@@ -10,8 +10,7 @@ const ProductTableHeader = () => {
 
   return (
     <div className='product-table-header'>
-      <div className='empty-space'></div>
-      <div className='product-table-content'>
+      <div></div>
         <div>
           <p>{format('product_name.label')}</p>
         </div>
@@ -23,8 +22,8 @@ const ProductTableHeader = () => {
         </div>
         <div>
           <p>{format('table.overall_compatibility.label')}</p>
-        </div>
       </div>
+      <div></div>
     </div>
   );
 };
