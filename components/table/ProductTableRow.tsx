@@ -5,7 +5,6 @@ import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { ProductsType } from '../../service/types';
 import BBImage from './BuildingBlocksImage';
-import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import SubTable from './SubTable';
 
 type Props = {
