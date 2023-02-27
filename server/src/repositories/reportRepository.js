@@ -4,9 +4,14 @@ const reportRepository = (repository) => {
     return repository.aggregateByProduct(filters, callback);
   }
 
+  function productsCount(callback) {
+    return repository.productsCount(callback);
+  }
+
   return {
     add,
     aggregateByProduct,
+    productsCount,
   };
 };
 
