@@ -8,6 +8,7 @@ const buildReportRoutes = (reportController) => {
   const upload = multer({ storage });
   reportRoutes.route('/report/upload').post(upload.single('report'), reportController.saveReport);
   reportRoutes.route('/report').get(reportController.getProductCompatibility);
+  reportRoutes.route('/report/count').get(reportController.getProductsCount);
   return reportRoutes;
 };
 
