@@ -9,7 +9,7 @@ module.exports = {
         .then(
           () => {},
           (err) => {
-            console.errorr('Connection error: ', err);
+            console.error('Connection error: ', err);
           },
         )
         .catch((err) => {

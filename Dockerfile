@@ -4,12 +4,12 @@ FROM node
 RUN mkdir -p /testing-webapp
 WORKDIR /testing-webapp
 
-#Install dependencies
-COPY package.json yarn.lock ./
-RUN yarn install
-
 #Copy source files
 COPY . .
 
+#Install dependencies
+RUN yarn install
+
 #Running the app
 CMD ["yarn","dev"]
+
