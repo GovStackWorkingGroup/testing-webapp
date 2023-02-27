@@ -14,6 +14,7 @@ export const productsList: ProductsType = {
       saveTime: 1676213907348,
       testsPassed: 30,
       testsFailed: 2,
+      compatibility: 0.3455,
     },
   ],
 };

@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for SubTableHeader component: should render the SubTableHeader component and match snapshot 1`] = `
+<div>
+  <div
+    class="sub-table-header"
+  >
+    <div />
+    <div
+      data-testid="bb-label"
+    >
+      <p>
+        Building Block
+      </p>
+    </div>
+    <div
+      class="sub-table-content-tests"
+    >
+      <div
+        data-testid="test-passed-label"
+      >
+        <p>
+          Tests Passed
+        </p>
+      </div>
+      <div
+        data-testid="test-failed-label"
+      >
+        <p>
+          Tests Failed
+        </p>
+      </div>
+    </div>
+    <div
+      data-testid="compatibility-label"
+    >
+      <p>
+        Compatibility
+      </p>
+    </div>
+    <div />
+  </div>
+</div>
+`;

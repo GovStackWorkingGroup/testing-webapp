@@ -1,9 +1,10 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import debounce from 'lodash.debounce';
 import { useRouter } from 'next/router';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import classNames from 'classnames';
 import { ProductsType } from '../../service/types';
 import BBImage from './BuildingBlocksImage';
-import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import SubTable from './SubTable';
 
 type Props = {
@@ -56,7 +57,10 @@ const ProductTableRow = ({ product }: Props) => {
 
   return (
     <>
-      <div className='product-table-row' onClick={handleShowSubTable}>
+      <div
+        className={classNames('product-table-row', { 'product-table-row-opened': isSubTableOpen })}
+        onClick={handleShowSubTable}
+      >
         <div className='details-arrow'>
           {isSubTableOpen ? (
             <RiArrowUpSLine />
