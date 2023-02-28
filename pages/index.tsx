@@ -8,7 +8,7 @@ const HomePage = () => {
       <Head>
         <title>GovStack testing</title>
         <meta name='description' content='GovStack Testing App' />
-        <link rel='icon' href='/favicon.ico' />
+        <link rel='icon' href='/favicon.png' />
       </Head>
       <main>
         <ProductTable />
