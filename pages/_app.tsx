@@ -4,7 +4,7 @@ import '../components/header/Header.less';
 import '../components/table/ProductTable.less';
 import '../components/Definition.less';
 import '../components/table/SubTable.less';
-
+import '../components/Definition.less';
 import { IntlProvider, } from 'react-intl';
 import { useRouter } from 'next/router';
 import React from 'react';

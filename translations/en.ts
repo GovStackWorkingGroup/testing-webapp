@@ -16,7 +16,6 @@ export const en = {
   'app.compatibility.label': 'Compatibility',
 
   'building_block.label': 'Building Block',
-
   'building_block.plural.label': 'Building Blocks',
 
   'image.alt.logoFor': 'Logo for: {name}',
