@@ -12,7 +12,8 @@ function getLatestReportPipeline(filters) {
         sourceBranch: { $exists: 1 },
         saveTime: { $exists: 1 },
       },
-    }, {
+    },
+    {
       $group: {
         _id: {
           buildingBlock: '$buildingBlock',
@@ -22,7 +23,10 @@ function getLatestReportPipeline(filters) {
         },
         latest: {
           $last: {
-            date: '$finish.timestamp.seconds', saveTime: '$saveTime', id: '$_id', testCases: '$testCases',
+            date: '$finish.timestamp.seconds',
+            saveTime: '$saveTime',
+            id: '$_id',
+            testCases: '$testCases',
           },
         },
       },
@@ -61,6 +65,66 @@ function getLatestReportPipeline(filters) {
                   },
                 },
               },
+            },
+            compatibility: {
+              $let: {
+                vars: {
+                  sumPassed: {
+                    $size: {
+                      $filter: {
+                        input: '$latest.testCases',
+                        as: 'case',
+                        cond: {
+                          $eq: ['$$case.passed', true],
+                        },
+                      },
+                    },
+                  },
+                  sumFailed: {
+                    $size: {
+                      $filter: {
+                        input: '$latest.testCases',
+                        as: 'case',
+                        cond: {
+                          $eq: ['$$case.passed', false],
+                        },
+                      },
+                    },
+                  },
+                },
+                in: {
+                  $round: [
+                    {
+                      $divide: ['$$sumPassed', { $add: ['$$sumPassed', '$$sumFailed'] }],
+                    },
+                    4,
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    {
+      $set: {
+        overallCompatibility: {
+          $let: {
+            vars: {
+              sumPassed: {
+                $sum: '$compatibilities.testsPassed',
+              },
+              sumFailed: {
+                $sum: '$compatibilities.testsFailed',
+              },
+            },
+            in: {
+              $round: [
+                {
+                  $divide: ['$$sumPassed', { $add: ['$$sumPassed', '$$sumFailed'] }],
+                },
+                4,
+              ],
             },
           },
         },
