@@ -95,7 +95,16 @@ function getLatestReportPipeline(filters) {
                 in: {
                   $round: [
                     {
-                      $divide: ['$$sumPassed', { $add: ['$$sumPassed', '$$sumFailed'] }],
+                      $divide: [
+                        '$$sumPassed',
+                        {
+                          $cond: {
+                            if: { $gt: [{ $add: ['$$sumPassed', '$$sumFailed'] }, 0] },
+                            then: { $add: ['$$sumPassed', '$$sumFailed'] },
+                            else: 1,
+                          },
+                        },
+                      ],
                     },
                     4,
                   ],
@@ -121,7 +130,16 @@ function getLatestReportPipeline(filters) {
             in: {
               $round: [
                 {
-                  $divide: ['$$sumPassed', { $add: ['$$sumPassed', '$$sumFailed'] }],
+                  $divide: [
+                    '$$sumPassed',
+                    {
+                      $cond: {
+                        if: { $gt: [{ $add: ['$$sumPassed', '$$sumFailed'] }, 0] },
+                        then: { $add: ['$$sumPassed', '$$sumFailed'] },
+                        else: 1,
+                      },
+                    },
+                  ],
                 },
                 4,
               ],
