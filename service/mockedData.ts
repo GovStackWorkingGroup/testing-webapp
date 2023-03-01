@@ -91,6 +91,7 @@ export const mockedProductList = [
         saveTime: 1670490781000,
         testsPassed: 12,
         testsFailed: 7,
+        compatibility: 0.3455,
       },
       {
         id: '0ba8dcdc-0c12-4a7e-b9c6-e7674379cf15',
@@ -99,6 +100,7 @@ export const mockedProductList = [
         saveTime: 1673582060000,
         testsPassed: 8,
         testsFailed: 5,
+        compatibility: 0.3455,
       },
     ],
     overallCompatibility: 0.1323,
