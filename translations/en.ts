@@ -1,8 +1,8 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.definition.description': `This web application is used to show how candidate products align with
-    the technical specifications that have been developed by <a href='https://www.govstack.global/' target="_blank">Govstack</a>
-    for various <a href='https://govstack.gitbook.io/specification/' target="_blank">Building Blocks</a>. For each
+    the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
+    for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
     Building Blocks a series of APIs have been defined and tests have been developed which any compliant
     product must be able to pass. These tests are run against candidate platforms and this application 
     provides detailed information on which tests are passing and which are failing. Users may select any
