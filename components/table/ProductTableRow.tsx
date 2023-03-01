@@ -25,13 +25,14 @@ const ProductTableRow = ({ product }: Props) => {
 
   const getContainerSize = useCallback(() => {
     const bbContainer = bbContentContainer.current;
+    const bbImageWidth = 28;
     if (productCompatibilitiesLength > 0 && bbContainer) {
-      const bbImageWidth = bbContainer.clientWidth * 0.75;
+      const bbImageContainerWidth = bbContainer.clientWidth * 0.75;
       const numberOfVisibleBBImageinContainer =
-        productCompatibilitiesLength - Math.floor((bbImageWidth || 0) / 28);
+        productCompatibilitiesLength - Math.floor((bbImageContainerWidth || 0) / bbImageWidth);
 
       setNumberOfHidenBBImages(Math.max(0, numberOfVisibleBBImageinContainer));
-      setImageSectionWidth(`${bbImageWidth - (bbImageWidth % 28)}px`);
+      setImageSectionWidth(`${bbImageContainerWidth - (bbImageContainerWidth % bbImageWidth)}px`);
     }
   }, [productCompatibilitiesLength, bbContentContainer]);
 

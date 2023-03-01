@@ -1,0 +1,62 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for SubTableRows component: should render the SubTableRows component and match snapshot 1`] = `
+<div>
+  <div>
+    <div
+      class="sub-table-row"
+    >
+      <div />
+      <div
+        class="sub-table-row-bb"
+        data-testid="bb-name"
+      >
+        <img
+          alt="Logo for: Building block label"
+          class="bb-image"
+          data-nimg="1"
+          decoding="async"
+          height="18"
+          loading="lazy"
+          src="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75"
+          srcset="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=32&q=75 1x, /_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75 2x"
+          style="color: transparent;"
+          width="18"
+        />
+        <p>
+          Building block label
+        </p>
+      </div>
+      <div
+        class="sub-table-content-tests"
+      >
+        <div
+          data-testid="tests-passed"
+        >
+          <p>
+            30
+          </p>
+        </div>
+        <div
+          data-testid="tests-failed"
+        >
+          <p>
+            2
+          </p>
+        </div>
+      </div>
+      <div
+        class="sub-table-content-compatibility"
+        data-testid="compatibility"
+      >
+        <p>
+          34.55%
+        </p>
+      </div>
+      <div
+        class="test-details-arrow"
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -1,17 +1,17 @@
 import React from 'react';
-import SubTableRow from '../../../components/table/SubTableRow';
+import SubTableRows from '../../../components/table/SubTableRows';
 import { render } from '../../test-utils/test-utils';
 import { productsList } from './mockedData/ProductTable';
 
-describe('Unit tests for SubTableRow component:', () => {
+describe('Unit tests for SubTableRows component:', () => {
   const BB_NAME_TEST_ID = 'bb-name';
   const TESTS_PASSED_TEST_ID = 'tests-passed';
   const TESTS_FAILED_TEST_ID = 'tests-failed';
   const COMPATIBILITY_TEST_ID = 'compatibility';
 
-  it('should render the SubTableRow component and match snapshot', () => {
+  it('should render the SubTableRows component and match snapshot', () => {
     const { container } = render(
-      <SubTableRow compatibilities={productsList.compatibilities} />
+      <SubTableRows compatibilities={productsList.compatibilities} />
     );
 
     expect(container).toMatchSnapshot();
@@ -19,7 +19,7 @@ describe('Unit tests for SubTableRow component:', () => {
 
   it('when have corresponding values', () => {
     const { getByTestId } = render(
-      <SubTableRow
+      <SubTableRows
         compatibilities={[
           {
             id: '07112c0a-8263-4717-92ce-c52bca785624',
