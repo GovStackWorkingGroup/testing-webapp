@@ -15,6 +15,7 @@ export type ProductsType = {
     sourceBranch: string; // Branch on which tests were executed
   };
   compatibilities: CompatibilitiesType[];
+  overallCompatibility: number;
 };
 
 export type ProductsListType = ProductsType[];
