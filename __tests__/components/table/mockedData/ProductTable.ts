@@ -17,4 +17,5 @@ export const productsList: ProductsType = {
       compatibility: 0.3455,
     },
   ],
+  overallCompatibility: 0.2355,
 };

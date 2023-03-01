@@ -79,7 +79,7 @@ export const mockedProductList = [
         compatibility: 0.3455,
       },
     ],
-    overallCompatibility: 0.2323,
+    overallCompatibility: 1,
   },
   {
     _id: { testApp: 'Subin', testSuite: 'Technology', sourceBranch: 'a' },

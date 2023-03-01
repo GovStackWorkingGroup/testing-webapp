@@ -19,6 +19,7 @@ const mockedContainerWidth = (clientWidth: number) =>
 describe('Unit tests for ProductTableRow component:', () => {
   const REST_COUNT_TEST_ID = 'bb-rest-count';
   const LAST_UPDATE_TEST_ID = 'product-last-update';
+  const OVERALL_COMPATIBILITY_TEST_ID = 'product-overall-compatibility';
 
   it('should render the ProductTableRow component and match snapshot', () => {
     const { container } = render(<ProductTableRow product={productsList} />);
@@ -130,4 +131,13 @@ describe('Unit tests for ProductTableRow component:', () => {
     expect(getByTestId(LAST_UPDATE_TEST_ID)).toHaveTextContent('2/21/2023');
   });
 
+  it('should overall compatibility has proper value', () => {
+    mockedContainerWidth(40);
+
+    const { queryByTestId } = render(
+      <ProductTableRow product={productsList} />
+    );
+
+    expect(queryByTestId(OVERALL_COMPATIBILITY_TEST_ID)).toHaveTextContent('23.55%');
+  });
 });

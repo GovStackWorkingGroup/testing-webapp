@@ -94,8 +94,8 @@ const ProductTableRow = ({ product }: Props) => {
         <div data-testid='product-last-update'>
           <p className='product-last-update'>{productLastUpdate}</p>
         </div>
-        <div>
-          <p></p>
+        <div data-testid='product-overall-compatibility'>
+          <p>{`${product.overallCompatibility === 1 ? '100' : (product.overallCompatibility*100).toFixed(2)}%`}</p>
         </div>
       </div>
       {isSubTableOpen && <SubTable product={product} />}
