@@ -1,0 +1,48 @@
+@import '../../styles/Variables.less';
+@import '../../styles/Extends.less';
+
+.sub-table {
+  font-size: 12px;
+  width: 100%;
+}
+
+.sub-table-header {
+  // plus 15px because of scroll width
+  width: calc(100% + 15px);
+  display: grid;
+  grid-template-columns: 1fr 8fr 4fr 4fr 2fr;
+  grid-template-rows: 48px;
+  align-items: center;
+  font-weight: 700;
+  color: @text-secondary;
+  border-bottom: 1px solid #dfdfea;
+}
+
+.sub-table-row {
+  // plus 15px because of scroll width
+  width: calc(100% + 15px);
+  border-bottom: 1px solid #dfdfea;
+  display: grid;
+  grid-template-columns: 1fr 8fr 4fr 4fr 2fr;
+  grid-template-rows: 48px;
+  align-items: center;
+}
+.sub-table-row:hover {
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
+  border-color: #dfdfea;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.sub-table-content-tests {
+  display: flex;
+}
+.sub-table-content-tests > div {
+  width: 50%;
+}
+
+.sub-table-row-bb:extend(.flex-row) {
+  width: 50%;
+  gap: 15px;
+  align-items: center;
+}

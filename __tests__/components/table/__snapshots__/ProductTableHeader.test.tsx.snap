@@ -5,33 +5,28 @@ exports[`Unit tests for ProductTableHeader component: should render the ProductT
   <div
     class="product-table-header"
   >
-    <div
-      class="empty-space"
-    />
-    <div
-      class="product-table-content"
-    >
-      <div>
-        <p>
-          Product Name
-        </p>
-      </div>
-      <div>
-        <p>
-          Building Blocks
-        </p>
-      </div>
-      <div>
-        <p>
-          Last Update
-        </p>
-      </div>
-      <div>
-        <p>
-          Overall Compatibility
-        </p>
-      </div>
+    <div />
+    <div>
+      <p>
+        Product Name
+      </p>
     </div>
+    <div>
+      <p>
+        Building Blocks
+      </p>
+    </div>
+    <div>
+      <p>
+        Last Update
+      </p>
+    </div>
+    <div>
+      <p>
+        Overall Compatibility
+      </p>
+    </div>
+    <div />
   </div>
 </div>
 `;

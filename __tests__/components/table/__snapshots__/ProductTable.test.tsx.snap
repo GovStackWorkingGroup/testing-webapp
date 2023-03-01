@@ -19,33 +19,28 @@ exports[`Unit tests for ProductTable component: should render the ProductTable c
       <div
         class="product-table-header"
       >
-        <div
-          class="empty-space"
-        />
-        <div
-          class="product-table-content"
-        >
-          <div>
-            <p>
-              Product Name
-            </p>
-          </div>
-          <div>
-            <p>
-              Building Blocks
-            </p>
-          </div>
-          <div>
-            <p>
-              Last Update
-            </p>
-          </div>
-          <div>
-            <p>
-              Overall Compatibility
-            </p>
-          </div>
+        <div />
+        <div>
+          <p>
+            Product Name
+          </p>
         </div>
+        <div>
+          <p>
+            Building Blocks
+          </p>
+        </div>
+        <div>
+          <p>
+            Last Update
+          </p>
+        </div>
+        <div>
+          <p>
+            Overall Compatibility
+          </p>
+        </div>
+        <div />
       </div>
       <div
         class="product-table-row-section"
@@ -55,60 +50,76 @@ exports[`Unit tests for ProductTable component: should render the ProductTable c
         >
           <div
             class="details-arrow"
-          />
+          >
+            <svg
+              fill="currentColor"
+              height="1em"
+              stroke="currentColor"
+              stroke-width="0"
+              viewBox="0 0 24 24"
+              width="1em"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 13.172l4.95-4.95 1.414 1.414L12 16 5.636 9.636 7.05 8.222z"
+                />
+              </g>
+            </svg>
+          </div>
+          <div>
+            <p>
+              Test Product
+            </p>
+          </div>
           <div
-            class="product-table-content"
+            class="table-bb-section"
           >
             <div>
-              <p>
-                Test Product
-              </p>
-            </div>
-            <div
-              class="table-bb-section"
-            >
+              <div
+                class="table-bb-image"
+                style="width: 0px;"
+              >
+                <img
+                  alt="Logo for: Building block label"
+                  class="bb-image"
+                  data-nimg="1"
+                  decoding="async"
+                  height="18"
+                  loading="lazy"
+                  src="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75"
+                  srcset="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=32&q=75 1x, /_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75 2x"
+                  style="color: transparent;"
+                  width="18"
+                />
+              </div>
               <div>
                 <div
-                  class="table-bb-image"
-                  style="width: 0px;"
+                  class="overflow-count"
+                  data-testid="bb-rest-count"
                 >
-                  <img
-                    alt="Logo for: Building block label"
-                    class="bb-image"
-                    data-nimg="1"
-                    decoding="async"
-                    height="18"
-                    loading="lazy"
-                    src="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75"
-                    srcset="/_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=32&q=75 1x, /_next/image?url=%2Fimages%2FbuildingBlocks%2FBuilding%20block%20label.png&w=48&q=75 2x"
-                    style="color: transparent;"
-                    width="18"
-                  />
-                </div>
-                <div>
-                  <div
-                    class="overflow-count"
-                    data-testid="bb-rest-count"
-                  >
-                    <p>
-                      +1
-                    </p>
-                  </div>
+                  <p>
+                    +1
+                  </p>
                 </div>
               </div>
             </div>
-            <div
-              data-testid="product-last-update"
+          </div>
+          <div
+            data-testid="product-last-update"
+          >
+            <p
+              class="product-last-update"
             >
-              <p
-                class="product-last-update"
-              >
-                1/20/1970
-              </p>
-            </div>
-            <div>
-              <p />
-            </div>
+              1/20/1970
+            </p>
+          </div>
+          <div>
+            <p />
           </div>
         </div>
       </div>

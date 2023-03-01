@@ -11,6 +11,11 @@ export const en = {
   'app.definition.note':
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
   'app.definition.title': 'GovStack Building Block Compliance Platform',
+  'app.tests_passed.label': 'Tests Passed',
+  'app.tests_failed.label': 'Tests Failed',
+  'app.compatibility.label': 'Compatibility',
+
+  'building_block.label': 'Building Block',
 
   'building_block.plural.label': 'Building Blocks',
 

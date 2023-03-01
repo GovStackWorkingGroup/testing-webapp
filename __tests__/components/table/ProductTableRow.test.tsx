@@ -112,6 +112,7 @@ describe('Unit tests for ProductTableRow component:', () => {
               saveTime: 1659380963000,
               testsPassed: 2,
               testsFailed: 2,
+              compatibility: 0.3455,
             },
             {
               id: '07112c0a-8263-4717-92ce-c52bca785624',
@@ -120,6 +121,7 @@ describe('Unit tests for ProductTableRow component:', () => {
               saveTime: 1659380963000,
               testsPassed: 2,
               testsFailed: 2,
+              compatibility: 0.3455,
             }],
         }}
       />
