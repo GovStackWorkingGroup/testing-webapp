@@ -458,6 +458,9 @@ export const mockedProductList = [
     ],
     overallCompatibility: 0.2323,
   },
+];
+
+export const moreMockedProductList = [
   {
     _id: {
       testApp: 'Zoolab',
