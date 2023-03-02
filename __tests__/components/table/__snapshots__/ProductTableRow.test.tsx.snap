@@ -79,7 +79,7 @@ exports[`Unit tests for ProductTableRow component: should render the ProductTabl
       data-testid="product-overall-compatibility"
     >
       <p>
-        23.55%
+        23%
       </p>
     </div>
   </div>
@@ -141,7 +141,7 @@ exports[`Unit tests for ProductTableRow component: when product compatibilities 
       data-testid="product-overall-compatibility"
     >
       <p>
-        23.55%
+        23%
       </p>
     </div>
   </div>

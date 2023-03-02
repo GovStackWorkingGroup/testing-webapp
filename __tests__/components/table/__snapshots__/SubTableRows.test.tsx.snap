@@ -50,7 +50,7 @@ exports[`Unit tests for SubTableRows component: should render the SubTableRows c
         data-testid="compatibility"
       >
         <p>
-          34.55%
+          34%
         </p>
       </div>
       <div

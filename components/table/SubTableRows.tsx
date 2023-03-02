@@ -26,7 +26,7 @@ const SubTableRows = ({ compatibilities }: Props) => {
               </div>
             </div>
             <div className='sub-table-content-compatibility' data-testid='compatibility'>
-              <p>{`${(bb.compatibility*100).toFixed(2)}%`}</p>
+              <p>{`${Math.floor(bb.compatibility*100)}%`}</p>
             </div>
             <div className='test-details-arrow'></div>
           </div>

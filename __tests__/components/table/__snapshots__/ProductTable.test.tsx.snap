@@ -122,7 +122,7 @@ exports[`Unit tests for ProductTable component: should render the ProductTable c
             data-testid="product-overall-compatibility"
           >
             <p>
-              23.55%
+              23%
             </p>
           </div>
         </div>

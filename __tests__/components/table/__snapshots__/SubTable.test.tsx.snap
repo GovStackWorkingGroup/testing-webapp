@@ -91,7 +91,7 @@ exports[`Unit tests for SubTable component: should render the SubTable component
           data-testid="compatibility"
         >
           <p>
-            34.55%
+            34%
           </p>
         </div>
         <div

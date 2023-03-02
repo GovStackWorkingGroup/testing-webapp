@@ -138,6 +138,6 @@ describe('Unit tests for ProductTableRow component:', () => {
       <ProductTableRow product={productsList} />
     );
 
-    expect(queryByTestId(OVERALL_COMPATIBILITY_TEST_ID)).toHaveTextContent('23.55%');
+    expect(queryByTestId(OVERALL_COMPATIBILITY_TEST_ID)).toHaveTextContent('23%');
   });
 });
