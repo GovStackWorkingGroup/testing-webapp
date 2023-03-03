@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for InfiniteScrollCustomLoader component: should render the InfiniteScrollCustomLoader component and match snapshot 1`] = `
+<div>
+  <p
+    class="data-loader-message"
+    data-testid="scroll-loader"
+  >
+    Loading more data...
+  </p>
+</div>
+`;

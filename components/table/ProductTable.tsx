@@ -4,6 +4,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { getProductsList } from '../../service/serviceAPI';
 import { ProductsType } from '../../service/types';
 import { moreMockedProductList } from '../../service/mockedData';
+import InfiniteScrollCustomLoader from '../InfiniteScrollLoader';
 import ProductTableHeader from './ProductTableHeader';
 import ProductTableRow from './ProductTableRow';
 
@@ -47,7 +48,7 @@ const ProductTable = () => {
             dataLength={40}
             next={handleLoadMoreData}
             hasMore={hasMoreData}
-            loader={<p className='data-loader-message'>Loading more data...</p>}
+            loader={<InfiniteScrollCustomLoader />}
             style={{ overflowX: 'hidden' }}
           >
             {productsList.map((product, key) => (
