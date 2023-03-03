@@ -1,7 +1,7 @@
+const FiltersValidation = require('./utils/filtersValidation');
+
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-console */
-
-const FiltersValidation = require('./utils/filtersValidation');
 
 module.exports = class ReportGetProductRequestHandler {
   constructor(request, response) {
@@ -11,15 +11,14 @@ module.exports = class ReportGetProductRequestHandler {
   }
 
   async getReports(repository) {
-    const limit = FiltersValidation.validateFilter(this.req.query.limit, Infinity);
-    const offset = FiltersValidation.validateFilter(this.req.query.offset, 0);
+    const { limit, offset } = this.req.query;
+    const validatedLimit = FiltersValidation.isFilterValid(limit) ? limit : null;
+    const validatedOffset = FiltersValidation.isFilterValid(offset) ? offset : null;
 
-    repository.aggregateByProduct({ limit, offset }, (err, result) => {
+    repository.aggregateByProduct({ validatedLimit, validatedOffset }, (err, result) => {
       if (err) {
         console.error(err);
-        this.res
-          .status(500)
-          .send(`Failed to fetch report summary. Details: \n\t${err}\nPlease contact administrator.`);
+        this.res.status(500).send(`Failed to fetch report summary. Details: \n\t${err}\nPlease contact administrator.`);
         return;
       }
       this.res.json(result);

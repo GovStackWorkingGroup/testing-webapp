@@ -1,7 +1,7 @@
 const ReportModel = require('../schemas/report');
 
 // eslint-disable-next-line class-methods-use-this, no-unused-vars
-function getLatestReportPipeline(filters = { limit: Infinity, offset: 0 }) {
+function getLatestReportPipeline(filters) {
   return [
     {
       $match: {
@@ -149,8 +149,6 @@ function getLatestReportPipeline(filters = { limit: Infinity, offset: 0 }) {
       },
     },
     { $sort: { _id: 1 } },
-    { $skip: Number(filters.offset) },
-    { $limit: Number(filters.limit) },
   ];
 }
 
@@ -161,13 +159,23 @@ const repository = () => {
   };
 
   const aggregateByProduct = (filters, callback) => {
-    ReportModel.aggregate(getLatestReportPipeline(filters)).exec(callback);
+    const aggregation = ReportModel.aggregate(getLatestReportPipeline(filters));
+
+    if (filters.validatedOffset !== null) {
+      aggregation.append({ $skip: Number(filters.validatedOffset) });
+    }
+
+    if (filters.validatedLimit !== null) {
+      aggregation.append({ $limit: Number(filters.validatedLimit) });
+    }
+
+    aggregation.exec(callback);
   };
 
   const productsCount = (callback) => {
-    const latestReportPipeline = getLatestReportPipeline();
-    latestReportPipeline.push({ $count: 'count' });
-    ReportModel.aggregate(latestReportPipeline).exec(callback);
+    ReportModel.aggregate(getLatestReportPipeline())
+      .append([{ $count: 'count' }])
+      .exec(callback);
   };
 
   return {

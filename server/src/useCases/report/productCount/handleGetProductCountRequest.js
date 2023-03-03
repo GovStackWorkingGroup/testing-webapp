@@ -12,9 +12,7 @@ module.exports = class ProductCountRequestHandler {
     repository.productsCount((err, result) => {
       if (err) {
         console.error(err);
-        this.res
-          .status(500)
-          .send(`Failed to fetch products count. Details: \n\t${err}\nPlease contact administrator.`);
+        this.res.status(500).send(`Failed to fetch products count. Details: \n\t${err}\nPlease contact administrator.`);
         return;
       }
       this.res.json(result[0]);
