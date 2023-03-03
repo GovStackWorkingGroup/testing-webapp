@@ -12,7 +12,11 @@ module.exports = class ReportGetProductRequestHandler {
 
   async getReports(repository) {
     const { limit, offset } = this.req.query;
-    const validatedLimit = FiltersValidation.isFilterValid(limit) ? limit : null;
+
+    let validatedLimit;
+    validatedLimit = FiltersValidation.isFilterValid(limit) ? limit : null;
+    validatedLimit = FiltersValidation.maxLimitCheck(validatedLimit);
+
     const validatedOffset = FiltersValidation.isFilterValid(offset) ? offset : null;
 
     repository.aggregateByProduct({ validatedLimit, validatedOffset }, (err, result) => {
