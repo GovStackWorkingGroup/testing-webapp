@@ -1,11 +1,10 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable no-console */
 const ReportUploadRequestHandler = require('../useCases/report/reportSave/handleSaveRequest');
 const ReportProductGetRequestHandler = require('../useCases/report/productCompatibility/handleGetProductRequest');
 const ProductCountRequestHandler = require('../useCases/report/productCount/handleGetProductCountRequest');
 
-const reportController = (
-  reportDbRepository,
-  reportDbRepositoryImpl,
-) => {
+const reportController = (reportDbRepository, reportDbRepositoryImpl) => {
   const repository = reportDbRepository(reportDbRepositoryImpl);
 
   const saveReport = (req, res) => {

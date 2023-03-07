@@ -1,7 +1,7 @@
 const ReportModel = require('../schemas/report');
 
 // eslint-disable-next-line class-methods-use-this, no-unused-vars
-function getLatestReportPipeline(filters) {
+function getLatestReportPipeline() {
   return [
     {
       $match: {
@@ -159,14 +159,14 @@ const repository = () => {
   };
 
   const aggregateByProduct = (filters, callback) => {
-    const aggregation = ReportModel.aggregate(getLatestReportPipeline(filters));
+    const aggregation = ReportModel.aggregate(getLatestReportPipeline());
 
-    if (filters.validatedOffset !== null) {
-      aggregation.append({ $skip: Number(filters.validatedOffset) });
+    if (filters.offset !== undefined) {
+      aggregation.append({ $skip: filters.offset });
     }
 
-    if (filters.validatedLimit !== null) {
-      aggregation.append({ $limit: Number(filters.validatedLimit) });
+    if (filters.limit !== undefined) {
+      aggregation.append({ $limit: filters.limit });
     }
 
     aggregation.exec(callback);
