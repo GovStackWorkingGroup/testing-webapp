@@ -2,10 +2,8 @@ version: '3'
 services:
     web:
       build: .
-      volumes:
-          - .:/testing-webapp
       ports:
-        - 3003:3003
+        - 80:3003
   
     mongo:
       image: mongo
@@ -30,8 +28,6 @@ services:
       command: dev
       ports: 
         - 5000:5000
-      volumes:
-        - ./server:/app
       environment:
         MONGO_USERNAME: ${MONGO_USERNAME:-root}
         MONGO_PASSOWORD: ${MONGO_PASSOWORD:-P@ssw00rd!}
