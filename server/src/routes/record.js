@@ -11,6 +11,9 @@ const buildReportRoutes = (reportController) => {
   reportRoutes
     .route('/report')
     .get(PaginationMiddleware.handlePaginationFilters, reportController.getProductCompatibility);
+  reportRoutes
+    .route('/report/:id')
+    .get(PaginationMiddleware.handlePaginationFilters, reportController.getProductDetails);
   reportRoutes.route('/report/count').get(reportController.getProductsCount);
   return reportRoutes;
 };
