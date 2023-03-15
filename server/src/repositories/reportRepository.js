@@ -8,9 +8,14 @@ const reportRepository = (repository) => {
     return repository.productsCount(callback);
   }
 
+  function aggregateByProductId(id, callback) {
+    return repository.aggregateByProductId(id, callback);
+  }
+
   return {
     add,
     aggregateByProduct,
+    aggregateByProductId,
     productsCount,
   };
 };
