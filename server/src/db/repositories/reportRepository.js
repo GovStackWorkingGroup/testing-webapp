@@ -260,6 +260,7 @@ function getReportDetailsPipeline(id) {
         },
         data: {
           $push: {
+            id: '$testCases._id',
             uri: '$testCases.gherkinDocument.uri',
             method: {
               $substr: [
@@ -306,6 +307,7 @@ function getReportDetailsPipeline(id) {
             passed: '$testCases.passed',
             details: [
               {
+                id: '$testCases._id',
                 scenario: '$testCases.name',
                 steps: '$testCases.steps',
               },
@@ -333,11 +335,13 @@ function getReportDetailsPipeline(id) {
       $project: {
         compatibilities: 1,
         data: {
+          id: 1,
           uri: 1,
           method: 1,
           endpoint: 1,
           passed: 1,
           details: {
+            id: 1,
             scenario: 1,
             steps: {
               result: {
@@ -386,7 +390,7 @@ function getReportDetailsPipeline(id) {
     },
     {
       $group: {
-        _id: '$data.details.scenario',
+        _id: '$data._id',
         steps: {
           $push: '$data.details.steps',
         },
@@ -399,6 +403,11 @@ function getReportDetailsPipeline(id) {
       },
     },
     {
+      $sort: {
+        'data.details.id': 1,
+      },
+    },
+    {
       $group: {
         _id: '$data.uri',
         compatibilities: {
@@ -406,7 +415,8 @@ function getReportDetailsPipeline(id) {
         },
         details: {
           $push: {
-            scenario: '$_id',
+            scenarioId: '$data.details.id',
+            scenario: '$data.details.scenario',
             steps: '$steps',
           },
         },
@@ -414,8 +424,7 @@ function getReportDetailsPipeline(id) {
           $push: '$data.passed',
         },
         data: {
-          $first: {
-            uri: '$data.uri',
+          $push: {
             method: '$data.method',
             endpoint: '$data.endpoint',
           },
@@ -425,12 +434,10 @@ function getReportDetailsPipeline(id) {
     {
       $sort: {
         _id: 1,
-        scenario: 1,
       },
     },
     {
       $project: {
-        _id: 1,
         compatibilities: 1,
         data: {
           method: 1,
