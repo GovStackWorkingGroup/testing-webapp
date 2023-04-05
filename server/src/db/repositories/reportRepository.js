@@ -390,7 +390,7 @@ function getReportDetailsPipeline(id) {
     },
     {
       $group: {
-        _id: '$data._id',
+        _id: '$data.id',
         steps: {
           $push: '$data.details.steps',
         },
@@ -415,7 +415,6 @@ function getReportDetailsPipeline(id) {
         },
         details: {
           $push: {
-            scenarioId: '$data.details.id',
             scenario: '$data.details.scenario',
             steps: '$steps',
           },
