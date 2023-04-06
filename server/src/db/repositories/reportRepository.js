@@ -423,7 +423,8 @@ function getReportDetailsPipeline(id) {
           $push: '$data.passed',
         },
         data: {
-          $push: {
+          $first: {
+            uri: '$data.uri',
             method: '$data.method',
             endpoint: '$data.endpoint',
           },
