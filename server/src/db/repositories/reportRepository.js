@@ -423,7 +423,8 @@ function getReportDetailsPipeline(id) {
           $push: '$data.passed',
         },
         data: {
-          $push: {
+          $first: {
+            uri: '$data.uri',
             method: '$data.method',
             endpoint: '$data.endpoint',
           },
@@ -439,6 +440,7 @@ function getReportDetailsPipeline(id) {
       $project: {
         compatibilities: 1,
         data: {
+          uri: 1,
           method: 1,
           endpoint: 1,
           passed: {
