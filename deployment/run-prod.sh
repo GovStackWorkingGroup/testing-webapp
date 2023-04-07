@@ -6,3 +6,6 @@ cd "$(dirname "$0")"
 # We run in prod mode, but we still build from this guild repository
 docker-compose -f ../docker-compose.yml up --build -d --force-recreate 
 
+# Clean up dangling images
+docker image prune -f
+
