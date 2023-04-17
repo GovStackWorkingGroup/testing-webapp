@@ -37,6 +37,10 @@ const repository = () => {
     ReportModel.aggregate(sortedAggregation).exec(callback);
   };
 
+  const aggregateBuildingBlocks = (callback) => {
+    ReportModel.aggregate(getBuildingBlockListPipeline()).exec(callback);
+  };
+
   const productsCount = (callback) => {
     ReportModel.aggregate(getLatestReportPipeline())
       .append([{ $count: 'count' }])
