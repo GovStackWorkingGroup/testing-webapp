@@ -2,6 +2,7 @@ const ReportUploadRequestHandler = require('../useCases/report/reportSave/handle
 const ReportProductGetRequestHandler = require('../useCases/report/productCompatibility/handleGetProductRequest');
 const ProductCountRequestHandler = require('../useCases/report/productCount/handleGetProductCountRequest');
 const ProductDetailsRequestHandler = require('../useCases/report/productTestCases/handleGetProductDetailsRequest');
+const ReportGetBuildingBlocksRequestHandler = require('../useCases/report/buildingBlocks/handleGetBuildingBlocksRequest');
 
 const reportController = (reportDbRepository, reportDbRepositoryImpl) => {
   const repository = reportDbRepository(reportDbRepositoryImpl);
@@ -35,11 +36,18 @@ const reportController = (reportDbRepository, reportDbRepositoryImpl) => {
       .catch((err) => res.status(500).send(`Unexpected exception occurred: ${err}`));
   };
 
+  const getBuildingBlocks = (req, res) => {
+    new ReportGetBuildingBlocksRequestHandler(req, res)
+      .getBuildingBlocks(repository)
+      .catch((err) => res.status(500).send(`Unexpected exception occurred: ${err}`));
+  };
+
   return {
     saveReport,
     getProductCompatibility,
     getProductsCount,
     getProductDetails,
+    getBuildingBlocks,
   };
 };
 

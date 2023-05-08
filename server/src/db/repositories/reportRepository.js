@@ -43,11 +43,25 @@ const repository = () => {
       .exec(callback);
   };
 
+  const aggregateByBuildingBlock = (callback) => {
+    const aggregation = ReportModel.aggregate([]);
+    aggregation.group({
+      _id: '$buildingBlock',
+      softwares: { $addToSet: '$testApp' },
+    });
+    aggregation.project({
+      _id: 1,
+      supportedSoftwares: { $size: '$softwares' },
+    });
+    aggregation.sort({ _id: 1 }).exec(callback);
+  };
+
   return {
     add,
     aggregateCompatibilityByProduct,
     aggregateBBDetailsByProductId,
     productsCount,
+    aggregateByBuildingBlock,
   };
 };
 

@@ -12,11 +12,16 @@ const reportRepository = (repository) => {
     return repository.aggregateBBDetailsByProductId(id, sorting, callback);
   }
 
+  function aggregateByBuildingBlock(callback) {
+    return repository.aggregateByBuildingBlock(callback);
+  }
+
   return {
     add,
     aggregateCompatibilityByProduct,
     aggregateBBDetailsByProductId,
     productsCount,
+    aggregateByBuildingBlock,
   };
 };
 
