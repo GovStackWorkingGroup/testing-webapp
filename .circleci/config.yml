@@ -19,6 +19,15 @@ jobs:
       - run:
           command: yarn test
           name: Run YARN tests
+  build_docker_images:
+    docker:
+      - image: docker:24
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker images
+          command: docker compose build
   deploy:
     docker:
       - image: cimg/base:2023.03

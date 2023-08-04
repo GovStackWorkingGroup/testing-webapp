@@ -2,6 +2,7 @@ version: '3'
 services:
     web:
       build: .
+      image: govstack/testing-webapp-frontend:0.1.0-SNAPSHOT
       expose:
         - "3003"
       environment:
@@ -35,7 +36,7 @@ services:
 
 
     backend:
-      image: testing-webapp-server
+      image: govstack/testing-webapp-backend:0.1.0-SNAPSHOT
       restart: always
       build:
         context: ./server
