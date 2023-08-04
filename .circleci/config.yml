@@ -30,7 +30,9 @@ jobs:
           command: docker compose build
       - run:
           name: Push Docker images to Docker.io
-          command: docker compose push
+          command: |
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker compose push
   deploy:
     docker:
       - image: cimg/base:2023.03
