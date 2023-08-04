@@ -19,7 +19,7 @@ jobs:
       - run:
           command: yarn test
           name: Run YARN tests
-  build_docker_images:
+  build_push_docker_images:
     docker:
       - image: docker:24
     steps:
@@ -28,6 +28,9 @@ jobs:
       - run:
           name: Build Docker images
           command: docker compose build
+      - run:
+          name: Push Docker images to Docker.io
+          command: docker compose push
   deploy:
     docker:
       - image: cimg/base:2023.03
@@ -49,12 +52,12 @@ workflows:
   build_test_deploy:
     jobs:
       - build_and_test
-      - build_docker_images:
+      - build_push_docker_images:
            requires:
              - build_and_test
       - deploy:
            requires:
-             - build_docker_images
+             - build_push_docker_images
            filters:
              branches:
                only:
