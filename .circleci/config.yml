@@ -49,12 +49,13 @@ workflows:
   build_test_deploy:
     jobs:
       - build_and_test
-      - deploy:
+      - build_docker_images
            requires:
              - build_and_test
+      - deploy:
+           requires:
              - build_docker_images
            filters:
              branches:
                only:
                  - main
-
