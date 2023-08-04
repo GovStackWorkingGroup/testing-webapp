@@ -52,6 +52,7 @@ workflows:
       - deploy:
            requires:
              - build_and_test
+             - build_docker_images
            filters:
              branches:
                only:
