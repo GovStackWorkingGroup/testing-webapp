@@ -103,6 +103,7 @@ const TestReportSchema = new mongoose.Schema({
   testSuite: String,
   testApp: String,
   sourceBranch: String,
+  version: String,
 });
 
 TestReportSchema.index({
@@ -111,6 +112,7 @@ TestReportSchema.index({
   testSuite: 1,
   testApp: 1,
   sourceBranch: 1,
+  version: 1,
   saveTime: -1,
 });
 

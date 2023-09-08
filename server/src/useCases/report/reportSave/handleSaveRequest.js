@@ -28,6 +28,7 @@ const RequestSchema = {
         testSuite: { type: 'string' },
         testApp: { type: 'string' },
         sourceBranch: { type: 'string' },
+        version: {type: 'string'},
       },
       required: [
         'buildingBlock',
@@ -168,6 +169,7 @@ module.exports = class ReportUploadRequestHandler {
     report.testSuite = this.req.body.testSuite;
     report.testApp = this.req.body.testApp;
     report.sourceBranch = this.req.body.sourceBranch;
+    report.version = this.req.body.version;
     report.productMetaData = productMetaData;
 
     this.saveToDatabase(repository, report);

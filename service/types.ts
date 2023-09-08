@@ -13,6 +13,7 @@ export type ProductsType = {
     testApp: string; // Label of the product
     testSuite: string; // Test suite label
     sourceBranch: string; // Branch on which tests were executed
+    version: string; // Version on which tests were executed
   };
   compatibilities: BuildingBlockType[];
   overallCompatibility: number;

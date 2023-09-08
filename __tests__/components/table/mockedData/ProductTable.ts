@@ -11,6 +11,7 @@ export const mockedProduct: ProductsType = {
     testApp: 'Test Product',
     testSuite: 'Test suite',
     sourceBranch: 'Test branch',
+    version: 'Version',
   },
   compatibilities: [
     {

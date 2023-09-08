@@ -14,6 +14,7 @@ module.exports = class ReportGetProductRequestHandler {
       'sort.testApp': '_id.testApp',
       'sort.testSuite': '_id.testSuite',
       'sort.sourceBranch': '_id.sourceBranch',
+      'sort.version': '_id.version',
       'sort.overallCompatibility': 'overallCompatibility',
       'sort.lastUpdate': 'lastUpdate',
     };
