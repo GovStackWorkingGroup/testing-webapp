@@ -89,35 +89,6 @@ yarn dev
 Backend service and monogoDB are also setups automatically
 during `docker-compose up --build` execution.
 
-## Git Flow in Our Project
-
-We use the Git Flow branching model to organize our work:
-
-- Main Branch (`main`)**: It represents the most stable version of our project, as it's used for production. Direct commits to this branch are not allowed; it's protected.
-
-- Develop Branch (`develop`)**: It acts as an integration branch for features. All new features are branched off from `develop`. Direct commits to this branch are not allowed; it's protected.
-
-- Feature Branches (`feature/*`)**: For new features or enhancements. Once development is done, they're merged back into `develop`.
-
-- Release Branches (`release/*`)**: These are cut from `develop` when we're ready for a new production release. When the release is finalized, it's merged into both `main` and `develop`.
-
-- Hotfix Branches (`hotfix/*`)**: These are created if there's a severe bug in the production version. They branch off from `main` and are merged back into both `main` and `develop` after the fix.
-
-Naming Conventions:
-
-- Feature Branches: `feature/ticket-ID` - Branches used for new features or enhancements, named according to the ticket or task ID.
-
-- Release Branches**: `release/version` - Branches prepared for production releases, named by the release version.
-
-- Hotfix Branches**: `hotfix/hotfix-name` - Branches used to quickly fix urgent issues in the production environment, named descriptively based on the nature of the hotfix.
-
-Commit Message Convention:
-
-- For each commit use format: `ticket_ID: brief description of the changes`
-
-Remember, when creating a new branch, always pull the latest changes from the branch you're basing off to avoid conflicts.
-
-
 ## Useful information
 
 Below you will find all the guidelines.
@@ -146,3 +117,31 @@ To ensure that the file with translation keys is properly organized, it is worth
 - remove unused translation keys
 
 - avoid concatenating translations
+
+## Git Flow in Our Project
+
+We use the Git Flow branching model to organize our work:
+
+- Main Branch (`main`)**: It represents the most stable version of our project, as it's used for production. Direct commits to this branch are not allowed; it's protected.
+
+- Develop Branch (`develop`)**: It acts as an integration branch for features. All new features are branched off from `develop`. Direct commits to this branch are not allowed; it's protected.
+
+- Feature Branches (`feature/*`)**: For new features or enhancements. Once development is done, they're merged back into `develop`.
+
+- Release Branches (`release/*`)**: These are cut from `develop` when we're ready for a new production release. When the release is finalized, it's merged into both `main` and `develop`.
+
+- Hotfix Branches (`hotfix/*`)**: These are created if there's a severe bug in the production version. They branch off from `main` and are merged back into both `main` and `develop` after the fix.
+
+Naming Conventions:
+
+- Feature Branches: `feature/ticket-ID` - Branches used for new features or enhancements, named according to the ticket or task ID.
+
+- Release Branches**: `release/version` - Branches prepared for production releases, named by the release version.
+
+- Hotfix Branches**: `hotfix/hotfix-name` - Branches used to quickly fix urgent issues in the production environment, named descriptively based on the nature of the hotfix.
+
+Commit Message Convention:
+
+- For each commit use format: `ticket_ID: brief description of the changes`
+
+Remember, when creating a new branch, always pull the latest changes from the branch you're basing off to avoid conflicts.
