@@ -28,17 +28,17 @@ const ComplianceDetailSchema = new mongoose.Schema({
             type: String
         }
     },
-    requirementSpecification: {
+    requirementSpecificationCompliance: {
         level: {
             type: Number,
-            enum: [0, 1, 2]
+            enum: [-1, 1, 2]
         },
         note: String
     },
-    interface: {
+    interfaceCompliance: {
         level: {
             type: Number,
-            enum: [0, 1, 2]
+            enum: [-1, 1, 2]
         },
         note: String
     }
