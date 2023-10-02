@@ -1,25 +1,38 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-console */
-const {
-  mapQueryToSorting,
-} = require('../requestUtils');
+import { Request, Response } from 'express';
+import mapQueryToSorting from '../requestUtils';
 
-module.exports = class ReportGetProductDetailsRequestHandler {
-  constructor(request, response) {
+interface Repository {
+  aggregateBBDetailsByProductId(params: {
+    id: string;
+  }, sorting: any, callback: (err: ErrorType, result: any) => void): void;
+}
+
+export default class ReportGetProductDetailsRequestHandler {
+
+  public req: Request;
+  public res: Response;
+  public dbConnect: any;
+
+  constructor(request: Request, response: Response) {
     this.req = request;
     this.res = response;
     this.dbConnect = request.app.locals.reportCollection;
   }
 
-  async getProductDetails(repository) {
+  async getProductDetails(repository: Repository) {
     const {
-      limit,
-      offset,
+      limit: queryLimit,
+      offset: queryOffset,
     } = this.req.query;
     const {
       id,
     } = this.req.params;
+
+    const limit = (typeof queryLimit === 'string') ? parseInt(queryLimit, 10) : 10; // Defaulting to 10 if undefined
+    const offset = (typeof queryOffset === 'string') ? parseInt(queryOffset, 10) : 0; // Defaulting to 0 if undefined
 
     const mapQueryToMongo = {
       'sort.name': 'endpoint',
@@ -31,7 +44,7 @@ module.exports = class ReportGetProductDetailsRequestHandler {
 
     repository.aggregateBBDetailsByProductId({
       id,
-    }, sorting, async (err, result) => {
+    }, sorting, async (err: ErrorType, result: any) => {
       if (err) {
         console.error(err);
         this.res.status(500).send(`Failed to fetch detailed report summary. Details: \n\t${err}`);

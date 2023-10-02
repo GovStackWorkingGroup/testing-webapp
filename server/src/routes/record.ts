@@ -1,8 +1,9 @@
-const express = require('express');
-const multer = require('multer');
-const PaginationMiddleware = require('../middlewares/paginationMiddleware');
+import express from 'express';
+import multer from 'multer';
+import PaginationMiddleware from '../middlewares/paginationMiddleware';
+import { ReportController } from '../controllers/reportController'
 
-const buildReportRoutes = (reportController) => {
+const buildReportRoutes = (reportController: ReportController) => {
   const reportRoutes = express.Router();
 
   const storage = multer.memoryStorage();
@@ -24,4 +25,4 @@ const buildReportRoutes = (reportController) => {
   return reportRoutes;
 };
 
-module.exports = buildReportRoutes;
+export default buildReportRoutes;

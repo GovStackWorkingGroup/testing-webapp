@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const {
   ObjectId,
@@ -6,7 +6,7 @@ const {
 
 const getReportDetailsPipeline = (id) => [{
   $match: {
-    _id: ObjectId(id),
+    _id: new ObjectId(id),
   },
 },
 {
@@ -315,7 +315,7 @@ const sortReportDetails = (sorting) => [
   },
 ];
 
-module.exports = {
+export {
   getReportDetailsPipeline,
   sortReportDetails,
 };

@@ -1,7 +1,7 @@
-const ReportModel = require('../schemas/report');
+import ReportModel from '../schemas/report';
 
-const { getReportDetailsPipeline, sortReportDetails } = require('../pipelines/reportDetails');
-const { getLatestReportPipeline, sortLatestReports, branchReports } = require('../pipelines/latestReports');
+import { getReportDetailsPipeline, sortReportDetails } from '../pipelines/reportDetails';
+import { getLatestReportPipeline, sortLatestReports, branchReports } from '../pipelines/latestReports';
 
 function addSortingToPipeline(sorting, aggregation, sortFunction) {
   const sort = !!sorting && Object.keys(sorting).length !== 0;
@@ -16,23 +16,24 @@ const repository = () => {
   };
 
   const aggregateCompatibilityByProduct = (filters, sorting, callback) => {
-    let aggregation = [];
+    let aggregation: any[] = [];
     if (filters.branch !== undefined) {
       aggregation = aggregation.concat(branchReports(filters.branch));
     }
     aggregation = aggregation.concat(getLatestReportPipeline());
     aggregation = addSortingToPipeline(sorting, aggregation, sortLatestReports);
-    aggregation = ReportModel.aggregate(aggregation);
+    // "aggregatedResult" will be of type "Aggregate<any[]>", not "any[]"
+    let aggregatedResult = ReportModel.aggregate(aggregation);
 
     if (filters.offset !== undefined) {
-      aggregation.append({ $skip: filters.offset });
+      aggregatedResult.append({ $skip: filters.offset });
     }
 
     if (filters.limit !== undefined) {
-      aggregation.append({ $limit: filters.limit });
+      aggregatedResult.append({ $limit: filters.limit });
     }
 
-    aggregation.exec(callback);
+    aggregatedResult.exec(callback);
   };
 
   const aggregateBBDetailsByProductId = (productId, sorting, callback) => {
@@ -42,13 +43,13 @@ const repository = () => {
   };
 
   const productsCount = (filters, callback) => {
-    let aggregation = [];
+    let aggregation: any[] = [];
     if (filters.branch !== undefined) {
       aggregation = aggregation.concat(branchReports(filters.branch));
     }
     aggregation = aggregation.concat(getLatestReportPipeline());
     ReportModel.aggregate(aggregation)
-      .append([{ $count: 'count' }])
+      .append({ $count: 'count' })
       .exec(callback);
   };
 
@@ -74,4 +75,4 @@ const repository = () => {
   };
 };
 
-module.exports = repository();
+export default repository();

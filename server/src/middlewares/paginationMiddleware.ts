@@ -1,6 +1,6 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable no-console */
-module.exports = {
+export default {
   handlePaginationFilters: (req, _res, next) => {
     const MAX_LIMIT_IN_REQUEST = 1000;
     let { limit, offset } = req.query;

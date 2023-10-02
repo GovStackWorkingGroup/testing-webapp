@@ -1,4 +1,4 @@
-const mapQueryToSorting = (queryParams, queryToMongoMapping) => {
+const mapQueryToSorting = (queryParams: any, queryToMongoMapping: Record<string, string>) => {
   /**
 
     Maps query parameters to MongoDB sorting options.
@@ -16,7 +16,7 @@ const mapQueryToSorting = (queryParams, queryToMongoMapping) => {
     */
   const sortIndicator = 'sort.';
   const mapQueryToMongo = queryToMongoMapping;
-  const newParams = {};
+  const newParams: Record<string, number> = {};
   Object.keys(queryParams).forEach((key) => {
     const order = queryParams[key];
     if (key.startsWith(sortIndicator)) {
@@ -33,6 +33,4 @@ const mapQueryToSorting = (queryParams, queryToMongoMapping) => {
   return newParams;
 };
 
-module.exports = {
-  mapQueryToSorting,
-};
+export default mapQueryToSorting;

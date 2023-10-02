@@ -1,5 +1,5 @@
-const request = require('supertest');
-const app = require('../server');
+import request from 'supertest';
+import app from '../server';
 
 describe('Unit test example for GET /report', () => {
   it('should return status 200', async () => {

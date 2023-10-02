@@ -1,18 +1,22 @@
-const TestDataAggregation = require('./dataAggregation');
-const dataModels = require('./dataModels');
+import TestDataAggregation from './dataAggregation';
+import { TestCaseStep, TestCase, TestExecution } from './dataModels';
 
-module.exports = class TestCaseBuilder {
-  constructor(testCaseInfo, DataAggregator = TestDataAggregation) {
+export default class TestCaseBuilder {
+
+  public testCaseInfo: any;
+  public aggregatedData: any;
+
+  constructor(testCaseInfo: any, DataAggregator: any = TestDataAggregation) {
     this.testCaseInfo = testCaseInfo;
     this.aggregatedData = new DataAggregator(testCaseInfo).aggregate().data;
   }
 
-  buildExecutionResult() {
+  buildExecutionResult(): TestExecution {
     if (!this.aggregatedData) {
       throw new Error('Data in TestCaseBuilder has to be aggregated using aggregateTestCaseInfo() before building executionResult');
     }
 
-    return new dataModels.TestExecution(
+    return new TestExecution(
       this.aggregatedData.meta,
       this.aggregatedData.start,
       this.aggregatedData.finish,
@@ -20,10 +24,10 @@ module.exports = class TestCaseBuilder {
     );
   }
 
-  buildTestCases() {
-    const testCases = [];
+  buildTestCases(): TestCase[] {
+    const testCases: TestCase[] = [];
     const testCasesMap = new Map(Object.entries(this.aggregatedData.testCases));
-    testCasesMap.forEach((testCase) => {
+    testCasesMap.forEach((testCase: any) => {
       const { pickleId, id } = testCase;
       const pickle = this.aggregatedData.pickles[pickleId];
       const source = this.aggregatedData.sources[pickle.uri];
@@ -31,9 +35,9 @@ module.exports = class TestCaseBuilder {
       const start = this.aggregatedData.testCasesStarted[id];
       const finish = this.aggregatedData.testCasesFinished[start.id];
       const steps = this.buildTestCaseSteps(pickle);
-      const passed = steps.filter((x) => x.result.status === 'FAILED').length === 0;
+      const passed = steps.filter((x) => x.result?.status === 'FAILED').length === 0;
       const { name } = pickle;
-      testCases.push(new dataModels.TestCase(
+      testCases.push(new TestCase(
         source,
         gherkinDocument,
         steps,
@@ -47,8 +51,8 @@ module.exports = class TestCaseBuilder {
     return testCases;
   }
 
-  buildTestCaseSteps(pickle) {
-    const steps = [];
+  buildTestCaseSteps(pickle: any): TestCaseStep[] {
+    const steps: TestCaseStep[] = [];
     const testCaseStep = this.aggregatedData.testCases[pickle.id];
 
     pickle.steps.forEach((step) => {
@@ -59,9 +63,8 @@ module.exports = class TestCaseBuilder {
       const finish = this.aggregatedData.testCasesStepsFinished[testStepId];
       // Finish entry in message sometimes is not parsed correctly
       const result = finish ? finish.testStepResult : {};
-      const { text } = step;
-      const { type } = step;
-      steps.push(new dataModels.TestCaseStep(
+      const { text, type } = step;
+      steps.push(new TestCaseStep(
         start.timestamp,
         finish ? finish.timestamp : null,
         result,
@@ -72,4 +75,4 @@ module.exports = class TestCaseBuilder {
 
     return steps;
   }
-};
+}

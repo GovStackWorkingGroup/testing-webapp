@@ -1,4 +1,4 @@
-module.exports = class TestCaseInfoPropertyNames {
+export default class TestCaseInfoPropertyNames {
   static META = 'meta';
 
   static TEST_RUN_STARTED = 'testRunStarted';

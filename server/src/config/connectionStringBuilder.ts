@@ -1,11 +1,24 @@
-module.exports = class MongoConnection {
+export class MongoConnection {
+
+  conn: {
+    username: string | undefined;
+    passwd: string | undefined;
+    host: string | undefined;
+    port: string | undefined;
+    databaseName: string | undefined;
+    connectionOptions: string;
+  };
+  
+  uri: string;
+  databaseName: string | undefined;
+  reconnectInterval: number;
+
   constructor() {
     this.conn = this.getConnection();
     this.uri = this.buildUri();
     this.databaseName = this.conn.databaseName;
     this.reconnectInterval = 10000;
   }
-
   getConnection = () => {
     const envConnectionOptions = process.env.MONGO_CONNECTION_OPTIONS;
     const defaultConnectionOptions = 'maxPoolSize=20&w=majority';
@@ -27,6 +40,9 @@ module.exports = class MongoConnection {
   }
 
   buildUri = () => {
+    if(!this.conn.username || !this.conn.passwd || !this.conn.host || !this.conn.port) {
+      throw new Error("Required connection details are missing.");
+    }
     const uri = 'mongodb://'
             + `${this.conn.username}:${encodeURIComponent(this.conn.passwd)}@`
             + `${this.conn.host}:${this.conn.port}`

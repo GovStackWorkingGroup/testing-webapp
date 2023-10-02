@@ -1,7 +1,11 @@
 /* eslint-disable class-methods-use-this */
-const PropertyNames = require('./propertyNames');
+import PropertyNames from './propertyNames';
 
-module.exports = class TestDataAggregation {
+export default class TestDataAggregation {
+
+  testCaseInfo: any;
+  data: any;
+
   constructor(testCaseInfo) {
     this.testCaseInfo = testCaseInfo;
     this.data = {};
@@ -110,7 +114,7 @@ module.exports = class TestDataAggregation {
     //   'feature/testCase.feature': {uri: 'feature/testCase.feature'},
     //   'feature/otherCase.feature': {uri: 'feature/otherCase.feature'}}
     const listOfMatchingAttributes = this
-      .filterTestCaseInfoByElement(testCaseInfo, attributeName, true);
+      .filterTestCaseInfoByElement(testCaseInfo, attributeName);
 
     return this.mapAttributeListToMap(listOfMatchingAttributes, mappingKey);
   }

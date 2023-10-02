@@ -127,7 +127,7 @@ const branchReports = (branchName) => [
   },
 ];
 
-module.exports = {
+export {
   getLatestReportPipeline,
   sortLatestReports,
   branchReports,

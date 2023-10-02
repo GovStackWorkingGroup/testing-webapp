@@ -1,12 +1,12 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
-const streamline = require('streamifier');
-const { jsonToMessages } = require('@cucumber/json-to-messages');
-const readline = require('readline');
-const yaml = require('js-yaml');
-const { validate } = require('jsonschema');
-const MemoryStream = require('memorystream');
-const TestCaseBuilder = require('./reportBuilder/testCaseBuilder');
+import streamline from 'streamifier';
+import { jsonToMessages } from '@cucumber/json-to-messages';
+import readline, { Interface } from 'readline';
+import yaml from 'js-yaml';
+import { validate, ValidatorResult } from 'jsonschema';
+import MemoryStream from 'memorystream';
+import TestCaseBuilder from './reportBuilder/testCaseBuilder';
 
 const RequestSchema = {
   type: 'object',
@@ -45,14 +45,18 @@ const RequestSchema = {
   ],
 };
 
-module.exports = class ReportUploadRequestHandler {
-  constructor(saveRequest, response) {
+export default class ReportUploadRequestHandler {
+  public req: any;
+  public res: any;
+  public dbConnect: any;
+
+  constructor(saveRequest: any, response: any) {
     this.req = saveRequest;
     this.res = response;
     this.dbConnect = saveRequest.app.locals.reportCollection;
   }
 
-  async saveData(repository) {
+    async saveData(repository: any): Promise<boolean> {
     if (!this.isRequestValid()) {
       return false;
     }
@@ -62,16 +66,16 @@ module.exports = class ReportUploadRequestHandler {
     return true;
   }
 
-  isRequestValid() {
-    const validationResult = validate(this.req, RequestSchema);
+  isRequestValid(): boolean {
+    const validationResult: ValidatorResult = validate(this.req, RequestSchema);
     if (validationResult.errors.length > 0) {
-      this.sendValidationError(validationResult.errors);
-      return false;
+        this.sendValidationError(validationResult.errors);
+        return false;
     }
     return true;
-  }
+}
 
-  async readFirstLine(stream) {
+  async readFirstLine(stream: NodeJS.ReadableStream): Promise<string> {
     return new Promise((resolve, reject) => {
       const rl = readline.createInterface({
         input: stream,
@@ -90,13 +94,13 @@ module.exports = class ReportUploadRequestHandler {
     });
   }
 
-  isJSONFormat(line) {
+  isJSONFormat(line: string): boolean {
     return line[0] === '[';
   }
 
-  async loadData() {
-    const items = [];
-    const errors = [];
+  async loadData(): Promise<any[]> {
+    const items: any[] = [];
+    const errors: any[] = [];
 
     const rl = await this.loadReportFromJsonFormatBuffer() || await this.loadReportFromBuffer();
     // eslint-disable-next-line no-restricted-syntax
@@ -104,12 +108,11 @@ module.exports = class ReportUploadRequestHandler {
       try {
         const searchTerm = '{';
         const indexOfFirst = line.indexOf(searchTerm);
-        // Message format sometimes have artefacts at start of line
         const fixedLine = line.substring(indexOfFirst);
         items.push(JSON.parse(fixedLine));
-      } catch (e) {
+      } catch (e: any) {
         console.log(e.stack);
-        errors.push(e);
+        throw new Error(`Failed to parse a line due to: ${e.message}`);
       }
     }
 
@@ -120,7 +123,7 @@ module.exports = class ReportUploadRequestHandler {
     return items;
   }
 
-  async loadReportFromJsonFormatBuffer() {
+  async loadReportFromJsonFormatBuffer(): Promise<Interface | null> {
     try {
       const firstLine = await this.readFirstLine(
         streamline.createReadStream(this.req.files.report[0].buffer),
@@ -136,20 +139,20 @@ module.exports = class ReportUploadRequestHandler {
         });
         return rl;
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(e.stack);
     }
     return null;
   }
 
-  async loadReportFromBuffer() {
+  async loadReportFromBuffer(): Promise<Interface> {
     return readline.createInterface({
       input: streamline.createReadStream(this.req.files.report[0].buffer),
       crlfDelay: Infinity,
     });
   }
 
-  async loadProductInfo() {
+  async loadProductInfo(): Promise<any> {
     // Product info is passed through META file field inside of payload.
     // It's not used in aggregation, and is not mandatory.
     // At the moment it provides information about product name.
@@ -163,7 +166,7 @@ module.exports = class ReportUploadRequestHandler {
     return productMetaProperties;
   }
 
-  async jsonSave(repository, data, productMetaData) {
+  async jsonSave(repository: any, data: any, productMetaData: any): Promise<void> {
     const report = data;
     report.buildingBlock = this.req.body.buildingBlock;
     report.testSuite = this.req.body.testSuite;
@@ -175,10 +178,10 @@ module.exports = class ReportUploadRequestHandler {
     this.saveToDatabase(repository, report);
   }
 
-  saveToDatabase(repository, data) {
+  saveToDatabase(repository: any, data: any): void {
     const { res } = this;
 
-    repository.add(data, (err, result) => {
+    repository.add(data, (err: any, result: any) => {
       if (err) {
         if (err.name === 'ValidationError') {
           res.status(404).send(err);
@@ -193,7 +196,7 @@ module.exports = class ReportUploadRequestHandler {
     });
   }
 
-  sendValidationError(errors) {
+  sendValidationError(errors: any): void {
     this.res.status(400).send({
       success: false,
       details: `Invalid report format. Details on report parsing:\n${errors}\n`,

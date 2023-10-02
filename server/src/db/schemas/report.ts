@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const MetaSchema = {
   protocolVersion: String,
@@ -118,4 +118,4 @@ TestReportSchema.index({
 
 const ReportModel = mongoose.model('Report', TestReportSchema);
 
-module.exports = ReportModel;
+export default ReportModel;

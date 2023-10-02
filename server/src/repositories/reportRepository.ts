@@ -25,4 +25,4 @@ const reportRepository = (repository) => {
   };
 };
 
-module.exports = reportRepository;
+export default reportRepository;
