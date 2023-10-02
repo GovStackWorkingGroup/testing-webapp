@@ -25,7 +25,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
   },
   status: {
     type: Number,
-    enum: [StatusEnum.DRAFT, StatusEnum.IN_REVIEW, StatusEnum.APPROVED, StatusEnum.REJECTED],
+    enum: Object.values(StatusEnum),
     default: StatusEnum.DRAFT
   },
   submissionDate: {
