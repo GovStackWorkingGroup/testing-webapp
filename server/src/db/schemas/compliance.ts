@@ -1,6 +1,20 @@
 import mongoose from 'mongoose';
 
 // SCHEMA FORM CONTENT
+const StatusEnum = {
+  DRAFT: 0,
+  IN_REVIEW: 1,
+  APPROVED: 2,
+  REJECTED: 3
+};
+
+const SpecificationComplianceLevel = {
+  NA: -1,
+  LEVEL_1: 1,
+  LEVEL_2: 2
+};
+
+// SCHEMA FORM CONTENT
 const ComplianceDetailSchema = new mongoose.Schema({
   bbSpecification: {
     type: String,
@@ -11,9 +25,9 @@ const ComplianceDetailSchema = new mongoose.Schema({
     required: true
   },
   status: {
-    type: String,
-    enum: ['in review', 'approved', 'rejected'],
-    default: 'in review'
+    type: Number,
+    enum: Object.values(StatusEnum),
+    default: StatusEnum.DRAFT
   },
   submissionDate: {
     type: Date,
@@ -31,16 +45,16 @@ const ComplianceDetailSchema = new mongoose.Schema({
   requirementSpecificationCompliance: {
     level: {
       type: Number,
-      enum: [-1, 1, 2]
-    },
-    note: String
+      enum: Object.values(SpecificationComplianceLevel),
+      required: true
+    }
   },
   interfaceCompliance: {
     level: {
       type: Number,
-      enum: [-1, 1, 2]
-    },
-    note: String
+      enum: Object.values(SpecificationComplianceLevel),
+      required: true
+    }
   }
 });
 
@@ -68,12 +82,10 @@ const ComplianceReportSchema = new mongoose.Schema({
   website: {
     type: String,
     required: true,
-    match: /^http[s]?:\/\/.*/
   },
   documentation: [{
     type: String,
     required: true,
-    match: /^http[s]?:\/\/.*/
   }],
   pointOfContact: {
     type: String,
