@@ -1,29 +1,47 @@
 import Compliance from '../schemas/compliance';
 
-const aggregationPipeline = [
-  {
-    $unwind: "$compliance"
-  },
-  {
-    $unwind: "$compliance.bbDetails"
-  },
+const aggregationPipeline: any[] = [
+  { $unwind: "$compliance" },
+
+  // Convert the bbDetails Map to an array
+  { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
+
+  // Unwind the bbDetailsArray to access each bb's details
+  { $unwind: "$bbDetailsArray" },
+
+  // Project the desired fields
   {
     $project: {
       softwareName: 1,
-      bb: { $toString: "$compliance.bbDetails._id" },
       softwareVersion: "$compliance.version",
-      bbVersion: "$compliance.bbDetails.bbVersion",
-      status: "$compliance.bbDetails.status",
-      submissionDate: "$compliance.bbDetails.submissionDate",
-      deploymentCompliance: "$compliance.bbDetails.deploymentCompliance.isCompliant",
-      requirementSpecificationCompliance: "$compliance.bbDetails.requirementSpecificationCompliance.level",
-      interfaceCompliance: "$compliance.bbDetails.interfaceCompliance.level"
+      bb: "$bbDetailsArray.k",
+      bbVersion: "$bbDetailsArray.v.bbVersion",
+      status: "$bbDetailsArray.v.status",
+      submissionDate: "$bbDetailsArray.v.submissionDate",
+      deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance.isCompliant",
+      requirementSpecificationCompliance: "$bbDetailsArray.v.requirementSpecificationCompliance.level",
+      interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
     }
   },
   {
     $group: {
       _id: "$softwareName",
       data: { $push: "$$ROOT" }
+    }
+  },
+  {
+    $project: {
+      data: {
+        _id: 1,
+        softwareVersion: 1,
+        bb: 1,
+        bbVersion: 1,
+        status: 1,
+        submissionDate: 1,
+        deploymentCompliance: 1,
+        requirementSpecificationCompliance: 1,
+        interfaceCompliance: 1
+      }
     }
   }
 ];
@@ -39,8 +57,14 @@ const mongoComplianceRepository = {
 
   async aggregateComplianceReports() {
     try {
-      return await Compliance.aggregate(aggregationPipeline).exec();
+      const results = await Compliance.aggregate(aggregationPipeline).exec();
+      const reshapedResults = results.reduce((accumulatedResult, currentItem) => {
+        accumulatedResult[currentItem._id] = currentItem.data;
+        return accumulatedResult;
+      }, {});
+      return reshapedResults;
     } catch (error) {
+      console.error("Root cause of aggregation error:", error);
       throw new Error('Error aggregating compliance reports');
     }
   }
