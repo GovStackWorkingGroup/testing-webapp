@@ -1,11 +1,16 @@
 const complianceRepository = (repository) => {
-    const findAll = async () => {
-      return repository.find();
-    };
-  
-    return {
-      findAll,
-    };
+  const findAll = async () => {
+    return repository.find();
   };
-  
-  export default complianceRepository;
+
+  const aggregateComplianceReports = async () => {
+    return repository.aggregateComplianceReports();
+  };
+
+  return {
+    findAll,
+    aggregateComplianceReports
+  };
+};
+
+export default complianceRepository;
