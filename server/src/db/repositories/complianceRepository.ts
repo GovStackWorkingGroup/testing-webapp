@@ -2,14 +2,8 @@ import Compliance from '../schemas/compliance';
 
 const aggregationPipeline: any[] = [
   { $unwind: "$compliance" },
-
-  // Convert the bbDetails Map to an array
   { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
-
-  // Unwind the bbDetailsArray to access each bb's details
   { $unwind: "$bbDetailsArray" },
-
-  // Project the desired fields
   {
     $project: {
       softwareName: 1,
