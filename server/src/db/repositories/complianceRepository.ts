@@ -1,3 +1,4 @@
+import { ComplianceDbRepository } from 'myTypes'; 
 import Compliance from '../schemas/compliance';
 
 const aggregationPipeline: any[] = [
@@ -40,8 +41,8 @@ const aggregationPipeline: any[] = [
   }
 ];
 
-const mongoComplianceRepository = {
-  async find() {
+const mongoComplianceRepository: ComplianceDbRepository = {
+  async findAll() {
     try {
       return await Compliance.find();
     } catch (error) {

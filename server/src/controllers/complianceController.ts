@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handleGetAllComplianceReports';
 import { default500Error } from './controllerUtils';
+import { ComplianceDbRepository } from 'myTypes';
 
-const complianceController = (complianceDbRepository: any, complianceDbRepositoryImpl: any) => {
-  const repository = complianceDbRepository(complianceDbRepositoryImpl);
+const complianceController = (
+  complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
+  complianceDbRepositoryImpl: ComplianceDbRepository
+) => {
+  const repository = complianceDbRepositoryConstructor(complianceDbRepositoryImpl);
 
   const getAllComplianceReports = (req: Request, res: Response): void => {
-    new GetAllComplianceReportsRequestHandler(req, res)
-      .getAllComplianceReports(repository)
+    new GetAllComplianceReportsRequestHandler(req, res, repository)
+      .getAllComplianceReports()
       .catch((err: any) => default500Error(res, err));
   };
 
