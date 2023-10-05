@@ -23,4 +23,15 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
+const startApp = async (startUpConfig) => {
+  connection(startUpConfig.appConfig).connectToMongo();
+  app.listen(port, () => {
+    console.log(`Server is running on port: ${port}`);
+  });
+};
+
+if (process.env.NODE_ENV !== 'test') {
+  startApp(config); // If not in test mode, start app with default URI
+}
+
 module.exports = app;
