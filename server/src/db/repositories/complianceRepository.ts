@@ -41,6 +41,11 @@ const aggregationPipeline: any[] = [
   }
 ];
 
+const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
+  { $match: { "softwareName": softwareName } },
+  // Additional aggregation steps specific to reshaping software details go here
+];
+
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
     try {
@@ -62,7 +67,18 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       console.error("Root cause of aggregation error:", error);
       throw new Error('Error aggregating compliance reports');
     }
+  },
+
+  async getSoftwareComplianceDetail(softwareName: string) {
+    try {
+      const results = await Compliance.aggregate(softwareDetailAggregationPipeline(softwareName)).exec();
+      return softwareName;
+    } catch (error) {
+      console.error("Root cause of fetching software compliance details:", error);
+      throw new Error('Error fetching software compliance details');
+    }
   }
+
 };
 
 export default mongoComplianceRepository;

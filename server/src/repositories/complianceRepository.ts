@@ -14,9 +14,19 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const getSoftwareComplianceDetail = async (softwareName: string) => {
+    try {
+      return await repository.getSoftwareComplianceDetail(softwareName);
+    } catch (error) {
+      console.error('There was an error while aggregating the compliance reports:', error);
+      throw error;
+    }
+  };
+
   return {
     findAll,
-    aggregateComplianceReports
+    aggregateComplianceReports,
+    getSoftwareComplianceDetail
   };
 };
 

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import complianceRepository from '../../repositories/complianceRepository';
 import { ComplianceDbRepository } from "myTypes";
 
 export default class GetAllComplianceReportsRequestHandler {

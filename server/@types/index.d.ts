@@ -47,9 +47,11 @@ declare module 'myTypes' {
   
     type FindResult = ComplianceReport[];
     type AggregateResult = Record<string, any>;
+    type SofwareDetailsResults = any; // this must be changed!
   
     export interface ComplianceDbRepository {
       findAll: () => Promise<FindResult>;
       aggregateComplianceReports: () => Promise<AggregateResult>;
+      getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     }
   }
