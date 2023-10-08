@@ -1,16 +1,16 @@
 export class MongoConnection {
 
   conn: {
-    username: string | undefined;
-    passwd: string | undefined;
-    host: string | undefined;
-    port: string | undefined;
-    databaseName: string | undefined;
+    username: string;
+    passwd: string;
+    host: string;
+    port: string;
+    databaseName: string;
     connectionOptions: string;
   };
   
   uri: string;
-  databaseName: string | undefined;
+  databaseName: string;
   reconnectInterval: number;
 
   constructor() {
@@ -19,15 +19,23 @@ export class MongoConnection {
     this.databaseName = this.conn.databaseName;
     this.reconnectInterval = 10000;
   }
-  getConnection = () => {
+
+  getConnection(): {
+    username: string;
+    passwd: string;
+    host: string;
+    port: string;
+    databaseName: string;
+    connectionOptions: string;
+  } {
     const envConnectionOptions = process.env.MONGO_CONNECTION_OPTIONS;
     const defaultConnectionOptions = 'maxPoolSize=20&w=majority';
     const conn = {
-      username: process.env.MONGO_USERNAME,
-      passwd: process.env.MONGO_PASSOWORD,
-      host: process.env.MONGO_HOST,
-      port: process.env.MONGO_PORT,
-      databaseName: process.env.MONGO_DATABASE,
+      username: process.env.MONGO_USERNAME || '',
+      passwd: process.env.MONGO_PASSOWORD || '',
+      host: process.env.MONGO_HOST || '',
+      port: process.env.MONGO_PORT || '',
+      databaseName: process.env.MONGO_DATABASE || '',
       connectionOptions: envConnectionOptions || defaultConnectionOptions,
     };
 
@@ -39,10 +47,7 @@ export class MongoConnection {
     return conn;
   }
 
-  buildUri = () => {
-    if(!this.conn.username || !this.conn.passwd || !this.conn.host || !this.conn.port) {
-      throw new Error("Required connection details are missing.");
-    }
+  buildUri(): string {
     const uri = 'mongodb://'
             + `${this.conn.username}:${encodeURIComponent(this.conn.passwd)}@`
             + `${this.conn.host}:${this.conn.port}`
@@ -50,4 +55,4 @@ export class MongoConnection {
 
     return uri;
   }
-};
+}
