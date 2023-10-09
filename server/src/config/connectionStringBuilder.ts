@@ -1,14 +1,16 @@
+type Connection = {
+  username: string;
+  passwd: string;
+  host: string;
+  port: string;
+  databaseName: string;
+  connectionOptions: string;
+  [key: string]: string;
+}
+
 export class MongoConnection {
 
-  conn: {
-    username: string;
-    passwd: string;
-    host: string;
-    port: string;
-    databaseName: string;
-    connectionOptions: string;
-  };
-  
+  conn: Connection;
   uri: string;
   databaseName: string;
   reconnectInterval: number;
@@ -30,7 +32,7 @@ export class MongoConnection {
   } {
     const envConnectionOptions = process.env.MONGO_CONNECTION_OPTIONS;
     const defaultConnectionOptions = 'maxPoolSize=20&w=majority';
-    const conn = {
+    const conn: Connection = {
       username: process.env.MONGO_USERNAME || '',
       passwd: process.env.MONGO_PASSOWORD || '',
       host: process.env.MONGO_HOST || '',
