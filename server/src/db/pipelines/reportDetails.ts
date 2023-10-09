@@ -4,7 +4,7 @@ const {
   ObjectId,
 } = mongoose.Types;
 
-const getReportDetailsPipeline = (id) => [{
+const getReportDetailsPipeline = (id: string): any[] => [{
   $match: {
     _id: new ObjectId(id),
   },
@@ -303,7 +303,7 @@ const getReportDetailsPipeline = (id) => [{
 },
 ];
 
-const sortReportDetails = (sorting) => [
+const sortReportDetails = (sorting: Record<string, number>) => [
   {
     $project: {
       _id: 1,
