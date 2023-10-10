@@ -9,10 +9,8 @@ jobs:
       name: node/default
       tag: '16.10'
     steps:
-      - run:
-          name: Set working directory to src
-          command: cd src
-      - checkout
+      - checkout:
+          path: ~/src
       - node/install-packages:
           pkg-manager: yarn
       - run:
