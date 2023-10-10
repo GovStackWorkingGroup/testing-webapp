@@ -2,9 +2,9 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.3
-working_directory: ~/src
 jobs:
   build_and_test:
+    working_directory: ~/src
     executor:
       name: node/default
       tag: '16.10'
