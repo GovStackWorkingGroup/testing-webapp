@@ -10,7 +10,7 @@ jobs:
     pre-steps:
       - run:
           name: Add path to folder
-          command: echo /src
+          command: cd src
     steps:
       - checkout
       - node/install-packages:
