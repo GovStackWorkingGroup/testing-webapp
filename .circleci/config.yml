@@ -7,7 +7,7 @@ jobs:
     executor:
       name: node/default
       tag: '16.10'
-    working_directory: ~/project/src/src
+    working_directory: ~/src
     steps:
       - checkout
       - node/install-packages:
@@ -16,11 +16,11 @@ jobs:
       - run:
           command: yarn lint
           name: Lint the codebase
-          working_directory: ~/project/src/src
+          working_directory: ~/src
       - run:
           command: yarn test
           name: Run YARN tests
-          working_directory: ~/project/src/src
+          working_directory: ~/src
 
   deploy:
     docker:
