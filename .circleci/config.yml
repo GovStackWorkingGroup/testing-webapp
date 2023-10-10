@@ -11,7 +11,7 @@ jobs:
     steps:
       - checkout
       - run: cd src
-      - node/install-packages:
+      - src/node/install-packages:
           pkg-manager: yarn
       - run:
           command: yarn lint
