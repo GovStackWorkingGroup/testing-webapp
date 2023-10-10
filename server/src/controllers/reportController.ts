@@ -6,6 +6,7 @@ import { default500Error } from './controllerUtils';
 import ReportGetBuildingBlocksRequestHandler from '../useCases/report/buildingBlocks/handleGetBuildingBlocksRequest';
 import { Request, Response } from 'express';
 import 'multer';
+import { ReportRepository } from '../../@types/report/reportInterfaces';
 
 export interface ReportController {
   saveReport(req: Request, res: Response): void;
@@ -15,7 +16,10 @@ export interface ReportController {
   getBuildingBlocks(req: Request, res: Response): void;
 }
 
-const reportController = (reportDbRepository: any, reportDbRepositoryImpl: any): ReportController => {
+const reportController = (
+  reportDbRepository: (impl: ReportRepository) => ReportRepository,
+  reportDbRepositoryImpl: ReportRepository
+): ReportController => {
   const repository = reportDbRepository(reportDbRepositoryImpl);
 
   const saveReport = (req: Request, res: Response): void => {

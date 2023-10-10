@@ -1,16 +1,9 @@
-import { Callback } from "mongoose";
 import { Filters } from "../../@types/shared/commonTypes";
-
-interface ReportRepository {
-  add(report: Document, callback: Callback): void;
-  aggregateCompatibilityByProduct(filters: Filters, sorting: Record<string, number>, callback: Callback): void;
-  productsCount(filters: Filters, callback: Callback): void;
-  aggregateBBDetailsByProductId(id: String, sorting: Record<string, number>, callback: Callback): void;
-  aggregateByBuildingBlock(callback: Callback): void;
-}
+import { ReportRepository, TestReport } from "../../@types/report/reportInterfaces";
+import { Document, Callback } from "mongoose";
 
 const reportRepository = (repository: ReportRepository): ReportRepository => {
-  const add = (report: Document, callback: Callback) =>repository.add(report, callback);
+  const add = (report: TestReport, callback: Callback): void =>repository.add(report, callback);
   function aggregateCompatibilityByProduct(filters: Filters, sorting: Record<string, number>, callback: Callback) {
     return repository.aggregateCompatibilityByProduct(filters, sorting, callback);
   }
@@ -19,8 +12,8 @@ const reportRepository = (repository: ReportRepository): ReportRepository => {
     return repository.productsCount(filters, callback);
   }
 
-  function aggregateBBDetailsByProductId(id: String, sorting: Record<string, number>, callback: Callback) {
-    return repository.aggregateBBDetailsByProductId(id, sorting, callback);
+  function aggregateBBDetailsByProductId(params: { id: string; }, sorting: Record<string, number>, callback: Callback) {
+    return repository.aggregateBBDetailsByProductId(params, sorting, callback);
   }
 
   function aggregateByBuildingBlock(callback: Callback) {

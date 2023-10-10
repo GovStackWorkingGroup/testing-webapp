@@ -3,6 +3,7 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
 import mapQueryToSorting from '../requestUtils';
+import { Model } from 'mongoose';
 
 interface Repository {
   aggregateBBDetailsByProductId(params: {
@@ -14,7 +15,7 @@ export default class ReportGetProductDetailsRequestHandler {
 
   public req: Request;
   public res: Response;
-  public dbConnect: any;
+  public dbConnect: Model<Document>;
 
   constructor(request: Request, response: Response) {
     this.req = request;

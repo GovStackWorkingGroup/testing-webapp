@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import { Config } from '../../@types/shared/commonInterfaces';
 
 /* eslint-disable no-console */
-export const createConnection = (config) => {
+export const createConnection = (config: Config) => {
   function connectToMongo() {
     mongoose
       .connect(config.mongoConnection.uri)

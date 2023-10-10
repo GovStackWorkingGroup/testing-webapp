@@ -21,7 +21,11 @@ const repository = () => {
     return newReport.save(callback);
   };
 
-  const aggregateCompatibilityByProduct = (filters: Filters, sorting: Record<string, number>, callback: Callback) => {
+  const aggregateCompatibilityByProduct = (
+    filters: Filters,
+    sorting: Record<string, number>,
+    callback: Callback
+  ) => {
     let aggregation: any[] = [];
     if (filters.branch !== undefined) {
       aggregation = aggregation.concat(branchReports(filters.branch));

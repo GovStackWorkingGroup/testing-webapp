@@ -1,3 +1,7 @@
-export * from './reportTypes';
-export * from './reportEnums';
-export * from './reportInterfaces';
+import {ProductMetaData, MetaSchema} from './reportInterfaces';
+
+type MetaYamlOutput = ProductMetaData & MetaSchema;
+
+type SortOrder = 'asc' | 'desc';
+type QueryParams = Record<string, SortOrder>;
+type MongoMapping = Record<string, string>;
