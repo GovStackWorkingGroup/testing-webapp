@@ -10,7 +10,7 @@ jobs:
       tag: '16.10'
     steps:
       - checkout:
-          path: ~/src
+          path: src
       - node/install-packages:
           pkg-manager: yarn
       - run:
