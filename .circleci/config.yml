@@ -7,7 +7,7 @@ jobs:
     executor:
       name: node/default
       tag: '16.10'
-    working_directory: ~/src
+    working_directory: ~/src/src
     steps:
       - checkout
       - node/install-packages:
