@@ -4,14 +4,16 @@ orbs:
   node: circleci/node@5.0.3
 jobs:
   build_and_test:
-    working_directory: ~/src
     executor:
       name: node/default
       tag: '16.10'
+    pre-steps:
+      - run:
+          name: Add path to folder
+          command: echo /src
     steps:
       - checkout
-      - run: cd src
-      - src/node/install-packages:
+      - node/install-packages:
           pkg-manager: yarn
       - run:
           command: yarn lint
