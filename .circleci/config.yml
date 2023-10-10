@@ -10,11 +10,11 @@ jobs:
       tag: '16.10'
     steps:
       - checkout
-      - node/install-packages:
-          pkg-manager: yarn
       - run:
           name: Set working directory to src
           command: cd src
+      - node/install-packages:
+          pkg-manager: yarn
       - run:
           command: yarn lint
           name: Lint the codebase
