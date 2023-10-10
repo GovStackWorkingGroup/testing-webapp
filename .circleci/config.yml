@@ -7,6 +7,7 @@ jobs:
     executor:
       name: node/default
       tag: '16.10'
+    working_directory: ~/project/src
     steps:
       - checkout
       - node/install-packages:
@@ -27,8 +28,8 @@ jobs:
           # These keys come from the CircleCI App. Projects Settings -> SSH - Keys -> Additional SSH Keys.
           # The fingerprint will show up after adding a key.
           fingerprints:
-            - "d1:b2:46:4e:a2:e8:3b:10:0b:49:78:06:fa:92:25:52"
-            - "0a:51:56:fd:81:33:42:19:7d:59:13:af:43:1f:cf:1e"
+            - 'd1:b2:46:4e:a2:e8:3b:10:0b:49:78:06:fa:92:25:52'
+            - '0a:51:56:fd:81:33:42:19:7d:59:13:af:43:1f:cf:1e'
       - run:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
@@ -40,9 +41,9 @@ jobs:
       - run:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              cd src && bash deployment/deploy.sh prod
+              bash deployment/deploy.sh prod
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              cd src && bash deployment/deploy.sh staging
+              bash deployment/deploy.sh staging
             fi
           name: Deploy based on branch
 
