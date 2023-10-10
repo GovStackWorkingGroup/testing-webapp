@@ -9,8 +9,8 @@ jobs:
       name: node/default
       tag: '16.10'
     steps:
-      - checkout:
-          path: ~/src
+      - checkout
+      - run: cd src
       - node/install-packages:
           pkg-manager: yarn
       - run:
