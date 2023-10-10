@@ -41,9 +41,9 @@ jobs:
       - run:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              bash deployment/deploy.sh prod
+              cd src && bash deployment/deploy.sh prod
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              bash deployment/deploy.sh staging
+              cd src && bash deployment/deploy.sh staging
             fi
           name: Deploy based on branch
 
