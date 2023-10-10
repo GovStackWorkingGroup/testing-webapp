@@ -2,15 +2,14 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.3
-
+working_directory: ~/src
 jobs:
   build_and_test:
     executor:
       name: node/default
       tag: '16.10'
     steps:
-      - checkout:
-          path: src
+      - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
