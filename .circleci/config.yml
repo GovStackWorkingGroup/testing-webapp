@@ -13,10 +13,13 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: cd src && yarn lint
+          name: Set working directory to src
+          command: cd src
+      - run:
+          command: yarn lint
           name: Lint the codebase
       - run:
-          command: cd src && yarn test
+          command: yarn test
           name: Run YARN tests
 
   deploy:
@@ -41,9 +44,9 @@ jobs:
       - run:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
-              cd src && bash deployment/deploy.sh prod
+              bash deployment/deploy.sh prod
             elif [ "${CIRCLE_BRANCH}" == "develop" ]; then
-              cd src && bash deployment/deploy.sh staging
+              bash deployment/deploy.sh staging
             fi
           name: Deploy based on branch
 
