@@ -1,4 +1,3 @@
-import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { IntlProvider } from 'react-intl';
@@ -16,6 +15,7 @@ import '../components/table/SubTable.less';
 import '../components/table/TestResultTable.less';
 import '../styles/Globals.less';
 import * as translations from '../translations';
+import type { AppProps } from 'next/app';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();

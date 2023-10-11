@@ -10,8 +10,8 @@ import TestResultTable from '../../../components/table/TestResultTable';
 import { ResultTableSortByType } from '../../../components/table/types';
 import { getBuildingBlockTestResults } from '../../../service/serviceAPI';
 import {
-    BuildingBlockEndpointTest,
-    BuildingBlockTestSummary,
+  BuildingBlockEndpointTest,
+  BuildingBlockTestSummary,
 } from '../../../service/types';
 
 const TestResultPage = () => {
