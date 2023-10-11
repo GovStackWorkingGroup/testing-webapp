@@ -1,8 +1,8 @@
 import TestStepsView from '../../components/TestStepsView';
 import { render } from '../test-utils/test-utils';
 import {
-    testFailedDetails,
-    testPassedDetails,
+  testFailedDetails,
+  testPassedDetails,
 } from './table/mockedData/ProductTable';
 
 describe('Unit tests for TestStepsView component:', () => {

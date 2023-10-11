@@ -1,9 +1,9 @@
 import {
-    BuildingBlockEndpointTest,
-    BuildingBlockTestSummary,
-    BuildingBlockType,
-    ProductsType,
-    TestsDetailsType,
+  BuildingBlockEndpointTest,
+  BuildingBlockTestSummary,
+  BuildingBlockType,
+  ProductsType,
+  TestsDetailsType,
 } from '../../../../service/types';
 
 export const mockedProduct: ProductsType = {
