@@ -7,15 +7,16 @@ jobs:
     executor:
       name: node/default
       tag: '16.10'
-    working_directory: src
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
       - run:
+          working_directory: src
           command: yarn lint
           name: Lint the codebase
       - run:
+          working_directory: src
           command: yarn test
           name: Run YARN tests
 
