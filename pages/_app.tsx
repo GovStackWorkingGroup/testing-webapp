@@ -1,21 +1,21 @@
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { IntlProvider } from 'react-intl';
 import 'react-tooltip/dist/react-tooltip.css';
-import '../styles/Globals.less';
-import '../components/mainLayout/MainLayout.less';
-import '../components/header/Header.less';
-import '../components/table/ProductTable.less';
-import '../components/table/TestResultTable.less';
-import '../components/table/SubTable.less';
 import '../components/Definition.less';
 import '../components/LoadingBar.less';
 import '../components/TestStepsView.less';
 import '../components/TestSummary.less';
-import '../components/shared/SearchInput.less';
-import { IntlProvider } from 'react-intl';
-import { useRouter } from 'next/router';
-import React from 'react';
-import Head from 'next/head';
-import * as translations from '../translations';
+import '../components/header/Header.less';
+import '../components/header/HeaderMenuButton.less';
 import MainLayout from '../components/mainLayout/MainLayout';
+import '../components/mainLayout/MainLayout.less';
+import '../components/shared/SearchInput.less';
+import '../components/table/ProductTable.less';
+import '../components/table/SubTable.less';
+import '../components/table/TestResultTable.less';
+import '../styles/Globals.less';
+import * as translations from '../translations';
 import type { AppProps } from 'next/app';
 
 const App = ({ Component, pageProps }: AppProps) => {
