@@ -10,7 +10,7 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          working_directory: src
+          app-dir: src
           pkg-manager: yarn
       - run:
           working_directory: src
