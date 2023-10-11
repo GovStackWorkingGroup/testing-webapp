@@ -12,15 +12,12 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: yarn
-          app-dir: src
       - run:
           command: yarn lint
           name: Lint the codebase
-          working_directory: src
       - run:
           command: yarn test
           name: Run YARN tests
-          working_directory: src
 
   deploy:
     docker:
