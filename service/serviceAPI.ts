@@ -5,7 +5,7 @@ import {
 import { BuildingBlockTestSummary, ProductsListType } from './types';
 
 const baseUrl = process.env.API_URL || 'http://localhost:5000';
-
+console.log('process.env.API_UR', process.env.API_URL);
 type Success<T> = { status: true; data: T };
 type Failure = { status: false; error: Error };
 
@@ -60,7 +60,9 @@ export const getSoftwaresData = async (
   }
 };
 
-export const getSoftwareListCount = async (branch?: string): Promise<Success<number> | Failure> => {
+export const getSoftwareListCount = async (
+  branch?: string
+): Promise<Success<number> | Failure> => {
   try {
     const url = new URL(`${baseUrl}/report/count`);
 
