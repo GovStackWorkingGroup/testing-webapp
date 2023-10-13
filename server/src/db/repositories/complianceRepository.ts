@@ -42,8 +42,76 @@ const aggregationPipeline: any[] = [
 ];
 
 const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
-  { $match: { "softwareName": softwareName } },
-  // Additional aggregation steps specific to reshaping software details go here
+  {
+    $match: { "softwareName": softwareName }
+  },
+  {
+    $unwind: "$compliance"
+  },
+  {
+    $project: {
+      softwareName: 1,
+      logo: 1,
+      website: 1,
+      documentation: 1,
+      pointOfContact: 1,
+      compliance: {
+        formId: "$_id",
+        version: "$compliance.version",
+        bbDetails: {
+          $arrayToObject: {
+            $map: {
+              input: { $objectToArray: "$compliance.bbDetails" },
+              as: "bbDetail",
+              in: [
+                "$$bbDetail.k",
+                {
+                  bbSpecification: "$$bbDetail.v.bbSpecification",
+                  bbVersion: "$$bbDetail.v.bbVersion",
+                  status: "$$bbDetail.v.status",
+                  submissionDate: "$$bbDetail.v.submissionDate",
+                  deploymentCompliance: {
+                    interface: "$$bbDetail.v.deploymentCompliance.details",
+                    requirementSpecification: "$$bbDetail.v.deploymentCompliance.details"
+                  },
+                  requirementSpecificationCompliance: {
+                    interface: "$$bbDetail.v.requirementSpecificationCompliance.details",
+                    requirementSpecification: "$$bbDetail.v.requirementSpecificationCompliance.level"
+                  },
+                  interfaceCompliance: {
+                    interface: "$$bbDetail.v.interfaceCompliance.details",
+                    requirementSpecification: "$$bbDetail.v.interfaceCompliance.level"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    $group: {
+      _id: null,
+      softwareName: { $first: "$softwareName" },
+      logo: { $first: "$logo" },
+      website: { $first: "$website" },
+      documentation: { $first: "$documentation" },
+      pointOfContact: { $first: "$pointOfContact" },
+      compliance: { $push: "$compliance" }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      softwareName: 1,
+      logo: 1,
+      website: 1,
+      documentation: 1,
+      pointOfContact: 1,
+      compliance: 1
+    }
+  }
 ];
 
 const mongoComplianceRepository: ComplianceDbRepository = {
@@ -72,7 +140,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   async getSoftwareComplianceDetail(softwareName: string) {
     try {
       const results = await Compliance.aggregate(softwareDetailAggregationPipeline(softwareName)).exec();
-      return softwareName;
+      return results;
     } catch (error) {
       console.error("Root cause of fetching software compliance details:", error);
       throw new Error('Error fetching software compliance details');

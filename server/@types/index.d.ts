@@ -45,9 +45,40 @@ declare module 'myTypes' {
       compliance: ComplianceVersion[];
     }
   
+    export interface ComplianceDetailTransformed {
+      interface: {
+          level: SpecificationComplianceLevel;
+          note?: string;
+      };
+      requirementSpecification: {
+          level: SpecificationComplianceLevel;
+          note?: string;
+      };
+  }
+
+  export interface BbDetailTransformed {
+      [bbVersion: string]: ComplianceDetailTransformed;
+  }
+
+  export interface ComplianceVersionTransformed {
+      version: string;
+      bbDetails: {
+          [bbName: string]: BbDetailTransformed;
+      };
+  }
+
+  export interface SoftwareDetailsResult {
+      softwareName: string;
+      logo: string;
+      website: string;
+      documentation: string[];
+      pointOfContact: string;
+      compliance: ComplianceVersionTransformed[];
+  }
+
     type FindResult = ComplianceReport[];
     type AggregateResult = Record<string, any>;
-    type SofwareDetailsResults = any; // this must be changed!
+    type SofwareDetailsResults = SoftwareDetailsResult[];
   
     export interface ComplianceDbRepository {
       findAll: () => Promise<FindResult>;

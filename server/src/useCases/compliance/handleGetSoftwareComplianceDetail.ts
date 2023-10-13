@@ -19,6 +19,10 @@ export default class GetSoftwareComplianceDetailRequestHandler {
     async getSoftwareComplianceDetail(): Promise<void> {
         try {
             const softwareComplianceDetail = await this.repository.getSoftwareComplianceDetail(this.softwareName);
+            if (softwareComplianceDetail.length === 0) {
+                this.res.status(404).send(`Software with name '${this.softwareName}' not found.`);
+                return;
+            }
             this.res.json(softwareComplianceDetail);
         } catch (error) {
             console.error("Error fetching compliance reports:", error);
