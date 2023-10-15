@@ -55,36 +55,20 @@ const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
       website: 1,
       documentation: 1,
       pointOfContact: 1,
-      compliance: {
-        formId: "$_id",
-        version: "$compliance.version",
-        bbDetails: {
-          $arrayToObject: {
-            $map: {
-              input: { $objectToArray: "$compliance.bbDetails" },
-              as: "bbDetail",
-              in: [
-                "$$bbDetail.k",
-                {
-                  bbSpecification: "$$bbDetail.v.bbSpecification",
-                  bbVersion: "$$bbDetail.v.bbVersion",
-                  status: "$$bbDetail.v.status",
-                  submissionDate: "$$bbDetail.v.submissionDate",
-                  deploymentCompliance: {
-                    interface: "$$bbDetail.v.deploymentCompliance.details",
-                    requirementSpecification: "$$bbDetail.v.deploymentCompliance.details"
-                  },
-                  requirementSpecificationCompliance: {
-                    interface: "$$bbDetail.v.requirementSpecificationCompliance.details",
-                    requirementSpecification: "$$bbDetail.v.requirementSpecificationCompliance.level"
-                  },
-                  interfaceCompliance: {
-                    interface: "$$bbDetail.v.interfaceCompliance.details",
-                    requirementSpecification: "$$bbDetail.v.interfaceCompliance.level"
-                  }
-                }
-              ]
-            }
+      version: "$compliance.version",
+      bbDetails: {
+        $arrayToObject: {
+          $map: {
+            input: { $objectToArray: "$compliance.bbDetails" },
+            as: "bbDetail",
+            in: [
+              "$$bbDetail.k",
+              {
+                bbVersion: "$$bbDetail.v.bbVersion",
+                requirementSpecificationCompliance: "$$bbDetail.v.requirementSpecificationCompliance",
+                interfaceCompliance: "$$bbDetail.v.interfaceCompliance"
+              }
+            ]
           }
         }
       }
@@ -92,19 +76,24 @@ const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
   },
   {
     $group: {
-      _id: null,
-      softwareName: { $first: "$softwareName" },
+      _id: "$softwareName",
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      compliance: { $push: "$compliance" }
+      compliance: {
+        $push: {
+          formId: "$_id",
+          version: "$version",
+          bbDetails: "$bbDetails"
+        }
+      }
     }
   },
   {
     $project: {
       _id: 0,
-      softwareName: 1,
+      softwareName: "$_id",
       logo: 1,
       website: 1,
       documentation: 1,
