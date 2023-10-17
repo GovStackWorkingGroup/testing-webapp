@@ -14,6 +14,28 @@ const SpecificationComplianceLevel = {
   LEVEL_2: 2
 };
 
+const RequirementFulfillment = {
+  MET: 1,
+  NOT_MET: 0
+};
+
+// Requirements Schema
+const RequirementSchema = new mongoose.Schema({
+  requirement: {
+    type: String,
+    required: true
+  },
+  comment: {
+    type: String,
+    default: ''
+  },
+  fulfillment: {
+    type: Number,
+    enum: Object.values(RequirementFulfillment),
+    required: true
+  }
+});
+
 // SCHEMA FORM CONTENT
 const ComplianceDetailSchema = new mongoose.Schema({
   bbSpecification: {
@@ -40,6 +62,16 @@ const ComplianceDetailSchema = new mongoose.Schema({
     },
     details: {
       type: String
+    },
+    documentation: {
+      files: [{
+        type: String, // saved as string base64
+        required: true
+      }],
+      containerLink: {
+        type: String,
+        required: true
+      }
     }
   },
   requirementSpecificationCompliance: {
@@ -47,14 +79,21 @@ const ComplianceDetailSchema = new mongoose.Schema({
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
       required: true
-    }
+    },
+    crossCuttingRequirements: [RequirementSchema],
+    functionalRequirements: [RequirementSchema]
   },
   interfaceCompliance: {
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
       required: true
-    }
+    },
+    testHarnessResult: {
+      type: String,
+      default: ''
+    },
+    requirements: [RequirementSchema]
   }
 });
 
