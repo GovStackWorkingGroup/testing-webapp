@@ -1,9 +1,8 @@
-import { Filters } from "../../@types/shared/commonTypes";
-import { ReportRepository, TestReport } from "../../@types/report/reportInterfaces";
+/// <reference path="../../@types/shared/commonTypes.d.ts" />
 import { Document, Callback } from "mongoose";
 
-const reportRepository = (repository: ReportRepository): ReportRepository => {
-  const add = (report: TestReport, callback: Callback): void =>repository.add(report, callback);
+const reportRepository = (repository: ReportInterfaces.ReportRepository): ReportInterfaces.ReportRepository => {
+  const add = (report: ReportInterfaces.TestReport, callback: Callback): void =>repository.add(report, callback);
   function aggregateCompatibilityByProduct(filters: Filters, sorting: Record<string, number>, callback: Callback) {
     return repository.aggregateCompatibilityByProduct(filters, sorting, callback);
   }

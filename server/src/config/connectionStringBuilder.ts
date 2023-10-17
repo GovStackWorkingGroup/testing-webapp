@@ -1,13 +1,3 @@
-type Connection = {
-  username: string;
-  passwd: string;
-  host: string;
-  port: string;
-  databaseName: string;
-  connectionOptions: string;
-  [key: string]: string;
-}
-
 export class MongoConnection {
 
   conn: Connection;

@@ -1,8 +1,9 @@
+/// <reference path="../../@types/shared/commonInterfaces.d.ts" />
+
 import mongoose from 'mongoose';
-import { Config } from '../../@types/shared/commonInterfaces';
 
 /* eslint-disable no-console */
-export const createConnection = (config: Config) => {
+export const createConnection = (config: CommonTypes.Config) => {
   function connectToMongo() {
     mongoose
       .connect(config.mongoConnection.uri)

@@ -5,12 +5,6 @@ import { Request, Response } from 'express';
 import mapQueryToSorting from '../requestUtils';
 import { Model } from 'mongoose';
 
-interface Repository {
-  aggregateBBDetailsByProductId(params: {
-    id: string;
-  }, sorting: any, callback: (err: ErrorType, result: any) => void): void;
-}
-
 export default class ReportGetProductDetailsRequestHandler {
 
   public req: Request;
@@ -23,7 +17,7 @@ export default class ReportGetProductDetailsRequestHandler {
     this.dbConnect = request.app.locals.reportCollection;
   }
 
-  async getProductDetails(repository: Repository) {
+  async getProductDetails(repository: ReportInterfaces.ReportRepository) {
     const {
       limit: queryLimit,
       offset: queryOffset,

@@ -1,3 +1,4 @@
+/// <reference path="../../@types/report/reportInterfaces.d.ts" />
 import ReportUploadRequestHandler from '../useCases/report/reportSave/handleSaveRequest';
 import { ReportGetProductRequestHandler } from '../useCases/report/productCompatibility/handleGetProductRequest';
 import ProductCountRequestHandler from '../useCases/report/productCount/handleGetProductCountRequest';
@@ -6,20 +7,12 @@ import { default500Error } from './controllerUtils';
 import ReportGetBuildingBlocksRequestHandler from '../useCases/report/buildingBlocks/handleGetBuildingBlocksRequest';
 import { Request, Response } from 'express';
 import 'multer';
-import { ReportRepository } from '../../@types/report/reportInterfaces';
 
-export interface ReportController {
-  saveReport(req: Request, res: Response): void;
-  getProductCompatibility(req: Request, res: Response): void;
-  getProductsCount(req: Request, res: Response): void;
-  getProductDetails(req: Request, res: Response): void;
-  getBuildingBlocks(req: Request, res: Response): void;
-}
 
 const reportController = (
-  reportDbRepository: (impl: ReportRepository) => ReportRepository,
-  reportDbRepositoryImpl: ReportRepository
-): ReportController => {
+  reportDbRepository: (impl: ReportInterfaces.ReportRepository) => ReportInterfaces.ReportRepository,
+  reportDbRepositoryImpl: ReportInterfaces.ReportRepository
+): ReportInterfaces.ReportController => {
   const repository = reportDbRepository(reportDbRepositoryImpl);
 
   const saveReport = (req: Request, res: Response): void => {

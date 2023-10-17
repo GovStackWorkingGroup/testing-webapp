@@ -3,7 +3,6 @@ import { Document, Callback, PipelineStage } from 'mongoose';
 import ReportModel from '../schemas/report';
 import { getLatestReportPipeline, sortLatestReports, branchReports } from '../pipelines/latestReports';
 import { getReportDetailsPipeline, sortReportDetails } from '../pipelines/reportDetails';
-import { Filters } from '../../../@types/shared/commonTypes';
 
 function addSortingToPipeline(
   sorting: Record<string, number>,

@@ -1,26 +1,30 @@
-export interface Conn {
-    username: string;
-    passwd: string;
-    host: string;
-    port: string;
-    databaseName: string;
-    connectionOptions: string;
-}
+declare namespace CommonTypes {
+    type Request = import('express').Request;
 
-export interface MongoConnection {
-    conn: Conn;
-    uri: string;
-    databaseName: string;
-    reconnectInterval: number;
-}
+    interface Conn {
+        username: string;
+        passwd: string;
+        host: string;
+        port: string;
+        databaseName: string;
+        connectionOptions: string;
+    }
 
-export interface Config {
-    appName: string;
-    isProduction: boolean;
-    mongoConnection: MongoConnection;
-}
+    interface MongoConnection {
+        conn: Conn;
+        uri: string;
+        databaseName: string;
+        reconnectInterval: number;
+    }
 
-export interface MulterRequest extends Request {
-    files?: any;
-    body?: any;
+    interface Config {
+        appName: string;
+        isProduction: boolean;
+        mongoConnection: MongoConnection;
+    }
+
+    interface MulterRequest extends Request {
+        files?: any;
+        body: any;
+    }
 }

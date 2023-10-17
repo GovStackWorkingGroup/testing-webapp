@@ -1,5 +1,8 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
+/// <reference path="../../../../@types/report/reportInterfaces.d.ts" />
+/// <reference path="../../../../@types/report/reportTypes.d.ts" />
+
 import { jsonToMessages } from '@cucumber/json-to-messages';
 import { Response } from 'express';
 import { Model } from 'mongoose';
@@ -8,11 +11,8 @@ import readline, { Interface } from 'readline';
 import streamline from 'streamifier';
 import yaml from 'js-yaml';
 
-import { MulterRequest } from '../../../../@types/shared/commonInterfaces';
 import MemoryStream from 'memorystream';
 import TestCaseBuilder from './reportBuilder/testCaseBuilder';
-import { ReportItem, ReportRepository, TestReport} from '../../../../@types/report/reportInterfaces';
-import { MetaYamlOutput } from '../../../../@types/report/reportTypes';
 
 const RequestSchema = {
   type: 'object',
@@ -52,7 +52,7 @@ const RequestSchema = {
 };
 
 export default class ReportUploadRequestHandler {
-  public req: MulterRequest;
+  public req: CommonTypes.MulterRequest;
   public res: Response;
   public dbConnect: Model<Document>;
 
@@ -62,14 +62,14 @@ export default class ReportUploadRequestHandler {
     this.dbConnect = saveRequest.app.locals.reportCollection;
   }
 
-  async saveData(repository: ReportRepository): Promise<boolean> {
+  async saveData(repository: ReportInterfaces.ReportRepository): Promise<boolean> {
     if (!this.isRequestValid()) {
       return false;
     }
     const executionResult: any = new TestCaseBuilder(await this.loadData()).buildExecutionResult();
   
-    const dataToSave: TestReport = {
-      ...(executionResult as unknown as TestReport),
+    const dataToSave: ReportInterfaces.TestReport = {
+      ...(executionResult as unknown as ReportInterfaces.TestReport),
       buildingBlock: this.req.body.buildingBlock,
       testSuite: this.req.body.testSuite,
       testApp: this.req.body.testApp,
@@ -120,8 +120,8 @@ export default class ReportUploadRequestHandler {
     return line[0] === '[';
   }
 
-  async loadData(): Promise<ReportItem[]> {
-    const items: ReportItem[] = [];
+  async loadData(): Promise<ReportInterfaces.ReportItem[]> {
+    const items: ReportInterfaces.ReportItem[] = [];
     const errors: string[] = [];
 
     const rl = await this.loadReportFromJsonFormatBuffer() || await this.loadReportFromBuffer();
@@ -183,7 +183,7 @@ export default class ReportUploadRequestHandler {
     });
   }
 
-  async loadProductInfo(): Promise<MetaYamlOutput> {
+  async loadProductInfo(): Promise<ReportTypes.MetaYamlOutput> {
     // Product info is passed through META file field inside of payload.
     // It's not used in aggregation, and is not mandatory.
     // At the moment it provides information about product name.
@@ -193,11 +193,11 @@ export default class ReportUploadRequestHandler {
         name: `${this.req?.body?.testApp} (candidate META.yml missing)`,
       };
     }
-    const productMetaProperties = yaml.load(this.req.files.META[0].buffer) as MetaYamlOutput;
+    const productMetaProperties = yaml.load(this.req.files.META[0].buffer) as ReportTypes.MetaYamlOutput;
     return productMetaProperties;
   }
 
-  async jsonSave(repository: ReportRepository, data: TestReport, productMetaData: any): Promise<void> {
+  async jsonSave(repository: ReportInterfaces.ReportRepository, data: ReportInterfaces.TestReport, productMetaData: any): Promise<void> {
     const report = data;
     report.buildingBlock = this.req.body.buildingBlock;
     report.testSuite = this.req.body.testSuite;
@@ -209,7 +209,7 @@ export default class ReportUploadRequestHandler {
     this.saveToDatabase(repository, report);
   }
 
-  saveToDatabase(repository: ReportRepository, data: TestReport): void {
+  saveToDatabase(repository: ReportInterfaces.ReportRepository, data: ReportInterfaces.TestReport): void {
     const { res } = this;
 
     repository.add(data, (err: any, result: any) => {

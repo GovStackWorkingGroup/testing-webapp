@@ -1,1 +1,1 @@
-declare type ErrorType = (err: Error | null) => void;
+type ErrorType = Error | null;

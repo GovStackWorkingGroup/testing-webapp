@@ -1,9 +1,8 @@
 import express from 'express';
 import multer from 'multer';
 import PaginationMiddleware from '../middlewares/paginationMiddleware';
-import { ReportController } from '../controllers/reportController'
 
-const buildReportRoutes = (reportController: ReportController) => {
+const buildReportRoutes = (reportController: ReportInterfaces.ReportController) => {
   const reportRoutes = express.Router();
 
   const storage = multer.memoryStorage();
