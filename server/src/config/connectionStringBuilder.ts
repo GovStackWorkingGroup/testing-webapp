@@ -1,5 +1,4 @@
 export class MongoConnection {
-
   conn: Connection;
   uri: string;
   databaseName: string;
@@ -12,39 +11,30 @@ export class MongoConnection {
     this.reconnectInterval = 10000;
   }
 
-  getConnection(): {
-    username: string;
-    passwd: string;
-    host: string;
-    port: string;
-    databaseName: string;
-    connectionOptions: string;
-  } {
-    const envConnectionOptions = process.env.MONGO_CONNECTION_OPTIONS;
-    const defaultConnectionOptions = 'maxPoolSize=20&w=majority';
-    const conn: Connection = {
-      username: process.env.MONGO_USERNAME || '',
-      passwd: process.env.MONGO_PASSOWORD || '',
-      host: process.env.MONGO_HOST || '',
-      port: process.env.MONGO_PORT || '',
-      databaseName: process.env.MONGO_DATABASE || '',
-      connectionOptions: envConnectionOptions || defaultConnectionOptions,
+  getConnection(): Connection {
+    const conn: Partial<Connection> = {
+      username: process.env.MONGO_USERNAME,
+      passwd: process.env.MONGO_PASSOWORD,
+      host: process.env.MONGO_HOST,
+      port: process.env.MONGO_PORT,
+      databaseName: process.env.MONGO_DATABASE,
+      connectionOptions: process.env.MONGO_CONNECTION_OPTIONS || 'maxPoolSize=20&w=majority',
     };
 
-    const undefinedFields = Object.keys(conn).filter((item) => !conn[item]);
-    if (undefinedFields.length > 0) {
-      throw new Error(`Some of mandatory environmental variables are missing [${undefinedFields}]`);
-    }
+    Object.entries(conn).forEach(([key, value]) => {
+      if (!value) {
+        throw new Error(`parameter ${key} is undefined`);
+      }
+    });
 
-    return conn;
+    return conn as Connection;
   }
 
   buildUri(): string {
     const uri = 'mongodb://'
-            + `${this.conn.username}:${encodeURIComponent(this.conn.passwd)}@`
-            + `${this.conn.host}:${this.conn.port}`
-            + `/?${this.conn.connectionOptions}`;
-
+      + `${this.conn.username}:${encodeURIComponent(this.conn.passwd)}@`
+      + `${this.conn.host}:${this.conn.port}`
+      + `/?${this.conn.connectionOptions}`;
     return uri;
   }
 }

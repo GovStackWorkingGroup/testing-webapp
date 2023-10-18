@@ -34,7 +34,7 @@ const RequestSchema = {
         testSuite: { type: 'string' },
         testApp: { type: 'string' },
         sourceBranch: { type: 'string' },
-        version: {type: 'string'},
+        version: { type: 'string' },
       },
       required: [
         'buildingBlock',
@@ -66,8 +66,10 @@ export default class ReportUploadRequestHandler {
     if (!this.isRequestValid()) {
       return false;
     }
-    const executionResult: any = new TestCaseBuilder(await this.loadData()).buildExecutionResult();
-  
+    const executionResult: any = new TestCaseBuilder(
+      await this.loadData()
+    ).buildExecutionResult();
+
     const dataToSave: ReportInterfaces.TestReport = {
       ...(executionResult as unknown as ReportInterfaces.TestReport),
       buildingBlock: this.req.body.buildingBlock,
@@ -83,7 +85,7 @@ export default class ReportUploadRequestHandler {
         }
       },
     };
-  
+
     await this.jsonSave(repository, dataToSave, dataToSave.productMetaData);
     return true;
   }
@@ -91,11 +93,11 @@ export default class ReportUploadRequestHandler {
   isRequestValid(): boolean {
     const validationResult: ValidatorResult = validate(this.req, RequestSchema);
     if (validationResult.errors.length > 0) {
-        this.sendValidationError(validationResult.errors);
-        return false;
+      this.sendValidationError(validationResult.errors);
+      return false;
     }
     return true;
-}
+  }
 
   async readFirstLine(stream: NodeJS.ReadableStream): Promise<string> {
     return new Promise((resolve, reject) => {

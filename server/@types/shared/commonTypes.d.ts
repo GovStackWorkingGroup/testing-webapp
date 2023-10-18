@@ -15,5 +15,5 @@ type Connection = {
   port: string;
   databaseName: string;
   connectionOptions: string;
-  [key: string]: string;
+  [key: string]: string ;
 }
