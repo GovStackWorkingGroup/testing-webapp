@@ -1,5 +1,6 @@
-import { ComplianceDbRepository } from 'myTypes'; 
+import { ComplianceDbRepository, FormDetailsResults } from 'myTypes'; 
 import Compliance from '../schemas/compliance';
+import mongoose from 'mongoose';
 
 const aggregationPipeline: any[] = [
   { $unwind: "$compliance" },
@@ -65,8 +66,14 @@ const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
               "$$bbDetail.k",
               {
                 bbVersion: "$$bbDetail.v.bbVersion",
-                requirementSpecificationCompliance: "$$bbDetail.v.requirementSpecificationCompliance",
-                interfaceCompliance: "$$bbDetail.v.interfaceCompliance"
+                requirementSpecificationCompliance: {
+                  level: "$$bbDetail.v.requirementSpecificationCompliance.level",
+                  note: "$$bbDetail.v.requirementSpecificationCompliance.note"
+                },
+                interfaceCompliance: {
+                  level: "$$bbDetail.v.interfaceCompliance.level",
+                  note: "$$bbDetail.v.interfaceCompliance.note"
+                }
               }
             ]
           }
@@ -103,6 +110,59 @@ const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
   }
 ];
 
+const formDetailAggregationPipeline = (formId: string): any[] => [
+  {
+    $match: { "_id": new mongoose.Types.ObjectId(formId) }  },
+  {
+    $unwind: "$compliance"
+  },
+  {
+    $project: {
+      bbDetails: {
+        $arrayToObject: {
+          $map: {
+            input: { $objectToArray: "$compliance.bbDetails" },
+            as: "bbDetail",
+            in: [
+              "$$bbDetail.k",
+              {
+                interfaceCompliance: {
+                  testHarnessResult: "$$bbDetail.v.interfaceCompliance.testHarnessResult",
+                  requirements: "$$bbDetail.v.interfaceCompliance.requirements"
+                },
+                requirementSpecificationCompliance: {
+                  crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
+                  functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
+                },
+                deploymentCompliance: {
+                  documentation: "$$bbDetail.v.deploymentCompliance.documentation"
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$softwareName",
+      formDetails: {
+        $push: {
+          version: "$version",
+          bbDetails: "$bbDetails"
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      formDetails: 1
+    }
+  }
+];
+
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
     try {
@@ -134,7 +194,17 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       console.error("Root cause of fetching software compliance details:", error);
       throw new Error('Error fetching software compliance details');
     }
-  }
+  },
+
+  async getFormDetail(formId: string): Promise<FormDetailsResults> {
+    try {
+      const results = await Compliance.aggregate(formDetailAggregationPipeline(formId)).exec();
+      return results[0];
+    } catch (error) {
+      console.error("Root cause of teching compliance form details");
+      throw new Error('Error fetching compliance form details')
+    }
+  },
 
 };
 

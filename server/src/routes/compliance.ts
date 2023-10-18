@@ -5,6 +5,7 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.get('/compliance/list', controller.getAllComplianceReports);
   router.get('/compliance/:softwareName/detail', controller.getSoftwareComplianceDetail);
+  router.get('/compliance/forms/:id', controller.getFormDetail);
 
   return router;
 };
