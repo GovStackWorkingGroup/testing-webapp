@@ -1,10 +1,16 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable no-console */
-import streamline from 'streamifier';
+/// <reference path="../../../../@types/report/reportInterfaces.d.ts" />
+/// <reference path="../../../../@types/report/reportTypes.d.ts" />
+
 import { jsonToMessages } from '@cucumber/json-to-messages';
-import readline, { Interface } from 'readline';
-import yaml from 'js-yaml';
+import { Response } from 'express';
+import { Model } from 'mongoose';
 import { validate, ValidatorResult } from 'jsonschema';
+import readline, { Interface } from 'readline';
+import streamline from 'streamifier';
+import yaml from 'js-yaml';
+
 import MemoryStream from 'memorystream';
 import TestCaseBuilder from './reportBuilder/testCaseBuilder';
 
@@ -28,7 +34,7 @@ const RequestSchema = {
         testSuite: { type: 'string' },
         testApp: { type: 'string' },
         sourceBranch: { type: 'string' },
-        version: {type: 'string'},
+        version: { type: 'string' },
       },
       required: [
         'buildingBlock',
@@ -46,9 +52,9 @@ const RequestSchema = {
 };
 
 export default class ReportUploadRequestHandler {
-  public req: any;
-  public res: any;
-  public dbConnect: any;
+  public req: CommonTypes.MulterRequest;
+  public res: Response;
+  public dbConnect: Model<Document>;
 
   constructor(saveRequest: any, response: any) {
     this.req = saveRequest;
@@ -56,13 +62,31 @@ export default class ReportUploadRequestHandler {
     this.dbConnect = saveRequest.app.locals.reportCollection;
   }
 
-    async saveData(repository: any): Promise<boolean> {
+  async saveData(repository: ReportInterfaces.ReportRepository): Promise<boolean> {
     if (!this.isRequestValid()) {
       return false;
     }
-    const dataToSave = new TestCaseBuilder(await this.loadData()).buildExecutionResult();
-    const productMetaData = await this.loadProductInfo();
-    await this.jsonSave(repository, dataToSave, productMetaData);
+    const executionResult: any = new TestCaseBuilder(
+      await this.loadData()
+    ).buildExecutionResult();
+
+    const dataToSave: ReportInterfaces.TestReport = {
+      ...(executionResult as unknown as ReportInterfaces.TestReport),
+      buildingBlock: this.req.body.buildingBlock,
+      testSuite: this.req.body.testSuite,
+      testApp: this.req.body.testApp,
+      sourceBranch: this.req.body.sourceBranch,
+      version: this.req.body.version,
+      productMetaData: await this.loadProductInfo(),
+      start: {
+        timestamp: {
+          seconds: executionResult.start.getTime() / 1000,
+          nanos: (executionResult.start.getMilliseconds() % 1000) * 1e6
+        }
+      },
+    };
+
+    await this.jsonSave(repository, dataToSave, dataToSave.productMetaData);
     return true;
   }
 
@@ -98,9 +122,9 @@ export default class ReportUploadRequestHandler {
     return line[0] === '[';
   }
 
-  async loadData(): Promise<any[]> {
-    const items: any[] = [];
-    const errors: any[] = [];
+  async loadData(): Promise<ReportInterfaces.ReportItem[]> {
+    const items: ReportInterfaces.ReportItem[] = [];
+    const errors: string[] = [];
 
     const rl = await this.loadReportFromJsonFormatBuffer() || await this.loadReportFromBuffer();
     // eslint-disable-next-line no-restricted-syntax
@@ -110,9 +134,14 @@ export default class ReportUploadRequestHandler {
         const indexOfFirst = line.indexOf(searchTerm);
         const fixedLine = line.substring(indexOfFirst);
         items.push(JSON.parse(fixedLine));
-      } catch (e: any) {
-        console.log(e.stack);
-        throw new Error(`Failed to parse a line due to: ${e.message}`);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          console.log(e.stack);
+          errors.push(`Failed to parse a line due to: ${e.message}`);
+        } else {
+          // Handle or log other kinds of thrown values if necessary
+          errors.push(`Failed to parse a line due to an unexpected error.`);
+        }
       }
     }
 
@@ -139,8 +168,12 @@ export default class ReportUploadRequestHandler {
         });
         return rl;
       }
-    } catch (e: any) {
-      console.log(e.stack);
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        console.log(e.stack);
+      } else {
+        console.log('An unexpected error occurred:', e);
+      }
     }
     return null;
   }
@@ -152,21 +185,21 @@ export default class ReportUploadRequestHandler {
     });
   }
 
-  async loadProductInfo(): Promise<any> {
+  async loadProductInfo(): Promise<ReportTypes.MetaYamlOutput> {
     // Product info is passed through META file field inside of payload.
     // It's not used in aggregation, and is not mandatory.
     // At the moment it provides information about product name.
     // If name is missing it's replaced with <testSuite> (missing META.yml).
     if (!this.req.files.META) {
       return {
-        name: `${this.req.body.testApp} (candidate META.yml missing)`,
+        name: `${this.req?.body?.testApp} (candidate META.yml missing)`,
       };
     }
-    const productMetaProperties = yaml.load(this.req.files.META[0].buffer);
+    const productMetaProperties = yaml.load(this.req.files.META[0].buffer) as ReportTypes.MetaYamlOutput;
     return productMetaProperties;
   }
 
-  async jsonSave(repository: any, data: any, productMetaData: any): Promise<void> {
+  async jsonSave(repository: ReportInterfaces.ReportRepository, data: ReportInterfaces.TestReport, productMetaData: any): Promise<void> {
     const report = data;
     report.buildingBlock = this.req.body.buildingBlock;
     report.testSuite = this.req.body.testSuite;
@@ -178,7 +211,7 @@ export default class ReportUploadRequestHandler {
     this.saveToDatabase(repository, report);
   }
 
-  saveToDatabase(repository: any, data: any): void {
+  saveToDatabase(repository: ReportInterfaces.ReportRepository, data: ReportInterfaces.TestReport): void {
     const { res } = this;
 
     repository.add(data, (err: any, result: any) => {

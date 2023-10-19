@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for Header component: should render the Header component and match snapshot 1`] = `
+<div>
+  <div
+    class="header"
+  >
+    <div
+      class="header-logo"
+      data-testid="logo"
+    >
+      <img
+        alt="logo"
+        src="/images/logo.png"
+      />
+    </div>
+    <div
+      class="header-right-section"
+    >
+      <div
+        class="header-link-button-section"
+      >
+        <a
+          class="header-menu-button "
+          data-testid="header-menu-button"
+          href="/"
+        >
+          API testing
+        </a>
+        <a
+          class="header-menu-button "
+          data-testid="header-menu-button"
+          href="/softwareComplianceTesting"
+        >
+          Software Compliance Testing
+        </a>
+      </div>
+      <div
+        class="header-help"
+      />
+    </div>
+  </div>
+</div>
+`;
