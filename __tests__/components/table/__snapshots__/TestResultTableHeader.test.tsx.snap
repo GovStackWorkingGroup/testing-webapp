@@ -24,15 +24,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 8l6 6H6z"
-            />
-          </g>
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
         </svg>
         <svg
           class="sort-icon-down"
@@ -44,15 +38,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 16l-6-6h12z"
-            />
-          </g>
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
         </svg>
       </div>
     </div>
@@ -75,15 +63,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 8l6 6H6z"
-            />
-          </g>
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
         </svg>
         <svg
           class="sort-icon-down"
@@ -95,15 +77,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 16l-6-6h12z"
-            />
-          </g>
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
         </svg>
       </div>
     </div>
@@ -126,15 +102,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 8l6 6H6z"
-            />
-          </g>
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
         </svg>
         <svg
           class="sort-icon-down"
@@ -146,15 +116,9 @@ exports[`Unit tests for TestResultTableHeader component: should render the TestR
           width="1em"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g>
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M12 16l-6-6h12z"
-            />
-          </g>
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
         </svg>
       </div>
     </div>
