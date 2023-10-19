@@ -4,14 +4,22 @@ Frontend web application for the GovStack test platform.
 
 ## Documentation
 
-### Prerequisites
+### Frontend
 
- * Node.js (Version 16 or greater)
- * Yarn
+#### Prerequisites
 
-### Application configuration for development
+- Node.js (Version 16 or greater)
+- Yarn
 
-To configure and run the application, navigate to project directory and run the following commands:
+#### Application configuration for front-end development
+
+To configure and run the application, navigate to project directory - 'src' folder
+
+```
+cd src
+```
+
+and run the following commands:
 
 ```
 yarn install
@@ -22,7 +30,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 The application will run on localhost port 3003 by default.
 
-### Build
+#### Build
 
 To run build:
 
@@ -30,7 +38,7 @@ To run build:
 yarn build
 ```
 
-### Tests
+#### Tests
 
 To run tests:
 
@@ -38,7 +46,7 @@ To run tests:
 yarn test
 ```
 
-### Lint
+#### Lint
 
 To run eslint:
 
@@ -46,7 +54,7 @@ To run eslint:
 yarn lint
 ```
 
-### Docker
+#### Docker
 
 Application can be deployed in docker container by running
 
@@ -60,21 +68,24 @@ or
  docker-compose up
 ```
 
-## Less
+#### Less
 
 Less (which stands for Leaner Style Sheets) is a backwards-compatible language extension for CSS.
 Every `.less` file should be localized in the `styles` folder.
 
 To run less-watch-compiler in terminal:
+
 ```
 yarn less
 ```
 
-## Backend 
-Testing application has a simple backend written using express.js. 
-A more detailed description of the backend's part can be found in `/server/README.md`. 
+### Backend
 
-### Setup 
+Testing application has a simple backend written using express.js.
+A more detailed description of the backend's part can be found in `/server/README.md`.
+
+#### Setup
+
 From the main directory (requires running mongoDB):
 
 ```bash
@@ -89,11 +100,11 @@ yarn dev
 Backend service and monogoDB are also setups automatically
 during `docker-compose up --build` execution.
 
-## Useful information
+### Useful information
 
 Below you will find all the guidelines.
 
-### Translations rules
+#### Translations rules
 
 To ensure that the file with translation keys is properly organized, it is worth familiarizing yourself with its rules:
 
@@ -117,3 +128,31 @@ To ensure that the file with translation keys is properly organized, it is worth
 - remove unused translation keys
 
 - avoid concatenating translations
+
+### Git Flow in Our Project
+
+We use the Git Flow branching model to organize our work:
+
+- Main Branch (`main`)\*\*: It represents the most stable version of our project, as it's used for production. Direct commits to this branch are not allowed; it's protected.
+
+- Develop Branch (`develop`)\*\*: It acts as an integration branch for features. All new features are branched off from `develop`. Direct commits to this branch are not allowed; it's protected.
+
+- Feature Branches (`feature/*`)\*\*: For new features or enhancements. Once development is done, they're merged back into `develop`.
+
+- Release Branches (`release/*`)\*\*: These are cut from `develop` when we're ready for a new production release. When the release is finalized, it's merged into both `main` and `develop`.
+
+- Hotfix Branches (`hotfix/*`)\*\*: These are created if there's a severe bug in the production version. They branch off from `main` and are merged back into both `main` and `develop` after the fix.
+
+Naming Conventions:
+
+- Feature Branches: `feature/ticket-ID` - Branches used for new features or enhancements, named according to the ticket or task ID.
+
+- Release Branches\*\*: `release/version` - Branches prepared for production releases, named by the release version.
+
+- Hotfix Branches\*\*: `hotfix/hotfix-name` - Branches used to quickly fix urgent issues in the production environment, named descriptively based on the nature of the hotfix.
+
+Commit Message Convention:
+
+- For each commit use format: `ticket_ID: brief description of the changes`
+
+Remember, when creating a new branch, always pull the latest changes from the branch you're basing off to avoid conflicts.

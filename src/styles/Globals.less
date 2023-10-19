@@ -1,0 +1,128 @@
+@import '../styles/Variables.less';
+@import '../styles/Extends.less';
+
+body {
+  background-color: @background-page;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: @text-main;
+  padding: 0;
+  margin: 0;
+  height: 100vh;
+}
+
+.primary-btn:extend(.btn) {
+  background-color: @accents-and-btn;
+  color: @white;
+}
+
+.secondary-btn:extend(.btn) {
+  border: 1px solid @accents-and-btn;
+  color: @accents-and-btn;
+}
+
+.tertiary-btn:extend(.btn) {
+  color: @accents-and-btn;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.test-result-page {
+  width: 100vw;
+  height: calc(100vh - @header-height - 2px);
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.test-result-primary-section {
+  width: 100%;
+  margin: 25px 0 0 0;
+}
+
+.test-result-primary-section > div {
+  margin: auto;
+  min-width: 55vw;
+  max-width: 1000px;
+  padding: 0 20px;
+  height: 100%;
+}
+
+.test-result-second-section {
+  min-width: 40vw;
+  max-width: 40vw;
+  height: 100%;
+  border: 1px solid #dfdfea;
+  background-color: @white;
+}
+
+.test-result-second-section-title {
+  height: 5%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: @selected-product;
+  padding: 24px 20px;
+  color: @blue-dark;
+}
+
+.test-result-second-section-text {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding-top: 3px;
+  word-break: break-all;
+}
+
+.close-icon {
+  font-size: 24px;
+}
+
+.test-result-second-section-body {
+  overflow: scroll;
+  height: 91%;
+}
+
+.back-to-home-page-btn {
+  width: max-content;
+  color: @accents-and-btn;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.test-result-title {
+  display: flex;
+  flex-direction: row;
+  font-size: 18px;
+  font-weight: 700;
+  padding-top: 20px;
+  padding-bottom: 16px;
+}
+
+.test-result-title > p {
+  margin: 0;
+}
+
+.test-result-title > p:first-of-type {
+  padding-right: 4px;
+}
+
+.quote {
+  font-size: 5px;
+}
+
+p {
+  margin: 0;
+}
+
+.text-tooltip .text-tooltip-body {
+  border-radius: 1px solid 5%;
+  max-width: 40vw;
+}

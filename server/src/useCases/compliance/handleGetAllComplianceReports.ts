@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import complianceRepository from '../../repositories/complianceRepository';
 import { ComplianceDbRepository } from "myTypes";
 
 export default class GetAllComplianceReportsRequestHandler {
@@ -10,8 +11,9 @@ export default class GetAllComplianceReportsRequestHandler {
   }
 
   async getAllComplianceReports(): Promise<void> {
+    const { limit, offset } = this.req.query;
     try {
-      const aggregatedReports = await this.repository.aggregateComplianceReports();
+      const aggregatedReports = await this.repository.aggregateComplianceReports(limit, offset);
       this.res.json(aggregatedReports);
     } catch (error) {
       console.error("Error fetching compliance reports:", error);

@@ -2,20 +2,22 @@ version: 2.1
 
 orbs:
   node: circleci/node@5.0.3
-
 jobs:
   build_and_test:
-    executor: 
+    executor:
       name: node/default
       tag: '16.10'
     steps:
       - checkout
       - node/install-packages:
+          app-dir: src
           pkg-manager: yarn
       - run:
+          working_directory: src
           command: yarn lint
           name: Lint the codebase
       - run:
+          working_directory: src
           command: yarn test
           name: Run YARN tests
 
@@ -28,8 +30,8 @@ jobs:
           # These keys come from the CircleCI App. Projects Settings -> SSH - Keys -> Additional SSH Keys.
           # The fingerprint will show up after adding a key.
           fingerprints:
-            - "d1:b2:46:4e:a2:e8:3b:10:0b:49:78:06:fa:92:25:52"
-            - "0a:51:56:fd:81:33:42:19:7d:59:13:af:43:1f:cf:1e"
+            - 'd1:b2:46:4e:a2:e8:3b:10:0b:49:78:06:fa:92:25:52'
+            - '0a:51:56:fd:81:33:42:19:7d:59:13:af:43:1f:cf:1e'
       - run:
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
@@ -52,10 +54,10 @@ workflows:
     jobs:
       - build_and_test
       - deploy:
-           requires:
-             - build_and_test
-           filters:
-             branches:
-               only:
-                 - main
-                 - develop
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - main
+                - develop

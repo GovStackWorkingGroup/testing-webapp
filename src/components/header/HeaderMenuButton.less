@@ -1,0 +1,22 @@
+@import '../../styles/Variables.less';
+
+.header-menu-button {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0px 16px;
+  background-color: inherit;
+  border: none;
+  font-size: 16px;
+  color: @text-main;
+}
+
+.header-menu-button:hover {
+  color: @accents-and-btn;
+}
+
+.header-menu-button-active {
+  background-color: @blue-lightest;
+  color: @accents-and-btn;
+  border-bottom: 2px solid @accents-and-btn;
+}

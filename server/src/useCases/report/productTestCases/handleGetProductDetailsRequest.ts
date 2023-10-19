@@ -3,18 +3,13 @@
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
 import mapQueryToSorting from '../requestUtils';
-
-interface Repository {
-  aggregateBBDetailsByProductId(params: {
-    id: string;
-  }, sorting: any, callback: (err: ErrorType, result: any) => void): void;
-}
+import { Model } from 'mongoose';
 
 export default class ReportGetProductDetailsRequestHandler {
 
   public req: Request;
   public res: Response;
-  public dbConnect: any;
+  public dbConnect: Model<Document>;
 
   constructor(request: Request, response: Response) {
     this.req = request;
@@ -22,7 +17,7 @@ export default class ReportGetProductDetailsRequestHandler {
     this.dbConnect = request.app.locals.reportCollection;
   }
 
-  async getProductDetails(repository: Repository) {
+  async getProductDetails(repository: ReportInterfaces.ReportRepository) {
     const {
       limit: queryLimit,
       offset: queryOffset,
@@ -44,7 +39,7 @@ export default class ReportGetProductDetailsRequestHandler {
 
     repository.aggregateBBDetailsByProductId({
       id,
-    }, sorting, async (err: ErrorType, result: any) => {
+    }, sorting, async (err: Error | null, result: any) => {
       if (err) {
         console.error(err);
         this.res.status(500).send(`Failed to fetch detailed report summary. Details: \n\t${err}`);
