@@ -39,7 +39,7 @@ export default class ReportGetProductDetailsRequestHandler {
 
     repository.aggregateBBDetailsByProductId({
       id,
-    }, sorting, async (err: ErrorType, result: any) => {
+    }, sorting, async (err: Error | null, result: any) => {
       if (err) {
         console.error(err);
         this.res.status(500).send(`Failed to fetch detailed report summary. Details: \n\t${err}`);
