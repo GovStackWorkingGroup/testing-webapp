@@ -23,10 +23,20 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const getFormDetail = async (formId: string) => {
+    try {
+      return await repository.getFormDetail(formId);
+    } catch (error) {
+      console.error('There was an error while aggregating the compliance reports:', error);
+      throw error;
+    }
+  }
+
   return {
     findAll,
     aggregateComplianceReports,
-    getSoftwareComplianceDetail
+    getSoftwareComplianceDetail,
+    getFormDetail
   };
 };
 
