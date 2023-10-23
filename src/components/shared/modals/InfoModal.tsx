@@ -3,17 +3,22 @@ import { RiCloseFill } from 'react-icons/ri';
 
 type ModalProps = {
   modalTitle: string;
+  onClose: () => void;
   children: React.ReactNode;
 };
 
-const InfoModal = ({ modalTitle, children }: ModalProps) => {
+const InfoModal = ({ modalTitle, onClose, children }: ModalProps) => {
   return (
-    <div>
-      <div>
-        <p>{modalTitle}</p>
-        <RiCloseFill onClick={() => {}} />
+    <div className="modal-overlay">
+      <div className="modal-container">
+        <div className="modal-title-section">
+          <p>{modalTitle}</p>
+          <div className="modal-close-container">
+            <RiCloseFill className="modal-close-icon" onClick={onClose} />
+          </div>
+        </div>
+        <div>{children}</div>
       </div>
-      <div>{children}</div>
     </div>
   );
 };
