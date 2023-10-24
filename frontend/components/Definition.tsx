@@ -1,27 +1,41 @@
-import React, { useCallback } from 'react';
-import { useIntl } from 'react-intl';
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import useTranslations from '../hooks/useTranslation';
 
-const Definition = () => {
-  const { formatMessage } = useIntl();
-  const format = useCallback(
-    (id: string) => formatMessage({ id }),
-    [formatMessage]
-  );
+type DefinitionType = {
+  title: string;
+  hasRedirecting?: boolean;
+  description: string;
+  note?: string;
+};
+
+const Definition = ({
+  title,
+  hasRedirecting = false,
+  description,
+  note,
+}: DefinitionType) => {
+  const { format } = useTranslations();
 
   return (
-    <div className='definition-section'>
-      <p className='definition-title' data-testid='definition-title'>
-        {format('app.definition.title')}
+    <div className="definition-section">
+      <p className="definition-title" data-testid="definition-title">
+        {title}
       </p>
-      <div data-testid='definition-description'>
-        <ReactMarkdown className='definition-description' linkTarget="_blank">
-          {format('app.definition.description')}
-        </ReactMarkdown>
+      <div data-testid="definition-description">
+        {hasRedirecting ? (
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {description}
+          </ReactMarkdown>
+        ) : (
+          <div className="definition-description">{description}</div>
+        )}
       </div>
-      <p className='definition-note' data-testid='definition-note'>
-        {format('app.definition.note')}
-      </p>
+      {note && (
+        <p className="definition-note" data-testid="definition-note">
+          {format('app.definition.note')}
+        </p>
+      )}
     </div>
   );
 };
