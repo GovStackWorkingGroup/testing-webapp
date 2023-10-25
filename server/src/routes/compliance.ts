@@ -13,8 +13,7 @@ const buildComplianceRoutes = (controller: any) => {
   });
 
   const filesUpload = multer({ storage }).fields([
-    { name: 'logo', maxCount: 1 },
-    { name: 'documentation', maxCount: 10 }
+    { name: 'logo', maxCount: 1 }
   ]);
 
   router.get('/compliance/list', limiter, PaginationMiddleware.handlePaginationFilters, controller.getAllComplianceReports);
