@@ -1,4 +1,9 @@
 import mongoose from 'mongoose';
+import { ComplianceReport } from 'myTypes';
+
+const isRequiredIfNotDraft = function(this: ComplianceReport, value: any) {
+  return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
+};
 
 // SCHEMA FORM CONTENT
 const StatusEnum = {
@@ -56,11 +61,6 @@ const ComplianceDetailSchema = new mongoose.Schema({
   bbVersion: {
     type: String,
     required: true
-  },
-  status: {
-    type: Number,
-    enum: Object.values(StatusEnum),
-    default: StatusEnum.DRAFT
   },
   submissionDate: {
     type: Date,
@@ -133,15 +133,33 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  documentation: [{
+  documentation: {
     type: String,
     required: true,
-  }],
+  },
   pointOfContact: {
     type: String,
     required: true
   },
-  compliance: [ComplianceVersionSchema]
+  status: {
+    type: Number,
+    enum: Object.values(StatusEnum),
+    default: StatusEnum.DRAFT
+  },
+  link: {
+    type: String,
+    unique: true
+  },
+  expirationDate: {
+    type: Date
+  },
+  compliance: {
+    type: [ComplianceVersionSchema],
+    validate: {
+      validator: isRequiredIfNotDraft,
+      message: 'Compliance is required when status is not DRAFT'
+    }
+  }
 });
 
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);

@@ -1,6 +1,8 @@
-import { ComplianceDbRepository, FormDetailsResults } from 'myTypes'; 
+import { ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes'; 
+import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
+import { appConfig } from '../../config/index';
 
 const createAggregationPipeline = (limit: number, offset: number): any[] => {
   const aggregationPipeline: any[] = [
@@ -211,6 +213,28 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw new Error('Error fetching compliance form details')
     }
   },
+
+  async createOrSubmitForm(draftData: Partial<ComplianceReport>): Promise<string> {
+    try {
+
+      const isDraft = draftData.status == StatusEnum.DRAFT;
+      const link = isDraft ? uuidv4() : '';
+      const expirationDate = isDraft ? new Date(Date.now() + appConfig.draftExpirationTime) : undefined;
+
+      const newDraft = new Compliance({
+        ...draftData,
+        link,
+        expirationDate
+      });
+
+      await newDraft.save();
+
+      return link;
+    } catch (error) {
+      console.error('Error while creating compliance draft:', error);
+      throw new Error('Error creating compliance draft');
+    }
+  }
 
 };
 

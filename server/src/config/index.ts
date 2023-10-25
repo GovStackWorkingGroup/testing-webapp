@@ -9,16 +9,18 @@ interface AppConfig {
   appName: string;
   isProduction: boolean;
   mongoConnection: MongoConnection;
+  draftExpirationTime: number
 }
 
 const appConfig: AppConfig = {
   appName: process.env.appName || 'testing-webapp-api',
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
+  draftExpirationTime: 24 * 60 * 60 * 1000,
 };
 
 const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
+  windowMs: 60 * 60 * 1000,
   max: 100, 
   message: "Too many requests from this IP, please try again later."
 });
