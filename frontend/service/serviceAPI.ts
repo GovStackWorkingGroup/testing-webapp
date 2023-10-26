@@ -4,7 +4,7 @@ import {
 } from '../components/table/types';
 import { BuildingBlockTestSummary, ProductsListType } from './types';
 
-const baseUrl = process.env.API_URL || 'http://localhost:5000';
+const baseUrl = process.env.API_URL || 'http://localhost:5001';
 
 type Success<T> = { status: true; data: T };
 type Failure = { status: false; error: Error };
@@ -118,6 +118,28 @@ export const getBuildingBlockTestResults = async (
       return response.json();
     })
     .then<Success<BuildingBlockTestSummary>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getComplianceList = async () => {
+  return await fetch('http://localhost:5001/compliance/list', {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<object>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

@@ -17,6 +17,7 @@ const SoftwareComplianceTestingPage = () => {
         <Definition
           title={format('app.definition_self_assessment.title')}
           description={format('app.definition_self_assessment.description')}
+          customStyle="definition-section-software-compliance"
         />
         <ListOfCandidateApplicationComplianceResults />
       </main>

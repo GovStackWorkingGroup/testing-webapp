@@ -1,114 +1,119 @@
+import { useEffect, useState } from 'react';
 import useTranslations from '../hooks/useTranslation';
+import { getComplianceList } from '../service/serviceAPI';
+import { CellValue, DataRow } from '../service/types';
 import Table from './table/Table';
 
+type DataProps = {
+  headers: string[];
+  rows: DataRow[] | Record<string, never>;
+};
+
 const ListOfCandidateApplicationComplianceResults = () => {
+  const [data, setData] = useState({});
   const { format } = useTranslations();
+  const fetchData = async () => {
+    const [data] = await Promise.all([getComplianceList()]);
+    if (data.status) {
+      const transformedData: DataProps = {
+        headers: [
+          format('table.software_name.label'),
+          format('table.bb_specification.label'),
+          format('table.bb_version.label'),
+          format('test_table.status.label'),
+          format('table.submission_date.label'),
+          format('table.deployment_compliance.label'),
+          format('table.requirement_specification_compliance.label'),
+          format('table.interface_compliance.label'),
+        ],
+        rows: [],
+      };
 
-  const data = {
-    headers: [
-      format('evaluation_schema.compliance.label'),
-      format('evaluation_schema.requirement.label'),
-      format('evaluation_schema.level_1.label'),
-      'Interface Compliance',
-    ],
-    rows: [
-      {
-        subHeader: 'test1',
-        cell: [
+      const propertyOrder = [
+        'softwareVersion',
+        'bb',
+        'bbVersion',
+        'status',
+        'submissionDate',
+        'deploymentCompliance',
+        'requirementSpecificationCompliance',
+        'interfaceCompliance',
+      ];
+
+      const originalData = {
+        SandboxApp: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
+            _id: '653921814314d3101cbee82b',
+            bb: 'bb digital registries',
+            bbVersion: '1.2.0',
+            status: 'In Review',
+            deploymentCompliance: true,
+            interfaceCompliance: 2,
+            requirementSpecificationCompliance: 1,
+            softwareVersion: '2.0',
+            submissionDate: '2025-10-01T14:48:00.000Z',
           },
           {
-            value: format(
-              'evaluation_schema.deployability_via_container.label'
-            ),
-          },
-          { value: 'checked' },
-          { value: 'checked' },
-        ],
-      },
-      {
-        subHeader: 'test2',
-        cell: [
-          {
-            value: format('evaluation_schema.interface_compliance.label'),
-          },
-          {
-            value: format('evaluation_schema.fulfillment_of_service_api.label'),
-          },
-          {
-            value: format('evaluation_schema.equal_or_more_than_1.label'),
-          },
-          {
-            value: format('evaluation_schema.all.label'),
+            _id: '653921814314d3101cbee82b',
+            bb: 'bb payments',
+            bbVersion: '1.1.2',
+            status: 'In Review',
+            deploymentCompliance: true,
+            interfaceCompliance: -1,
+            softwareVersion: '2.0',
+            submissionDate: '2022-11-01T14:48:00.000Z',
+            requirementSpecificationCompliance: 1,
           },
         ],
-      },
-      {
-        subHeader: 'test3',
-        cell: [
+        openIMIS: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
-          },
-          {
-            // values: [
-            //   {
-            value: format(
-              'evaluation_schema.fulfillment_of_required_key.label'
-            ),
-            //   },
-            //   {
-            //     value: format(
-            //       'evaluation_schema.fulfillment_of_required_functional_requirements.label'
-            //     ),
-            //   },
-            //   {
-            //     value: format(
-            //       'evaluation_schema.fulfillment_of_required_cross_cutting_requirements.label'
-            //     ),
-            //   },
-            // ],
-          },
-          {
-            // values: [
-            //   {
-            value: format('evaluation_schema.all.label'),
-            // },
-            //   {
-            //     value: format('evaluation_schema.equal_or_more_than_1.label'),
-            //   },
-            //   { value: format('evaluation_schema.equal_or_more_than_1.label') },
-            // ],
-          },
-          {
-            // values: [
-            //   {
-            value: format('evaluation_schema.all.label'),
-            //   },
-            //   {
-            //     value: format('evaluation_schema.all.label'),
-            //   },
-            //   {
-            //     value: format('evaluation_schema.all.label'),
-            //   },
-            // ],
+            _id: '653921814314d3101cbee82a',
+            bb: 'bb digital registries',
+            bbVersion: '1.2.0',
+            deploymentCompliance: true,
+            interfaceCompliance: 2,
+            status: 'In Review',
+            requirementSpecificationCompliance: 1,
+            softwareVersion: '2.0',
+            submissionDate: '2025-10-01T14:48:00.000Z',
           },
         ],
-      },
-    ],
+      };
+
+      /*eslint no-prototype-builtins: */
+      for (const key in originalData) {
+        if (originalData.hasOwnProperty(key)) {
+          let subHeaderAdded = false;
+          transformedData.rows.push(
+            ...originalData[key].map((item: any, index: any) => {
+              const cell: CellValue[] = [];
+              for (const property of propertyOrder) {
+                if (item.hasOwnProperty(property)) {
+                  cell.push({ value: item[property] });
+                }
+              }
+
+              if (!subHeaderAdded && index === 0) {
+                subHeaderAdded = true;
+
+                return { cell, subHeader: key };
+              } else {
+                return { cell };
+              }
+            })
+          );
+        }
+      }
+
+      setData(transformedData);
+    }
   };
 
-  const handleRedirectToComplianceForm = (value: string | undefined) => {
-    console.log('ss', value);
-  };
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  return (
-    <Table
-      data={data}
-      hasVerticalBorders={false}
-      handleRedirect={handleRedirectToComplianceForm}
-    />
-  );
+  return <Table data={data} hasVerticalBorders={false} />;
 };
 
 export default ListOfCandidateApplicationComplianceResults;

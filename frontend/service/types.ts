@@ -44,3 +44,20 @@ export type BuildingBlockTestSummary = {
   data: BuildingBlockEndpointTest[];
   count: number;
 };
+
+// All types used in Table.tsx and the data connected to it
+export type TableProps = {
+  data: { headers: string[]; rows: DataRow[] } | Record<string, never>;
+  hasVerticalBorders?: boolean;
+};
+
+export type CellValue = {
+  value: string | number | boolean;
+};
+
+export type Cell = CellValue | { values: CellValue[] };
+
+export type DataRow = {
+  cell: Cell[];
+  subHeader?: string;
+};

@@ -33,7 +33,6 @@ export const en = {
   'evaluation_schema.compliance.label': 'Compliance',
   'evaluation_schema.deployability_via_container.label':
     'Deployability via container',
-  'evaluation_schema.deployment_compliance.label': 'Deployment Compliance',
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
   'evaluation_schema.fulfillment_of_required_api.label':
     'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
@@ -45,7 +44,6 @@ export const en = {
     'Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications',
   'evaluation_schema.fulfillment_of_service_api.label':
     'Fulfillment of Service API requirements',
-  'evaluation_schema.interface_compliance.label': 'Interface Compliance',
   'evaluation_schema.level_1.label': 'Level 1',
   'evaluation_schema.level_2.label': 'Level 2',
   'evaluation_schema.optional.label': 'Optional',
@@ -60,11 +58,19 @@ export const en = {
   'result_page.back_to_product_list': '< Back to Products List',
   'result_page.title': 'Tests for',
 
+  'table.bb_specification.label': 'BB Specification',
+  'table.bb_version.label': 'BB Version',
+  'table.deployment_compliance.label': 'Deployment Compliance',
+  'table.interface_compliance.label': 'Interface Compliance',
   'table.last_update.label': 'Last Update',
   'table.no_result_count.message': 'No results count found',
   'table.overall_compatibility.label': 'Overall Compatibility',
+  'table.software_name.label': 'Software Version',
+  'table.submission_date.label': 'Submission Date',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
+  'table.requirement_specification_compliance.label':
+    'Requirement Specification Compliance',
 
   'test_table.category.label': 'Category',
   'test_table.failed': 'Failed',
