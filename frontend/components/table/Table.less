@@ -1,11 +1,16 @@
 @import '../../styles/Variables.less';
 @import '../../styles/Extends.less';
 
+.table-container {
+  max-width: 90vw;
+  overflow-x: scroll;
+}
+
 table.main-table {
   border: 1px solid @border-grey;
   border-radius: 8px;
   border-spacing: 0;
-  max-width: 90vw;
+  width: 100%;
 
   thead:extend(.table-header-text) {
     height: @table-row;
@@ -14,8 +19,12 @@ table.main-table {
     background-color: @blue-lightest;
 
     th {
-      padding: 0 40px 0 10px;
+      padding: 0 10px;
       border-right: 1px solid @border-grey;
+    }
+
+    th.th-custom-wider-padding {
+      padding: 0 40px 0 10px;
     }
 
     th.no-vertical-border {

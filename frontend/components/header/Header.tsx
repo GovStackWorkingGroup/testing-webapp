@@ -32,12 +32,12 @@ const Header = () => {
       <div className="header-right-section">
         <div className="header-link-button-section">
           <HeaderMenuButton
-            buttonTitle={format('app.api-testing.label')}
+            buttonTitle={format('app.api_testing.label')}
             href={'/'}
             active={currentPath === '/'}
           />
           <HeaderMenuButton
-            buttonTitle={format('app.software-compliance-testing.label')}
+            buttonTitle={format('app.software_compliance_testing.label')}
             href={'/softwareComplianceTesting'}
             active={currentPath === '/softwareComplianceTesting'}
           />

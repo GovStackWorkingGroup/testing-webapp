@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import useTranslations from '../hooks/useTranslation';
-import { getComplianceList } from '../service/serviceAPI';
-import { CellValue, DataRow } from '../service/types';
-import Table from './table/Table';
+import useTranslations from '../../hooks/useTranslation';
+import { getComplianceList } from '../../service/serviceAPI';
+import { CellValue, DataRow } from '../../service/types';
+import Table from '../table/Table';
 
-type DataProps = {
+export type DataProps = {
   headers: string[];
   rows: DataRow[] | Record<string, never>;
 };
@@ -113,7 +113,9 @@ const ListOfCandidateApplicationComplianceResults = () => {
     fetchData();
   }, []);
 
-  return <Table data={data} hasVerticalBorders={false} />;
+  return (
+    <Table data={data} hasVerticalBorders={false} hasClassicPadding={false} />
+  );
 };
 
 export default ListOfCandidateApplicationComplianceResults;

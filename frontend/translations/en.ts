@@ -1,6 +1,8 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
-  'app.api-testing.label': 'API testing',
+  'app.api_testing.label': 'API testing',
+  'api.back_to_reports_list.label': '< Back to Report List',
+  'app.compliance_with.label': 'Compliance with',
   'app.definition.description': `This web application is used to show how candidate products align with
     the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
     for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
@@ -24,13 +26,13 @@ export const en = {
   'app.scroll-loader.message': 'Loading more data...',
   'app.scenario.label': 'Scenario:',
   'app.search': 'Software Name',
-  'app.software-compliance-testing.label': 'Software Compliance Testing',
+  'app.software_attributes.label': 'Software Attributes',
+  'app.software_compliance_testing.label': 'Software Compliance Testing',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
 
   'evaluation_schema.all.label': 'All',
-  'evaluation_schema.compliance.label': 'Compliance',
   'evaluation_schema.deployability_via_container.label':
     'Deployability via container',
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
@@ -60,17 +62,25 @@ export const en = {
 
   'table.bb_specification.label': 'BB Specification',
   'table.bb_version.label': 'BB Version',
+  'table.building_block_version.label': 'Building Block Version',
+  'table.compliance.label': 'Compliance',
+  'table.compliance_level.label': 'Compliance Level',
   'table.deployment_compliance.label': 'Deployment Compliance',
+  'table.documentation.label': 'Documentation',
   'table.interface_compliance.label': 'Interface Compliance',
   'table.last_update.label': 'Last Update',
+  'table.logo': 'Logo',
   'table.no_result_count.message': 'No results count found',
+  'table.notes': 'Notes',
   'table.overall_compatibility.label': 'Overall Compatibility',
+  'table.point_of_contact': 'Point of contact',
   'table.software_name.label': 'Software Version',
   'table.submission_date.label': 'Submission Date',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
   'table.requirement_specification_compliance.label':
     'Requirement Specification Compliance',
+  'table.website.label': 'Website',
 
   'test_table.category.label': 'Category',
   'test_table.failed': 'Failed',

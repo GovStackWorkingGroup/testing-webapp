@@ -1,13 +1,19 @@
 import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
+import classNames from 'classnames';
 import { Cell, DataRow } from '../../service/types';
 
 type TableProps = {
   data: { headers: string[]; rows: DataRow[] } | Record<string, never>;
   hasVerticalBorders?: boolean;
+  hasClassicPadding?: boolean;
 };
 
-const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
+const Table = ({
+  data,
+  hasVerticalBorders = true,
+  hasClassicPadding = true,
+}: TableProps) => {
   const formatDateIfDate = (value: Cell) => {
     if (typeof value === 'string') {
       const date = new Date(value);
@@ -22,7 +28,7 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
   };
 
   return (
-    <>
+    <div className="table-container">
       {data && (
         <table className="main-table">
           <thead>
@@ -32,7 +38,7 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
                   key={`header-${header}-${indexKey}`}
                   className={`${
                     hasVerticalBorders ? '' : 'no-vertical-border'
-                  }`}
+                  } ${hasClassicPadding ? '' : 'th-custom-wider-padding'}`}
                 >
                   {header}
                 </th>
@@ -170,7 +176,7 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
           </tbody>
         </table>
       )}
-    </>
+    </div>
   );
 };
 

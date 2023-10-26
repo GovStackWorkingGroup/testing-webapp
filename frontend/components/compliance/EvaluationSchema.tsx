@@ -1,11 +1,11 @@
 import useTranslations from '../../hooks/useTranslation';
-import Table from './Table';
+import Table from '../table/Table';
 
 const EvaluationSchemaTable = () => {
   const { format } = useTranslations();
   const data = {
     headers: [
-      format('evaluation_schema.compliance.label'),
+      format('table.compliance.label'),
       format('evaluation_schema.requirement.label'),
       format('evaluation_schema.level_1.label'),
       format('evaluation_schema.level_2.label'),

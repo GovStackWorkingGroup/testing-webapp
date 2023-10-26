@@ -1,0 +1,49 @@
+@import '../../styles/Variables.less';
+
+.compliance-detail-page-container {
+  padding: 16px 25px;
+}
+
+.software-attributes-section {
+  padding: 40px 10%;
+}
+
+.software-attributes-section > p {
+  padding-bottom: 16px;
+}
+
+.software-attributes-container {
+  width: 100%;
+  border: 1px solid @stroke;
+  border-radius: 8px;
+}
+
+.software-attribute {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid @stroke;
+}
+
+.software-attributes-container > .software-attribute:last-child {
+  border-bottom: none;
+}
+
+.software-attribute > div {
+  padding-left: 16px;
+  display: flex;
+  align-items: center;
+  min-height: @table-row;
+  font-size: 13px;
+  font-weight: 700;
+  color: @text-secondary;
+}
+
+.software-attribute > div:first-child {
+  width: 30%;
+  background-color: @blue-lightest;
+  border-right: 1px solid @stroke;
+}
+
+.software-attribute > div:last-child {
+  gap: 10px;
+}

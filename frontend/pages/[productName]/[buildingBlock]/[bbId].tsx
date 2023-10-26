@@ -15,15 +15,15 @@ import {
 } from '../../../service/types';
 
 const TestResultPage = () => {
-  const [bbTestSummary, setBBTestSummary] = useState<BuildingBlockTestSummary>();
-  const [currentBBTest, setCurrentBBTest] = useState<BuildingBlockEndpointTest>();
-  const [sortBy, setSortBy] = useState<ResultTableSortByType>(
-    {
-      uri: { field: 'uri', order: null },
-      name: { field: 'name', order: null },
-      status: { field: 'status', order: null }
-    }
-  );
+  const [bbTestSummary, setBBTestSummary] =
+    useState<BuildingBlockTestSummary>();
+  const [currentBBTest, setCurrentBBTest] =
+    useState<BuildingBlockEndpointTest>();
+  const [sortBy, setSortBy] = useState<ResultTableSortByType>({
+    uri: { field: 'uri', order: null },
+    name: { field: 'name', order: null },
+    status: { field: 'status', order: null },
+  });
 
   const router = useRouter();
   const { productName, bbId } = router.query;
@@ -36,7 +36,7 @@ const TestResultPage = () => {
 
   const fetchData = useCallback(async () => {
     const [data] = await Promise.all([
-      getBuildingBlockTestResults(bbId as string, sortBy)
+      getBuildingBlockTestResults(bbId as string, sortBy),
     ]);
     if (data.status) {
       setBBTestSummary(data.data);
@@ -55,24 +55,24 @@ const TestResultPage = () => {
 
   return (
     <main>
-      <div className='test-result-page'>
-        <div className='test-result-primary-section'>
+      <div className="test-result-page">
+        <div className="test-result-primary-section">
           <div>
             <Link
-              className='back-to-home-page-btn'
+              className="back-to-btn"
               href={'/'}
-              data-testid='test-result-page-link'
+              data-testid="test-result-page-link"
             >
               {format('result_page.back_to_product_list')}
             </Link>
             <div
-              className='test-result-title'
-              data-testid='test-result-page-title'
+              className="test-result-title"
+              data-testid="test-result-page-title"
             >
               <p>{format('result_page.title')}</p>
-              <FaQuoteLeft className='quote' />
+              <FaQuoteLeft className="quote" />
               <p>{productName}</p>
-              <FaQuoteRight className='quote' />
+              <FaQuoteRight className="quote" />
             </div>
             <TestSummary bbSummary={bbTestSummary?.compatibilities} />
             <TestResultTable
@@ -83,16 +83,16 @@ const TestResultPage = () => {
           </div>
         </div>
         {currentBBTest ? (
-          <div className='test-result-second-section'>
-            <div className='test-result-second-section-title'>
-              <div className='test-result-second-section-text'>
+          <div className="test-result-second-section">
+            <div className="test-result-second-section-title">
+              <div className="test-result-second-section-text">
                 <p>{`${currentBBTest?.method} ${currentBBTest?.endpoint}`}</p>
               </div>
-              <div className='close-icon'>
+              <div className="close-icon">
                 <RiCloseLine onClick={() => setCurrentBBTest(undefined)} />
               </div>
             </div>
-            <div className='test-result-second-section-body'>
+            <div className="test-result-second-section-body">
               {currentBBTest.details?.map((testDetail, idx) => (
                 <TestStepsView
                   testDetails={testDetail}

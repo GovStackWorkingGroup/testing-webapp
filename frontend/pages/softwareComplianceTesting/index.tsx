@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Definition from '../../components/Definition';
 import useTranslations from '../../hooks/useTranslation';
-import ListOfCandidateApplicationComplianceResults from '../../components/ListOfCandidateApplicationComplianceResults';
+import ListOfCandidateApplicationComplianceResults from '../../components/compliance/ListOfCandidateApplicationComplianceResults';
 
 const SoftwareComplianceTestingPage = () => {
   const { format } = useTranslations();
