@@ -24,11 +24,6 @@ const ComplianceDetailSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  status: {
-    type: Number,
-    enum: Object.values(StatusEnum),
-    default: StatusEnum.DRAFT
-  },
   submissionDate: {
     type: Date,
     default: Date.now
@@ -90,6 +85,13 @@ const ComplianceReportSchema = new mongoose.Schema({
   pointOfContact: {
     type: String,
     required: true
+  },
+  expirationDate: {
+    type: Date
+  },
+  status: {
+    type: Number,
+    require: true
   },
   compliance: [ComplianceVersionSchema]
 });

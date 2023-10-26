@@ -1,7 +1,7 @@
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
-    export enum StatusEnum {
+    export const enum StatusEnum {
       DRAFT = 0,
       IN_REVIEW = 1,
       APPROVED = 2,
@@ -17,7 +17,6 @@ declare module 'myTypes' {
     export interface ComplianceDetail {
       bbSpecification: string;
       bbVersion: string;
-      status: StatusEnum;
       submissionDate?: Date;
       deploymentCompliance: {
         isCompliant: boolean;
