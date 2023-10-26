@@ -5,6 +5,7 @@ table.main-table {
   border: 1px solid @border-grey;
   border-radius: 8px;
   border-spacing: 0;
+  max-width: 90vw;
 
   thead:extend(.table-header-text) {
     height: @table-row;
@@ -80,4 +81,45 @@ table.inside-table {
 .tr-subheader-container {
   display: flex;
   justify-content: space-between;
+  color: @text-main;
+  text-decoration: none;
+  align-items: center;
+}
+
+.td-text-color-container {
+  height: 22px;
+  width: max-content;
+  border-radius: 4px;
+  line-height: 22px;
+  padding: 4px 8px;
+}
+
+.td-text-color-container.status-in-review {
+  background-color: @background-medium-blue;
+  color: @blue-medium;
+}
+
+.td-text-color-container.status-rejected {
+  background-color: @fail-background-second;
+  color: @fail;
+}
+
+.td-text-color-container.status-approved {
+  background-color: @success-background-second;
+  color: @success;
+}
+
+.td-text-color-container.status-na {
+  background-color: @grey-background;
+  color: @text-secondary;
+}
+
+.td-text-color-container.status-level-one {
+  background-color: @purple-background;
+  color: @purple-one;
+}
+
+.td-text-color-container.status-level-two {
+  background-color: @green-background;
+  color: @green-one;
 }
