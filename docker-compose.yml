@@ -1,7 +1,9 @@
 version: '3'
 services:
     web:
-      build: .
+      build:
+        context: ./frontend
+        dockerfile: ./Dockerfile
       ports:
         - 3003:3003
       environment:
@@ -35,7 +37,7 @@ services:
       image: testing-webapp-server
       restart: always
       build:
-        context: ./server
+        context: ./backend
         dockerfile: ./Dockerfile
       command: dev
       expose:

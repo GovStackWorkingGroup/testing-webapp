@@ -8,18 +8,22 @@ const StatusEnum = {
   REJECTED: 3
 };
 
+<<<<<<< HEAD:server/src/db/schemas/compliance.ts
 const RequirementStatusEnum = {
   REQUIRED: 0,
   RECOMMENDED: 1,
   OPTIONAL: 2
 };
 
+=======
+>>>>>>> develop:backend/src/db/schemas/compliance.ts
 const SpecificationComplianceLevel = {
   NA: -1,
   LEVEL_1: 1,
   LEVEL_2: 2
 };
 
+<<<<<<< HEAD:server/src/db/schemas/compliance.ts
 const RequirementFulfillment = {
   MET: 1,
   NOT_MET: 0
@@ -47,6 +51,8 @@ const RequirementSchema = new mongoose.Schema({
   },
 });
 
+=======
+>>>>>>> develop:backend/src/db/schemas/compliance.ts
 // SCHEMA FORM CONTENT
 const ComplianceDetailSchema = new mongoose.Schema({
   bbSpecification: {
@@ -90,21 +96,29 @@ const ComplianceDetailSchema = new mongoose.Schema({
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
       required: true
+<<<<<<< HEAD:server/src/db/schemas/compliance.ts
     },
     crossCuttingRequirements: [RequirementSchema],
     functionalRequirements: [RequirementSchema]
+=======
+    }
+>>>>>>> develop:backend/src/db/schemas/compliance.ts
   },
   interfaceCompliance: {
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
       required: true
+<<<<<<< HEAD:server/src/db/schemas/compliance.ts
     },
     testHarnessResult: {
       type: String,
       default: ''
     },
     requirements: [RequirementSchema]
+=======
+    }
+>>>>>>> develop:backend/src/db/schemas/compliance.ts
   }
 });
 

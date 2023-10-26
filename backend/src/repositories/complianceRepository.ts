@@ -14,6 +14,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+<<<<<<< HEAD:server/src/repositories/complianceRepository.ts
   const getSoftwareComplianceDetail = async (softwareName: string) => {
     try {
       return await repository.getSoftwareComplianceDetail(softwareName);
@@ -37,6 +38,11 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail
+=======
+  return {
+    findAll,
+    aggregateComplianceReports
+>>>>>>> develop:backend/src/repositories/complianceRepository.ts
   };
 };
 

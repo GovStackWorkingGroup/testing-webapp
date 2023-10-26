@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handleGetAllComplianceReports';
+<<<<<<< HEAD:server/src/controllers/complianceController.ts
 import GetSoftwareComplianceDetailRequestHandler from '../useCases/compliance/handleGetSoftwareComplianceDetail';
 import GetFormDetailRequestHandler from '../useCases/compliance/handleGetFormDetail';
+=======
+>>>>>>> develop:backend/src/controllers/complianceController.ts
 import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository } from 'myTypes';
 
@@ -17,6 +20,7 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   };
 
+<<<<<<< HEAD:server/src/controllers/complianceController.ts
   const getSoftwareComplianceDetail = (req: Request, res: Response): void => {
     const softwareName = req.params.softwareName;
 
@@ -37,6 +41,10 @@ const complianceController = (
     getAllComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail
+=======
+  return {
+    getAllComplianceReports
+>>>>>>> develop:backend/src/controllers/complianceController.ts
   };
 };
 

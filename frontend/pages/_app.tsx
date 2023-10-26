@@ -9,10 +9,13 @@ import '../components/TestSummary.less';
 import '../components/header/Header.less';
 import '../components/header/HeaderMenuButton.less';
 import MainLayout from '../components/mainLayout/MainLayout';
+import '../components/shared/inputs/SearchInput.less';
+import '../components/shared/modals/Modal.less';
 import '../components/mainLayout/MainLayout.less';
-import '../components/shared/SearchInput.less';
+import '../components/shared/inputs/SearchInput.less';
 import '../components/table/ProductTable.less';
 import '../components/table/SubTable.less';
+import '../components/table/Table.less';
 import '../components/table/TestResultTable.less';
 import '../styles/Globals.less';
 import * as translations from '../translations';
@@ -31,13 +34,13 @@ const App = ({ Component, pageProps }: AppProps) => {
     <>
       <Head>
         <meta
-          name='viewport'
-          content='width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0'
+          name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0"
         />
       </Head>
       <IntlProvider
         locale={locale as keyof typeof translations}
-        defaultLocale='en'
+        defaultLocale="en"
         messages={messages}
       >
         <MainLayout>

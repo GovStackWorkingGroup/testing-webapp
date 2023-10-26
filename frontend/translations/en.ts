@@ -26,6 +26,30 @@ export const en = {
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
 
+  'evaluation_schema.all.label': 'All',
+  'evaluation_schema.compliance.label': 'Compliance',
+  'evaluation_schema.deployability_via_container.label':
+    'Deployability via container',
+  'evaluation_schema.deployment_compliance.label': 'Deployment Compliance',
+  'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
+  'evaluation_schema.fulfillment_of_required_api.label':
+    'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
+  'evaluation_schema.fulfillment_of_required_key.label':
+    'Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications',
+  'evaluation_schema.fulfillment_of_required_functional_requirements.label':
+    'Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications',
+  'evaluation_schema.fulfillment_of_required_cross_cutting_requirements.label':
+    'Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications',
+  'evaluation_schema.fulfillment_of_service_api.label':
+    'Fulfillment of Service API requirements',
+  'evaluation_schema.interface_compliance.label': 'Interface Compliance',
+  'evaluation_schema.level_1.label': 'Level 1',
+  'evaluation_schema.level_2.label': 'Level 2',
+  'evaluation_schema.optional.label': 'Optional',
+  'evaluation_schema.requirement.label': 'Requirement',
+  'evaluation_schema.requirement_specification.label':
+    'Requirement Specification',
+
   'image.alt.logoFor': 'Logo for: {name}',
 
   'software_name.label': 'Software Name',

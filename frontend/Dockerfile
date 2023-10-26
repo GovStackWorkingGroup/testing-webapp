@@ -1,8 +1,8 @@
 FROM node
 
 #Setup working directory
-RUN mkdir -p /testing-webapp
-WORKDIR /testing-webapp
+RUN mkdir -p /frontend
+WORKDIR /frontend
 
 #Copy source files
 COPY . .
