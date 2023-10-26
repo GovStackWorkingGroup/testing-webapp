@@ -1,7 +1,7 @@
 import { StatusEnum } from 'myTypes';
 import ComplianceReport from '../db/schemas/compliance'
 
-async function removeSensitiveDataFromExpiredDrafts() {
+export async function removeSensitiveDataFromExpiredDrafts() {
     try {
         const currentDateTime = new Date();
         const query = {
@@ -34,5 +34,3 @@ async function removeSensitiveDataFromExpiredDrafts() {
         console.error('An error occurred while removing sensitive data from expired drafts:', error);
     }
 }
-
-export default removeSensitiveDataFromExpiredDrafts;

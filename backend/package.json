@@ -5,6 +5,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@cucumber/json-to-messages": "^10.0.0",
+    "@types/sinon": "^10.0.20",
     "@vpriem/express-api-key-auth": "^1.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -21,13 +22,14 @@
     "node-cron": "^3.0.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.8",
+    "sinon": "^17.0.0",
     "streamifier": "^0.1.1",
     "supertest": "^6.3.3"
   },
   "scripts": {
     "dev": "nodemon -L server.ts",
     "prod": "node server.ts",
-    "test": "mocha",
+    "test": "mocha --exit",
     "test:watch": "mocha --watch"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
 import { schedule } from 'node-cron';
-import removeSensitiveDataFromExpiredDrafts from './removeExpiredDrafts';
+import { removeSensitiveDataFromExpiredDrafts } from './removeExpiredDrafts';
 import { appConfig } from '../config';
 
 export const startCronJobs = (): void => {
