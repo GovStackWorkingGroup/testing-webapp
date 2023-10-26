@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
+import classNames from 'classnames';
 import useTranslations from '../hooks/useTranslation';
 
 type DefinitionType = {
@@ -7,6 +8,7 @@ type DefinitionType = {
   hasRedirecting?: boolean;
   description: string;
   note?: string;
+  customStyle?: string;
 };
 
 const Definition = ({
@@ -14,11 +16,12 @@ const Definition = ({
   hasRedirecting = false,
   description,
   note,
+  customStyle,
 }: DefinitionType) => {
   const { format } = useTranslations();
 
   return (
-    <div className="definition-section">
+    <div className={classNames('definition-section', customStyle)}>
       <p className="definition-title" data-testid="definition-title">
         {title}
       </p>

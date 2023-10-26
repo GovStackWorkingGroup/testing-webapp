@@ -14,7 +14,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
+            value: format('table.deployment_compliance.label'),
           },
           {
             value: format(
@@ -28,7 +28,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.interface_compliance.label'),
+            value: format('table.interface_compliance.label'),
           },
           {
             values: [
@@ -69,7 +69,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
+            value: format('evaluation_schema.requirement_specification.label'),
           },
           {
             values: [
