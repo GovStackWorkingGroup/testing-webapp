@@ -1,11 +1,6 @@
-<<<<<<< HEAD:server/src/db/repositories/complianceRepository.ts
 import { ComplianceDbRepository, FormDetailsResults } from 'myTypes'; 
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
-=======
-import { ComplianceDbRepository } from 'myTypes'; 
-import Compliance from '../schemas/compliance';
->>>>>>> develop:backend/src/db/repositories/complianceRepository.ts
 
 const createAggregationPipeline = (limit: number, offset: number): any[] => {
   const aggregationPipeline: any[] = [
@@ -49,7 +44,6 @@ const createAggregationPipeline = (limit: number, offset: number): any[] => {
   ];
   if (offset !== undefined) aggregationPipeline.push({ $skip: offset });
   if (limit !== undefined) aggregationPipeline.push({ $limit: limit });
-<<<<<<< HEAD:server/src/db/repositories/complianceRepository.ts
   
   return aggregationPipeline;
 };
@@ -175,12 +169,6 @@ const formDetailAggregationPipeline = (formId: string): any[] => [
   }
 ];
 
-=======
-
-  return aggregationPipeline;
-};
-
->>>>>>> develop:backend/src/db/repositories/complianceRepository.ts
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
     try {
@@ -202,7 +190,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       console.error("Root cause of aggregation error:", error);
       throw new Error('Error aggregating compliance reports');
     }
-<<<<<<< HEAD:server/src/db/repositories/complianceRepository.ts
   },
 
   async getSoftwareComplianceDetail(softwareName: string) {
@@ -225,9 +212,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-=======
-  }
->>>>>>> develop:backend/src/db/repositories/complianceRepository.ts
 };
 
 export default mongoComplianceRepository;
