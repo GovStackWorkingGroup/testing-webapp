@@ -93,7 +93,10 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: Number,
     require: true
   },
-  compliance: [ComplianceVersionSchema]
+  compliance: [ComplianceVersionSchema],
+  link: {
+    type: String,
+  }
 });
 
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);

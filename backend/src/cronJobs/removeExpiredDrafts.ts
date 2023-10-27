@@ -20,10 +20,11 @@ export async function removeSensitiveDataFromExpiredDrafts() {
                     "documentation",
                     "pointOfContact",
                     "compliance",
+                    "status"
                 ]
             }
         ]);
-
+        
         if (result.matchedCount > 0) {
             console.log(`Found and updated ${result.matchedCount} expired drafts. Removed sensitive data.`);
         } else {
