@@ -6,6 +6,7 @@
   "dependencies": {
     "@cucumber/json-to-messages": "^10.0.0",
     "@types/sinon": "^10.0.20",
+    "@types/uuid-validate": "^0.0.2",
     "@vpriem/express-api-key-auth": "^1.1.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
@@ -25,7 +26,8 @@
     "prettier": "^2.8.8",
     "sinon": "^17.0.0",
     "streamifier": "^0.1.1",
-    "supertest": "^6.3.3"
+    "supertest": "^6.3.3",
+    "validator": "^13.11.0"
   },
   "scripts": {
     "dev": "nodemon -L server.ts",

@@ -35,3 +35,5 @@ export async function removeSensitiveDataFromExpiredDrafts() {
         console.error('An error occurred while removing sensitive data from expired drafts:', error);
     }
 }
+
+export default removeSensitiveDataFromExpiredDrafts;

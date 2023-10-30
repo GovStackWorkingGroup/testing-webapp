@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 
 // SCHEMA FORM CONTENT
 const StatusEnum = {
@@ -94,8 +95,14 @@ const ComplianceReportSchema = new mongoose.Schema({
     require: true
   },
   compliance: [ComplianceVersionSchema],
-  link: {
+  uniqueId: {
     type: String,
+    validate: {
+      validator: function(v) {
+        return uuidValidate(v) && uuidVersion(v) === 4;
+      },
+      message: props => `${props.value} is not a valid version 4 UUID`
+    },
   }
 });
 
