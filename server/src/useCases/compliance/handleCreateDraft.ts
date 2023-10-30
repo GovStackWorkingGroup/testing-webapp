@@ -48,7 +48,7 @@ export default class CreateDraftRequestHandler {
             }
 
             return this.res.status(201).send(response);
-        } catch (error) {
+        } catch (error: any) {
             if (error instanceof mongoose.Error.ValidationError) {
                 return this.res.status(400).send({ success: false, error: error.message });
             } else if (error instanceof TypeError) {
@@ -57,7 +57,7 @@ export default class CreateDraftRequestHandler {
             }
 
             console.error("Error creating draft:", error);
-            return this.res.status(500).send({ success: false, error: "Error creating draft." });
+            return this.res.status(500).send({ success: false, error: error.message || "Error creating draft." });
         }
     }
 }

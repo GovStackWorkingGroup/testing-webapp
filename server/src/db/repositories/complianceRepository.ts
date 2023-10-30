@@ -1,8 +1,9 @@
-import { ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes'; 
+import { ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
 import { appConfig } from '../../config/index';
+import { ValidationError } from 'jsonschema';
 
 const createAggregationPipeline = (limit: number, offset: number): any[] => {
   const aggregationPipeline: any[] = [
@@ -46,7 +47,7 @@ const createAggregationPipeline = (limit: number, offset: number): any[] => {
   ];
   if (offset !== undefined) aggregationPipeline.push({ $skip: offset });
   if (limit !== undefined) aggregationPipeline.push({ $limit: limit });
-  
+
   return aggregationPipeline;
 };
 
@@ -120,7 +121,8 @@ const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
 
 const formDetailAggregationPipeline = (formId: string): any[] => [
   {
-    $match: { "_id": new mongoose.Types.ObjectId(formId) }  },
+    $match: { "_id": new mongoose.Types.ObjectId(formId) }
+  },
   {
     $unwind: "$compliance"
   },
@@ -230,8 +232,12 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       await newForm.save();
 
       return uniqueId;
-    } catch (error) {
-      console.error('Error while creating compliance draft:', error);
+    } catch (error: any) {
+      if (error instanceof mongoose.Error.ValidationError) {
+        const missingFields = Object.keys(error.errors).join(', ');
+        const errorMessage = `Missing required fields: ${missingFields}`;
+        throw new Error(errorMessage);
+      }
       throw new Error('Error creating compliance draft');
     }
   }

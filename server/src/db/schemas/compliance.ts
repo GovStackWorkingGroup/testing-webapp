@@ -137,6 +137,10 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  description: {
+    type: String,
+    required: true,
+  },
   pointOfContact: {
     type: String,
     required: true
