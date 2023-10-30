@@ -28,9 +28,8 @@ export default class CreateDraftRequestHandler {
     async createOrSubmitForm(): Promise<Response> {
         try {
             const files = this.req.files as UploadedFiles;
-
             if (!files.logo || !files.logo[0]) {
-                return this.res.status(400).send("Missing required file: logo");
+                return this.res.status(400).send({ success: false, error: "Missing required file: logo" });
             }
 
             const draftData = {
@@ -51,6 +50,9 @@ export default class CreateDraftRequestHandler {
             return this.res.status(201).send(response);
         } catch (error) {
             if (error instanceof mongoose.Error.ValidationError) {
+                return this.res.status(400).send({ success: false, error: error.message });
+            } else if (error instanceof TypeError) {
+                console.error("Type error:", error);
                 return this.res.status(400).send({ success: false, error: error.message });
             }
 
