@@ -10,14 +10,14 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
-          app-dir: src
+          app-dir: frontend
           pkg-manager: yarn
       - run:
-          working_directory: src
+          working_directory: frontend
           command: yarn lint
           name: Lint the codebase
       - run:
-          working_directory: src
+          working_directory: frontend
           command: yarn test
           name: Run YARN tests
 

@@ -1,0 +1,64 @@
+@import '../../styles/Variables.less';
+@import '../../styles/Extends.less';
+
+table.main-table {
+  border: 1px solid #dfdfea;
+  border-radius: 8px;
+  border-spacing: 0;
+
+  thead:extend(.table-header-text) {
+    height: 48px;
+    text-align: left;
+    width: 100%;
+    background-color: @blue-lightest;
+
+    th {
+      padding: 0 10px 0 10px;
+      border-right: 1px solid #dfdfea;
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+  }
+
+  tbody {
+    width: 100%;
+
+    tr {
+      min-height: 48px;
+      height: 48px;
+
+      td {
+        min-height: 48px;
+        padding: 0 10px 0 10px;
+        border-top: 1px solid #dfdfea;
+        border-right: 1px solid #dfdfea;
+      }
+
+      td.td-row-details {
+        padding: 0;
+      }
+
+      td:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+table.inside-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 100%;
+
+  tr:first-child {
+    td {
+      border-top: none;
+    }
+  }
+}
+
+.check-icon {
+  color: @accents-and-btn;
+}
