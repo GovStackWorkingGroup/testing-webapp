@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { ComplianceReport } from 'myTypes';
 
-const isRequiredIfNotDraft = function(this: ComplianceReport, value: any) {
+const validateRequiredIfNotDraftForForm = function(this: ComplianceReport, value: any) {
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
 };
 
@@ -89,7 +89,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
+      default: SpecificationComplianceLevel.NA,
     },
     crossCuttingRequirements: [RequirementSchema],
     functionalRequirements: [RequirementSchema]
@@ -98,7 +98,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
+      default: SpecificationComplianceLevel.NA,
     },
     testHarnessResult: {
       type: String,
@@ -146,7 +146,7 @@ const ComplianceReportSchema = new mongoose.Schema({
     enum: Object.values(StatusEnum),
     default: StatusEnum.DRAFT
   },
-  link: {
+  uniqueId: {
     type: String,
     unique: true
   },
@@ -156,7 +156,7 @@ const ComplianceReportSchema = new mongoose.Schema({
   compliance: {
     type: [ComplianceVersionSchema],
     validate: {
-      validator: isRequiredIfNotDraft,
+      validator: validateRequiredIfNotDraftForForm,
       message: 'Compliance is required when status is not DRAFT'
     }
   }

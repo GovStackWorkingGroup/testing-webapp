@@ -218,18 +218,18 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     try {
 
       const isDraft = draftData.status == StatusEnum.DRAFT;
-      const link = isDraft ? uuidv4() : '';
+      const uniqueId = isDraft ? uuidv4() : '';
       const expirationDate = isDraft ? new Date(Date.now() + appConfig.draftExpirationTime) : undefined;
 
-      const newDraft = new Compliance({
+      const newForm = new Compliance({
         ...draftData,
-        link,
+        uniqueId,
         expirationDate
       });
 
-      await newDraft.save();
+      await newForm.save();
 
-      return link;
+      return uniqueId;
     } catch (error) {
       console.error('Error while creating compliance draft:', error);
       throw new Error('Error creating compliance draft');

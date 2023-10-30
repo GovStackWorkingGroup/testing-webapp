@@ -48,7 +48,7 @@ declare module 'myTypes' {
     documentation: string;
     pointOfContact: string;
     compliance: ComplianceVersion[];
-    link?: string;
+    uniqueId?: string;
     expirationDate?: Date;
     status: StatusEnum;
   }

@@ -8,8 +8,8 @@ const buildComplianceRoutes = (controller: any) => {
   const router = express.Router();
 
   const storage = multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, 'uploads/'),
-    filename: (_req, file, cb) => cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
+    destination: (_req, _file, done) => done(null, 'uploads/'),
+    filename: (_req, file, done) => done(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
   });
 
   const filesUpload = multer({ storage }).fields([

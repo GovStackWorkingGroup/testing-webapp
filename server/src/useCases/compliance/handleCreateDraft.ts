@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { ComplianceDbRepository, StatusEnum } from "myTypes";
 
 type UploadedFiles = {
@@ -26,15 +27,10 @@ export default class CreateDraftRequestHandler {
 
     async createOrSubmitForm(): Promise<Response> {
         try {
-            const requiredFields = ['softwareName', 'website', 'documentation', 'description', 'email'];
-            const missingFields = requiredFields.filter(field => !this.req.body[field]);
             const files = this.req.files as UploadedFiles;
 
             if (!files.logo || !files.logo[0]) {
-                missingFields.push('logo');
-            }
-            if (missingFields.length > 0) {
-                return this.res.status(400).send(`Missing required fields: ${missingFields.join(', ')}`);
+                return this.res.status(400).send("Missing required file: logo");
             }
 
             const draftData = {
@@ -54,8 +50,12 @@ export default class CreateDraftRequestHandler {
 
             return this.res.status(201).send(response);
         } catch (error) {
+            if (error instanceof mongoose.Error.ValidationError) {
+                return this.res.status(400).send({ success: false, error: error.message });
+            }
+
             console.error("Error creating draft:", error);
-            return this.res.status(500).send("Error creating draft.");
+            return this.res.status(500).send({ success: false, error: "Error creating draft." });
         }
     }
 }

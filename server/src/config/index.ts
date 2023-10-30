@@ -16,7 +16,8 @@ const appConfig: AppConfig = {
   appName: process.env.appName || 'testing-webapp-api',
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
-  draftExpirationTime: 24 * 60 * 60 * 1000,
+  // Time is specified in milliseconds.
+  draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
 
 const limiter = rateLimit({
