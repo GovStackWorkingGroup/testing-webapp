@@ -21,11 +21,12 @@ describe('Compliance API', () => {
       softwareName: "openIMIS",
       logo: "https://openIMIS.com/logo.png",
       website: "https://openIMIS.com",
-      documentation: ["https://openIMIS.com/doc1", "https://openIMIS.com/doc2"],
+      documentation: "https://openIMIS.com/doc1",
       pointOfContact: "contact@openIMIS.com",
       status: 0,
       uniqueId: "550e8400-e29b-41d4-a716-446655440001",
       expirationDate: new Date("2024-11-24T00:00:00.000Z"),
+      description: "Sample description.",
       compliance: [
         {
           version: "2.0",
@@ -34,6 +35,7 @@ describe('Compliance API', () => {
               bbSpecification: "SpecificationA",
               bbVersion: "1.2.0",
               submissionDate: new Date("2025-10-01T14:48:00.000Z"),
+              status: 0,
               deploymentCompliance: {
                 isCompliant: true,
                 details: "Details for openIMIS, bb-digital-registries",
@@ -64,7 +66,6 @@ describe('Compliance API', () => {
       ]
     };
     await ComplianceReport.create(complianceData);
-    console.log(complianceData);
   });
 
   after(async () => {
@@ -90,11 +91,10 @@ describe('Compliance API', () => {
         expect(responseData[softwareName]).to.be.an('array');
     
         responseData[softwareName].forEach(item => {
-          console.log(item)
           expect(item).to.have.property('softwareVersion').that.is.a('string');
           expect(item).to.have.property('bb').that.is.a('string');
           expect(item).to.have.property('bbVersion').that.is.a('string');
-          // expect(item).to.have.property('status').that.is.oneOf([0, 1, 2, 3]);
+          expect(item).to.have.property('status').that.is.oneOf([0, 1, 2, 3]);
           expect(item).to.have.property('submissionDate').to.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)$/);
           expect(item).to.have.property('deploymentCompliance').that.is.a('boolean');
           expect(item).to.have.property('requirementSpecificationCompliance').that.is.oneOf([null, -1, 1, 2]);

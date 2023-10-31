@@ -14,13 +14,14 @@ export async function removeSensitiveDataFromExpiredDrafts() {
         const result = await ComplianceReport.updateMany(query, [
             {
                 $unset: [
+                    "status",
                     "softwareName",
                     "logo",
                     "website",
                     "documentation",
                     "pointOfContact",
                     "compliance",
-                    "status"
+                    "description"
                 ]
             }
         ]);

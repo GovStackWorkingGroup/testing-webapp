@@ -33,11 +33,12 @@ describe('Cron Job', () => {
       softwareName: "openIMIS",
       logo: "https://openIMIS.com/logo.png",
       website: "https://openIMIS.com",
-      documentation: ["https://openIMIS.com/doc1", "https://openIMIS.com/doc2"],
+      documentation: "https://openIMIS.com/doc1",
       pointOfContact: "contact@openIMIS.com",
       status: 0,
       expirationDate: futureDate,
       compliance: [],
+      description: "Sample description.",
       uniqueId: '550e8400-e29b-41d4-a716-446655440000'
     });
 
@@ -45,11 +46,12 @@ describe('Cron Job', () => {
       softwareName: "openIMIS",
       logo: "https://openIMIS.com/logo.png",
       website: "https://openIMIS.com",
-      documentation: ["https://openIMIS.com/doc1", "https://openIMIS.com/doc2"],
+      documentation: "https://openIMIS.com/doc1",
       pointOfContact: "contact@openIMIS.com",
       status: 0,
       expirationDate: expiredDate,
       compliance: [],
+      description: "Sample description.",
       uniqueId: '550e8400-e29b-41d4-a716-446655440001'
     });
 
@@ -87,13 +89,12 @@ describe('Cron Job', () => {
 
     const expiredReports = await ComplianceReport.find({ expirationDate: { $lt: new Date() } }).exec();
     const nonExpiredReports = await ComplianceReport.find({ expirationDate: { $gte: new Date() } }).exec();
-
-    const optionalFields = ['__v', 'id', 'uniqueId'];
+    const optionalFields = ['__v', 'id', 'uniqueId', 'status'];
 
     const requiredFieldsForExpired = ['uniqueId', 'expirationDate'];
     ReportChecker.checkReports(expiredReports, requiredFieldsForExpired, optionalFields);
 
-    const requiredFieldsForNonExpired = ['softwareName', 'logo', 'website', 'documentation', 'pointOfContact', 'status', 'compliance'];
+    const requiredFieldsForNonExpired = ['softwareName', 'logo', 'website', 'documentation', 'pointOfContact', 'status', 'compliance', 'description'];
     ReportChecker.checkReports(nonExpiredReports, requiredFieldsForNonExpired, optionalFields);
   });
 
