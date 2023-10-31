@@ -39,7 +39,7 @@ const Header = () => {
           <HeaderMenuButton
             buttonTitle={format('app.software-compliance-testing.label')}
             href={'/softwareComplianceTesting'}
-            active={currentPath === '/softwareComplianceTesting'}
+            active={currentPath.includes('/softwareComplianceTesting')}
           />
         </div>
         <div className="header-help">

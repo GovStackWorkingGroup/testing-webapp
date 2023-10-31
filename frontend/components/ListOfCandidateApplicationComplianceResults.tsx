@@ -3,6 +3,8 @@ import useTranslations from '../hooks/useTranslation';
 import { getComplianceList } from '../service/serviceAPI';
 import { CellValue, DataRow } from '../service/types';
 import Table from './table/Table';
+import Button from './shared/buttons/Button';
+import { COMPLIANCE_TESTING_FORM } from './consts';
 
 type DataProps = {
   headers: string[];
@@ -113,7 +115,19 @@ const ListOfCandidateApplicationComplianceResults = () => {
     fetchData();
   }, []);
 
-  return <Table data={data} hasVerticalBorders={false} />;
+  return (
+    <div>
+      <div>
+        <Button
+          text={format('app.check_compliance.label')}
+          styles="primary-button"
+          type="link"
+          href={COMPLIANCE_TESTING_FORM}
+        />
+      </div>
+      <Table data={data} hasVerticalBorders={false} />;
+    </div>
+  );
 };
 
 export default ListOfCandidateApplicationComplianceResults;
