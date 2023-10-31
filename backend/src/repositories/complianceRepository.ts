@@ -1,4 +1,4 @@
-import { ComplianceDbRepository } from "myTypes";
+import { ComplianceDbRepository, ComplianceReport } from "myTypes";
 
 const complianceRepository = (repository: ComplianceDbRepository) => {
   const findAll = async () => {
@@ -32,11 +32,21 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   }
 
+  const createOrSubmitForm = async (draftData: Partial<ComplianceReport>) => {
+    try {
+      return await repository.createOrSubmitForm(draftData);
+    } catch (error) {
+      console.error('There was an error while creating the draft:', error);
+      throw error;
+    }
+  };
+
   return {
     findAll,
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
-    getFormDetail
+    getFormDetail,
+    createOrSubmitForm
   };
 };
 

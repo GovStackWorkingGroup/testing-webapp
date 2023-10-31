@@ -1,4 +1,9 @@
 import mongoose from 'mongoose';
+import { ComplianceReport } from 'myTypes';
+
+const validateRequiredIfNotDraftForForm = function(this: ComplianceReport, value: any) {
+  return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
+};
 
 // SCHEMA FORM CONTENT
 const StatusEnum = {
@@ -57,11 +62,6 @@ const ComplianceDetailSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  status: {
-    type: Number,
-    enum: Object.values(StatusEnum),
-    default: StatusEnum.DRAFT
-  },
   submissionDate: {
     type: Date,
     default: Date.now
@@ -89,7 +89,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
+      default: SpecificationComplianceLevel.NA,
     },
     crossCuttingRequirements: [RequirementSchema],
     functionalRequirements: [RequirementSchema]
@@ -98,7 +98,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
+      default: SpecificationComplianceLevel.NA,
     },
     testHarnessResult: {
       type: String,
@@ -133,15 +133,37 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  documentation: [{
+  documentation: {
     type: String,
     required: true,
-  }],
+  },
+  description: {
+    type: String,
+    required: true,
+  },
   pointOfContact: {
     type: String,
     required: true
   },
-  compliance: [ComplianceVersionSchema]
+  status: {
+    type: Number,
+    enum: Object.values(StatusEnum),
+    default: StatusEnum.DRAFT
+  },
+  uniqueId: {
+    type: String,
+    unique: true
+  },
+  expirationDate: {
+    type: Date
+  },
+  compliance: {
+    type: [ComplianceVersionSchema],
+    validate: {
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'Compliance is required when status is not DRAFT'
+    }
+  }
 });
 
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);

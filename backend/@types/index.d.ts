@@ -1,20 +1,20 @@
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
-  export enum StatusEnum {
+  export const enum StatusEnum {
     DRAFT = 0,
     IN_REVIEW = 1,
     APPROVED = 2,
     REJECTED = 3
   }
 
-  export enum RequirementStatusEnum {
+  export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
     OPTIONAL = 2
   }
 
-  export enum SpecificationComplianceLevel {
+  export const enum SpecificationComplianceLevel {
     NA = -1,
     LEVEL_1 = 1,
     LEVEL_2 = 2
@@ -23,7 +23,6 @@ declare module 'myTypes' {
   export interface ComplianceDetail {
     bbSpecification: string;
     bbVersion: string;
-    status: StatusEnum;
     submissionDate?: Date;
     deploymentCompliance: {
       isCompliant: boolean;
@@ -46,9 +45,12 @@ declare module 'myTypes' {
     softwareName: string;
     logo: string;
     website: string;
-    documentation: string[];
+    documentation: string;
     pointOfContact: string;
     compliance: ComplianceVersion[];
+    uniqueId?: string;
+    expirationDate?: Date;
+    status: StatusEnum;
   }
 
   export interface ComplianceDetailTransformed {
@@ -109,12 +111,13 @@ declare module 'myTypes' {
   type FindResult = ComplianceReport[];
   type AggregateResult = Record<string, any>;
   type SofwareDetailsResults = SoftwareDetailsResult[];
-  type FormDetailsResults = FormDetailResult
+  type FormDetailsResults = FormDetailResult;
 
   export interface ComplianceDbRepository {
     findAll: () => Promise<FindResult>;
     aggregateComplianceReports: (limit, offset) => Promise<AggregateResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
-    getFormDetail: (formId: string) => Promise<FormDetailsResults>
+    getFormDetail: (formId: string) => Promise<FormDetailsResults>;
+    createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
   }
 }
