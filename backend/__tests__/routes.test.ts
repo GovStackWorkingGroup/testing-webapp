@@ -10,10 +10,14 @@ describe('Unit test example for GET /report', () => {
   before(async () => {
     mongod = await MongoMemoryServer.create();
     const uri = mongod.getUri();
+    if (mongoose.connection.readyState === 1) {
+      await mongoose.disconnect();
+    }
     await mongoose.connect(uri);
   });
 
   after(async () => {
+    await mongoose.connection.dropDatabase();
     await mongoose.disconnect();
     await mongod.stop();
   });

@@ -9,6 +9,12 @@ const StatusEnum = {
   REJECTED: 3
 };
 
+const BBStatusEnum = {
+  IN_REVIEW: 1,
+  APPROVED: 2,
+  REJECTED: 3
+};
+
 const SpecificationComplianceLevel = {
   NA: -1,
   LEVEL_1: 1,
@@ -24,6 +30,11 @@ const ComplianceDetailSchema = new mongoose.Schema({
   bbVersion: {
     type: String,
     required: true
+  },
+  status: {
+    type: Number,
+    enum: Object.values(StatusEnum),
+    default: BBStatusEnum.IN_REVIEW
   },
   submissionDate: {
     type: Date,

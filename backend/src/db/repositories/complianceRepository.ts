@@ -13,7 +13,7 @@ const createAggregationPipeline = (limit: number, offset: number): any[] => {
         bb: "$bbDetailsArray.k",
         bbVersion: "$bbDetailsArray.v.bbVersion",
         status: "$bbDetailsArray.v.status",
-        submissionDate: "$bbDetailsArray.v.submissionDate",
+        submissionDate: { $toDate: "$bbDetailsArray.v.submissionDate" },
         deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance.isCompliant",
         requirementSpecificationCompliance: "$bbDetailsArray.v.requirementSpecificationCompliance.level",
         interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
