@@ -6,7 +6,7 @@ jobs:
   build_and_test:
     executor:
       name: node/default
-      tag: '16.10'
+      tag: '18.18.2'
     steps:
       - checkout
       - node/install-packages:

@@ -1,6 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import dotenv from 'dotenv';
 import { MongoConnection } from './connectionStringBuilder';
+import rateLimit from "express-rate-limit"; 
 
 dotenv.config();
 
@@ -11,6 +12,7 @@ interface AppConfig {
   cron: {
     removeExpiredDraftsSchedule: string;
   };
+  draftExpirationTime: number
 }
 
 const appConfig: AppConfig = {
@@ -20,8 +22,17 @@ const appConfig: AppConfig = {
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
   },
+  // Time is specified in milliseconds.
+  draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
 };
+
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 100, 
+  message: "Too many requests from this IP, please try again later."
+});
 
 export {
   appConfig,
+  limiter
 };

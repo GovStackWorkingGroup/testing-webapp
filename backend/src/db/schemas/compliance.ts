@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
+import { ComplianceReport } from 'myTypes';
+
+const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
+  return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
+};
 
 // SCHEMA FORM CONTENT
 const StatusEnum = {
@@ -13,6 +18,12 @@ const BBStatusEnum = {
   IN_REVIEW: 1,
   APPROVED: 2,
   REJECTED: 3
+}
+
+const RequirementStatusEnum = {
+  REQUIRED: 0,
+  RECOMMENDED: 1,
+  OPTIONAL: 2
 };
 
 const SpecificationComplianceLevel = {
@@ -20,6 +31,33 @@ const SpecificationComplianceLevel = {
   LEVEL_1: 1,
   LEVEL_2: 2
 };
+
+const RequirementFulfillment = {
+  MET: 1,
+  NOT_MET: 0
+};
+
+// Requirements Schema
+const RequirementSchema = new mongoose.Schema({
+  requirement: {
+    type: String,
+    required: true
+  },
+  comment: {
+    type: String,
+    default: ''
+  },
+  fulfillment: {
+    type: Number,
+    enum: Object.values(RequirementFulfillment),
+    required: true
+  },
+  status: {
+    type: Number,
+    enum: Object.values(RequirementStatusEnum),
+    default: RequirementStatusEnum.REQUIRED
+  },
+});
 
 // SCHEMA FORM CONTENT
 const ComplianceDetailSchema = new mongoose.Schema({
@@ -47,21 +85,38 @@ const ComplianceDetailSchema = new mongoose.Schema({
     },
     details: {
       type: String
+    },
+    documentation: {
+      files: [{
+        type: String, // saved as string base64
+        required: true
+      }],
+      containerLink: {
+        type: String,
+        required: true
+      }
     }
   },
   requirementSpecificationCompliance: {
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
-    }
+      default: SpecificationComplianceLevel.NA,
+    },
+    crossCuttingRequirements: [RequirementSchema],
+    functionalRequirements: [RequirementSchema]
   },
   interfaceCompliance: {
     level: {
       type: Number,
       enum: Object.values(SpecificationComplianceLevel),
-      required: true
-    }
+      default: SpecificationComplianceLevel.NA,
+    },
+    testHarnessResult: {
+      type: String,
+      default: ''
+    },
+    requirements: [RequirementSchema]
   }
 });
 
@@ -90,30 +145,41 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  documentation: [{
+  documentation: {
     type: String,
     required: true,
-  }],
+  },
+  description: {
+    type: String,
+    required: true,
+  },
   pointOfContact: {
     type: String,
     required: true
   },
-  expirationDate: {
-    type: Date
-  },
   status: {
     type: Number,
-    require: true
+    enum: Object.values(StatusEnum),
+    default: StatusEnum.DRAFT
   },
-  compliance: [ComplianceVersionSchema],
   uniqueId: {
     type: String,
     validate: {
-      validator: function(v) {
+      validator: function (v) {
         return uuidValidate(v) && uuidVersion(v) === 4;
       },
       message: props => `${props.value} is not a valid version 4 UUID`
-    },
+    }
+  },
+  expirationDate: {
+    type: Date
+  },
+  compliance: {
+    type: [ComplianceVersionSchema],
+    validate: {
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'Compliance is required when status is not DRAFT'
+    }
   }
 });
 
