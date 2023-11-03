@@ -12,6 +12,7 @@ import '../components/header/HeaderMenuButton.less';
 import MainLayout from '../components/mainLayout/MainLayout';
 import '../components/shared/inputs/SearchInput.less';
 import '../components/shared/modals/Modal.less';
+import '../components/shared/buttons/Button.less';
 import '../components/mainLayout/MainLayout.less';
 import '../components/shared/inputs/SearchInput.less';
 import '../components/table/ProductTable.less';

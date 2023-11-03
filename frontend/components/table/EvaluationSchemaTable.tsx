@@ -1,15 +1,18 @@
 import useTranslations from '../../hooks/useTranslation';
+import { DataProps } from '../../service/types';
 import Table from './Table';
 
 const EvaluationSchemaTable = () => {
   const { format } = useTranslations();
-  const data = {
-    headers: [
-      format('evaluation_schema.compliance.label'),
-      format('evaluation_schema.requirement.label'),
-      format('evaluation_schema.level_1.label'),
-      format('evaluation_schema.level_2.label'),
-    ],
+
+  const headers = [
+    format('evaluation_schema.compliance.label'),
+    format('evaluation_schema.requirement.label'),
+    format('evaluation_schema.level_1.label'),
+    format('evaluation_schema.level_2.label'),
+  ];
+
+  const data: DataProps = {
     rows: [
       {
         cell: [
@@ -119,7 +122,7 @@ const EvaluationSchemaTable = () => {
     ],
   };
 
-  return <Table data={data} />;
+  return <Table data={data} headers={headers} />;
 };
 
 export default EvaluationSchemaTable;

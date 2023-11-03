@@ -4,6 +4,7 @@ import '../../public/images/logo.png';
 import { useIntl } from 'react-intl';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../constants';
 import HeaderMenuButton from './HeaderMenuButton';
 
 const Header = () => {
@@ -38,8 +39,8 @@ const Header = () => {
           />
           <HeaderMenuButton
             buttonTitle={format('app.software-compliance-testing.label')}
-            href={'/softwareComplianceTesting'}
-            active={currentPath === '/softwareComplianceTesting'}
+            href={COMPLIANCE_TESTING_RESULT_PAGE}
+            active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
           />
         </div>
         <div className="header-help">

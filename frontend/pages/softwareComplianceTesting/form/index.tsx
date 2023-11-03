@@ -2,7 +2,7 @@ import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../components/constants';
 import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
 import useTranslations from '../../../hooks/useTranslation';
 
-const SoftwareComplianceDetailsPage = () => {
+const SoftwareComplianceForm = () => {
   const { format } = useTranslations();
 
   return (
@@ -15,4 +15,4 @@ const SoftwareComplianceDetailsPage = () => {
   );
 };
 
-export default SoftwareComplianceDetailsPage;
+export default SoftwareComplianceForm;

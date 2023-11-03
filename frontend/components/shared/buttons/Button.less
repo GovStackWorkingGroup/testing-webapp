@@ -1,0 +1,24 @@
+@import '../../../styles/Variables.less';
+@import '../../../styles/Extends.less';
+
+.custom-button:extend(.btn) {
+  width: max-content;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.custom-button.primary-button {
+  background-color: @accents-and-btn;
+  color: @white;
+}
+
+.back-to-btn {
+  padding: 10px 20px;
+  width: max-content;
+}
+
+.back-to-btn > a {
+  color: @accents-and-btn;
+  font-size: 12px;
+  text-decoration: none;
+}

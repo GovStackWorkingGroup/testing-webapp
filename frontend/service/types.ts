@@ -46,8 +46,12 @@ export type BuildingBlockTestSummary = {
 };
 
 // All types used in Table.tsx and the data connected to it
+export type DataProps = {
+  rows: DataRow[] | Record<string, never>;
+};
+
 export type TableProps = {
-  data: { headers: string[]; rows: DataRow[] } | Record<string, never>;
+  data: DataProps | Record<string, never>;
   hasVerticalBorders?: boolean;
 };
 

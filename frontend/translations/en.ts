@@ -1,6 +1,8 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
+  'api.back_to_reports_list.label': '< Back to Report List',
+  'app.check_compliance.label': 'Check Compliance',
   'app.definition.description': `This web application is used to show how candidate products align with
     the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
     for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
@@ -17,6 +19,7 @@ export const en = {
     'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
+  'app.evaluation_schema.label': 'Evaluation Schema',
   'app.help.label': 'Help',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
@@ -63,6 +66,7 @@ export const en = {
   'table.deployment_compliance.label': 'Deployment Compliance',
   'table.interface_compliance.label': 'Interface Compliance',
   'table.last_update.label': 'Last Update',
+  'table.no_data_available.message': 'No Data Available',
   'table.no_result_count.message': 'No results count found',
   'table.overall_compatibility.label': 'Overall Compatibility',
   'table.software_name.label': 'Software Version',

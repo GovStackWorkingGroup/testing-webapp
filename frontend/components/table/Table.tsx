@@ -1,13 +1,26 @@
 import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
-import { Cell, DataRow } from '../../service/types';
+import { RiQuestionLine } from 'react-icons/ri';
+import { Cell, DataProps } from '../../service/types';
+import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../constants';
+import BBImage from '../BuildingBlocksImage';
+import useTranslations from '../../hooks/useTranslation';
 
 type TableProps = {
-  data: { headers: string[]; rows: DataRow[] } | Record<string, never>;
+  data: DataProps | Record<string, never>;
+  headers: string[];
   hasVerticalBorders?: boolean;
+  handleOpenEvaluationSchemaModal?: (value: boolean) => void;
 };
 
-const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
+const Table = ({
+  data,
+  hasVerticalBorders = true,
+  handleOpenEvaluationSchemaModal,
+  headers,
+}: TableProps) => {
+  const { format } = useTranslations();
+
   const formatDateIfDate = (value: Cell) => {
     if (typeof value === 'string') {
       const date = new Date(value);
@@ -23,22 +36,50 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
 
   return (
     <>
-      {data && (
-        <table className="main-table">
-          <thead>
-            <tr>
-              {data.headers?.map((header, indexKey) => (
+      <table className="main-table">
+        <thead>
+          <tr>
+            {headers?.map((header, indexKey) => {
+              if (
+                [
+                  'table.deployment_compliance.label',
+                  'table.requirement_specification_compliance.label',
+                  'table.interface_compliance.label',
+                ].includes(header) &&
+                handleOpenEvaluationSchemaModal
+              ) {
+                return (
+                  <th
+                    key={`header-${header}-${indexKey}`}
+                    className={`${
+                      hasVerticalBorders ? '' : 'no-vertical-border'
+                    }`}
+                  >
+                    <div className="th-header-with-icon">
+                      <p>{format(header)}</p>
+                      <RiQuestionLine
+                        className="th-icon-question-mark cursor-pointer"
+                        onClick={() => handleOpenEvaluationSchemaModal(true)}
+                      />
+                    </div>
+                  </th>
+                );
+              }
+
+              return (
                 <th
                   key={`header-${header}-${indexKey}`}
                   className={`${
                     hasVerticalBorders ? '' : 'no-vertical-border'
                   }`}
                 >
-                  {header}
+                  {format(header)}
                 </th>
-              ))}
-            </tr>
-          </thead>
+              );
+            })}
+          </tr>
+        </thead>
+        {Object.keys(data).length ? (
           <tbody>
             {data.rows?.map((row, indexKey) => (
               <>
@@ -51,7 +92,7 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
                       <Link
                         className="tr-subheader-container"
                         href={{
-                          pathname: `softwareComplianceTesting/details/${row.subHeader}`,
+                          pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                         }}
                       >
                         <p>{row.subHeader}</p>
@@ -131,6 +172,23 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
                         );
                       }
 
+                      if (
+                        typeof cell.value === 'string' &&
+                        cell.value.startsWith('bb-')
+                      ) {
+                        return (
+                          <td
+                            key={`details-cell-${cell.value}-${indexKey}`}
+                            className={`${
+                              hasVerticalBorders ? '' : 'no-vertical-border'
+                            } td-bb-image-name-container`}
+                          >
+                            <BBImage imagePath={cell.value} />
+                            <p>{format(cell.value)}</p>
+                          </td>
+                        );
+                      }
+
                       return (
                         <td
                           key={`details-cell-${cell.value}-${indexKey}`}
@@ -168,8 +226,18 @@ const Table = ({ data, hasVerticalBorders = true }: TableProps) => {
               </>
             ))}
           </tbody>
-        </table>
-      )}
+        ) : (
+          <tbody>
+            <tr>
+              <td colSpan={8}>
+                <div className="td-no-data-message">
+                  {format('table.no_data_available.message')}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )}
+      </table>
     </>
   );
 };
