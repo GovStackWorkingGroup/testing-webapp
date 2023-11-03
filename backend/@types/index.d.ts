@@ -119,5 +119,6 @@ declare module 'myTypes' {
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
+    editOrSubmitDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
   }
 }

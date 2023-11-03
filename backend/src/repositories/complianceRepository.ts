@@ -41,12 +41,22 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const editOrSubmitDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
+    try {
+      return await repository.editOrSubmitDraftForm(draftId, updateData);
+    } catch (error) {
+      console.error('There was an error while editing the form:', error);
+      throw error;
+    }
+  };
+
   return {
     findAll,
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,
-    createOrSubmitForm
+    createOrSubmitForm,
+    editOrSubmitDraftForm
   };
 };
 

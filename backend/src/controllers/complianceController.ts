@@ -3,6 +3,7 @@ import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handle
 import GetSoftwareComplianceDetailRequestHandler from '../useCases/compliance/handleGetSoftwareComplianceDetail';
 import GetFormDetailRequestHandler from '../useCases/compliance/handleGetFormDetail';
 import CreateDraftRequestHandler from '../useCases/compliance/handleCreateDraft';
+import EditDraftRequestHandler from '../useCases/compliance/handleEditDraft';
 import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 
@@ -36,16 +37,25 @@ const complianceController = (
 
   const createOrSubmitForm = async (req: Request, res: Response): Promise<void> => {
     const status = req.body.status || StatusEnum.DRAFT;
-    new CreateDraftRequestHandler(req, res, repository, status )
+    new CreateDraftRequestHandler(req, res, repository, status)
       .createOrSubmitForm()
       .catch((err: any) => default500Error(res, err));
   };
+
+  const editOrSubmitDraftForm = async (req: Request, res: Response): Promise<void> => {
+    const draftId = req.params.draftId;
+
+    new EditDraftRequestHandler(req, res, repository)
+      .editOrSubmitDraftForm(draftId)
+      .catch((err: any) => default500Error(res, err));
+  }
 
   return {
     getAllComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    editOrSubmitDraftForm,
   };
 };
 
