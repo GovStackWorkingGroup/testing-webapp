@@ -1,13 +1,13 @@
 import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
-import { Cell, DataProps } from '../../service/types';
-import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../constants';
+import { Cell, DataType } from '../../service/types';
+import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
 
 type TableProps = {
-  data: DataProps | Record<string, never>;
+  data: DataType | Record<string, never>;
   headers: string[];
   hasVerticalBorders?: boolean;
   handleOpenEvaluationSchemaModal?: (value: boolean) => void;
@@ -20,7 +20,6 @@ const Table = ({
   headers,
 }: TableProps) => {
   const { format } = useTranslations();
-
   const formatDateIfDate = (value: Cell) => {
     if (typeof value === 'string') {
       const date = new Date(value);
@@ -79,8 +78,8 @@ const Table = ({
             })}
           </tr>
         </thead>
-        {Object.keys(data).length ? (
-          <tbody>
+        {data.rows.length ? (
+          <tbody id="scrollableDiv">
             {data.rows?.map((row, indexKey) => (
               <>
                 {row.subHeader && (

@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import useTranslations from '../hooks/useTranslation';
-import { getComplianceList } from '../service/serviceAPI';
-import { CellValue, DataProps } from '../service/types';
-import Table from './table/Table';
-import InfoModal from './shared/modals/InfoModal';
-import EvaluationSchemaTable from './table/EvaluationSchemaTable';
-import Button from './shared/buttons/Button';
-import { COMPLIANCE_TESTING_FORM } from './constants';
-import InfiniteScrollCustomLoader from './InfiniteScrollLoader';
+import useTranslations from '../../hooks/useTranslation';
+import { getComplianceList } from '../../service/serviceAPI';
+import { CellValue, DataType } from '../../service/types';
+import Table from '../table/Table';
+import InfoModal from '../shared/modals/InfoModal';
+import Button from '../shared/buttons/Button';
+import { COMPLIANCE_TESTING_FORM } from '../../service/constants';
+import InfiniteScrollCustomLoader from '../InfiniteScrollLoader';
+import EvaluationSchemaTable from './EvaluationSchemaTable';
 
-const ListOfCandidateApplicationComplianceResults = () => {
-  const [data, setData] = useState({});
+const ListOfCandidateResults = () => {
+  const [resultData, setResultData] = useState<DataType>({ rows: [] });
+  const [currentDataLength, setCurrentDataLength] = useState(0);
+  const [allDataLength, setAllDataLength] = useState(0);
   const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
     useState(false);
 
@@ -29,10 +31,13 @@ const ListOfCandidateApplicationComplianceResults = () => {
   ];
 
   const fetchData = async (offset: number, limit: number) => {
-    const [data] = await Promise.all([getComplianceList(offset, limit)]);
+    const data = await getComplianceList(offset, limit);
     if (data.status) {
-      const transformedData: DataProps = {
-        rows: [],
+      setAllDataLength(data.data.count);
+
+      const transformedData: DataType = {
+        // @ts-ignore
+        rows: [...resultData.rows],
       };
 
       const propertyOrder = [
@@ -47,12 +52,12 @@ const ListOfCandidateApplicationComplianceResults = () => {
       ];
 
       /*eslint no-prototype-builtins: */
-      for (const key in data.data) {
-        if (data.data.hasOwnProperty(key)) {
+      for (const key in data.data.data) {
+        if (data.data.data.hasOwnProperty(key)) {
           let subHeaderAdded = false;
           transformedData.rows.push(
             // @ts-ignore
-            ...data.data[key].map((item: object, index: number) => {
+            ...data.data.data[key].map((item: object, index: number) => {
               const cell: CellValue[] = [];
               for (const property of propertyOrder) {
                 if (item.hasOwnProperty(property)) {
@@ -91,16 +96,19 @@ const ListOfCandidateApplicationComplianceResults = () => {
         }
       }
 
-      setData(transformedData);
+      setCurrentDataLength(
+        transformedData.rows.filter((row) => row.subHeader).length
+      );
+      setResultData(transformedData);
     }
   };
 
   useEffect(() => {
-    fetchData(0, 10);
+    fetchData(0, 5);
   }, []);
 
   const handleLoadMoreData = () => {
-    // Call fetchData
+    fetchData(currentDataLength, 5);
   };
 
   return (
@@ -115,16 +123,16 @@ const ListOfCandidateApplicationComplianceResults = () => {
       </div>
       <InfiniteScroll
         scrollableTarget="scrollableDiv"
-        dataLength={Object.keys(data).length}
+        dataLength={allDataLength}
         next={handleLoadMoreData}
-        hasMore={false}
+        hasMore={allDataLength > currentDataLength}
         loader={<InfiniteScrollCustomLoader />}
         style={{ overflowX: 'hidden' }}
       >
         <div className="list-of-candidate-table-container">
           <Table
             headers={headers}
-            data={data}
+            data={resultData}
             hasVerticalBorders={false}
             handleOpenEvaluationSchemaModal={(value) =>
               setDisplayEvaluationSchemaModal(value)
@@ -144,4 +152,4 @@ const ListOfCandidateApplicationComplianceResults = () => {
   );
 };
 
-export default ListOfCandidateApplicationComplianceResults;
+export default ListOfCandidateResults;

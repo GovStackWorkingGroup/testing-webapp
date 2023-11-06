@@ -2,7 +2,11 @@ import {
   ResultTableSortByType,
   SoftwaresTableSortByType,
 } from '../components/table/types';
-import { BuildingBlockTestSummary, DataProps, ProductsListType } from './types';
+import {
+  BuildingBlockTestSummary,
+  ComplianceList,
+  ProductsListType,
+} from './types';
 
 const baseUrl = process.env.API_URL;
 
@@ -127,7 +131,7 @@ export const getBuildingBlockTestResults = async (
 
 export const getComplianceList = async (offset: number, limit: number) => {
   return await fetch(
-    `http://localhost:5001/compliance/list?offset=${offset}&limit=${limit}`,
+    `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}`,
     {
       method: 'get',
       headers: {
@@ -142,7 +146,7 @@ export const getComplianceList = async (offset: number, limit: number) => {
 
       return response.json();
     })
-    .then<Success<DataProps>>((actualData) => {
+    .then<Success<ComplianceList>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

@@ -1,4 +1,4 @@
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../components/constants';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../service/constants';
 import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
 import useTranslations from '../../../hooks/useTranslation';
 

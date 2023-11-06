@@ -1,6 +1,6 @@
 import useTranslations from '../../hooks/useTranslation';
-import { DataProps } from '../../service/types';
-import Table from './Table';
+import { DataType } from '../../service/types';
+import Table from '../table/Table';
 
 const EvaluationSchemaTable = () => {
   const { format } = useTranslations();
@@ -12,7 +12,7 @@ const EvaluationSchemaTable = () => {
     format('evaluation_schema.level_2.label'),
   ];
 
-  const data: DataProps = {
+  const data: DataType = {
     rows: [
       {
         cell: [

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import Definition from '../../components/Definition';
 import useTranslations from '../../hooks/useTranslation';
-import ListOfCandidateApplicationComplianceResults from '../../components/ListOfCandidateApplicationComplianceResults';
+import ListOfCandidateResults from '../../components/compliance/ListOfCandidateResults';
 
 const SoftwareComplianceTestingPage = () => {
   const { format } = useTranslations();
@@ -19,7 +19,7 @@ const SoftwareComplianceTestingPage = () => {
           description={format('app.definition_self_assessment.description')}
           customStyle="definition-section-software-compliance"
         />
-        <ListOfCandidateApplicationComplianceResults />
+        <ListOfCandidateResults />
       </main>
     </div>
   );

@@ -45,13 +45,18 @@ export type BuildingBlockTestSummary = {
   count: number;
 };
 
+export type ComplianceList = {
+  count: number;
+  data: object;
+};
+
 // All types used in Table.tsx and the data connected to it
-export type DataProps = {
+export type DataType = {
   rows: DataRow[] | Record<string, never>;
 };
 
 export type TableProps = {
-  data: DataProps | Record<string, never>;
+  data: DataType | Record<string, never>;
   hasVerticalBorders?: boolean;
 };
 

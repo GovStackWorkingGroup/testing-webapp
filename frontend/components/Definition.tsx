@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import classNames from 'classnames';
-import useTranslations from '../hooks/useTranslation';
 
 type DefinitionType = {
   title: string;
