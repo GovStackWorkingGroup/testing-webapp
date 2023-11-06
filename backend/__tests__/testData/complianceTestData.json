@@ -4,11 +4,24 @@
         "logo": "https://openIMIS.com/logo.png",
         "website": "https://openIMIS.com",
         "documentation": "https://openIMIS.com/doc1",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ou.",
         "pointOfContact": "contact@openIMIS.com",
         "status": 0,
         "uniqueId": "34e7dfbf-5de0-4146-8946-387135333bb8",
         "expirationDate": "2024-11-24T00:00:00.000Z",
-        "description": "sample description of my application",
+        "deploymentCompliance": {
+            "documentation": [
+                "base64EncodedFile1",
+                "base64EncodedFile2"
+            ],
+            "deploymentInstructions": "https://link.to/container",
+            "requirements": [
+                {
+                    "requirement": "Req1",
+                    "level": 1
+                }
+            ]
+        },
         "compliance": [
             {
                 "version": "2.0",
@@ -19,40 +32,110 @@
                         "status": 1,
                         "submissionDate": "2025-10-01T14:48:00.000Z",
                         "deploymentCompliance": {
-                            "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
-                            "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
-                                "containerLink": "https://link.to/container"
-                            }
+                            "isCompliant": true
                         },
                         "requirementSpecificationCompliance": {
                             "level": 1,
                             "crossCuttingRequirements": [
-                                {"requirement": "Req1", "comment": "Comment1", "fulfillment": 1, "status": 0},
-                                {"requirement": "Req2", "comment": "Comment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "Req3", "comment": "Comment3", "fulfillment": 1, "status": 2},
-                                {"requirement": "Req4", "comment": "Comment4", "fulfillment": 0, "status": 0},
-                                {"requirement": "Req5", "comment": "Comment5", "fulfillment": 1, "status": 1}
-                              ],
-                              "functionalRequirements": [
-                                {"requirement": "FuncReq1", "comment": "FuncComment1", "fulfillment": 1, "status": 2},
-                                {"requirement": "FuncReq2", "comment": "FuncComment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "FuncReq3", "comment": "FuncComment3", "fulfillment": 1, "status": 0},
-                                {"requirement": "FuncReq4", "comment": "FuncComment4", "fulfillment": 0, "status": 2},
-                                {"requirement": "FuncReq5", "comment": "FuncComment5", "fulfillment": 1, "status": 1}
-                              ]
+                                {
+                                    "requirement": "Req1",
+                                    "comment": "Comment1",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req2",
+                                    "comment": "Comment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "Req3",
+                                    "comment": "Comment3",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "Req4",
+                                    "comment": "Comment4",
+                                    "fulfillment": 0,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req5",
+                                    "comment": "Comment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ],
+                            "functionalRequirements": [
+                                {
+                                    "requirement": "FuncReq1",
+                                    "comment": "FuncComment1",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq2",
+                                    "comment": "FuncComment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "FuncReq3",
+                                    "comment": "FuncComment3",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "FuncReq4",
+                                    "comment": "FuncComment4",
+                                    "fulfillment": 0,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq5",
+                                    "comment": "FuncComment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ]
                         },
                         "interfaceCompliance": {
                             "level": 2,
                             "testHarnessResult": "ResultA",
                             "requirements": [
-                                {"requirement": "InterReq1", "comment": "InterComment1", "fulfillment": 1, "status": 0},
-                                {"requirement": "InterReq2", "comment": "InterComment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "InterReq3", "comment": "InterComment3", "fulfillment": 1, "status": 2},
-                                {"requirement": "InterReq4", "comment": "InterComment4", "fulfillment": 0, "status": 0},
-                                {"requirement": "InterReq5", "comment": "InterComment5", "fulfillment": 1, "status": 1}
-                              ]
+                                {
+                                    "requirement": "InterReq1",
+                                    "comment": "InterComment1",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "InterReq2",
+                                    "comment": "InterComment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "InterReq3",
+                                    "comment": "InterComment3",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "InterReq4",
+                                    "comment": "InterComment4",
+                                    "fulfillment": 0,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "InterReq5",
+                                    "comment": "InterComment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ]
                         }
                     },
                     "bb-payments": {
@@ -62,11 +145,84 @@
                         "submissionDate": "2022-11-01T14:48:00.000Z",
                         "deploymentCompliance": {
                             "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
+                            "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
+                        },
+                        "requirementSpecificationCompliance": {
+                            "level": 1,
+                            "crossCuttingRequirements": [
+                                {
+                                    "requirement": "Req1",
+                                    "comment": "Comment1",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req2",
+                                    "comment": "Comment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "Req3",
+                                    "comment": "Comment3",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "Req4",
+                                    "comment": "Comment4",
+                                    "fulfillment": 0,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req5",
+                                    "comment": "Comment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ],
+                            "functionalRequirements": [
+                                {
+                                    "requirement": "FuncReq1",
+                                    "comment": "FuncComment1",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq2",
+                                    "comment": "FuncComment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "FuncReq3",
+                                    "comment": "FuncComment3",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "FuncReq4",
+                                    "comment": "FuncComment4",
+                                    "fulfillment": 0,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq5",
+                                    "comment": "FuncComment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ]
                         },
                         "interfaceCompliance": {
                             "level": -1,
@@ -80,15 +236,25 @@
                         "submissionDate": "2023-12-01T14:48:00.000Z",
                         "deploymentCompliance": {
                             "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
+                            "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
                         "requirementSpecificationCompliance": {
                             "level": 2,
                             "note": "NoteD"
+                        },
+                        "interfaceCompliance": {
+                            "level": 1,
+                            "note": "Updated Note"
                         }
                     }
                 }
@@ -96,16 +262,22 @@
             {
                 "version": "2.1",
                 "bbDetails": {
-                    "bb-digital registries": {
+                    "bb-digital-registries": {
                         "bbSpecification": "SpecificationA",
                         "bbVersion": "1.2.1",
                         "status": 2,
                         "submissionDate": "2026-01-01T14:48:00.000Z",
                         "deploymentCompliance": {
                             "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
+                            "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
@@ -125,11 +297,21 @@
                         "submissionDate": "2023-01-01T14:48:00.000Z",
                         "deploymentCompliance": {
                             "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
+                            "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
+                        },
+                        "requirementSpecificationCompliance": {
+                            "level": 2,
+                            "note": "NoteD"
                         },
                         "interfaceCompliance": {
                             "level": -1,
@@ -143,14 +325,24 @@
                         "submissionDate": "2024-01-01T14:48:00.000Z",
                         "deploymentCompliance": {
                             "isCompliant": true,
-                            "details": "Details for openIMIS, bb-digital-registries",
+                            "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
                         "requirementSpecificationCompliance": {
                             "level": 2,
+                            "note": "Updated Note"
+                        },
+                        "interfaceCompliance": {
+                            "level": -1,
                             "note": "Updated Note"
                         }
                     }
@@ -163,11 +355,24 @@
         "logo": "https://SandboxApp.com/logo.png",
         "website": "https://SandboxApp.com",
         "documentation": "https://SandboxApp.com/doc1",
+        "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ou.",
         "pointOfContact": "contact@SandboxApp.com",
         "status": 0,
-        "uniqueId": "38f92bc2-f813-474d-8269-aeada773f090",
+        "uniqueId": "34e7dfbf-5de0-4146-8946-387135333bb8",
         "expirationDate": "2022-11-24T00:00:00.000Z",
-        "description": "sample desc",
+        "deploymentCompliance": {
+            "documentation": [
+                "base64EncodedFile1",
+                "base64EncodedFile2"
+            ],
+            "deploymentInstructions": "https://link.to/container",
+            "requirements": [
+                {
+                    "requirement": "Req1",
+                    "level": 1
+                }
+            ]
+        },
         "compliance": [
             {
                 "version": "2.0",
@@ -178,40 +383,110 @@
                         "status": 1,
                         "submissionDate": "2025-10-01T14:48:00.000Z",
                         "deploymentCompliance": {
-                            "isCompliant": true,
-                            "details": "Details for SandboxApp, bb-digital-registries",
-                            "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
-                                "containerLink": "https://link.to/container"
-                            }
+                            "isCompliant": true
                         },
                         "requirementSpecificationCompliance": {
                             "level": 1,
                             "crossCuttingRequirements": [
-                                {"requirement": "Req1", "comment": "Comment1", "fulfillment": 1, "status": 0},
-                                {"requirement": "Req2", "comment": "Comment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "Req3", "comment": "Comment3", "fulfillment": 1, "status": 2},
-                                {"requirement": "Req4", "comment": "Comment4", "fulfillment": 0, "status": 0},
-                                {"requirement": "Req5", "comment": "Comment5", "fulfillment": 1, "status": 1}
-                              ],
-                              "functionalRequirements": [
-                                {"requirement": "FuncReq1", "comment": "FuncComment1", "fulfillment": 1, "status": 2},
-                                {"requirement": "FuncReq2", "comment": "FuncComment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "FuncReq3", "comment": "FuncComment3", "fulfillment": 1, "status": 0},
-                                {"requirement": "FuncReq4", "comment": "FuncComment4", "fulfillment": 0, "status": 2},
-                                {"requirement": "FuncReq5", "comment": "FuncComment5", "fulfillment": 1, "status": 1}
-                              ]
+                                {
+                                    "requirement": "Req1",
+                                    "comment": "Comment1",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req2",
+                                    "comment": "Comment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "Req3",
+                                    "comment": "Comment3",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "Req4",
+                                    "comment": "Comment4",
+                                    "fulfillment": 0,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "Req5",
+                                    "comment": "Comment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ],
+                            "functionalRequirements": [
+                                {
+                                    "requirement": "FuncReq1",
+                                    "comment": "FuncComment1",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq2",
+                                    "comment": "FuncComment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "FuncReq3",
+                                    "comment": "FuncComment3",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "FuncReq4",
+                                    "comment": "FuncComment4",
+                                    "fulfillment": 0,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "FuncReq5",
+                                    "comment": "FuncComment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ]
                         },
                         "interfaceCompliance": {
                             "level": 2,
                             "testHarnessResult": "ResultA",
                             "requirements": [
-                                {"requirement": "InterReq1", "comment": "InterComment1", "fulfillment": 1, "status": 0},
-                                {"requirement": "InterReq2", "comment": "InterComment2", "fulfillment": 0, "status": 1},
-                                {"requirement": "InterReq3", "comment": "InterComment3", "fulfillment": 1, "status": 2},
-                                {"requirement": "InterReq4", "comment": "InterComment4", "fulfillment": 0, "status": 0},
-                                {"requirement": "InterReq5", "comment": "InterComment5", "fulfillment": 1, "status": 1}
-                              ]
+                                {
+                                    "requirement": "InterReq1",
+                                    "comment": "InterComment1",
+                                    "fulfillment": 1,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "InterReq2",
+                                    "comment": "InterComment2",
+                                    "fulfillment": 0,
+                                    "status": 1
+                                },
+                                {
+                                    "requirement": "InterReq3",
+                                    "comment": "InterComment3",
+                                    "fulfillment": 1,
+                                    "status": 2
+                                },
+                                {
+                                    "requirement": "InterReq4",
+                                    "comment": "InterComment4",
+                                    "fulfillment": 0,
+                                    "status": 0
+                                },
+                                {
+                                    "requirement": "InterReq5",
+                                    "comment": "InterComment5",
+                                    "fulfillment": 1,
+                                    "status": 1
+                                }
+                            ]
                         }
                     },
                     "bb-payments": {
@@ -223,9 +498,19 @@
                             "isCompliant": true,
                             "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
+                        },
+                        "requirementSpecificationCompliance": {
+                            "level": 2,
+                            "note": "NoteD"
                         },
                         "interfaceCompliance": {
                             "level": -1,
@@ -241,13 +526,23 @@
                             "isCompliant": true,
                             "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
                         "requirementSpecificationCompliance": {
                             "level": 2,
                             "note": "NoteD"
+                        },
+                        "interfaceCompliance": {
+                            "level": -1,
+                            "note": "Updated Note"
                         }
                     }
                 }
@@ -255,7 +550,7 @@
             {
                 "version": "2.1",
                 "bbDetails": {
-                    "bb-digital registries": {
+                    "bb-digital-registries": {
                         "bbSpecification": "SpecificationA",
                         "bbVersion": "1.2.1",
                         "status": 2,
@@ -264,7 +559,13 @@
                             "isCompliant": true,
                             "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
@@ -286,9 +587,19 @@
                             "isCompliant": true,
                             "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
+                        },
+                        "requirementSpecificationCompliance": {
+                            "level": 2,
+                            "note": "NoteD"
                         },
                         "interfaceCompliance": {
                             "level": -1,
@@ -304,12 +615,22 @@
                             "isCompliant": true,
                             "details": "Details for SandboxApp, bb-digital-registries",
                             "documentation": {
-                                "files": ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
+                                "files": [
+                                    "base64EncodedFile1",
+                                    "base64EncodedFile2",
+                                    "base64EncodedFile3",
+                                    "base64EncodedFile4",
+                                    "base64EncodedFile5"
+                                ],
                                 "containerLink": "https://link.to/container"
                             }
                         },
                         "requirementSpecificationCompliance": {
                             "level": 2,
+                            "note": "Updated Note"
+                        },
+                        "interfaceCompliance": {
+                            "level": 1,
                             "note": "Updated Note"
                         }
                     }

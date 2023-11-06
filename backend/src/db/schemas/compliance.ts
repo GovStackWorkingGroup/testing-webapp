@@ -82,19 +82,6 @@ const ComplianceDetailSchema = new mongoose.Schema({
     isCompliant: {
       type: Boolean,
       required: true
-    },
-    details: {
-      type: String
-    },
-    documentation: {
-      files: [{
-        type: String, // saved as string base64
-        required: true
-      }],
-      containerLink: {
-        type: String,
-        required: true
-      }
     }
   },
   requirementSpecificationCompliance: {
@@ -131,6 +118,28 @@ const ComplianceVersionSchema = new mongoose.Schema({
     required: true
   }
 });
+
+const deploymentComplianceSchema = new mongoose.Schema({
+  documentation: [{
+      type: String, // saved as string base64
+      required: true
+  }],
+  deploymentInstructions: {
+    type: String,
+    required: true
+  },
+  requirements: [{
+    requirement: {
+      type: String,
+      required: true
+    },
+    level: {
+      type: Number,
+      enum: Object.values(SpecificationComplianceLevel),
+      default: SpecificationComplianceLevel.NA,
+    },
+  }]
+})
 
 const ComplianceReportSchema = new mongoose.Schema({
   softwareName: {
@@ -173,6 +182,13 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   expirationDate: {
     type: Date
+  },
+  deploymentCompliance: {
+    type: [deploymentComplianceSchema],
+    validate: {
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'DeploymentCompliance is required when status is not DRAFT'
+    }
   },
   compliance: {
     type: [ComplianceVersionSchema],
