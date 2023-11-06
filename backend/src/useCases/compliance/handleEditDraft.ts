@@ -35,7 +35,7 @@ export default class EditDraftRequestHandler {
               };
 
             // Update the logo if a new one is provided
-            if (files.logo && files.logo[0]) {
+            if (files && files.logo && files.logo[0]) {
                 updateData.logo = (files.logo[0] as Express.Multer.File).path;
             }
 
