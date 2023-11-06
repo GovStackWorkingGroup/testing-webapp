@@ -1,177 +1,11 @@
-import { ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
 import { appConfig } from '../../config/index';
-import { ValidationError } from 'jsonschema';
-
-const createAggregationPipeline = (limit: number, offset: number): any[] => {
-  const aggregationPipeline: any[] = [
-    { $unwind: "$compliance" },
-    { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
-    { $unwind: "$bbDetailsArray" },
-    {
-      $project: {
-        softwareName: 1,
-        softwareVersion: "$compliance.version",
-        bb: "$bbDetailsArray.k",
-        bbVersion: "$bbDetailsArray.v.bbVersion",
-        status: "$bbDetailsArray.v.status",
-        submissionDate: { $toDate: "$bbDetailsArray.v.submissionDate" },
-        deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance.isCompliant",
-        requirementSpecificationCompliance: "$bbDetailsArray.v.requirementSpecificationCompliance.level",
-        interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
-      }
-    },
-    {
-      $group: {
-        _id: "$softwareName",
-        data: { $push: "$$ROOT" }
-      }
-    },
-    {
-      $project: {
-        data: {
-          _id: 1,
-          softwareVersion: 1,
-          bb: 1,
-          bbVersion: 1,
-          status: 1,
-          submissionDate: 1,
-          deploymentCompliance: 1,
-          requirementSpecificationCompliance: 1,
-          interfaceCompliance: 1
-        }
-      }
-    }
-  ];
-  if (offset !== undefined) aggregationPipeline.push({ $skip: offset });
-  if (limit !== undefined) aggregationPipeline.push({ $limit: limit });
-
-  return aggregationPipeline;
-};
-
-const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
-  {
-    $match: { "softwareName": softwareName }
-  },
-  {
-    $unwind: "$compliance"
-  },
-  {
-    $project: {
-      softwareName: 1,
-      logo: 1,
-      website: 1,
-      documentation: 1,
-      pointOfContact: 1,
-      version: "$compliance.version",
-      bbDetails: {
-        $arrayToObject: {
-          $map: {
-            input: { $objectToArray: "$compliance.bbDetails" },
-            as: "bbDetail",
-            in: [
-              "$$bbDetail.k",
-              {
-                bbVersion: "$$bbDetail.v.bbVersion",
-                requirementSpecificationCompliance: {
-                  level: "$$bbDetail.v.requirementSpecificationCompliance.level",
-                  note: "$$bbDetail.v.requirementSpecificationCompliance.note"
-                },
-                interfaceCompliance: {
-                  level: "$$bbDetail.v.interfaceCompliance.level",
-                  note: "$$bbDetail.v.interfaceCompliance.note"
-                }
-              }
-            ]
-          }
-        }
-      }
-    }
-  },
-  {
-    $group: {
-      _id: "$softwareName",
-      logo: { $first: "$logo" },
-      website: { $first: "$website" },
-      documentation: { $first: "$documentation" },
-      pointOfContact: { $first: "$pointOfContact" },
-      compliance: {
-        $push: {
-          formId: "$_id",
-          version: "$version",
-          bbDetails: "$bbDetails"
-        }
-      }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      softwareName: "$_id",
-      logo: 1,
-      website: 1,
-      documentation: 1,
-      pointOfContact: 1,
-      compliance: 1
-    }
-  }
-];
-
-const formDetailAggregationPipeline = (formId: string): any[] => [
-  {
-    $match: { "_id": new mongoose.Types.ObjectId(formId) }
-  },
-  {
-    $unwind: "$compliance"
-  },
-  {
-    $project: {
-      bbDetails: {
-        $arrayToObject: {
-          $map: {
-            input: { $objectToArray: "$compliance.bbDetails" },
-            as: "bbDetail",
-            in: [
-              "$$bbDetail.k",
-              {
-                interfaceCompliance: {
-                  testHarnessResult: "$$bbDetail.v.interfaceCompliance.testHarnessResult",
-                  requirements: "$$bbDetail.v.interfaceCompliance.requirements"
-                },
-                requirementSpecificationCompliance: {
-                  crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
-                  functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
-                },
-                deploymentCompliance: {
-                  documentation: "$$bbDetail.v.deploymentCompliance.documentation"
-                }
-              }
-            ]
-          }
-        }
-      }
-    }
-  },
-  {
-    $group: {
-      _id: "$softwareName",
-      formDetails: {
-        $push: {
-          version: "$version",
-          bbDetails: "$bbDetails"
-        }
-      }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      formDetails: 1
-    }
-  }
-];
+import { createAggregationPipeline } from '../pipelines/compliance/complianceListAggregation';
+import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetailAggregation';
+import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -182,13 +16,17 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async aggregateComplianceReports(limit: number, offset: number) {
+  async aggregateComplianceReports(limit: number, offset: number): Promise<ComplianceAggregationListResult> {
     try {
       const results = await Compliance.aggregate(createAggregationPipeline(limit, offset)).exec();
-      const reshapedResults = results.reduce((accumulatedResult, currentItem) => {
-        accumulatedResult[currentItem._id] = currentItem.data;
-        return accumulatedResult;
-      }, {});
+      const reshapedResults = {
+        count: results[0].totalSoftwareNames,
+        data: results[0].records.reduce((accumulatedResult, currentItem) => {
+          accumulatedResult[currentItem._id] = currentItem.records;
+          return accumulatedResult;
+        }, {})
+      };
+      
       return reshapedResults;
     } catch (error) {
       console.error("Root cause of aggregation error:", error);

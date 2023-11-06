@@ -11,7 +11,9 @@ export default class GetAllComplianceReportsRequestHandler {
   }
 
   async getAllComplianceReports(): Promise<void> {
-    const { limit, offset } = this.req.query;
+    const limit = parseInt(this.req.query.limit as string, 10) || Number.MAX_SAFE_INTEGER;
+    const offset = parseInt(this.req.query.offset as string, 10) || 0;
+    
     try {
       const aggregatedReports = await this.repository.aggregateComplianceReports(limit, offset);
       this.res.json(aggregatedReports);
