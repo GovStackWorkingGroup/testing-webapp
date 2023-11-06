@@ -17,32 +17,32 @@ export const createAggregationPipeline = (limit: number, offset: number): any[] 
             }
         },
         {
+            $group: {
+                _id: "$softwareName",
+                records: { $push: "$$ROOT" }
+            }
+        },
+        {
             $facet: {
-                data: [
-                    { $sort: { submissionDate: -1 } },
-                    { $skip: offset ? offset : 0 },
-                    { $limit: limit ? limit : Number.MAX_SAFE_INTEGER },
-                    {
-                        $group: {
-                            _id: "$softwareName",
-                            records: { $push: "$$ROOT" }
-                        }
-                    },
-                ],
-                softwareNameCount: [
-                    { $group: { _id: "$softwareName" } },
+                totalCount: [
+                    // Using this pipeline to count the total unique softwareNames
                     { $group: { _id: null, count: { $sum: 1 } } },
                     { $project: { _id: 0, count: 1 } }
+                ],
+                paginatedResults: [
+                    { $sort: { "_id": -1 } },
+                    { $skip: offset },
+                    { $limit: limit },
                 ]
             }
         },
         {
             $project: {
-                records: "$data",
-                totalSoftwareNames: { $arrayElemAt: ["$softwareNameCount.count", 0] }
+                totalSoftwareNames: { $arrayElemAt: ["$totalCount.count", 0] },
+                records: "$paginatedResults"
             }
         }
     ];
-    
+
     return aggregationPipeline;
 };
