@@ -45,6 +45,38 @@ export type BuildingBlockTestSummary = {
   count: number;
 };
 
+// Software compliance details
+export type ComplianceDetails = {
+  level: number;
+  note?: string;
+};
+
+export type ComplianceItem = {
+  bbVersion: string;
+  requirementSpecificationCompliance: ComplianceDetails;
+  interfaceCompliance: ComplianceDetails;
+  [key: string]: ComplianceDetails;
+};
+
+export type Compliance = {
+  [key: string]: ComplianceItem;
+};
+
+export type SoftwareDetailsType = {
+  logo: string;
+  website: string;
+  documentation: string[];
+  pointOfContact: string;
+  compliance: [
+    {
+      formId: string;
+      version: string;
+      bbDetails: Compliance;
+    }
+  ];
+  softwareName: string;
+};
+
 // All types used in Table.tsx and the data connected to it
 export type TableProps = {
   data: { headers: string[]; rows: DataRow[] } | Record<string, never>;

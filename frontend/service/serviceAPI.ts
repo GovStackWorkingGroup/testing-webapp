@@ -2,7 +2,11 @@ import {
   ResultTableSortByType,
   SoftwaresTableSortByType,
 } from '../components/table/types';
-import { BuildingBlockTestSummary, ProductsListType } from './types';
+import {
+  BuildingBlockTestSummary,
+  ProductsListType,
+  SoftwareDetailsType,
+} from './types';
 
 const baseUrl = process.env.API_URL || 'http://localhost:5001';
 
@@ -140,6 +144,28 @@ export const getComplianceList = async () => {
       return response.json();
     })
     .then<Success<object>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getSoftwareDetails = async (softwareName: string) => {
+  return await fetch('http://localhost:5001/compliance/SandboxApp/detail', {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDetailsType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
