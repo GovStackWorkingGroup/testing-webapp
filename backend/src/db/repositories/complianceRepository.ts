@@ -1,4 +1,4 @@
-import { ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -16,7 +16,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async aggregateComplianceReports(limit: number, offset: number) {
+  async aggregateComplianceReports(limit: number, offset: number): Promise<ComplianceAggregationListResult> {
     try {
       const results = await Compliance.aggregate(createAggregationPipeline(limit, offset)).exec();
       const reshapedResults = {
@@ -32,8 +32,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       console.error("Root cause of aggregation error:", error);
       throw new Error('Error aggregating compliance reports');
     }
-  }
-  ,
+  },
 
   async getSoftwareComplianceDetail(softwareName: string) {
     try {

@@ -1,5 +1,5 @@
 export const createAggregationPipeline = (limit: number, offset: number): any[] => {
-    const aggregationPipeline: any[] = [
+    const aggregationPipeline: unknown[] = [
         { $unwind: "$compliance" },
         { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
         { $unwind: "$bbDetailsArray" },
@@ -43,6 +43,6 @@ export const createAggregationPipeline = (limit: number, offset: number): any[] 
             }
         }
     ];
-
+    
     return aggregationPipeline;
 };
