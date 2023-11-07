@@ -63,18 +63,21 @@ export type Compliance = {
 };
 
 export type SoftwareDetailsType = {
-  logo: string;
-  website: string;
-  documentation: string[];
-  pointOfContact: string;
-  compliance: [
-    {
-      formId: string;
-      version: string;
-      bbDetails: Compliance;
-    }
-  ];
-  softwareName: string;
+  data: {
+    logo: string;
+    website: string;
+    documentation: string[];
+    pointOfContact: string;
+    compliance: [
+      {
+        formId: string;
+        version: string;
+        bbDetails: Compliance;
+      }
+    ];
+    softwareName: string;
+  };
+  status: boolean;
 };
 
 // All types used in Table.tsx and the data connected to it
