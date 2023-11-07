@@ -8,7 +8,7 @@ const SoftwareComplianceForm = () => {
   return (
     <div>
       <BackToPageButton
-        text={format('api.back_to_reports_list.label')}
+        text={format('app.back_to_reports_list.label')}
         href={COMPLIANCE_TESTING_RESULT_PAGE}
       />
     </div>

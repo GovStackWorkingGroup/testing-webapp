@@ -1,7 +1,7 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
-  'api.back_to_reports_list.label': '< Back to Report List',
+  'app.back_to_reports_list.label': '< Back to Report List',
   'app.check_compliance.label': 'Check Compliance',
   'app.definition.description': `This web application is used to show how candidate products align with
     the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
