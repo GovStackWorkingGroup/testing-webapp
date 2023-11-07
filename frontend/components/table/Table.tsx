@@ -7,7 +7,7 @@ import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
 
 type TableProps = {
-  data: DataType | Record<string, never>;
+  data: DataType;
   headers: string[];
   hasVerticalBorders?: boolean;
   handleOpenEvaluationSchemaModal?: (value: boolean) => void;

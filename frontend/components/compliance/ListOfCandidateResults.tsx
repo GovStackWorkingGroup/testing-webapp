@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useTranslations from '../../hooks/useTranslation';
 import { getComplianceList } from '../../service/serviceAPI';
-import { CellValue, DataType } from '../../service/types';
+import { CellValue, DataType, SingleComplianceItem } from '../../service/types';
 import Table from '../table/Table';
 import InfoModal from '../shared/modals/InfoModal';
 import Button from '../shared/buttons/Button';
@@ -31,12 +31,10 @@ const ListOfCandidateResults = () => {
   ];
 
   const fetchData = async (offset: number, limit: number) => {
-    const data = await getComplianceList(offset, limit);
-    if (data.status) {
-      setAllDataLength(data.data.count);
-
+    const fetchedData = await getComplianceList(offset, limit);
+    if (fetchedData.status) {
+      setAllDataLength(fetchedData.data.count);
       const transformedData: DataType = {
-        // @ts-ignore
         rows: [...resultData.rows],
       };
 
@@ -52,46 +50,46 @@ const ListOfCandidateResults = () => {
       ];
 
       /*eslint no-prototype-builtins: */
-      for (const key in data.data.data) {
-        if (data.data.data.hasOwnProperty(key)) {
+      for (const key in fetchedData.data.data) {
+        if (fetchedData.data.data.hasOwnProperty(key)) {
           let subHeaderAdded = false;
           transformedData.rows.push(
-            // @ts-ignore
-            ...data.data.data[key].map((item: object, index: number) => {
-              const cell: CellValue[] = [];
-              for (const property of propertyOrder) {
-                if (item.hasOwnProperty(property)) {
-                  if (property === 'status') {
-                    // @ts-ignore
-                    switch (item[property]) {
-                    case 0:
-                      cell.push({ value: 'Draft' });
-                      break;
-                    case 1:
-                      cell.push({ value: 'In Review' });
-                      break;
-                    case 2:
-                      cell.push({ value: 'Approved' });
-                      break;
-                    case 3:
-                      cell.push({ value: 'Rejected' });
-                      break;
+            ...fetchedData.data.data[key].map(
+              (item: SingleComplianceItem, index: number) => {
+                const cell: CellValue[] = [];
+                for (const property of propertyOrder) {
+                  if (item.hasOwnProperty(property)) {
+                    if (property === 'status') {
+                      switch (item[property]) {
+                      case 0:
+                        cell.push({ value: 'Draft' });
+                        break;
+                      case 1:
+                        cell.push({ value: 'In Review' });
+                        break;
+                      case 2:
+                        cell.push({ value: 'Approved' });
+                        break;
+                      case 3:
+                        cell.push({ value: 'Rejected' });
+                        break;
+                      }
+                    } else {
+                      // @ts-ignore
+                      cell.push({ value: item[property] });
                     }
-                  } else {
-                    // @ts-ignore
-                    cell.push({ value: item[property] });
                   }
                 }
-              }
 
-              if (!subHeaderAdded && index === 0) {
-                subHeaderAdded = true;
+                if (!subHeaderAdded && index === 0) {
+                  subHeaderAdded = true;
 
-                return { cell, subHeader: key };
-              } else {
-                return { cell };
+                  return { cell, subHeader: key };
+                } else {
+                  return { cell };
+                }
               }
-            })
+            )
           );
         }
       }

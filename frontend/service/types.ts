@@ -45,14 +45,27 @@ export type BuildingBlockTestSummary = {
   count: number;
 };
 
+export type SingleComplianceItem = {
+  _id: string;
+  bb: string;
+  bbVersion: string;
+  deploymentCompliance: boolean;
+  interfaceCompliance: number;
+  requirementSpecificationCompliance: number;
+  softwareName: string;
+  softwareVersion: string;
+  status: number;
+  submissionDate: string;
+};
+
 export type ComplianceList = {
   count: number;
-  data: object;
+  data: Record<string, SingleComplianceItem[]>;
 };
 
 // All types used in Table.tsx and the data connected to it
 export type DataType = {
-  rows: DataRow[] | Record<string, never>;
+  rows: DataRow[];
 };
 
 export type TableProps = {
