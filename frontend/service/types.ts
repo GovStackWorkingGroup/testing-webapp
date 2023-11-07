@@ -44,3 +44,42 @@ export type BuildingBlockTestSummary = {
   data: BuildingBlockEndpointTest[];
   count: number;
 };
+
+export type SingleComplianceItem = {
+  _id: string;
+  bb: string;
+  bbVersion: string;
+  deploymentCompliance: boolean;
+  interfaceCompliance: number;
+  requirementSpecificationCompliance: number;
+  softwareName: string;
+  softwareVersion: string;
+  status: number;
+  submissionDate: string;
+};
+
+export type ComplianceList = {
+  count: number;
+  data: Record<string, SingleComplianceItem[]>;
+};
+
+// All types used in Table.tsx and the data connected to it
+export type DataType = {
+  rows: DataRow[];
+};
+
+export type TableProps = {
+  data: DataType | Record<string, never>;
+  hasVerticalBorders?: boolean;
+};
+
+export type CellValue = {
+  value: string | number | boolean;
+};
+
+export type Cell = CellValue | { values: CellValue[] };
+
+export type DataRow = {
+  cell: Cell[];
+  subHeader?: string;
+};

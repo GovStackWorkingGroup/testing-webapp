@@ -2,9 +2,13 @@ import {
   ResultTableSortByType,
   SoftwaresTableSortByType,
 } from '../components/table/types';
-import { BuildingBlockTestSummary, ProductsListType } from './types';
+import {
+  BuildingBlockTestSummary,
+  ComplianceList,
+  ProductsListType,
+} from './types';
 
-const baseUrl = process.env.API_URL || 'http://localhost:5000';
+const baseUrl = process.env.API_URL;
 
 type Success<T> = { status: true; data: T };
 type Failure = { status: false; error: Error };
@@ -118,6 +122,31 @@ export const getBuildingBlockTestResults = async (
       return response.json();
     })
     .then<Success<BuildingBlockTestSummary>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getComplianceList = async (offset: number, limit: number) => {
+  return await fetch(
+    `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}`,
+    {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<ComplianceList>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

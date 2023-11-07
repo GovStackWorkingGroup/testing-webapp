@@ -1,20 +1,23 @@
 import useTranslations from '../../hooks/useTranslation';
-import Table from './Table';
+import { DataType } from '../../service/types';
+import Table from '../table/Table';
 
 const EvaluationSchemaTable = () => {
   const { format } = useTranslations();
-  const data = {
-    headers: [
-      format('evaluation_schema.compliance.label'),
-      format('evaluation_schema.requirement.label'),
-      format('evaluation_schema.level_1.label'),
-      format('evaluation_schema.level_2.label'),
-    ],
+
+  const headers = [
+    format('evaluation_schema.compliance.label'),
+    format('evaluation_schema.requirement.label'),
+    format('evaluation_schema.level_1.label'),
+    format('evaluation_schema.level_2.label'),
+  ];
+
+  const data: DataType = {
     rows: [
       {
         cell: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
+            value: format('table.deployment_compliance.label'),
           },
           {
             value: format(
@@ -28,7 +31,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.interface_compliance.label'),
+            value: format('table.interface_compliance.label'),
           },
           {
             values: [
@@ -69,7 +72,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.deployment_compliance.label'),
+            value: format('evaluation_schema.requirement_specification.label'),
           },
           {
             values: [
@@ -119,7 +122,7 @@ const EvaluationSchemaTable = () => {
     ],
   };
 
-  return <Table data={data} />;
+  return <Table data={data} headers={headers} />;
 };
 
 export default EvaluationSchemaTable;
