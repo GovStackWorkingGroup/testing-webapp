@@ -38,7 +38,7 @@ const ListOfCandidateResults = () => {
         rows: [...resultData.rows],
       };
 
-      const propertyOrder = [
+      const propertyOrder: Array<keyof Omit<SingleComplianceItem, '_id'>> = [
         'softwareVersion',
         'bb',
         'bbVersion',
@@ -74,7 +74,6 @@ const ListOfCandidateResults = () => {
                         break;
                       }
                     } else {
-                      // @ts-ignore
                       cell.push({ value: item[property] });
                     }
                   }
