@@ -6,6 +6,7 @@ import {
   BuildingBlockTestSummary,
   ComplianceList,
   ProductsListType,
+  SoftwareDetailsType,
 } from './types';
 
 const baseUrl = process.env.API_URL;
@@ -152,4 +153,39 @@ export const getComplianceList = async (offset: number, limit: number) => {
     .catch<Failure>((error) => {
       return { error, status: false };
     });
+};
+
+export const getSoftwareDetails = async (softwareName: string) => {
+  return await fetch(
+    `http://localhost:5001/compliance/${softwareName}/detail`,
+    {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDetailsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const checkIfImageUrlExists = async (url: string): Promise<boolean> => {
+  try {
+    const response = await fetch(url, { method: 'HEAD' });
+
+    return response.status === 200;
+  } catch (error) {
+    return false;
+  }
 };
