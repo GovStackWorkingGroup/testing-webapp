@@ -49,29 +49,28 @@ const ListOfCandidateResults = () => {
         'interfaceCompliance',
       ];
 
-      /*eslint no-prototype-builtins: */
       for (const key in fetchedData.data.data) {
-        if (fetchedData.data.data.hasOwnProperty(key)) {
+        if (Object.prototype.hasOwnProperty.call(fetchedData.data.data, key)) {
           let subHeaderAdded = false;
           transformedData.rows.push(
             ...fetchedData.data.data[key].map(
               (item: SingleComplianceItem, index: number) => {
                 const cell: CellValue[] = [];
                 for (const property of propertyOrder) {
-                  if (item.hasOwnProperty(property)) {
+                  if (Object.prototype.hasOwnProperty.call(item, property)) {
                     if (property === 'status') {
                       switch (item[property]) {
                       case 0:
-                        cell.push({ value: 'Draft' });
+                        cell.push({ value: format('table.draft.label') });
                         break;
                       case 1:
-                        cell.push({ value: 'In Review' });
+                        cell.push({ value: format('table.in_review.label') });
                         break;
                       case 2:
-                        cell.push({ value: 'Approved' });
+                        cell.push({ value: format('table.approved.label') });
                         break;
                       case 3:
-                        cell.push({ value: 'Rejected' });
+                        cell.push({ value: format('table.rejected.label') });
                         break;
                       }
                     } else {

@@ -153,17 +153,17 @@ const Table = ({
                             )}
                             {cell.value === -1 && (
                               <p className="td-text-color-container status-na">
-                                N/A
+                                {format('table.N/A.label')}
                               </p>
                             )}
                             {cell.value === 1 && (
                               <p className="td-text-color-container status-level-one">
-                                Level 1
+                                {format('table.level_1.label')}
                               </p>
                             )}
                             {cell.value === 2 && (
                               <p className="td-text-color-container status-level-two">
-                                Level 2
+                                {format('table.level_2.label')}
                               </p>
                             )}
                             {cell.value === true && <RiCheckFill />}
