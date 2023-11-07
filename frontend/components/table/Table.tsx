@@ -195,6 +195,7 @@ const Table = ({
                             hasVerticalBorders ? '' : 'no-vertical-border'
                           }`}
                         >
+                          {/* @ts-ignore */}
                           {formatDateIfDate(cell.value)}
                         </td>
                       );
