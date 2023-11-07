@@ -127,14 +127,24 @@ declare module 'myTypes' {
     status: RequirementStatusEnum;
   }
 
+  // pipelines
+  export interface SoftwareNameGroup {
+    _id: string;
+    records: ComplianceReport[];
+  }
+
+  export interface ComplianceAggregationListResult {
+    data: SoftwareNameGroup[];
+    count: number;
+  }
+
   type FindResult = ComplianceReport[];
-  type AggregateResult = Record<string, any>;
   type SofwareDetailsResults = SoftwareDetailsResult[];
   type FormDetailsResults = FormDetailResult;
 
   export interface ComplianceDbRepository {
     findAll: () => Promise<FindResult>;
-    aggregateComplianceReports: (limit, offset) => Promise<AggregateResult>;
+    aggregateComplianceReports: (limit: number, offset: number) => Promise<ComplianceAggregationListResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
