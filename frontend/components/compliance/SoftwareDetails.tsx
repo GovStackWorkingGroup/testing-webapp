@@ -1,10 +1,25 @@
-type SoftwareDetailsType = {
+type SoftwareDetailsProps = {
   title: string;
   children: React.ReactNode;
+  complianceSection?: boolean;
+  softwareVersion?: string;
 };
-const SoftwareDetails = ({ title, children }: SoftwareDetailsType) => (
+
+const SoftwareDetails = ({
+  title,
+  children,
+  complianceSection = false,
+  softwareVersion,
+}: SoftwareDetailsProps) => (
   <div className="software-attributes-section">
-    <p>{title}</p>
+    {complianceSection ? (
+      <p>
+        {title} <span className="bold">Software version {softwareVersion}</span>
+      </p>
+    ) : (
+      <p>{title}</p>
+    )}
+
     {children}
   </div>
 );

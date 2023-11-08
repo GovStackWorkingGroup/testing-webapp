@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
-import { Cell, DataType } from '../../service/types';
+import classNames from 'classnames';
+import { Cell, CellValue, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
@@ -11,6 +12,7 @@ type TableProps = {
   headers: string[];
   hasVerticalBorders?: boolean;
   handleOpenEvaluationSchemaModal?: (value: boolean) => void;
+  isScrollX?: boolean;
 };
 
 const Table = ({
@@ -18,6 +20,7 @@ const Table = ({
   hasVerticalBorders = true,
   handleOpenEvaluationSchemaModal,
   headers,
+  isScrollX = false,
 }: TableProps) => {
   const { format } = useTranslations();
   const formatDateIfDate = (value: Cell) => {
@@ -35,7 +38,9 @@ const Table = ({
 
   return (
     <>
-      <table className="main-table">
+      <table
+        className={classNames('main-table', { 'table-scroll-x': isScrollX })}
+      >
         <thead>
           <tr>
             {headers?.map((header, indexKey) => {
@@ -44,6 +49,7 @@ const Table = ({
                   'table.deployment_compliance.label',
                   'table.requirement_specification_compliance.label',
                   'table.interface_compliance.label',
+                  'table.compliance_level.label',
                 ].includes(header) &&
                 handleOpenEvaluationSchemaModal
               ) {
@@ -131,7 +137,7 @@ const Table = ({
                       ) {
                         return (
                           <td
-                            key={`details-cell-check-${cell.value}-${indexKey}`}
+                            key={`details-cell-status-${cell.value}-${indexKey}`}
                             className={`${
                               hasVerticalBorders ? '' : 'no-vertical-border'
                             }`}
@@ -180,10 +186,12 @@ const Table = ({
                             key={`details-cell-${cell.value}-${indexKey}`}
                             className={`${
                               hasVerticalBorders ? '' : 'no-vertical-border'
-                            } td-bb-image-name-container`}
+                            }`}
                           >
-                            <BBImage imagePath={cell.value} />
-                            <p>{format(cell.value)}</p>
+                            <div className="td-bb-image-name-container">
+                              <BBImage imagePath={cell.value} />
+                              <p>{format(cell.value)}</p>
+                            </div>
                           </td>
                         );
                       }
@@ -209,13 +217,41 @@ const Table = ({
                         >
                           <table className="inside-table">
                             <tbody>
-                              {cell.values.map((value) => (
-                                <tr
-                                  key={`details-divided-cell-${value}-${indexKey}`}
-                                >
-                                  <td>{value.value}</td>
-                                </tr>
-                              ))}
+                              {cell.values.map((item: CellValue, indexKey) => {
+                                if ([-1, 1, 2].includes(item.value as number)) {
+                                  return (
+                                    <tr
+                                      key={`details-divided-cell-${item.value}-${indexKey}`}
+                                    >
+                                      <td>
+                                        {(item.value as number) === -1 && (
+                                          <p className="td-text-color-container status-na">
+                                            {format('table.N/A.label')}
+                                          </p>
+                                        )}
+                                        {(item.value as number) === 1 && (
+                                          <p className="td-text-color-container status-level-one">
+                                            {format('table.level_1.label')}
+                                          </p>
+                                        )}
+                                        {(item.value as number) === 2 && (
+                                          <p className="td-text-color-container status-level-two">
+                                            {format('table.level_2.label')}
+                                          </p>
+                                        )}
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+
+                                return (
+                                  <tr
+                                    key={`details-divided-cell-values-${item.value}-${indexKey}`}
+                                  >
+                                    <td>{item.value}</td>
+                                  </tr>
+                                );
+                              })}
                             </tbody>
                           </table>
                         </td>

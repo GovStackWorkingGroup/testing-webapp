@@ -1,0 +1,235 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for EvaluationSchemaTable component: should render the component and match snapshot 1`] = `
+<div>
+  <table
+    class="main-table"
+  >
+    <thead>
+      <tr>
+        <th
+          class=""
+        >
+          Compliance
+        </th>
+        <th
+          class=""
+        >
+          Requirement
+        </th>
+        <th
+          class=""
+        >
+          Level 1
+        </th>
+        <th
+          class=""
+        >
+          Level 2
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      id="scrollableDiv"
+    >
+      <tr>
+        <td
+          class=""
+        >
+          Deployment Compliance
+        </td>
+        <td
+          class=""
+        >
+          Deployability via container
+        </td>
+        <td
+          class=""
+        >
+          <svg
+            class="check-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z"
+            />
+          </svg>
+        </td>
+        <td
+          class=""
+        >
+          <svg
+            class="check-icon"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M10.0007 15.1709L19.1931 5.97852L20.6073 7.39273L10.0007 17.9993L3.63672 11.6354L5.05093 10.2212L10.0007 15.1709Z"
+            />
+          </svg>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class=""
+        >
+          Interface Compliance
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  Fulfillment of Service API requirements
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  ≥ 1
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Optional
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class=""
+        >
+          Requirement Specification
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ≥ 1
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  ≥ 1
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table"
+          >
+            <tbody>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

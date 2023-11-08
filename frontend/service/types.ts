@@ -72,7 +72,7 @@ export type ComplianceDetails = {
 export type ComplianceItem = {
   requirementSpecificationCompliance: ComplianceDetails;
   interfaceCompliance: ComplianceDetails;
-  [key: string]: ComplianceDetails;
+  bbVersion: string;
 };
 
 export type Compliance = {

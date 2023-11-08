@@ -10,10 +10,6 @@ import SoftwareAttributes from '../../../components/compliance/SoftwareAttribute
 import useTranslations from '../../../hooks/useTranslation';
 
 const SoftwareComplianceDetailsPage = () => {
-  const { format } = useTranslations();
-  const router = useRouter();
-
-  const { softwareName } = router.query;
   const [softwareDetail, setSoftwareDetail] = useState<SoftwareDetailsType>([
     {
       logo: '',
@@ -30,6 +26,9 @@ const SoftwareComplianceDetailsPage = () => {
       softwareName: 'string;',
     },
   ]);
+  const { format } = useTranslations();
+  const router = useRouter();
+  const { softwareName } = router.query;
 
   const fetchData = async (softwareName: string) => {
     const data = await getSoftwareDetails(softwareName);
@@ -40,7 +39,7 @@ const SoftwareComplianceDetailsPage = () => {
 
   useEffect(() => {
     fetchData(softwareName as string);
-  }, []);
+  }, [softwareName]);
 
   return (
     <div className="compliance-detail-page-container">
@@ -51,9 +50,18 @@ const SoftwareComplianceDetailsPage = () => {
       <SoftwareDetails title={format('app.software_attributes.label')}>
         <SoftwareAttributes softwareDetails={softwareDetail} />
       </SoftwareDetails>
-      <SoftwareDetails title={format('app.compliance_with.label')}>
-        {/* <SoftwareComplianceWith /> */}
-      </SoftwareDetails>
+      {softwareDetail[0].compliance.length
+        ? softwareDetail[0].compliance.map((item, indexKey) => (
+          <SoftwareDetails
+            title={format('app.compliance_with.label')}
+            complianceSection={true}
+            softwareVersion={item.version}
+            key={`software-compliance-with-${indexKey}`}
+          >
+            <SoftwareComplianceWith softwareComplianceData={item.bbDetails} />
+          </SoftwareDetails>
+        ))
+        : null}
     </div>
   );
 };

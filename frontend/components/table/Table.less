@@ -2,7 +2,6 @@
 @import '../../styles/Extends.less';
 
 table.main-table {
-  display: block;
   border: 1px solid @border-grey;
   border-radius: 8px;
   border-spacing: 0;
@@ -71,6 +70,10 @@ table.inside-table {
       border-top: none;
     }
   }
+}
+
+.table-scroll-x {
+  display: block;
 }
 
 .check-icon {
@@ -148,6 +151,7 @@ table.inside-table {
 
 .td-bb-image-name-container {
   display: flex;
+  min-width: 145px;
   align-items: center;
   gap: 10px;
 }
