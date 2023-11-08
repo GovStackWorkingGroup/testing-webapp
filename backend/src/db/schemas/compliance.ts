@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
+import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
 
-const validateRequiredIfNotDraftForForm = function(this: ComplianceReport, value: any) {
+const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
 };
 
@@ -12,6 +13,12 @@ const StatusEnum = {
   APPROVED: 2,
   REJECTED: 3
 };
+
+const BBStatusEnum = {
+  IN_REVIEW: 1,
+  APPROVED: 2,
+  REJECTED: 3
+}
 
 const RequirementStatusEnum = {
   REQUIRED: 0,
@@ -61,6 +68,11 @@ const ComplianceDetailSchema = new mongoose.Schema({
   bbVersion: {
     type: String,
     required: true
+  },
+  status: {
+    type: Number,
+    enum: Object.values(StatusEnum),
+    default: BBStatusEnum.IN_REVIEW
   },
   submissionDate: {
     type: Date,
@@ -152,7 +164,12 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   uniqueId: {
     type: String,
-    unique: true
+    validate: {
+      validator: function (v) {
+        return uuidValidate(v) && uuidVersion(v) === 4;
+      },
+      message: props => `${props.value} is not a valid version 4 UUID`
+    }
   },
   expirationDate: {
     type: Date
