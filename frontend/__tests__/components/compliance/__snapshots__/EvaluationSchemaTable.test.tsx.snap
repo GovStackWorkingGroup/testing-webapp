@@ -84,82 +84,17 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
         <td
           class=""
         >
-          Interface Compliance
-        </td>
-        <td
-          class="td-row-details"
-        >
-          <table
-            class="inside-table"
-          >
-            <tbody>
-              <tr>
-                <td>
-                  Fulfillment of Service API requirements
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-        <td
-          class="td-row-details"
-        >
-          <table
-            class="inside-table"
-          >
-            <tbody>
-              <tr>
-                <td>
-                  ≥ 1
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  Optional
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-        <td
-          class="td-row-details"
-        >
-          <table
-            class="inside-table"
-          >
-            <tbody>
-              <tr>
-                <td>
-                  All
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  All
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-      <tr>
-        <td
-          class=""
-        >
           Requirement Specification
         </td>
         <td
           class="td-row-details"
         >
           <table
-            class="inside-table"
+            class="inside-table table-full-height"
           >
-            <tbody>
+            <tbody
+              class=""
+            >
               <tr>
                 <td>
                   Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications
@@ -182,9 +117,11 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table"
+            class="inside-table table-full-height"
           >
-            <tbody>
+            <tbody
+              class=""
+            >
               <tr>
                 <td>
                   All
@@ -207,14 +144,89 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table"
+            class="inside-table table-full-height"
           >
-            <tbody>
+            <tbody
+              class=""
+            >
               <tr>
                 <td>
                   All
                 </td>
               </tr>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  All
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td
+          class=""
+        >
+          Interface Compliance
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table table-full-height"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td>
+                  Fulfillment of Service API requirements
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table table-full-height"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td>
+                  ≥ 1
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Optional
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="inside-table table-full-height"
+          >
+            <tbody
+              class=""
+            >
               <tr>
                 <td>
                   All
