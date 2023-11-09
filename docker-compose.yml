@@ -4,7 +4,6 @@ services:
       build:
         context: ./frontend
         dockerfile: ./Dockerfile
-      platform: linux/arm64/v8
       ports:
         - 3003:3003
       environment:
