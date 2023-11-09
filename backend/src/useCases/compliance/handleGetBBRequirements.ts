@@ -20,7 +20,6 @@ export default class GetBBRequirementsRequestHandler {
     
     async getBBRequirements(): Promise<void> {
         try {
-            // Assuming your repository has a method getBBRequirements that takes a bbKey
             const bbRequirements = await this.repository.getBBRequirements(this.bbKey);
             
             if (!bbRequirements) {
