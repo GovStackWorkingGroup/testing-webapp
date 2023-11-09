@@ -31,7 +31,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('evaluation_schema.requirement_specification.label'),
+            value: format('table.requirement_specification.label'),
           },
           {
             values: [

@@ -47,6 +47,7 @@ table.main-table {
       td.td-row-details {
         padding: 0;
         max-width: 450px;
+        border-top: none;
       }
 
       td.no-vertical-border {
@@ -65,10 +66,25 @@ table.inside-table {
   border-collapse: collapse;
   width: 100%;
 
+  tr {
+    td {
+      border-top: none;
+    }
+  }
+
   tr:first-child {
     td {
       border-top: none;
     }
+  }
+
+  .border-top {
+    border-top: 1px solid #dfdfea;
+  }
+
+  .without-borders {
+    border-top: none;
+    border-right: none;
   }
 }
 
@@ -162,4 +178,14 @@ table.inside-table {
   justify-content: center;
   font-style: italic;
   color: @text-secondary;
+}
+
+.has-divided-inside-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-full-height {
+  height: 100%;
+  border-top: 1px solid #dfdfea;
 }

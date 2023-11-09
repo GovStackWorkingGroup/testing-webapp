@@ -72,6 +72,7 @@ export const en = {
   'table.deployment_compliance.label': 'Deployment Compliance',
   'table.documentation.label': 'Documentation',
   'table.draft.label': 'Draft',
+  'table.interface.label': 'Interface',
   'table.interface_compliance.label': 'Interface Compliance',
   'table.in_review.label': 'In Review',
   'table.last_update.label': 'Last Update',
@@ -89,6 +90,7 @@ export const en = {
   'table.rejected.label': 'Rejected',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
+  'table.requirement_specification.label': 'Requirement Specification',
   'table.requirement_specification_compliance.label':
     'Requirement Specification Compliance',
   'table.website.label': 'Website',

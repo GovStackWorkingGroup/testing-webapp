@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
-import { Cell, CellValue, DataType } from '../../service/types';
+import { Cell, CellValue, CellValues, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
@@ -210,48 +210,133 @@ const Table = ({
                     }
 
                     if ('values' in cell) {
+                      const doesValuesExistInsideValues = cell.values.some(
+                        (cellItem) => 'values' in cellItem
+                      );
+
                       return (
                         <td
                           className="td-row-details"
                           key={`divided-row-${cell}-${indexKey}`}
                         >
-                          <table className="inside-table">
-                            <tbody>
-                              {cell.values.map((item: CellValue, indexKey) => {
-                                if ([-1, 1, 2].includes(item.value as number)) {
-                                  return (
-                                    <tr
-                                      key={`details-divided-cell-${item.value}-${indexKey}`}
-                                    >
-                                      <td>
-                                        {(item.value as number) === -1 && (
-                                          <p className="td-text-color-container status-na">
-                                            {format('table.N/A.label')}
-                                          </p>
-                                        )}
-                                        {(item.value as number) === 1 && (
-                                          <p className="td-text-color-container status-level-one">
-                                            {format('table.level_1.label')}
-                                          </p>
-                                        )}
-                                        {(item.value as number) === 2 && (
-                                          <p className="td-text-color-container status-level-two">
-                                            {format('table.level_2.label')}
-                                          </p>
-                                        )}
-                                      </td>
-                                    </tr>
-                                  );
-                                }
-
-                                return (
-                                  <tr
-                                    key={`details-divided-cell-values-${item.value}-${indexKey}`}
-                                  >
-                                    <td>{item.value}</td>
-                                  </tr>
-                                );
+                          <table
+                            className={classNames('inside-table', {
+                              'table-full-height': !doesValuesExistInsideValues,
+                            })}
+                          >
+                            <tbody
+                              className={classNames({
+                                'has-divided-inside-table':
+                                  doesValuesExistInsideValues,
                               })}
+                            >
+                              {cell.values.map(
+                                (item: CellValue | CellValues, indexKey) => {
+                                  if ('value' in item) {
+                                    if (
+                                      [-1, 1, 2].includes(item.value as number)
+                                    ) {
+                                      return (
+                                        <tr
+                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                        >
+                                          <td>
+                                            {(item.value as number) === -1 && (
+                                              <p className="td-text-color-container status-na">
+                                                {format('table.N/A.label')}
+                                              </p>
+                                            )}
+                                            {(item.value as number) === 1 && (
+                                              <p className="td-text-color-container status-level-one">
+                                                {format('table.level_1.label')}
+                                              </p>
+                                            )}
+                                            {(item.value as number) === 2 && (
+                                              <p className="td-text-color-container status-level-two">
+                                                {format('table.level_2.label')}
+                                              </p>
+                                            )}
+                                          </td>
+                                        </tr>
+                                      );
+                                    }
+
+                                    return (
+                                      <tr
+                                        key={`details-divided-cell-values-${item.value}-${indexKey}`}
+                                      >
+                                        <td>{item.value}</td>
+                                      </tr>
+                                    );
+                                  }
+
+                                  if ('values' in item) {
+                                    return (
+                                      <td
+                                        className="td-row-details without-borders"
+                                        key={`divided-row-${cell}-${indexKey}`}
+                                      >
+                                        <table className="inside-table border-top">
+                                          <tbody>
+                                            {item.values.map(
+                                              (item: CellValue, indexKey) => {
+                                                if ('value' in item) {
+                                                  if (
+                                                    [-1, 1, 2].includes(
+                                                      item.value as number
+                                                    )
+                                                  ) {
+                                                    return (
+                                                      <tr
+                                                        key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                      >
+                                                        <td>
+                                                          {(item.value as number) ===
+                                                            -1 && (
+                                                            <p className="td-text-color-container status-na">
+                                                              {format(
+                                                                'table.N/A.label'
+                                                              )}
+                                                            </p>
+                                                          )}
+                                                          {(item.value as number) ===
+                                                            1 && (
+                                                            <p className="td-text-color-container status-level-one">
+                                                              {format(
+                                                                'table.level_1.label'
+                                                              )}
+                                                            </p>
+                                                          )}
+                                                          {(item.value as number) ===
+                                                            2 && (
+                                                            <p className="td-text-color-container status-level-two">
+                                                              {format(
+                                                                'table.level_2.label'
+                                                              )}
+                                                            </p>
+                                                          )}
+                                                        </td>
+                                                      </tr>
+                                                    );
+                                                  }
+
+                                                  return (
+                                                    <tr
+                                                      key={`details-divided-cell-values-${item.value}-${indexKey}`}
+                                                    >
+                                                      <td>{item.value}</td>
+                                                    </tr>
+                                                  );
+                                                }
+                                              }
+                                            )}
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    );
+                                  }
+                                }
+                              )}
                             </tbody>
                           </table>
                         </td>

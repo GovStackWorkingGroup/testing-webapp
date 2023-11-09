@@ -70,13 +70,14 @@ export type ComplianceDetails = {
 };
 
 export type ComplianceItem = {
-  requirementSpecificationCompliance: ComplianceDetails;
-  interfaceCompliance: ComplianceDetails;
+  requirements: ComplianceDetails;
+  interface: ComplianceDetails;
   bbVersion: string;
 };
 
 export type Compliance = {
-  [key: string]: ComplianceItem;
+  bbName: string;
+  bbVersions: ComplianceItem[];
 };
 
 export type SoftwareDetailsType = [
@@ -87,9 +88,8 @@ export type SoftwareDetailsType = [
     pointOfContact: string;
     compliance: [
       {
-        formId: string;
-        version: string;
-        bbDetails: Compliance;
+        softwareVersion: string;
+        bbDetails: Compliance[];
       }
     ];
     softwareName: string;
@@ -110,7 +110,14 @@ export type CellValue = {
   value: string | number | boolean;
 };
 
-export type Cell = CellValue | { values: CellValue[] };
+export type CellValues = {
+  values: CellValue[];
+};
+
+export type Cell =
+  | CellValue
+  | { values: CellValue[] }
+  | { values: CellValues[] };
 
 export type DataRow = {
   cell: Cell[];

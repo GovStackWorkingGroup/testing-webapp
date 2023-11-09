@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../service/constants';
+import {
+  COMPLIANCE_TESTING_RESULT_PAGE,
+  complianceTEST,
+} from '../../../service/constants';
 import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
 import { getSoftwareDetails } from '../../../service/serviceAPI';
 import SoftwareDetails from '../../../components/compliance/SoftwareDetails';
@@ -18,9 +21,8 @@ const SoftwareComplianceDetailsPage = () => {
       pointOfContact: '',
       compliance: [
         {
-          formId: '',
-          version: '',
-          bbDetails: {},
+          softwareVersion: '',
+          bbDetails: [],
         },
       ],
       softwareName: 'string;',
@@ -50,12 +52,13 @@ const SoftwareComplianceDetailsPage = () => {
       <SoftwareDetails title={format('app.software_attributes.label')}>
         <SoftwareAttributes softwareDetails={softwareDetail} />
       </SoftwareDetails>
-      {softwareDetail[0].compliance.length
-        ? softwareDetail[0].compliance.map((item, indexKey) => (
+      {/* {softwareDetail[0].compliance.length */}
+      {complianceTEST.length
+        ? complianceTEST.map((item, indexKey) => (
           <SoftwareDetails
             title={format('app.compliance_with.label')}
             complianceSection={true}
-            softwareVersion={item.version}
+            softwareVersion={item.softwareVersion}
             key={`software-compliance-with-${indexKey}`}
           >
             <SoftwareComplianceWith softwareComplianceData={item.bbDetails} />

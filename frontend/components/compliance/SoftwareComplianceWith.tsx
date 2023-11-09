@@ -6,7 +6,7 @@ import useTranslations from '../../hooks/useTranslation';
 import EvaluationSchemaTable from './EvaluationSchemaTable';
 
 type SoftwareComplianceWithProps = {
-  softwareComplianceData: Compliance;
+  softwareComplianceData: Compliance[];
 };
 
 const SoftwareComplianceWith = ({
@@ -32,40 +32,47 @@ const SoftwareComplianceWith = ({
       rows: [],
     };
 
-    for (const key in softwareComplianceData) {
-      if (Object.prototype.hasOwnProperty.call(softwareComplianceData, key)) {
-        const item = softwareComplianceData[key];
-        const row: DataRow = {
-          cell: [
-            { value: key },
-            { value: item.bbVersion },
-            {
-              values: [
-                { value: 'Interface' },
-                { value: 'Requirement Specification' },
-              ],
-            },
-            {
-              values: [
-                { value: item.interfaceCompliance.level },
-                { value: item.requirementSpecificationCompliance.level },
-              ],
-            },
-            {
-              values: [
-                { value: item.interfaceCompliance.note ?? '' },
-                { value: item.requirementSpecificationCompliance.note ?? '' },
-              ],
-            },
-          ],
-        };
+    const row: DataRow[] = softwareComplianceData.map((bbDetail) => ({
+      cell: [
+        { value: bbDetail.bbName },
+        {
+          values: bbDetail.bbVersions.map((bbVersion) => ({
+            value: bbVersion.bbVersion,
+          })),
+        },
+        {
+          values: bbDetail.bbVersions.map(() => ({
+            values: [
+              { value: format('table.interface.label') },
+              { value: format('table.requirement_specification.label') },
+            ],
+          })),
+        },
+        {
+          values: bbDetail.bbVersions.map((bbVersion) => ({
+            values: [
+              { value: bbVersion.interface.level },
+              { value: bbVersion.requirements.level },
+            ],
+          })),
+        },
+        {
+          values: bbDetail.bbVersions.map((bbVersion) => ({
+            values: [
+              { value: bbVersion.interface.note ?? '' },
+              { value: bbVersion.requirements.note ?? '' },
+            ],
+          })),
+        },
+      ],
+    }));
 
-        transformedData.rows.push(row);
-      }
-    }
+    row.forEach((row) => {
+      transformedData.rows.push(row);
+    });
 
     setSoftwareComplianceParams(transformedData);
-  }, [softwareComplianceData]);
+  }, [softwareComplianceData, format]);
 
   return (
     <>
