@@ -31,7 +31,7 @@ const RequirementFulfillment = {
 };
 
 // Requirements Schema
-const RequirementSchema = new mongoose.Schema({
+export const RequirementSchema = new mongoose.Schema({
   requirement: {
     type: String,
     required: true

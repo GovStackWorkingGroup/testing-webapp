@@ -119,6 +119,20 @@ declare module 'myTypes' {
     count: number;
   }
 
+  // BB Requirements
+  export interface BBRequirement {
+    bbName: string;
+    bbKey: string;
+    bbVersion: string;
+    dateOfSave: Date;
+    requirements: {
+      crossCutting: Requirement[];
+      functional: Requirement[];
+    }
+  }
+
+  export type AllBBRequirements = BBRequirement[];
+
   type FindResult = ComplianceReport[];
   type SofwareDetailsResults = SoftwareDetailsResult[];
   type FormDetailsResults = FormDetailResult;
@@ -129,5 +143,6 @@ declare module 'myTypes' {
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
+    getAllBBRequirements: () => Promise<AllBBRequirements>;
   }
 }
