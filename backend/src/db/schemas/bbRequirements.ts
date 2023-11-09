@@ -19,8 +19,10 @@ const BBRequirementSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    crossCuttingRequirements: [RequirementSchema],
-    functionalRequirements: [RequirementSchema],
+    requirements: {
+        crossCutting: [RequirementSchema],
+        functional: [RequirementSchema],
+    }
 });
 
 const BBRequirements = mongoose.model('BBRequirement', BBRequirementSchema);
