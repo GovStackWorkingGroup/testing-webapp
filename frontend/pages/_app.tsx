@@ -9,6 +9,7 @@ import '../components/TestSummary.less';
 import '../components/BuildingBlocksImage.less';
 import '../components/header/Header.less';
 import '../components/header/HeaderMenuButton.less';
+import '../components/compliance/SoftwareDetails.less';
 import MainLayout from '../components/mainLayout/MainLayout';
 import '../components/shared/inputs/SearchInput.less';
 import '../components/shared/modals/Modal.less';

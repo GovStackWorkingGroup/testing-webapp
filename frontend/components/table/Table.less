@@ -2,7 +2,6 @@
 @import '../../styles/Extends.less';
 
 table.main-table {
-  display: block;
   border: 1px solid @border-grey;
   border-radius: 8px;
   border-spacing: 0;
@@ -48,6 +47,7 @@ table.main-table {
       td.td-row-details {
         padding: 0;
         max-width: 450px;
+        border-top: none;
       }
 
       td.no-vertical-border {
@@ -66,11 +66,30 @@ table.inside-table {
   border-collapse: collapse;
   width: 100%;
 
+  tr {
+    td {
+      border-top: none;
+    }
+  }
+
   tr:first-child {
     td {
       border-top: none;
     }
   }
+
+  .border-top {
+    border-top: 1px solid #dfdfea;
+  }
+
+  .without-borders {
+    border-top: none;
+    border-right: none;
+  }
+}
+
+.table-scroll-x {
+  display: block;
 }
 
 .check-icon {
@@ -148,6 +167,7 @@ table.inside-table {
 
 .td-bb-image-name-container {
   display: flex;
+  min-width: 145px;
   align-items: center;
   gap: 10px;
 }
@@ -158,4 +178,30 @@ table.inside-table {
   justify-content: center;
   font-style: italic;
   color: @text-secondary;
+}
+
+.has-divided-inside-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-full-height {
+  height: 100%;
+  border-top: 1px solid #dfdfea;
+}
+
+.table-expand-div {
+  width: 395%;
+  margin-left: 100%;
+  background-color: @blue-10;
+  border-top: 1px solid #dfdfea;
+  border-left: 1px solid #dfdfea;
+  color: @accents-and-btn;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.table-expand-div > p {
+  padding-left: 16px;
 }
