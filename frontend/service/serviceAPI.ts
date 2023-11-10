@@ -156,15 +156,12 @@ export const getComplianceList = async (offset: number, limit: number) => {
 };
 
 export const getSoftwareDetails = async (softwareName: string) => {
-  return await fetch(
-    `http://localhost:5001/compliance/${softwareName}/detail`,
-    {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-  )
+  return await fetch(`${baseUrl}/compliance/${softwareName}/detail`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error(response.statusText);
