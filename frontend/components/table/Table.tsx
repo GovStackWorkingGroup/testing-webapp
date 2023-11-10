@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
+import { useState } from 'react';
 import { Cell, CellValue, CellValues, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
@@ -13,6 +14,7 @@ type TableProps = {
   hasVerticalBorders?: boolean;
   handleOpenEvaluationSchemaModal?: (value: boolean) => void;
   isScrollX?: boolean;
+  isEvaluationSchema?: boolean;
 };
 
 const Table = ({
@@ -21,8 +23,13 @@ const Table = ({
   handleOpenEvaluationSchemaModal,
   headers,
   isScrollX = false,
+  isEvaluationSchema = false,
 }: TableProps) => {
+  const [expandedRow, setExpandedRow] = useState<{ [key: string]: boolean }>(
+    {}
+  );
   const { format } = useTranslations();
+
   const formatDateIfDate = (value: Cell) => {
     if (typeof value === 'string') {
       const date = new Date(value);
@@ -34,6 +41,14 @@ const Table = ({
     } else {
       return value;
     }
+  };
+
+  const handleExpandRows = (index: number, name: string) => {
+    const compoundKey = `${index}-${name}`;
+    setExpandedRow((prevExpanded) => ({
+      ...prevExpanded,
+      [compoundKey]: !prevExpanded[compoundKey],
+    }));
   };
 
   return (
@@ -86,11 +101,11 @@ const Table = ({
         </thead>
         {data.rows.length ? (
           <tbody id="scrollableDiv">
-            {data.rows?.map((row, indexKey) => (
+            {data.rows?.map((row, rowIndexKey) => (
               <>
                 {row.subHeader && (
                   <tr
-                    key={`subheader-${row.subHeader}-${indexKey}`}
+                    key={`subheader-${row.subHeader}-${rowIndexKey}`}
                     className="tr-subheader"
                   >
                     <td colSpan={8}>
@@ -108,7 +123,7 @@ const Table = ({
                     </td>
                   </tr>
                 )}
-                <tr key={`row-${row}-${indexKey}`}>
+                <tr key={`row-${row}-${rowIndexKey}`}>
                   {row.cell.map((cell, indexKey) => {
                     if ('value' in cell) {
                       if (cell.value === 'checked') {
@@ -232,6 +247,19 @@ const Table = ({
                             >
                               {cell.values.map(
                                 (item: CellValue | CellValues, indexKey) => {
+                                  if (
+                                    !isEvaluationSchema &&
+                                    indexKey > 0 &&
+                                    !expandedRow[
+                                      `${rowIndexKey}-${
+                                        'value' in row.cell[0] &&
+                                        row.cell[0].value
+                                      }`
+                                    ]
+                                  ) {
+                                    return null;
+                                  }
+
                                   if ('value' in item) {
                                     if (
                                       [-1, 1, 2].includes(item.value as number)
@@ -344,6 +372,31 @@ const Table = ({
                     }
                   })}
                 </tr>
+                {!isEvaluationSchema &&
+                  'values' in row.cell[1] &&
+                  row.cell[1].values.length > 1 && (
+                  <div
+                    className="table-expand-div"
+                    onClick={() =>
+                      handleExpandRows(
+                        rowIndexKey,
+                        'value' in row.cell[0]
+                          ? (row.cell[0].value as string)
+                          : ''
+                      )
+                    }
+                  >
+                    <p>
+                      {expandedRow[
+                          `${rowIndexKey}-${
+                            'value' in row.cell[0] && row.cell[0].value
+                          }`
+                      ]
+                        ? format('table.hide_older_versions.label')
+                        : format('table.show_older_versions.label')}
+                    </p>
+                  </div>
+                )}
               </>
             ))}
           </tbody>

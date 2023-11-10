@@ -36,9 +36,14 @@ const SoftwareComplianceWith = ({
       cell: [
         { value: bbDetail.bbName },
         {
-          values: bbDetail.bbVersions.map((bbVersion) => ({
-            value: bbVersion.bbVersion,
-          })),
+          values: bbDetail.bbVersions
+            .slice()
+            .sort((a, b) => {
+              return b.bbVersion.localeCompare(a.bbVersion);
+            })
+            .map((bbVersion) => ({
+              value: bbVersion.bbVersion,
+            })),
         },
         {
           values: bbDetail.bbVersions.map(() => ({
@@ -49,20 +54,30 @@ const SoftwareComplianceWith = ({
           })),
         },
         {
-          values: bbDetail.bbVersions.map((bbVersion) => ({
-            values: [
-              { value: bbVersion.interface.level },
-              { value: bbVersion.requirements.level },
-            ],
-          })),
+          values: bbDetail.bbVersions
+            .slice()
+            .sort((a, b) => {
+              return b.bbVersion.localeCompare(a.bbVersion);
+            })
+            .map((bbVersion) => ({
+              values: [
+                { value: bbVersion.interface.level },
+                { value: bbVersion.requirements.level },
+              ],
+            })),
         },
         {
-          values: bbDetail.bbVersions.map((bbVersion) => ({
-            values: [
-              { value: bbVersion.interface.note ?? '' },
-              { value: bbVersion.requirements.note ?? '' },
-            ],
-          })),
+          values: bbDetail.bbVersions
+            .slice()
+            .sort((a, b) => {
+              return b.bbVersion.localeCompare(a.bbVersion);
+            })
+            .map((bbVersion) => ({
+              values: [
+                { value: bbVersion.interface.note ?? '' },
+                { value: bbVersion.requirements.note ?? '' },
+              ],
+            })),
         },
       ],
     }));

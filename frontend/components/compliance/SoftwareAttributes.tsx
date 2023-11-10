@@ -86,16 +86,13 @@ const SoftwareAttributes = ({ softwareDetails }: SoftwareAttributesProps) => {
           <p>{format('table.documentation.label')}</p>
         </div>
         <div>
-          {softwareDetailsParams.documentation.map((href, indexKey) => (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              key={`software-detail-documentation-${indexKey}`}
-            >
-              {href}
-            </a>
-          ))}
+          <a
+            href={softwareDetailsParams.documentation}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {softwareDetailsParams.documentation}
+          </a>
         </div>
       </div>
       <div className="software-attribute">

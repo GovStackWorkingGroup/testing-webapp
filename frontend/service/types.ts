@@ -84,7 +84,7 @@ export type SoftwareDetailsType = [
   {
     logo: string;
     website: string;
-    documentation: string[];
+    documentation: string;
     pointOfContact: string;
     compliance: [
       {

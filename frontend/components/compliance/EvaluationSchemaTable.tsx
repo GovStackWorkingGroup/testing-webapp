@@ -122,7 +122,7 @@ const EvaluationSchemaTable = () => {
     ],
   };
 
-  return <Table data={data} headers={headers} />;
+  return <Table data={data} headers={headers} isEvaluationSchema={true} />;
 };
 
 export default EvaluationSchemaTable;
