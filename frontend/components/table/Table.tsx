@@ -7,6 +7,7 @@ import { Cell, CellValue, CellValues, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
+import EvaluationSchemaTable from '../compliance/EvaluationSchemaTable';
 
 type TableProps = {
   data: DataType;
@@ -235,8 +236,8 @@ const Table = ({
                           key={`divided-row-${cell}-${indexKey}`}
                         >
                           <table
-                            className={classNames('inside-table', {
-                              'table-full-height': !doesValuesExistInsideValues,
+                            className={classNames('inside-table border-top', {
+                              'table-full-height': !doesValuesExistInsideValues && !isEvaluationSchema,
                             })}
                           >
                             <tbody
