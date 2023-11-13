@@ -1,6 +1,6 @@
 export const aggregationPipeline = (): any[] => [
     // Sort by bbName, bbKey, bbVersion, and dateOfSave descending
-    { $sort: { bbName: 1, bbKey: 1, bbVersion: 1, dateOfSave: -1 } },
+    { $sort: { bbName: 1, bbKey: 1, dateOfSave: -1 } },
     // Group by the unique combination of bbName, bbKey, and bbVersion
     {
       $group: {
