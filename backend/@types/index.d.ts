@@ -1,23 +1,42 @@
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
-  export const enum StatusEnum {
-    DRAFT = 0,
-    IN_REVIEW = 1,
-    APPROVED = 2,
-    REJECTED = 3
-  }
+    export const enum StatusEnum {
+      DRAFT = 0,
+      IN_REVIEW = 1,
+      APPROVED = 2,
+      REJECTED = 3
+    }
+  
+    export enum SpecificationComplianceLevel {
+      NA = -1,
+      LEVEL_1 = 1,
+      LEVEL_2 = 2
+    }
+
+    export interface ComplianceVersion {
+      version: string;
+      bbDetails: Map<string, ComplianceDetail>;
+    }
+  
+    export interface ComplianceReport {
+      softwareName: string;
+      logo: string;
+      website: string;
+      documentation: string;
+      pointOfContact: string;
+      compliance: ComplianceVersion[];
+    }
+  
+    export interface ComplianceDbRepository {
+      findAll: () => Promise<FindResult>;
+      aggregateComplianceReports: (limit, offset) => Promise<AggregateResult>;
+    }
 
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
     OPTIONAL = 2
-  }
-
-  export const enum SpecificationComplianceLevel {
-    NA = -1,
-    LEVEL_1 = 1,
-    LEVEL_2 = 2
   }
 
   export interface ComplianceDetail {
@@ -119,6 +138,16 @@ declare module 'myTypes' {
     count: number;
   }
 
+  // BB Requirements
+  export interface BBRequirement{
+    bbName: string;
+    bbKey: string;
+    bbVersion: string;
+    dateOfSave: Date;
+    crossCuttingRequirements: Requirement[];
+    functionalRequirements: Requirement[];
+  }
+
   type FindResult = ComplianceReport[];
   type SofwareDetailsResults = SoftwareDetailsResult[];
   type FormDetailsResults = FormDetailResult;
@@ -129,5 +158,6 @@ declare module 'myTypes' {
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
+    getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
   }
 }

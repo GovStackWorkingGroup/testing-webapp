@@ -1,4 +1,4 @@
-import { ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -6,6 +6,8 @@ import { appConfig } from '../../config/index';
 import { createAggregationPipeline } from '../pipelines/compliance/complianceListAggregation';
 import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetailAggregation';
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
+import BBRequirements from '../schemas/bbRequirements';
+import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -77,6 +79,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         throw new Error(errorMessage);
       }
       throw new Error('Error creating compliance draft');
+    }
+  },
+
+  async getBBRequirements(bbKey: string): Promise<BBRequirement[]> {
+    try {
+      return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
+    } catch (error) {
+      console.error("Error fetching BB requirements:", error);
+      throw error;
     }
   }
 

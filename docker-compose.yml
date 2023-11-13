@@ -16,11 +16,10 @@ services:
 
     mongo:
       image: mongo
-      platform: linux/arm64/v8
       restart: always
       # DB Ports not exposed by default.
-      ports:
-        - 27017:27017
+      # ports:
+      #   - 27017:27017
       volumes:
         - mongoData:/data/db
       environment:
