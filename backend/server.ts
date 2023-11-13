@@ -17,7 +17,7 @@ import mongoComplianceRepository from "./src/db/repositories/complianceRepositor
 
 import buildReportRoutes from './src/routes/record';
 import buildComplianceRoutes from "./src/routes/compliance";
-
+import { startCronJobs } from "./src/cronJobs";
 
 const port: number = parseInt(process.env.PORT as string, 10) || 5000;
 const app =  express();
@@ -32,6 +32,7 @@ app.use(buildComplianceRoutes(complianceController(complianceRepository, mongoCo
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
+  startCronJobs();
 });
 
 export default app;

@@ -1,23 +1,37 @@
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
-  export const enum StatusEnum {
-    DRAFT = 0,
-    IN_REVIEW = 1,
-    APPROVED = 2,
-    REJECTED = 3
-  }
+    export const enum StatusEnum {
+      DRAFT = 0,
+      IN_REVIEW = 1,
+      APPROVED = 2,
+      REJECTED = 3
+    }
+  
+    export enum SpecificationComplianceLevel {
+      NA = -1,
+      LEVEL_1 = 1,
+      LEVEL_2 = 2
+    }
 
+    export interface ComplianceVersion {
+      version: string;
+      bbDetails: Map<string, ComplianceDetail>;
+    }
+  
+    export interface ComplianceReport {
+      softwareName: string;
+      logo: string;
+      website: string;
+      documentation: string;
+      pointOfContact: string;
+      compliance: ComplianceVersion[];
+    }
+  
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
     OPTIONAL = 2
-  }
-
-  export const enum SpecificationComplianceLevel {
-    NA = -1,
-    LEVEL_1 = 1,
-    LEVEL_2 = 2
   }
 
   export interface ComplianceDetail {
@@ -144,5 +158,6 @@ declare module 'myTypes' {
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
+    getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
   }
 }

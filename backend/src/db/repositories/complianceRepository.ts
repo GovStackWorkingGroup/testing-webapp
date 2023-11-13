@@ -1,4 +1,4 @@
-import { AllBBRequirements, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -8,6 +8,7 @@ import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetai
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
+import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -87,6 +88,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return await BBRequirements.aggregate(aggregationPipeline()).exec();
     } catch (error) {
       console.error('There was an error while fetching all BB requirements:', error);
+      throw error;
+    }
+  },
+  
+  async getBBRequirements(bbKey: string): Promise<BBRequirement[]> {
+    try {
+      return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
+    } catch (error) {
+      console.error("Error fetching BB requirements:", error);
       throw error;
     }
   }

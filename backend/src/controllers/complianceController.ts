@@ -6,6 +6,7 @@ import CreateDraftRequestHandler from '../useCases/compliance/handleCreateDraft'
 import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
+import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBRequirements';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -47,6 +48,13 @@ const complianceController = (
       .getAllBBRequirements()
       .catch((err: any) => default500Error(res, err));
   };
+  const getBBRequirements = (req: Request, res: Response): void => {
+    const bbKey = req.params.bbKey;
+
+    new GetBBRequirementsRequestHandler(req, res, repository, bbKey)
+      .getBBRequirements()
+      .catch((err: any) => default500Error(res, err));
+  };
 
   return {
     getAllComplianceReports,
@@ -54,6 +62,7 @@ const complianceController = (
     getFormDetail,
     createOrSubmitForm,
     getAllBBRequirements,
+    getBBRequirements,
   };
 };
 

@@ -133,6 +133,7 @@ const ListOfCandidateResults = () => {
             handleOpenEvaluationSchemaModal={(value) =>
               setDisplayEvaluationSchemaModal(value)
             }
+            isScrollX={true}
           />
         </div>
       </InfiniteScroll>

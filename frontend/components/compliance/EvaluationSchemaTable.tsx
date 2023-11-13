@@ -31,48 +31,7 @@ const EvaluationSchemaTable = () => {
       {
         cell: [
           {
-            value: format('table.interface_compliance.label'),
-          },
-          {
-            values: [
-              {
-                value: format(
-                  'evaluation_schema.fulfillment_of_service_api.label'
-                ),
-              },
-              {
-                value: format(
-                  'evaluation_schema.fulfillment_of_required_api.label'
-                ),
-              },
-            ],
-          },
-          {
-            values: [
-              {
-                value: format('evaluation_schema.equal_or_more_than_1.label'),
-              },
-              {
-                value: format('evaluation_schema.optional.label'),
-              },
-            ],
-          },
-          {
-            values: [
-              {
-                value: format('evaluation_schema.all.label'),
-              },
-              {
-                value: format('evaluation_schema.all.label'),
-              },
-            ],
-          },
-        ],
-      },
-      {
-        cell: [
-          {
-            value: format('evaluation_schema.requirement_specification.label'),
+            value: format('table.requirement_specification.label'),
           },
           {
             values: [
@@ -119,10 +78,51 @@ const EvaluationSchemaTable = () => {
           },
         ],
       },
+      {
+        cell: [
+          {
+            value: format('table.interface_compliance.label'),
+          },
+          {
+            values: [
+              {
+                value: format(
+                  'evaluation_schema.fulfillment_of_service_api.label'
+                ),
+              },
+              {
+                value: format(
+                  'evaluation_schema.fulfillment_of_required_api.label'
+                ),
+              },
+            ],
+          },
+          {
+            values: [
+              {
+                value: format('evaluation_schema.equal_or_more_than_1.label'),
+              },
+              {
+                value: format('evaluation_schema.optional.label'),
+              },
+            ],
+          },
+          {
+            values: [
+              {
+                value: format('evaluation_schema.all.label'),
+              },
+              {
+                value: format('evaluation_schema.all.label'),
+              },
+            ],
+          },
+        ],
+      },
     ],
   };
 
-  return <Table data={data} headers={headers} />;
+  return <Table data={data} headers={headers} isEvaluationSchema={true} />;
 };
 
 export default EvaluationSchemaTable;
