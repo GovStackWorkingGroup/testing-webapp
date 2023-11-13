@@ -1,6 +1,9 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
+  'app.back_to_reports_list.label': '< Back to Report List',
+  'app.compliance_with.label': 'Compliance with',
+  'app.check_compliance.label': 'Check Compliance',
   'app.definition.description': `This web application is used to show how candidate products align with
     the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
     for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
@@ -12,8 +15,12 @@ export const en = {
   'app.definition.note':
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
   'app.definition.title': 'GovStack Building Block Compliance Platform',
+  'app.definition_self_assessment.title': 'Self-Assessment of Compliance',
+  'app.definition_self_assessment.description':
+    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
+  'app.evaluation_schema.label': 'Evaluation Schema',
   'app.help.label': 'Help',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
@@ -21,7 +28,8 @@ export const en = {
   'app.scroll-loader.message': 'Loading more data...',
   'app.scenario.label': 'Scenario:',
   'app.search': 'Software Name',
-  'app.software-compliance-testing.label': 'Software Compliance Testing',
+  'app.software_attributes.label': 'Software Attributes',
+  'app.software_compliance_testing.label': 'Software Compliance Testing',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
@@ -30,7 +38,6 @@ export const en = {
   'evaluation_schema.compliance.label': 'Compliance',
   'evaluation_schema.deployability_via_container.label':
     'Deployability via container',
-  'evaluation_schema.deployment_compliance.label': 'Deployment Compliance',
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
   'evaluation_schema.fulfillment_of_required_api.label':
     'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
@@ -42,7 +49,6 @@ export const en = {
     'Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications',
   'evaluation_schema.fulfillment_of_service_api.label':
     'Fulfillment of Service API requirements',
-  'evaluation_schema.interface_compliance.label': 'Interface Compliance',
   'evaluation_schema.level_1.label': 'Level 1',
   'evaluation_schema.level_2.label': 'Level 2',
   'evaluation_schema.optional.label': 'Optional',
@@ -57,11 +63,39 @@ export const en = {
   'result_page.back_to_product_list': '< Back to Products List',
   'result_page.title': 'Tests for',
 
+  'table.approved.label': 'Approved',
+  'table.bb_specification.label': 'BB Specification',
+  'table.bb_version.label': 'BB Version',
+  'table.building_block_version.label': 'Building Block Version',
+  'table.compliance.label': 'Compliance',
+  'table.compliance_level.label': 'Compliance Level',
+  'table.deployment_compliance.label': 'Deployment Compliance',
+  'table.documentation.label': 'Documentation',
+  'table.draft.label': 'Draft',
+  'table.hide_older_versions.label': 'Hide older versions',
+  'table.interface.label': 'Interface',
+  'table.interface_compliance.label': 'Interface Compliance',
+  'table.in_review.label': 'In Review',
   'table.last_update.label': 'Last Update',
+  'table.level_1.label': 'Level 1',
+  'table.level_2.label': 'Level 2',
+  'table.logo.label': 'Logo',
+  'table.N/A.label': 'N/A',
+  'table.no_data_available.message': 'No Data Available',
   'table.no_result_count.message': 'No results count found',
+  'table.notes': 'Notes',
   'table.overall_compatibility.label': 'Overall Compatibility',
+  'table.point_of_contact.label': 'Point of contact',
+  'table.show_older_versions.label': 'Show older versions',
+  'table.software_name.label': 'Software Version',
+  'table.submission_date.label': 'Submission Date',
+  'table.rejected.label': 'Rejected',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
+  'table.requirement_specification.label': 'Requirement Specification',
+  'table.requirement_specification_compliance.label':
+    'Requirement Specification Compliance',
+  'table.website.label': 'Website',
 
   'test_table.category.label': 'Category',
   'test_table.failed': 'Failed',

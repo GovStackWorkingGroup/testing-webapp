@@ -2,19 +2,25 @@
 @import '../../styles/Extends.less';
 
 table.main-table {
-  border: 1px solid #dfdfea;
+  border: 1px solid @border-grey;
   border-radius: 8px;
   border-spacing: 0;
+  width: 100%;
+  max-height: 100vh;
+  overflow-y: scroll;
 
   thead:extend(.table-header-text) {
-    height: 48px;
+    height: @table-row;
     text-align: left;
-    width: 100%;
     background-color: @blue-lightest;
 
     th {
-      padding: 0 10px 0 10px;
-      border-right: 1px solid #dfdfea;
+      padding: 0 40px 0 10px;
+      border-right: 1px solid @border-grey;
+    }
+
+    th.no-vertical-border {
+      border-right: none;
     }
 
     th:last-child {
@@ -23,21 +29,26 @@ table.main-table {
   }
 
   tbody {
-    width: 100%;
-
     tr {
-      min-height: 48px;
-      height: 48px;
+      min-height: @table-row;
+      height: @table-row;
 
       td {
-        min-height: 48px;
+        min-height: @table-row;
+        max-width: 400px;
         padding: 0 10px 0 10px;
-        border-top: 1px solid #dfdfea;
-        border-right: 1px solid #dfdfea;
+        border-top: 1px solid @border-grey;
+        border-right: 1px solid @border-grey;
       }
 
       td.td-row-details {
         padding: 0;
+        max-width: 450px;
+        border-top: none;
+      }
+
+      td.no-vertical-border {
+        border-right: none;
       }
 
       td:last-child {
@@ -52,13 +63,159 @@ table.inside-table {
   border-collapse: collapse;
   width: 100%;
 
+  tr {
+    td {
+      border-top: none;
+    }
+  }
+
   tr:first-child {
     td {
       border-top: none;
     }
   }
+
+  .border-top {
+    border-top: 1px solid #dfdfea;
+  }
+
+  .without-borders {
+    border-top: none;
+    border-right: none;
+  }
+}
+
+.table-scroll-x {
+  table-layout: fixed;
+  display: block;
+  max-width: min-content;
+  margin: 0 auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  overflow-y: none;
 }
 
 .check-icon {
   color: @accents-and-btn;
+}
+
+.th-header-with-icon {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.th-header-with-icon > p {
+  width: max-content;
+}
+
+.th-icon-question-mark {
+  color: @accents-and-btn;
+  font-size: 20px;
+}
+
+.th-icon-question-mark.cursor-pointer {
+  cursor: pointer;
+}
+
+.tr-subheader {
+  background-color: @blue-10;
+}
+
+.tr-subheader-container {
+  display: flex;
+  justify-content: space-between;
+  color: @text-main;
+  text-decoration: none;
+  align-items: center;
+}
+
+.td-text-color-container {
+  height: 22px;
+  width: max-content;
+  border-radius: 4px;
+  line-height: 22px;
+  padding: 4px 8px;
+}
+
+.td-text-color-container.status-in-review {
+  background-color: @background-medium-blue;
+  color: @blue-medium;
+}
+
+.td-text-color-container.status-rejected {
+  background-color: @fail-background-second;
+  color: @fail;
+}
+
+.td-text-color-container.status-approved {
+  background-color: @success-background-second;
+  color: @success;
+}
+
+.td-text-color-container.status-na {
+  background-color: @grey-background;
+  color: @text-secondary;
+}
+
+.td-text-color-container.status-level-one {
+  background-color: @purple-background;
+  color: @purple-one;
+}
+
+.td-text-color-container.status-level-two {
+  background-color: @green-background;
+  color: @green-one;
+}
+
+.td-bb-image-name-container {
+  display: flex;
+  min-width: 145px;
+  align-items: center;
+  gap: 10px;
+}
+
+.td-no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  color: @text-secondary;
+}
+
+.has-divided-inside-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-full-height {
+  height: 100%;
+  border-top: 1px solid #dfdfea;
+}
+
+.table-full-height {
+  tr {
+    height: 96px !important;
+  }
+}
+
+.table-expand-div {
+  width: 395%;
+  margin-left: 100%;
+  background-color: @blue-10;
+  border-top: 1px solid #dfdfea;
+  border-left: 1px solid #dfdfea;
+  color: @accents-and-btn;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.table-expand-div > p {
+  padding-left: 16px;
+}
+
+.border-top {
+  border-top: 1px solid #dfdfea;
 }

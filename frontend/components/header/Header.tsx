@@ -1,18 +1,15 @@
 import { useRouter } from 'next/router';
-import React, { useCallback } from 'react';
+import React from 'react';
 import '../../public/images/logo.png';
-import { useIntl } from 'react-intl';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
+import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
 
 const Header = () => {
   const router = useRouter();
-  const { formatMessage } = useIntl();
-  const format = useCallback(
-    (id: string) => formatMessage({ id }),
-    [formatMessage]
-  );
+  const { format } = useTranslations();
 
   const handleBackToHomePage = () => {
     router.push('/');
@@ -37,9 +34,9 @@ const Header = () => {
             active={currentPath === '/'}
           />
           <HeaderMenuButton
-            buttonTitle={format('app.software-compliance-testing.label')}
-            href={'/softwareComplianceTesting'}
-            active={currentPath === '/softwareComplianceTesting'}
+            buttonTitle={format('app.software_compliance_testing.label')}
+            href={COMPLIANCE_TESTING_RESULT_PAGE}
+            active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
           />
         </div>
         <div className="header-help">

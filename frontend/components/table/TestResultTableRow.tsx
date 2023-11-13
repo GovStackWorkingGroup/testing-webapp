@@ -7,7 +7,7 @@ import TextTooltip from '../TextTooltip';
 
 type Props = {
   bbTest: BuildingBlockEndpointTest;
-  passCurrentBBTest: () => void
+  passCurrentBBTest: () => void;
 };
 
 const TestResultTableRow = ({ bbTest, passCurrentBBTest }: Props) => {
@@ -22,7 +22,7 @@ const TestResultTableRow = ({ bbTest, passCurrentBBTest }: Props) => {
 
   const handleTextOverflowing = useCallback(() => {
     const bbContainer = endpointTextContainer.current;
-    if (bbContainer && (bbContainer.clientWidth < bbContainer.scrollWidth)) {
+    if (bbContainer && bbContainer.clientWidth < bbContainer.scrollWidth) {
       setIsTextOverflowing(true);
     } else {
       setIsTextOverflowing(false);
@@ -32,33 +32,48 @@ const TestResultTableRow = ({ bbTest, passCurrentBBTest }: Props) => {
   useEffect(handleTextOverflowing, [handleTextOverflowing]);
 
   useEffect(
-    () => window.addEventListener('resize', debounce(handleTextOverflowing, 20)),
+    () =>
+      window.addEventListener('resize', debounce(handleTextOverflowing, 20)),
     [handleTextOverflowing]
   );
 
   return (
-    <div className='test-table-row' onClick={passCurrentBBTest}>
+    <div className="test-table-row" onClick={passCurrentBBTest}>
       {bbTest?.passed ? (
-        <div className='test-table-row-status status-passed' data-testid='bb-test-passed'>
+        <div
+          className="test-table-row-status status-passed"
+          data-testid="bb-test-passed"
+        >
           <p>{format('test_table.passed')}</p>
         </div>
       ) : (
-        <div className='test-table-row-status status-failed' data-testid='bb-test-failed'>
+        <div
+          className="test-table-row-status status-failed"
+          data-testid="bb-test-failed"
+        >
           <p>{format('test_table.failed')}</p>
         </div>
       )}
       <div
-        className={classNames({ 'test-table-row-category': bbTest?.method !== '', })}
-        data-testid='bb-test-category'>{bbTest?.method === '' ? '-' : bbTest?.method}
+        className={classNames({
+          'test-table-row-category': bbTest?.method !== '',
+        })}
+        data-testid="bb-test-category"
+      >
+        {bbTest?.method === '' ? '-' : bbTest?.method}
       </div>
       <div
-        className='test-table-row-endpoint'
-        data-testid='bb-test-endpoint'
+        className="test-table-row-endpoint"
+        data-testid="bb-test-endpoint"
         data-tooltip-id={isTextOverflowing ? 'text-tooltip' : undefined}
         data-tooltip-content={isTextOverflowing ? bbTest?.endpoint : undefined}
       >
-        <p ref={endpointTextContainer}>{bbTest?.endpoint === '' ? '-' : bbTest?.endpoint}</p>
-        {isTextOverflowing ? <TextTooltip customStyle='row-endpoint-tooltip' /> : null}
+        <p ref={endpointTextContainer}>
+          {bbTest?.endpoint === '' ? '-' : bbTest?.endpoint}
+        </p>
+        {isTextOverflowing ? (
+          <TextTooltip customStyle="row-endpoint-tooltip" />
+        ) : null}
       </div>
     </div>
   );

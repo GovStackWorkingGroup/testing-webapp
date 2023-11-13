@@ -27,11 +27,6 @@ declare module 'myTypes' {
       pointOfContact: string;
       compliance: ComplianceVersion[];
     }
-  
-    export interface ComplianceDbRepository {
-      findAll: () => Promise<FindResult>;
-      aggregateComplianceReports: (limit, offset) => Promise<AggregateResult>;
-    }
 
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
@@ -138,6 +133,16 @@ declare module 'myTypes' {
     count: number;
   }
 
+  // BB Requirements
+  export interface BBRequirement{
+    bbName: string;
+    bbKey: string;
+    bbVersion: string;
+    dateOfSave: Date;
+    crossCuttingRequirements: Requirement[];
+    functionalRequirements: Requirement[];
+  }
+
   type FindResult = ComplianceReport[];
   type SofwareDetailsResults = SoftwareDetailsResult[];
   type FormDetailsResults = FormDetailResult;
@@ -149,5 +154,6 @@ declare module 'myTypes' {
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
     editOrSubmitDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
+    getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
   }
 }

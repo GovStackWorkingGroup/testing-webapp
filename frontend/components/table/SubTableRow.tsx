@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { RiArrowRightSLine } from 'react-icons/ri';
 import { useIntl } from 'react-intl';
 import { BuildingBlockType } from '../../service/types';
-import BBImage from './BuildingBlocksImage';
+import BBImage from '../BuildingBlocksImage';
 
 type Props = {
   buildingBlock: BuildingBlockType;

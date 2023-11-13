@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { useIntl } from 'react-intl';
 import { BuildingBlockType } from '../service/types';
 import LoadingBar from './LoadingBar';
-import BBImage from './table/BuildingBlocksImage';
+import BBImage from './BuildingBlocksImage';
 
 type Props = {
   bbSummary: BuildingBlockType | undefined
