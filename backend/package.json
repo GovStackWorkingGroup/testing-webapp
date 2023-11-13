@@ -6,6 +6,7 @@
   "dependencies": {
     "@cucumber/json-to-messages": "^10.0.0",
     "@vpriem/express-api-key-auth": "^1.1.0",
+    "axios": "^1.6.1",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^16.0.3",
@@ -19,8 +20,10 @@
     "mongoose": "^6.9.1",
     "mongoose-gen": "^2.1.1",
     "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.2",
     "nodemon": "^2.0.20",
     "prettier": "^2.8.8",
+    "semver": "^7.5.4",
     "streamifier": "^0.1.1",
     "supertest": "^6.3.3"
   },
@@ -31,11 +34,11 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.14",
-    "@types/express": "^4.17.18",
+    "@types/express": "^4.17.21",
     "@types/js-yaml": "^4.0.6",
     "@types/memorystream": "^0.3.2",
     "@types/multer": "^1.4.8",
-    "@types/node": "^20.7.1",
+    "@types/node": "^20.9.0",
     "@types/streamifier": "^0.1.0",
     "@types/supertest": "^2.0.13",
     "eslint": "^7.32.0 || ^8.2.0",
