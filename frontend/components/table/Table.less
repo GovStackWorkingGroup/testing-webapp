@@ -7,12 +7,11 @@ table.main-table {
   border-spacing: 0;
   width: 100%;
   max-height: 100vh;
-  overflow: scroll;
+  overflow-y: scroll;
 
   thead:extend(.table-header-text) {
     height: @table-row;
     text-align: left;
-    width: 100%;
     background-color: @blue-lightest;
 
     th {
@@ -30,8 +29,6 @@ table.main-table {
   }
 
   tbody {
-    width: 100%;
-
     tr {
       min-height: @table-row;
       height: @table-row;
@@ -89,7 +86,13 @@ table.inside-table {
 }
 
 .table-scroll-x {
+  table-layout: fixed;
   display: block;
+  max-width: min-content;
+  margin: 0 auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  overflow-y: none;
 }
 
 .check-icon {
@@ -190,6 +193,12 @@ table.inside-table {
   border-top: 1px solid #dfdfea;
 }
 
+.table-full-height {
+  tr {
+    height: 96px !important;
+  }
+}
+
 .table-expand-div {
   width: 395%;
   margin-left: 100%;
@@ -200,8 +209,13 @@ table.inside-table {
   height: 24px;
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .table-expand-div > p {
   padding-left: 16px;
+}
+
+.border-top {
+  border-top: 1px solid #dfdfea;
 }
