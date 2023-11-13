@@ -22,7 +22,7 @@ export default class EditDraftRequestHandler {
         return `${this.req.protocol}://${this.req.get('host')}${path}`;
     }
 
-    async editOrSubmitDraftForm(draftId: string): Promise<Response> {
+    async editDraftForm(draftId: string): Promise<Response> {
         try {
             // const formId = this.req.params.id; // Assuming there's an ID in the URL parameters to identify the form
             // if (!mongoose.Types.ObjectId.isValid(formId)) {
@@ -39,7 +39,7 @@ export default class EditDraftRequestHandler {
                 updateData.logo = (files.logo[0] as Express.Multer.File).path;
             }
 
-            const updateResult = await this.repository.editOrSubmitDraftForm(draftId, updateData);
+            const updateResult = await this.repository.editDraftForm(draftId, updateData);
 
             // if (!updateResult) {
             //     return this.res.status(404).send({ success: false, error: "Form not found" });

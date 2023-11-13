@@ -41,9 +41,9 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const editOrSubmitDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
+  const editDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
     try {
-      return await repository.editOrSubmitDraftForm(draftId, updateData);
+      return await repository.editDraftForm(draftId, updateData);
     } catch (error) {
       console.error('There was an error while editing the form:', error);
       throw error;
@@ -65,7 +65,7 @@ return {
   getSoftwareComplianceDetail,
   getFormDetail,
   createOrSubmitForm,
-  editOrSubmitDraftForm,
+  editDraftForm,
   getBBRequirements,
 };
 };

@@ -24,7 +24,7 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
 
-  router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editOrSubmitDraftForm);
+  router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editDraftForm);
   
   return router;
 };

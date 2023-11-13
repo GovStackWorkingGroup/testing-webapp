@@ -43,11 +43,11 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   };
 
-  const editOrSubmitDraftForm = async (req: Request, res: Response): Promise<void> => {
+  const editDraftForm = async (req: Request, res: Response): Promise<void> => {
     const draftId = req.params.draftId;
 
     new EditDraftRequestHandler(req, res, repository)
-      .editOrSubmitDraftForm(draftId)
+      .editDraftForm(draftId)
       .catch((err: any) => default500Error(res, err));
   };
   
@@ -64,7 +64,7 @@ const complianceController = (
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
-    editOrSubmitDraftForm,
+    editDraftForm,
     getBBRequirements,
   };
 };

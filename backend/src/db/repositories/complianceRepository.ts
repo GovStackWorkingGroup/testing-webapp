@@ -82,7 +82,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async editOrSubmitDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
+  async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
 
       const draft = await Compliance.findOne({ uniqueId: draftId });
