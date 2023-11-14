@@ -46,14 +46,11 @@ const SoftwareAttributes = ({ softwareDetails }: SoftwareAttributesProps) => {
         </div>
         <div>
           {softwareLogoExist ? (
-            <>
-              <img
-                className="img-logo"
-                src={softwareLogo.value}
-                alt={softwareLogo.title}
-              />
-              <p>{softwareLogo.title}</p>
-            </>
+            <img
+              className="img-logo"
+              src={softwareLogo.value}
+              alt={softwareLogo.title}
+            />
           ) : (
             <p>{softwareLogo.title}</p>
           )}
