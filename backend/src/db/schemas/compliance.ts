@@ -6,6 +6,8 @@ const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, valu
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
 };
 
+
+
 // SCHEMA FORM CONTENT
 const StatusEnum = {
   DRAFT: 0,
@@ -199,6 +201,27 @@ const ComplianceReportSchema = new mongoose.Schema({
   }
 });
 
+ComplianceDetailSchema.pre('save', function(next) {
+  const complianceDetail = this;
+
+  // Ensure requirementSpecificationCompliance exists before proceeding
+  if (complianceDetail.requirementSpecificationCompliance) {
+    // Custom validation for the 'fulfillment' field in RequirementSchema
+    complianceDetail.requirementSpecificationCompliance.crossCuttingRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+
+    complianceDetail.requirementSpecificationCompliance.functionalRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+  }
+
+  next();
+});
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);
 
 export default ComplianceReport;
