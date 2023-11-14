@@ -24,7 +24,7 @@ const SoftwareComplianceDetailsPage = () => {
           bbDetails: [],
         },
       ],
-      softwareName: 'string;',
+      softwareName: '',
     },
   ]);
   const { format } = useTranslations();

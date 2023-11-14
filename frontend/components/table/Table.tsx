@@ -33,10 +33,14 @@ const Table = ({
 
   const formatDateIfDate = (value: Cell) => {
     if (typeof value === 'string') {
-      const date = new Date(value);
-      if (!isNaN(date.getTime())) {
+      const pattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+      if (pattern.test(value)) {
+        const date = new Date(value);
+
         return date.toLocaleDateString();
-      } else {
+      }
+
+      if (!pattern.test(value)) {
         return value;
       }
     } else {
