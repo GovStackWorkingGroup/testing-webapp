@@ -1,4 +1,4 @@
-import { ComplianceDbRepository, ComplianceReport, BBRequirement } from "myTypes";
+import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport } from "myTypes";
 
 const complianceRepository = (repository: ComplianceDbRepository) => {
   const findAll = async () => {
@@ -41,6 +41,15 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const getAllBBRequirements = async (): Promise<AllBBRequirements> => {
+    try {
+      return await repository.getAllBBRequirements();
+    } catch (error) {
+      console.error('There was an error while fetching all BB requirements:', error);
+      throw error;
+    }
+  };
+  
   const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     try {
       return await repository.getBBRequirements(bbKey);
@@ -56,6 +65,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    getAllBBRequirements,
     getBBRequirements
   };
 };
