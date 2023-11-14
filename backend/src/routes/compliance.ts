@@ -28,60 +28,6 @@ const buildComplianceRoutes = (controller: any) => {
   router.get('/compliance/requirements/:bbKey', limiter, controller.getBBRequirements);
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
-  
-  router.get('/fetch_data', limiter, async (_req, res) => {
-    // get collections 
-    // /v1/orgs/pxmRWOPoaU8fUAbbcrus/collections
-    // get spaces for collection P6VwekZdnw37TKGOdRc3
-    // /v1/collections/0usSj5SjaAsqoOEju90C/spaces
-    // get spaces of given collection
-    // /v1/collections/0usSj5SjaAsqoOEju90C/spaces
-    // get pages in given spaceId 
-    // /v1/spaces/Vqte0R2TeBFaehnRpdeG/content
-    // get content of given page
-    // /v1/spaces/8B7scSfa9NpeR1BmaFM2/content/page/21tFDRp33yYrt2tJ5ifP
-    // here we have to filter each heading 1 which starts with "5" and then filter out if there is info
-    // if it is required
-    try {
-      const response = await processBBRequirements();
-      res.json(response);
-    } catch (error: any) {
-      console.error(error);
-      if (error.response) {
-        res.status(500).json({
-          message: error.response.message,
-          response: error.response.data,
-          status: error.response.status,
-        });
-      } else {
-        res.status(500).json({ message: error.message });
-      }
-    };
-
-    
-  });
-
-  router.get('/fetch_data1', limiter, async (_req, res) => {
-    try {
-      const response = await gitBookClient.get(`/v1/orgs/pxmRWOPoaU8fUAbbcrus/collections`);
-      res.json(response.data);
-    } catch (error: any) {
-      console.error(error);
-      if (error.response) {
-        res.status(500).json({
-          message: error.response.message,
-          response: error.response.data,
-          status: error.response.status,
-        });
-      } else {
-        res.status(500).json({ message: error.message });
-      }
-    };
-
-    
-  });
-  
-
   return router;
 };
 
