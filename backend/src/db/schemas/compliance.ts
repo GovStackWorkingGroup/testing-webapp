@@ -52,7 +52,7 @@ export const RequirementSchema = new mongoose.Schema({
   fulfillment: {
     type: Number,
     enum: Object.values(RequirementFulfillment),
-    required: true
+    required: false
   },
   status: {
     type: Number,
@@ -123,8 +123,8 @@ const ComplianceVersionSchema = new mongoose.Schema({
 
 const deploymentComplianceSchema = new mongoose.Schema({
   documentation: [{
-      type: String, // saved as string base64
-      required: true
+    type: String, // saved as string base64
+    required: true
   }],
   deploymentInstructions: {
     type: String,
@@ -201,7 +201,7 @@ const ComplianceReportSchema = new mongoose.Schema({
   }
 });
 
-ComplianceDetailSchema.pre('save', function(next) {
+ComplianceDetailSchema.pre('save', function (next) {
   const complianceDetail = this;
 
   // Ensure requirementSpecificationCompliance exists before proceeding

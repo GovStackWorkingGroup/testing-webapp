@@ -1,6 +1,7 @@
 import GitBookCollectionManager from './CollectionsManager';
 import GitBookSpaceManager from './SpacesManager';
 import GitBookPageContentManager from './PageContentManager';
+import BBRequirements from '../../db/schemas/bbRequirements';
 
 const processBBRequirements = async () => {
     const collectionManager = new GitBookCollectionManager();
@@ -20,6 +21,9 @@ const processBBRequirements = async () => {
                 const dateOfSave = new Date().toISOString();
 
                 const requirements = { crossCutting };
+
+                let bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
+                await bbRequirement.save();
 
                 allPageContents.push({ bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements });
             }
