@@ -71,3 +71,40 @@
 .search-option:hover {
   background-color: @selected-product;
 }
+
+// Custom input
+.custom-input-container {
+  // padding-bottom: 24px;
+}
+
+.custom-input-container > p:first-child {
+  padding-bottom: 4px;
+}
+
+.custom-input {
+  width: calc(100% - 16px);
+  height: 38px;
+  border-radius: 4px;
+  border: 1px solid @stroke;
+  outline: none;
+  padding-left: 16px;
+}
+
+.custom-input:focus {
+  border: 1px solid @accents-and-btn;
+}
+
+.custom-input.error {
+  border: 1px solid @fail;
+}
+
+.custom-input-error-message {
+  height: 12px;
+  color: @fail;
+  font-size: 12px;
+}
+
+.custom-input-tip-message {
+  height: 12px;
+  font-size: 12px;
+}
