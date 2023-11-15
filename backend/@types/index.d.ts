@@ -28,11 +28,6 @@ declare module 'myTypes' {
       compliance: ComplianceVersion[];
     }
   
-    export interface ComplianceDbRepository {
-      findAll: () => Promise<FindResult>;
-      aggregateComplianceReports: (limit, offset) => Promise<AggregateResult>;
-    }
-
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
@@ -159,5 +154,6 @@ declare module 'myTypes' {
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
+    getBBs(): Promise<Partial<BBRequirement>[]>;
   }
 }

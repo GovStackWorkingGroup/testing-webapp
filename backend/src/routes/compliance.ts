@@ -21,6 +21,7 @@ const buildComplianceRoutes = (controller: any) => {
   router.get('/compliance/forms/:id', limiter, controller.getFormDetail);
 
   router.get('/compliance/requirements/:bbKey', limiter, controller.getBBRequirements);
+  router.get('/compliance/bbs', limiter, controller.getBBs);
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
 

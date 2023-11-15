@@ -78,19 +78,16 @@ describe('Compliance API', () => {
     it('should return status 200', async () => {
       const res = await request(app).get('/compliance/list');
       expect(res.statusCode).to.equal(200);
-    });
 
-    it('should have the expected format', async () => {
-      const res = await request(app).get('/compliance/list');
-      expect(res.statusCode).to.equal(200);
-    
       const responseData = res.body;
       expect(responseData).to.be.an('object');
-    
-      for (const softwareName in responseData) {
-        expect(responseData[softwareName]).to.be.an('array');
-    
-        responseData[softwareName].forEach(item => {
+      expect(responseData).to.have.property('count').that.is.a('number');
+      expect(responseData).to.have.property('data').that.is.an('object');
+
+      for (const softwareName in responseData.data) {
+        expect(responseData.data[softwareName]).to.be.an('array');
+
+        responseData.data[softwareName].forEach(item => {
           expect(item).to.have.property('softwareVersion').that.is.a('string');
           expect(item).to.have.property('bb').that.is.a('string');
           expect(item).to.have.property('bbVersion').that.is.a('string');

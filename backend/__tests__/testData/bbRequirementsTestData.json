@@ -1,0 +1,676 @@
+[{
+  "_id": "65549661d82a8513d79d95a9",
+  "bbName": "Identity",
+  "bbKey": "bb-identity",
+  "bbVersion": "1.1",
+  "dateOfSave": "2023-11-15T09:58:57.535Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Enrollment Services",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95aa"
+      },
+      {
+        "requirement": "Multi-Factor Authentication",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95ab"
+      },
+      {
+        "requirement": "Numerical Digital ID Attribute",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95ac"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549661d82a8513d79d95ae",
+  "bbName": "Digital Registries",
+  "bbKey": "bb-digital-registries",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T09:58:57.535Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Citizen-Centric",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95af"
+      },
+      {
+        "requirement": "Open",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95b0"
+      },
+      {
+        "requirement": "Robust",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95b1"
+      },
+      {
+        "requirement": "Databases must not include business logic",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95b2"
+      },
+      {
+        "requirement": "Privacy and protection of user data",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95b3"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549661d82a8513d79d95b5",
+  "bbName": "Consent",
+  "bbKey": "bb-consent",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T09:58:57.607Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Access control",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95b6"
+      },
+      {
+        "requirement": "Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95b7"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549661d82a8513d79d95b9",
+  "bbName": "Cloud Infrastructure Hosting",
+  "bbKey": "bb-cloud-infrastructure-hosting",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T09:58:57.642Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Personal data must be kept private",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95ba"
+      },
+      {
+        "requirement": "All transactions must be Audit Logged",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95bb"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549661d82a8513d79d95bd",
+  "bbName": "Payments",
+  "bbKey": "bb-payments",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T09:58:57.700Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "External Identification, Registration, and Enrollment Logic",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95be"
+      },
+      {
+        "requirement": "Registration Requirements",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95bf"
+      },
+      {
+        "requirement": "Compliance Verification",
+        "comment": "",
+        "status": 2,
+        "_id": "65549661d82a8513d79d95c0"
+      },
+      {
+        "requirement": "Statutory and Operational Requirements",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95c1"
+      },
+      {
+        "requirement": "Real-time Response",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95c2"
+      },
+      {
+        "requirement": "Validation",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95c3"
+      },
+      {
+        "requirement": "Authorization",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95c4"
+      },
+      {
+        "requirement": "Eligibility Verification",
+        "comment": "",
+        "status": 1,
+        "_id": "65549661d82a8513d79d95c5"
+      },
+      {
+        "requirement": "Budget Availability",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95c6"
+      },
+      {
+        "requirement": "Calculation of Payments",
+        "comment": "",
+        "status": 2,
+        "_id": "65549661d82a8513d79d95c7"
+      },
+      {
+        "requirement": "Payment Systems",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95c8"
+      },
+      {
+        "requirement": "Settlement",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95c9"
+      },
+      {
+        "requirement": "Security",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95ca"
+      },
+      {
+        "requirement": "API Mechanisms",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95cb"
+      },
+      {
+        "requirement": "Architecture",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95cc"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549661d82a8513d79d95ce",
+  "bbName": "Registration",
+  "bbKey": "bb-registration",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T09:58:57.802Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "System Audit Log Functionality",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95cf"
+      },
+      {
+        "requirement": "Manage Identities and Access",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95d0"
+      },
+      {
+        "requirement": "Support for Accessibility and Context",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95d1"
+      },
+      {
+        "requirement": "Secure Ingress and Egress access mechanisms",
+        "comment": "",
+        "status": 0,
+        "_id": "65549661d82a8513d79d95d2"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549662d82a8513d79d95d4",
+  "bbName": "Gis",
+  "bbKey": "bb-gis",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T09:58:58.070Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Personal Data Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95d5"
+      },
+      {
+        "requirement": "All transactions must be Audit Logged",
+        "comment": "",
+        "status": 1,
+        "_id": "65549662d82a8513d79d95d6"
+      },
+      {
+        "requirement": "Interoperability",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95d7"
+      },
+      {
+        "requirement": "Exception Handling :",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95d8"
+      },
+      {
+        "requirement": "Incorporation of  Relevant Open GIS Standards and APIs",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95d9"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549662d82a8513d79d95db",
+  "bbName": "Esignature",
+  "bbKey": "bb-esignature",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T09:58:58.302Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Hardware Security Module Compliance",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95dc"
+      },
+      {
+        "requirement": "Audit",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95dd"
+      },
+      {
+        "requirement": "Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549662d82a8513d79d95de"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483baf",
+  "bbName": "Payments",
+  "bbKey": "bb-payments",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T10:35:18.385Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "External Identification, Registration, and Enrollment Logic",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bb0"
+      },
+      {
+        "requirement": "Registration Requirements",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bb1"
+      },
+      {
+        "requirement": "Compliance Verification",
+        "comment": "",
+        "status": 2,
+        "_id": "65549ee61e7c6dc81b483bb2"
+      },
+      {
+        "requirement": "Statutory and Operational Requirements",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bb3"
+      },
+      {
+        "requirement": "Real-time Response",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bb4"
+      },
+      {
+        "requirement": "Validation",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bb5"
+      },
+      {
+        "requirement": "Authorization",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bb6"
+      },
+      {
+        "requirement": "Eligibility Verification",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bb7"
+      },
+      {
+        "requirement": "Budget Availability",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bb8"
+      },
+      {
+        "requirement": "Calculation of Payments",
+        "comment": "",
+        "status": 2,
+        "_id": "65549ee61e7c6dc81b483bb9"
+      },
+      {
+        "requirement": "Payment Systems",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bba"
+      },
+      {
+        "requirement": "Settlement",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bbb"
+      },
+      {
+        "requirement": "Security",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bbc"
+      },
+      {
+        "requirement": "API Mechanisms",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bbd"
+      },
+      {
+        "requirement": "Architecture",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bbe"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483bc0",
+  "bbName": "Registration",
+  "bbKey": "bb-registration",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T10:35:18.423Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "System Audit Log Functionality",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bc1"
+      },
+      {
+        "requirement": "Manage Identities and Access",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bc2"
+      },
+      {
+        "requirement": "Support for Accessibility and Context",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bc3"
+      },
+      {
+        "requirement": "Secure Ingress and Egress access mechanisms",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bc4"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483bc6",
+  "bbName": "Consent",
+  "bbKey": "bb-consent",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T10:35:18.448Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Access control",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bc7"
+      },
+      {
+        "requirement": "Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bc8"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483bca",
+  "bbName": "Cloud Infrastructure Hosting",
+  "bbKey": "bb-cloud-infrastructure-hosting",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T10:35:18.539Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Personal data must be kept private",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bcb"
+      },
+      {
+        "requirement": "All transactions must be Audit Logged",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bcc"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483bce",
+  "bbName": "Gis",
+  "bbKey": "bb-gis",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T10:35:18.739Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Personal Data Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bcf"
+      },
+      {
+        "requirement": "All transactions must be Audit Logged",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee61e7c6dc81b483bd0"
+      },
+      {
+        "requirement": "Interoperability",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd1"
+      },
+      {
+        "requirement": "Exception Handling :",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd2"
+      },
+      {
+        "requirement": "Incorporation of  Relevant Open GIS Standards and APIs",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd3"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee61e7c6dc81b483bd5",
+  "bbName": "Identity",
+  "bbKey": "bb-identity",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T10:35:18.776Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Enrollment Services",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd6"
+      },
+      {
+        "requirement": "Multi-Factor Authentication",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd7"
+      },
+      {
+        "requirement": "Numerical Digital ID Attribute",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee61e7c6dc81b483bd8"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee71e7c6dc81b483bda",
+  "bbName": "Esignature",
+  "bbKey": "bb-esignature",
+  "bbVersion": "Development",
+  "dateOfSave": "2023-11-15T10:35:19.189Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Hardware Security Module Compliance",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee71e7c6dc81b483bdb"
+      },
+      {
+        "requirement": "Audit",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee71e7c6dc81b483bdc"
+      },
+      {
+        "requirement": "Privacy",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee71e7c6dc81b483bdd"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+},
+{
+  "_id": "65549ee71e7c6dc81b483bdf",
+  "bbName": "Digital Registries",
+  "bbKey": "bb-digital-registries",
+  "bbVersion": "1.0",
+  "dateOfSave": "2023-11-15T10:35:19.242Z",
+  "requirements": {
+    "crossCutting": [
+      {
+        "requirement": "Citizen-Centric",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee71e7c6dc81b483be0"
+      },
+      {
+        "requirement": "Open",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee71e7c6dc81b483be1"
+      },
+      {
+        "requirement": "Robust",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee71e7c6dc81b483be2"
+      },
+      {
+        "requirement": "Databases must not include business logic",
+        "comment": "",
+        "status": 1,
+        "_id": "65549ee71e7c6dc81b483be3"
+      },
+      {
+        "requirement": "Privacy and protection of user data",
+        "comment": "",
+        "status": 0,
+        "_id": "65549ee71e7c6dc81b483be4"
+      }
+    ],
+    "functional": []
+  },
+  "__v": 0
+}]

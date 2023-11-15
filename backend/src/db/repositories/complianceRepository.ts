@@ -8,6 +8,7 @@ import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetai
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 import BBRequirements from '../schemas/bbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -87,6 +88,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
     } catch (error) {
       console.error("Error fetching BB requirements:", error);
+      throw error;
+    }
+  },
+
+  async getBBs(): Promise<any[]> {
+    try{
+      return await BBRequirements.aggregate(uniqueBBsAggregationPipeline()).exec();
+    } catch (error) {
+      console.error("Error fetching BBs:", error)
       throw error;
     }
   }
