@@ -7,9 +7,19 @@ type ButtonProps = {
   styles: string;
   type: 'link' | 'button';
   href?: string | URL;
+  disabled?: boolean;
 };
 
-const Button = ({ text, onClick, styles, type, href }: ButtonProps) => {
+const Button = ({
+  text,
+  onClick,
+  styles,
+  type,
+  href,
+  disabled = false,
+}: ButtonProps) => {
+  console.log('disabled', disabled);
+
   return (
     <>
       {type === 'link' && (
@@ -20,7 +30,8 @@ const Button = ({ text, onClick, styles, type, href }: ButtonProps) => {
       {type === 'button' && (
         <button
           onClick={onClick}
-          className={classNames('custom-button', styles)}
+          className={classNames('custom-button', styles, { disabled })}
+          disabled={disabled}
         >
           {text}
         </button>

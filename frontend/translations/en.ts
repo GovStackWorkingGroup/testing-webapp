@@ -18,21 +18,29 @@ export const en = {
   'app.definition_self_assessment.title': 'Self-Assessment of Compliance',
   'app.definition_self_assessment.description':
     'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+  'app.email.label': 'Email',
+  'app.email_confirm.label': 'Confirm email',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
   'app.evaluation_schema.label': 'Evaluation Schema',
+  'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
+  'app.interface_requirement_specification.label':
+    'Interface & Requirement Specification Compliance',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
   'app.compatibility.label': 'Compatibility',
   'app.scroll-loader.message': 'Loading more data...',
   'app.scenario.label': 'Scenario:',
-  'app.search': 'Software Name',
   'app.software_attributes.label': 'Software Attributes',
   'app.software_compliance_testing.label': 'Software Compliance Testing',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
+
+  'drag_drop.format.label': 'PNG, JPG or SVG files accepted.',
+  'drag_drop.or_drop.label': 'or drag and drop it here',
+  'drag_drop.select_file.label': 'Select a file to upload',
 
   'evaluation_schema.all.label': 'All',
   'evaluation_schema.compliance.label': 'Compliance',
@@ -56,9 +64,21 @@ export const en = {
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
 
+  'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.tip_documentation.label': 'Paste link to your documentation.',
+  'form.tip_website.label': 'Paste link to your website.',
+
   'image.alt.logoFor': 'Logo for: {name}',
 
+  'software_documentation.label': 'Software Documentation',
+  'software_description.label': 'Tool Description',
+  'software_logo.label': 'Software Logo',
   'software_name.label': 'Software Name',
+  'software_website.label': 'Software Website',
+
+  'progress_bar.next.label': 'Next',
+  'progress_bar.previous_step.label': 'Previous Step',
+  'progress_bar.save_draft.label': 'Save draft',
 
   'result_page.back_to_product_list': '< Back to Products List',
   'result_page.title': 'Tests for',
