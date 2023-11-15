@@ -10,29 +10,31 @@ const processBBRequirements = async () => {
 
     const bbCollections = await collectionManager.fetchCollections('bb');
 
-    let allPageContents: Record<string, any>[] = [];
-    for (const { id: collectionId, bbKey, bbName } of bbCollections) {
+    const allPageContentsPromises = bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
         const spaceInfo = await collectionManager.fetchHighestVersionSpaceIdAndVersion(collectionId);
-        if (spaceInfo) {
-            const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, '5');
-            for (const pageId of pageIds) {
-                const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
-                const crossCutting = pageContentManager.extractRequirements(pageContent);
-                const dateOfSave = new Date().toISOString();
-
-                const requirements = { crossCutting };
-
-                let bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
-                await bbRequirement.save();
-
-                allPageContents.push({ bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements });
-            }
-        } else {
+        if (!spaceInfo) {
             console.log(`No valid space found for collection ID: ${collectionId}`);
+            return [];
         }
-    }
 
-    return allPageContents;
+        const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, '5');
+        const pageContentsPromises = pageIds.map(async (pageId) => {
+            const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
+            const crossCutting = pageContentManager.extractRequirements(pageContent);
+            const dateOfSave = new Date().toISOString();
+
+            const requirements = { crossCutting };
+            const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
+            await bbRequirement.save();
+
+            return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
+        });
+
+        return Promise.all(pageContentsPromises);
+    });
+
+    const allPageContentsNested = await Promise.all(allPageContentsPromises);
+    return allPageContentsNested.flat();
 };
 
 export { processBBRequirements };

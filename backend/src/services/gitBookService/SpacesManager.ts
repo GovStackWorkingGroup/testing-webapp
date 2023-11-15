@@ -1,4 +1,3 @@
-import { appConfig } from "../../config";
 import gitBookClient from "./gitBookClient";
 
 class GitBookSpaceManager {
