@@ -2,12 +2,7 @@ import multer from 'multer';
 import path from 'path';
 import express from 'express';
 import PaginationMiddleware from '../middlewares/paginationMiddleware';
-import { appConfig, limiter } from '../config/index';
-
-// to be relocated to other file:
-import gitBookClient from '../services/gitBookService/gitBookClient';
-import { processBBRequirements } from '../services/gitBookService/bbRequirementsProcessing';
-
+import { limiter } from '../config/index';
 
 const buildComplianceRoutes = (controller: any) => {
   const router = express.Router();
@@ -28,6 +23,7 @@ const buildComplianceRoutes = (controller: any) => {
   router.get('/compliance/requirements/:bbKey', limiter, controller.getBBRequirements);
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
+
   return router;
 };
 
