@@ -68,7 +68,14 @@ export const en = {
     'Requirement Specification',
 
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.invalid_email.message': 'Invalid email address.',
+  'form.invalid_email_match.message': 'Email addresses do not match.',
+  'form.invalid_file_format.message':
+    'Invalid file format. Please select a PNG, JPG, or SVG file.',
+  'form.required_field.message': 'This field is required.',
+  'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
+  'form.tip_max_characters.label': '400 characters max.',
   'form.tip_website.label': 'Paste link to your website.',
 
   'image.alt.logoFor': 'Logo for: {name}',
