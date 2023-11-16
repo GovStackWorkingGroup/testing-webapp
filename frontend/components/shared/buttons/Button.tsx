@@ -18,8 +18,6 @@ const Button = ({
   href,
   disabled = false,
 }: ButtonProps) => {
-  console.log('disabled', disabled);
-
   return (
     <>
       {type === 'link' && (

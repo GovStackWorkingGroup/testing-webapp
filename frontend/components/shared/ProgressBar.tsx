@@ -7,9 +7,17 @@ type ProgressBarProps = {
   steps: { label: string; step: number }[];
   children: React.ReactNode;
   currentStep: (step: number) => void;
+  onNextButton: () => void;
+  isCurrentFormValid: boolean;
 };
 
-const ProgressBar = ({ steps, children, currentStep }: ProgressBarProps) => {
+const ProgressBar = ({
+  steps,
+  children,
+  currentStep,
+  onNextButton,
+  isCurrentFormValid,
+}: ProgressBarProps) => {
   const [activeStep, setActiveStep] = useState(1);
 
   const { format } = useTranslations();
@@ -24,6 +32,13 @@ const ProgressBar = ({ steps, children, currentStep }: ProgressBarProps) => {
 
   const prevStep = () => {
     setActiveStep(activeStep - 1);
+  };
+
+  const handleNextButton = () => {
+    onNextButton();
+    if (isCurrentFormValid) {
+      nextStep();
+    }
   };
 
   const totalSteps = steps.length;
@@ -67,31 +82,34 @@ const ProgressBar = ({ steps, children, currentStep }: ProgressBarProps) => {
       <div className="progress-bar-body-container">
         <div>{children}</div>
       </div>
-
       <div className="progress-bar-buttons-container">
         <div>
           <div className="progress-bar-buttons-left-section">
-            <Button
-              type="button"
-              text={format('progress_bar.previous_step.label')}
-              styles="secondary-button"
-              onClick={() => prevStep()}
-              // disabled={activeStep === 1}
-            ></Button>
+            {activeStep > 1 && (
+              <Button
+                type="button"
+                text={format('progress_bar.previous_step.label')}
+                styles="secondary-button"
+                onClick={() => prevStep()}
+                // disabled={activeStep === 1}
+              ></Button>
+            )}
           </div>
           <div className="progress-bar-buttons-right-section">
-            <Button
-              type="button"
-              text={format('progress_bar.save_draft.label')}
-              styles="secondary-button"
-              onClick={prevStep}
-              // disabled={activeStep === 1}
-            ></Button>
+            {activeStep > 1 && (
+              <Button
+                type="button"
+                text={format('progress_bar.save_draft.label')}
+                styles="secondary-button"
+                onClick={prevStep}
+                // disabled={activeStep === 1}
+              ></Button>
+            )}
             <Button
               type="button"
               text={format('progress_bar.next.label')}
               styles="primary-button"
-              onClick={() => nextStep()}
+              onClick={() => handleNextButton()}
               disabled={activeStep === totalSteps}
             ></Button>
           </div>

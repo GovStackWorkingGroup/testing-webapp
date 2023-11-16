@@ -7,6 +7,8 @@ type InputProps = {
   inputKey: string;
   isInvalid: boolean;
   required?: boolean;
+  onChange?: (x: any) => void;
+  name: string;
 };
 
 const Input = ({
@@ -16,6 +18,9 @@ const Input = ({
   inputKey,
   isInvalid,
   required,
+  onChange,
+  name,
+  ...props
 }: InputProps) => {
   return (
     <div className="custom-input-container" key={inputKey}>
@@ -25,8 +30,11 @@ const Input = ({
         </p>
       )}
       <input
+        {...props}
+        name={name}
         className={classNames('custom-input', { error: isInvalid })}
-        type="text"
+        maxLength={50}
+        onChange={onChange}
       ></input>
       {isInvalid ? (
         <p className="custom-input-error-message">{errorMessage}</p>
