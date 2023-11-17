@@ -38,13 +38,14 @@ export default class CreateDraftRequestHandler {
                 pointOfContact: this.req.body.email,
                 logo: (files.logo![0] as Express.Multer.File).path
             };
-            const draftLink = await this.repository.createOrSubmitForm(draftData);
+            const draftUniqueId = await this.repository.createOrSubmitForm(draftData);
 
             const response: any = { success: true, details: "Form submitted successfully" };
-            if (draftLink) {
-                const fullPath = this.createFullUrl(`/compliance/drafts/drafts/${draftLink}`);
+            if (draftUniqueId) {
+                const fullPath = this.createFullUrl(`/softwareComplianceTesting/form/${draftUniqueId}`);
                 response.details = "Draft created successfully";
                 response.link = fullPath;
+                response.uniqueId = draftUniqueId;
             }
 
             return this.res.status(201).send(response);

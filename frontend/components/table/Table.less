@@ -7,12 +7,16 @@ table.main-table {
   border-spacing: 0;
   width: 100%;
   max-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   thead:extend(.table-header-text) {
     height: @table-row;
     text-align: left;
     background-color: @blue-lightest;
+
+    tr {
+      height: @table-row;
+    }
 
     th {
       padding: 0 40px 0 10px;

@@ -1,4 +1,4 @@
-import { BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -7,6 +7,7 @@ import { createAggregationPipeline } from '../pipelines/compliance/complianceLis
 import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetailAggregation';
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 import BBRequirements from '../schemas/bbRequirements';
+import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
@@ -101,6 +102,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
     } catch (error) {
       console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
+      throw error;
+    }
+  },
+  
+  async getAllBBRequirements(): Promise<AllBBRequirements> {
+    try {
+      return await BBRequirements.aggregate(aggregationPipeline()).exec();
+    } catch (error) {
+      console.error('There was an error while fetching all BB requirements:', error);
       throw error;
     }
   },
