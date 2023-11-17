@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   softwareComplianceFormSteps,
@@ -7,20 +7,22 @@ import BackToPageButton from '../../../components/shared/buttons/BackToPageButto
 import useTranslations from '../../../hooks/useTranslation';
 import ProgressBar from '../../../components/shared/ProgressBar';
 import SoftwareAttributesForm, {
+  FormValuesType,
   SoftwareAttributedRef,
 } from '../../../components/form/SoftwareAttributesForm';
+import { saveSoftwareDraft } from '../../../service/serviceAPI';
+import { softwareAttributesDefaultValues } from '../../../components/form/helpers';
 
 const SoftwareComplianceForm = () => {
-  const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
-
   const [currentProgressBarStep, setCurrentProgressBarStep] =
     useState<number>(1);
   const [softwareAttributesFormValues, setSoftwareAttributesFormValues] =
-    useState({});
+    useState<FormValuesType>(softwareAttributesDefaultValues);
   const [isSoftwareAttributesFormValid, setIsSoftwareAttributesFormValid] =
     useState(false);
-  const [isCurrentFormValid, setIsCurrentFormValid] = useState(false);
+  const [goToNextStep, setGoToNextStep] = useState(false);
 
+  const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const { format } = useTranslations();
 
   const handleStepChange = (currentStep: number) => {
@@ -29,11 +31,23 @@ const SoftwareComplianceForm = () => {
 
   const handleNextButton = () => {
     if (currentProgressBarStep === 1) {
-      // setValidateForm(true);
       softwareAttributedRef.current?.validate();
-      setIsCurrentFormValid(isSoftwareAttributesFormValid);
     }
   };
+
+  const handleSaveDraft = async (softwareData: FormValuesType) => {
+    await saveSoftwareDraft(softwareData).then((response) => {
+      if (response.status) {
+        setGoToNextStep(true);
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (isSoftwareAttributesFormValid && currentProgressBarStep === 1) {
+      handleSaveDraft(softwareAttributesFormValues);
+    }
+  }, [isSoftwareAttributesFormValid, currentProgressBarStep]);
 
   return (
     <div>
@@ -45,7 +59,8 @@ const SoftwareComplianceForm = () => {
         steps={softwareComplianceFormSteps}
         currentStep={handleStepChange}
         onNextButton={handleNextButton}
-        isCurrentFormValid={isCurrentFormValid}
+        isCurrentFormValid={isSoftwareAttributesFormValid}
+        goToNextStep={goToNextStep}
       >
         <>
           {currentProgressBarStep === 1 && (

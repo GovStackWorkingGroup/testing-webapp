@@ -56,10 +56,8 @@ const DragDrop = ({ selectedFile, isInvalid }: DragDrop) => {
       // Use FileReader to read file content
       const reader = new FileReader();
 
-      reader.onloadend = () => {};
-
       reader.onerror = () => {
-        console.error('There was an issue reading the file.');
+        setTypeFileError(true);
       };
 
       reader.readAsDataURL(droppedFile);
