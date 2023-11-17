@@ -27,6 +27,11 @@ describe('Compliance API', () => {
       uniqueId: "550e8400-e29b-41d4-a716-446655440001",
       expirationDate: new Date("2024-11-24T00:00:00.000Z"),
       description: "Sample description.",
+      deploymentCompliance: {
+        "documentation": "https://openIMIS.com/doc1",
+        "deploymentInstructions": "github.com/openIMIS",
+        "requirements": [{ "requirement": "re1", "level": 1 }]
+      },
       compliance: [
         {
           version: "2.0",
@@ -36,14 +41,7 @@ describe('Compliance API', () => {
               bbVersion: "1.2.0",
               submissionDate: new Date("2025-10-01T14:48:00.000Z"),
               status: 0,
-              deploymentCompliance: {
-                isCompliant: true,
-                details: "Details for openIMIS, bb-digital-registries",
-                documentation: {
-                  files: ["base64EncodedFile1", "base64EncodedFile2", "base64EncodedFile3", "base64EncodedFile4", "base64EncodedFile5"],
-                  containerLink: "https://link.to/container"
-                }
-              },
+              deploymentCompliance: 1,
               requirementSpecificationCompliance: {
                 level: 1,
                 crossCuttingRequirements: [
@@ -83,13 +81,13 @@ describe('Compliance API', () => {
     it('should have the expected format', async () => {
       const res = await request(app).get('/compliance/list');
       expect(res.statusCode).to.equal(200);
-    
+
       const responseData = res.body;
       expect(responseData).to.be.an('object');
-    
+
       for (const softwareName in responseData) {
         expect(responseData[softwareName]).to.be.an('array');
-    
+
         responseData[softwareName].forEach(item => {
           expect(item).to.have.property('softwareVersion').that.is.a('string');
           expect(item).to.have.property('bb').that.is.a('string');
