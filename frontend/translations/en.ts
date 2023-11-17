@@ -68,6 +68,8 @@ export const en = {
     'Requirement Specification',
 
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.form_invalid.message':
+    'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
   'form.invalid_email_match.message': 'Email addresses do not match.',
   'form.invalid_file_format.message':

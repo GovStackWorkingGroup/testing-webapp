@@ -124,3 +124,9 @@ export type DataRow = {
   cell: Cell[];
   subHeader?: string;
 };
+
+export type POSTSoftwareAttributesType = {
+  success: boolean;
+  details: string;
+  link: string;
+};

@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { RiErrorWarningFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import Button from './buttons/Button';
 
@@ -8,7 +9,9 @@ type ProgressBarProps = {
   children: React.ReactNode;
   currentStep: (step: number) => void;
   onNextButton: () => void;
-  isCurrentFormValid: boolean;
+  isCurrentFormValid: boolean | undefined;
+  goToNextStep: boolean;
+  // isNextButtonClicked: (value: boolean) => void;
 };
 
 const ProgressBar = ({
@@ -17,8 +20,10 @@ const ProgressBar = ({
   currentStep,
   onNextButton,
   isCurrentFormValid,
+  goToNextStep,
 }: ProgressBarProps) => {
   const [activeStep, setActiveStep] = useState(1);
+  const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
 
@@ -27,7 +32,9 @@ const ProgressBar = ({
   }, [activeStep, currentStep]);
 
   const nextStep = () => {
-    setActiveStep(activeStep + 1);
+    if (isCurrentFormValid) {
+      setActiveStep(activeStep + 1);
+    }
   };
 
   const prevStep = () => {
@@ -36,10 +43,15 @@ const ProgressBar = ({
 
   const handleNextButton = () => {
     onNextButton();
-    if (isCurrentFormValid) {
-      nextStep();
-    }
+    setIsNextButtonActive(isNextButtonActive + 1);
   };
+
+  useEffect(() => {
+    if (goToNextStep) {
+      nextStep();
+      // isNextButtonClicked(true);
+    }
+  }, [goToNextStep]);
 
   const totalSteps = steps.length;
 
@@ -91,18 +103,25 @@ const ProgressBar = ({
                 text={format('progress_bar.previous_step.label')}
                 styles="secondary-button"
                 onClick={() => prevStep()}
-                // disabled={activeStep === 1}
               ></Button>
             )}
           </div>
           <div className="progress-bar-buttons-right-section">
+            {!isCurrentFormValid && isNextButtonActive > 0 && (
+              <div className="progress-bar-error-container">
+                <div>
+                  <RiErrorWarningFill className="progress-bar-error-warning-icon" />
+                  <p>{format('form.form_invalid.message')}</p>
+                </div>
+                {/* <RiCloseLine className="progress-bar-error-close-icon" /> */}
+              </div>
+            )}
             {activeStep > 1 && (
               <Button
                 type="button"
                 text={format('progress_bar.save_draft.label')}
                 styles="secondary-button"
                 onClick={prevStep}
-                // disabled={activeStep === 1}
               ></Button>
             )}
             <Button

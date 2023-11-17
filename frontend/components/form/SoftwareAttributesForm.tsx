@@ -1,11 +1,13 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { validate } from 'email-validator';
+import { useFormState } from 'react-hook-form';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
+import { softwareAttributesDefaultValues } from './helpers';
 
-type FormValuesType = {
+export type FormValuesType = {
   softwareName: { value: string; error: boolean };
   softwareLogo: { value: File | undefined; error: boolean };
   softwareWebsite: { value: string; error: boolean };
@@ -30,15 +32,9 @@ const SoftwareAttributesForm = ({
   isSoftwareAttributesFormValid,
   customRef,
 }: SoftwareAttributesFormProps) => {
-  const [formValues, setFormValues] = useState<FormValuesType>({
-    softwareName: { value: '', error: false },
-    softwareLogo: { value: undefined, error: false },
-    softwareWebsite: { value: '', error: false },
-    softwareDocumentation: { value: '', error: false },
-    toolDescription: { value: '', error: false },
-    email: { value: '', error: { error: false, message: '' } },
-    confirmEmail: { value: '', error: { error: false, message: '' } },
-  });
+  const [formValues, setFormValues] = useState<FormValuesType>(
+    softwareAttributesDefaultValues
+  );
 
   const { format } = useTranslations();
 
@@ -103,15 +99,15 @@ const SoftwareAttributesForm = ({
           updatedValues.email.error.message = format(
             'form.required_field.message'
           );
+          isValid = false;
         }
-
-        isValid = false;
       } else if (fieldName === 'confirmEmail') {
         if (!validate(field.value as string)) {
           updatedValues.confirmEmail.error.error = true;
           updatedValues.confirmEmail.error.message = format(
             'form.required_field.message'
           );
+          isValid = false;
         }
 
         if (field.value !== updatedValues.email.value) {
@@ -119,9 +115,8 @@ const SoftwareAttributesForm = ({
           updatedValues.confirmEmail.error.message = format(
             'form.invalid_email_match.message'
           );
+          isValid = false;
         }
-
-        isValid = false;
       } else if (
         typeof field.value === 'string' &&
         fieldName !== 'email' &&
