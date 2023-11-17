@@ -12,7 +12,17 @@ interface AppConfig {
   cron: {
     removeExpiredDraftsSchedule: string;
   };
-  draftExpirationTime: number
+  draftExpirationTime: number,
+  jira: {
+    apiEndpoint: string;
+    apiKey: string;
+    projectKey: string;
+    issueType: string;
+    assigneeId: string;
+    labels: string[];
+    titleTemplate: string;
+    descriptionTemplate: string;
+  }
 }
 
 const appConfig: AppConfig = {
@@ -24,6 +34,16 @@ const appConfig: AppConfig = {
   },
   // Time is specified in milliseconds.
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+  jira: {
+    apiEndpoint: process.env.JIRA_API_ENDPOINT!,
+    apiKey: process.env.JIRA_API_KEY!,
+    projectKey: process.env.JIRA_PROJECT_KEY!,
+    issueType: process.env.JIRA_ISSUE_TYPE!,
+    assigneeId: process.env.JIRA_ASSIGNEE_ID!,
+    labels: process.env.JIRA_LABELS!.split(','),
+    titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
+    descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
+  },
 };
 
 const limiter = rateLimit({

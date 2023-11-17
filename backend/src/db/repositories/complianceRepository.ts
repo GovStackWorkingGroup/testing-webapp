@@ -83,6 +83,31 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
+  async submitForm(uniqueId: string): Promise<boolean> {
+    try {
+      const form = await Compliance.findOne({ uniqueId });
+      if (!form) {
+        throw new Error('Form not found');
+      }
+
+      if (form.status !== StatusEnum.DRAFT) {
+        throw new Error('Form is not in DRAFT status and cannot be submitted');
+      }
+
+      form.status = StatusEnum.IN_REVIEW;
+      form.uniqueId = undefined;
+      form.expirationDate = undefined;
+
+      await form.save();
+
+      return true;
+
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      throw new Error('Error submitting form');
+    }
+  },
+
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
       return await BBRequirements.aggregate(aggregationPipeline()).exec();

@@ -7,6 +7,7 @@ import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
 import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBRequirements';
+import SubmitFormRequestHandler from '../useCases/compliance/handleSubmitForm';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -43,6 +44,12 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   };
 
+  const submitForm = async (req: Request, res: Response): Promise<void> => {
+    new SubmitFormRequestHandler(req, res, repository)
+      .submitForm()
+      .catch((err:any) => default500Error(res, err));
+  }
+
   const getAllBBRequirements = (req: Request, res: Response): void => {
     new GetAllBBRequirementsRequestHandler(req, res, repository)
       .getAllBBRequirements()
@@ -61,6 +68,7 @@ const complianceController = (
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    submitForm,
     getAllBBRequirements,
     getBBRequirements,
   };

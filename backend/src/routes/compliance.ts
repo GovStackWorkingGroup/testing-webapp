@@ -25,6 +25,8 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
 
+  router.post('/compliance/drafts/submit', limiter, controller.submitForm);
+
   return router;
 };
 

@@ -41,6 +41,15 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const submitForm = async (uniqueId: string) => {
+    try {
+      return await repository.submitForm(uniqueId);
+    } catch (error) {
+      console.error('There was an error while submitting the form');
+      throw error;
+    }
+  };
+
   const getAllBBRequirements = async (): Promise<AllBBRequirements> => {
     try {
       return await repository.getAllBBRequirements();
@@ -65,6 +74,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    submitForm,
     getAllBBRequirements,
     getBBRequirements
   };
