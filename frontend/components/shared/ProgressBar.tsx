@@ -11,7 +11,7 @@ type ProgressBarProps = {
   onNextButton: () => void;
   isCurrentFormValid: boolean | undefined;
   goToNextStep: boolean;
-  // isNextButtonClicked: (value: boolean) => void;
+  renderFormError: boolean;
 };
 
 const ProgressBar = ({
@@ -21,6 +21,7 @@ const ProgressBar = ({
   onNextButton,
   isCurrentFormValid,
   goToNextStep,
+  renderFormError,
 }: ProgressBarProps) => {
   const [activeStep, setActiveStep] = useState(1);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
@@ -107,7 +108,7 @@ const ProgressBar = ({
             )}
           </div>
           <div className="progress-bar-buttons-right-section">
-            {!isCurrentFormValid && isNextButtonActive > 0 && (
+            {renderFormError && isNextButtonActive > 0 && (
               <div className="progress-bar-error-container">
                 <div>
                   <RiErrorWarningFill className="progress-bar-error-warning-icon" />

@@ -13,6 +13,7 @@ import '../components/shared/ProgressBar.less';
 import '../components/shared/DragAndDrop.less';
 import '../components/compliance/SoftwareDetails.less';
 import '../components/form/SoftwareForm.less';
+import { ToastContainer } from 'react-toastify';
 import MainLayout from '../components/mainLayout/MainLayout';
 import '../components/shared/inputs/Inputs.less';
 import '../components/shared/modals/Modal.less';
@@ -25,6 +26,7 @@ import '../components/table/TestResultTable.less';
 import '../styles/Globals.less';
 import * as translations from '../translations';
 import type { AppProps } from 'next/app';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
@@ -48,6 +50,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         defaultLocale="en"
         messages={messages}
       >
+        <ToastContainer hideProgressBar={true} />
         <MainLayout>
           <Component {...pageProps} />
         </MainLayout>

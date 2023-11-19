@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { validate } from 'email-validator';
-import { useFormState } from 'react-hook-form';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
+import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
 import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
@@ -25,18 +25,38 @@ type SoftwareAttributesFormProps = {
   softwareAttributesFormValues: (value: FormValuesType) => void;
   isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
+  onEdited: (hasError: boolean) => void;
 };
 
 const SoftwareAttributesForm = ({
   softwareAttributesFormValues,
   isSoftwareAttributesFormValid,
   customRef,
+  onEdited,
 }: SoftwareAttributesFormProps) => {
   const [formValues, setFormValues] = useState<FormValuesType>(
     softwareAttributesDefaultValues
   );
 
   const { format } = useTranslations();
+
+  useEffect(() => {
+    const savedSoftwareAttributesInStorage = JSON.parse(
+      localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || ''
+    );
+
+    if (savedSoftwareAttributesInStorage) {
+      setFormValues(
+        JSON.parse(
+          localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || ''
+        )
+      );
+
+      return;
+    } else {
+      setFormValues(softwareAttributesDefaultValues);
+    }
+  }, []);
 
   useEffect(() => {
     softwareAttributesFormValues(formValues);
@@ -76,6 +96,18 @@ const SoftwareAttributesForm = ({
     }
   };
 
+  useEffect(() => {
+    const hasError = Object.values(formValues).some((value) => {
+      if (typeof value.error === 'boolean') {
+        return value.error;
+      }
+
+      return value.error.error;
+    });
+
+    onEdited(hasError);
+  }, [formValues]);
+
   const handleSelectedFile = (selectedFile: File | undefined) => {
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
@@ -94,10 +126,18 @@ const SoftwareAttributesForm = ({
 
         isValid = false;
       } else if (fieldName === 'email' && typeof field.value === 'string') {
-        if (field.value.trim() === '' || !validate(field.value as string)) {
+        if (field.value.trim() === '') {
           updatedValues.email.error.error = true;
           updatedValues.email.error.message = format(
             'form.required_field.message'
+          );
+          isValid = false;
+        }
+
+        if (!validate(field.value as string)) {
+          updatedValues.email.error.error = true;
+          updatedValues.email.error.message = format(
+            'form.invalid_email.message'
           );
           isValid = false;
         }
@@ -105,7 +145,7 @@ const SoftwareAttributesForm = ({
         if (!validate(field.value as string)) {
           updatedValues.confirmEmail.error.error = true;
           updatedValues.confirmEmail.error.message = format(
-            'form.required_field.message'
+            'form.invalid_email.message'
           );
           isValid = false;
         }
@@ -167,6 +207,7 @@ const SoftwareAttributesForm = ({
               isInvalid={formValues.softwareName.error}
               required
               onChange={(event) => handleInputChange(event)}
+              value={formValues.softwareName.value}
             />
           </div>
           <div className="form-field-container">
@@ -188,6 +229,7 @@ const SoftwareAttributesForm = ({
               isInvalid={formValues.softwareWebsite.error}
               required
               onChange={(event) => handleInputChange(event)}
+              value={formValues.softwareWebsite.value}
             />
           </div>
           <div className="form-field-container">
@@ -200,6 +242,7 @@ const SoftwareAttributesForm = ({
               isInvalid={formValues.softwareDocumentation.error}
               required
               onChange={(event) => handleInputChange(event)}
+              value={formValues.softwareDocumentation.value}
             />
           </div>
         </div>
@@ -215,6 +258,7 @@ const SoftwareAttributesForm = ({
               })}
               maxLength={400}
               onChange={(event) => handleInputChange(event)}
+              value={formValues.toolDescription.value}
             />
             {formValues.toolDescription.error ? (
               <p className="custom-error-message">
@@ -243,6 +287,7 @@ const SoftwareAttributesForm = ({
               errorMessage={formValues.email.error.message}
               required
               onChange={(event) => handleInputChange(event)}
+              value={formValues.email.value}
             />
           </div>
           <div className="form-field-container">
@@ -254,6 +299,7 @@ const SoftwareAttributesForm = ({
               isInvalid={formValues.confirmEmail.error.error}
               required
               onChange={(event) => handleInputChange(event)}
+              value={formValues.confirmEmail.value}
             />
           </div>
         </div>
