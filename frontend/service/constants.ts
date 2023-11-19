@@ -4,6 +4,7 @@ export const COMPLIANCE_TESTING_DETAILS_PAGE =
 export const COMPLIANCE_TESTING_FORM = '/softwareRequirementsCompliance/form';
 export const COMPLIANCE_TESTING_RESULT_PAGE = '/softwareRequirementsCompliance';
 
+// Data
 export const softwareComplianceFormSteps = [
   {
     label: 'app.software_attributes.label',
@@ -22,3 +23,6 @@ export const softwareComplianceFormSteps = [
     step: 4,
   },
 ];
+
+// Local storage
+export const SOFTWARE_ATTRIBUTES_STORAGE_NAME = 'software_attributes';
