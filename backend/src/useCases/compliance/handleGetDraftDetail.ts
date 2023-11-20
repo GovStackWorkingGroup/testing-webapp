@@ -1,30 +1,30 @@
 import { Request, Response } from 'express';
 import { ComplianceDbRepository } from "myTypes";
 
-export default class GetFormDetailRequestHandler {
+export default class GetDraftDetailRequestHandler {
 
     private repository: ComplianceDbRepository;
-    private formId: string | undefined;
+    private draftUuid: string | undefined;
 
     constructor(
         private reg: Request,
         private res: Response,
         repository: ComplianceDbRepository,
-        formId: string | undefined,
+        draftUuid: string | undefined,
     ) {
         this.repository = repository;
-        this.formId = formId;
+        this.draftUuid = draftUuid;
     }
 
-    async getFormDetail(): Promise<void> {
+    async getDraftDetail(): Promise<void> {
         try {
-            const formDetail = await this.repository.getFormDetail(this.formId);
+            const draftDetail = await this.repository.getDraftDetail(this.draftUuid);
 
-            if (!formDetail) {
-                this.res.status(404).send(`Draft with UUID '${this.formId}' not found.`)
+            if (!draftDetail) {
+                this.res.status(404).send(`Draft with UUID '${this.draftUuid}' not found.`)
                 return;
             }
-            this.res.json(formDetail);
+            this.res.json(draftDetail);
         } catch (error) {
             console.error("Error fetching draft details:", error);
             this.res.status(500).send("Error fetching draft details.");

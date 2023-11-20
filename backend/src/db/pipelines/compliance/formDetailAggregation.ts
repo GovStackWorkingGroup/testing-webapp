@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { validate as isUuid } from 'uuid';
 
-export const formDetailAggregationPipeline = (formId: string | undefined, draftUuid: string | undefined): any[] => {
+export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
+  formId?: string,
+  draftUuid?: string
+} = {}): any[] => {
   const matchStage = {};
 
   if (draftUuid) {

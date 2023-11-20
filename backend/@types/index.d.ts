@@ -155,7 +155,8 @@ declare module 'myTypes' {
     findAll: () => Promise<FindResult>;
     aggregateComplianceReports: (limit: number, offset: number) => Promise<ComplianceAggregationListResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
-    getFormDetail: (formId: string | undefined, draftUuid: string | undefined) => Promise<FormDetailsResults>;
+    getFormDetail: (formId: string | undefined) => Promise<FormDetailsResults>;
+    getDraftDetail: (draftUuid: string | undefined) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
