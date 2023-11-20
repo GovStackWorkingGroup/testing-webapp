@@ -11,7 +11,7 @@ export const createAggregationPipeline = (limit: number, offset: number): any[] 
                 bbVersion: "$bbDetailsArray.v.bbVersion",
                 status: "$bbDetailsArray.v.status",
                 submissionDate: "$bbDetailsArray.v.submissionDate",
-                deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance.isCompliant",
+                deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance",
                 requirementSpecificationCompliance: "$bbDetailsArray.v.requirementSpecificationCompliance.level",
                 interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
             }
