@@ -16,8 +16,10 @@ export const en = {
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
   'app.definition.title': 'GovStack Building Block Compliance Platform',
   'app.definition_self_assessment.title': 'Self-Assessment of Compliance',
-  'app.definition_self_assessment.description':
-    'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+  'app.definition_self_assessment_part_1.description':
+    'The Software Requirements Compliance form allows software providers to self-assess their products against the functional requirements that have been developed by GovStack. These assessments help GovStack users validate that a particular software platform is able to meet the functional requirements for one or more Building Blocks, as well as whether it adheres to the cross-functional requirements specified for all GovStack implementations.',
+  'app.definition_self_assessment_part_2.description':
+    'Click on the ‘Check Compliance’ to start the assessment process for a particular product. For detailed instructions on filling out the self-assessment forms, please refer to [this document](https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance).',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
   'app.evaluation_schema.label': 'Evaluation Schema',
@@ -29,7 +31,8 @@ export const en = {
   'app.scenario.label': 'Scenario:',
   'app.search': 'Software Name',
   'app.software_attributes.label': 'Software Attributes',
-  'app.software_compliance_testing.label': 'Software Compliance Testing',
+  'app.software_requirements_compliance.label':
+    'Software Requirements Compliance',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',

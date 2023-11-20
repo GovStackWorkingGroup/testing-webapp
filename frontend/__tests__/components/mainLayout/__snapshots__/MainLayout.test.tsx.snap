@@ -33,9 +33,9 @@ exports[`Unit test for MainLayout component: render the MainLayout component 1`]
           <a
             class="header-menu-button "
             data-testid="header-menu-button"
-            href="/softwareComplianceTesting"
+            href="/softwareRequirementsCompliance"
           >
-            Software Compliance Testing
+            Software Requirements Compliance
           </a>
         </div>
         <div

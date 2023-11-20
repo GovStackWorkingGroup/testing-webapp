@@ -7,7 +7,6 @@ import { Cell, CellValue, CellValues, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
-import EvaluationSchemaTable from '../compliance/EvaluationSchemaTable';
 
 type TableProps = {
   data: DataType;
