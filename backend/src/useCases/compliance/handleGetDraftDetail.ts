@@ -4,13 +4,13 @@ import { ComplianceDbRepository } from "myTypes";
 export default class GetDraftDetailRequestHandler {
 
     private repository: ComplianceDbRepository;
-    private draftUuid: string | undefined;
+    private draftUuid: string;
 
     constructor(
         private reg: Request,
         private res: Response,
         repository: ComplianceDbRepository,
-        draftUuid: string | undefined,
+        draftUuid: string
     ) {
         this.repository = repository;
         this.draftUuid = draftUuid;

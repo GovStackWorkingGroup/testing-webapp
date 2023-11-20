@@ -47,7 +47,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async getFormDetail(formId: string | undefined): Promise<FormDetailsResults> {
+  async getFormDetail(formId: string): Promise<FormDetailsResults> {
     try {
       const results = await Compliance.aggregate(formDetailAggregationPipeline({ formId })).exec();
       return results[0];
@@ -57,7 +57,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async getDraftDetail(draftUuid: string | undefined): Promise<FormDetailsResults> {
+  async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
     try {
       const results = await Compliance.aggregate(formDetailAggregationPipeline({ draftUuid })).exec();
       return results[0];

@@ -23,7 +23,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const getFormDetail = async (formId: string | undefined) => {
+  const getFormDetail = async (formId: string) => {
     try {
       return await repository.getFormDetail(formId);
     } catch (error) {
@@ -32,7 +32,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const getDraftDetail = async (draftUuid: string | undefined) => {
+  const getDraftDetail = async (draftUuid: string) => {
     try {
       return await repository.getDraftDetail(draftUuid);
     } catch (error) {
