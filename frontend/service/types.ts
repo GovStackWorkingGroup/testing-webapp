@@ -49,7 +49,11 @@ export type SingleComplianceItem = {
   _id: string;
   bb: string;
   bbVersion: string;
-  deploymentCompliance: boolean;
+  deploymentCompliance: {
+    documentation: string;
+    deploymentInstructions: string;
+    requirements: { requirement: string; level: number }[];
+  };
   interfaceCompliance: number;
   requirementSpecificationCompliance: number;
   softwareName: string;
@@ -73,6 +77,7 @@ export type ComplianceItem = {
   requirements: ComplianceDetails;
   interface: ComplianceDetails;
   bbVersion: string;
+  deploymentCompliance: { requirement: string; level: number }[];
 };
 
 export type Compliance = {
