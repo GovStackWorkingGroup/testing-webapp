@@ -16,7 +16,13 @@ const SoftwareComplianceTestingPage = () => {
       <main>
         <Definition
           title={format('app.definition_self_assessment.title')}
-          description={format('app.definition_self_assessment.description')}
+          description={format(
+            'app.definition_self_assessment_part_1.description'
+          )}
+          descriptionPartTwo={format(
+            'app.definition_self_assessment_part_2.description'
+          )}
+          hasRedirecting={true}
           customStyle="definition-section-software-compliance"
         />
         <ListOfCandidateResults />
