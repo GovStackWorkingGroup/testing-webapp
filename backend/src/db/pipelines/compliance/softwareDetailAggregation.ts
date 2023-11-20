@@ -15,7 +15,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
             "bbName": "$$detail.k",
             "bbVersion": "$$detail.v.bbVersion",
             "requirements": "$$detail.v.requirementSpecificationCompliance",
-            "interface": "$$detail.v.interfaceCompliance"
+            "interface": "$$detail.v.interfaceCompliance",
+            "deploymentCompliance": "$deploymentCompliance.requirements" 
           }
         }
       }
@@ -35,7 +36,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
         $push: {
           bbVersion: "$compliance.bbDetailsArray.bbVersion",
           requirements: "$compliance.bbDetailsArray.requirements",
-          interface: "$compliance.bbDetailsArray.interface"
+          interface: "$compliance.bbDetailsArray.interface",
+          deploymentCompliance: "$deploymentCompliance.requirements"
         }
       },
       // Add these fields to be used with $first in the final $group stage
@@ -102,7 +104,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: 1,
       documentation: 1,
       pointOfContact: 1,
-      compliance: 1
+      compliance: 1,
+      deploymentCompliance: 1
     }
   }
 ];

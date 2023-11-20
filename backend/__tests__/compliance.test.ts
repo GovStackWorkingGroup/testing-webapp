@@ -84,11 +84,16 @@ describe('Compliance API', () => {
 
       const responseData = res.body;
       expect(responseData).to.be.an('object');
-
-      for (const softwareName in responseData) {
-        expect(responseData[softwareName]).to.be.an('array');
-
-        responseData[softwareName].forEach(item => {
+      expect(responseData).to.have.all.keys('count', 'data');
+      expect(responseData.count).to.be.a('number');
+    
+      const { data } = responseData;
+      expect(data).to.be.an('object');
+    
+      for (const softwareName in data) {
+        expect(data[softwareName]).to.be.an('array');
+    
+        data[softwareName].forEach(item => {
           expect(item).to.have.property('softwareVersion').that.is.a('string');
           expect(item).to.have.property('bb').that.is.a('string');
           expect(item).to.have.property('bbVersion').that.is.a('string');
@@ -99,6 +104,6 @@ describe('Compliance API', () => {
           expect(item).to.have.property('interfaceCompliance').that.is.oneOf([null, -1, 1, 2]);
         });
       }
-    });
+    });    
   });
 });

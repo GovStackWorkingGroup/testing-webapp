@@ -27,7 +27,7 @@ declare module 'myTypes' {
       pointOfContact: string;
       compliance: ComplianceVersion[];
     }
-  
+
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
@@ -157,6 +157,7 @@ declare module 'myTypes' {
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
+    editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
   }
