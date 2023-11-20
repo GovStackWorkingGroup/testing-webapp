@@ -80,10 +80,9 @@ const ComplianceDetailSchema = new mongoose.Schema({
     default: Date.now
   },
   deploymentCompliance: {
-    isCompliant: {
-      type: Boolean,
-      required: true
-    }
+    type: Number,
+    enum: Object.values(SpecificationComplianceLevel),
+    default: SpecificationComplianceLevel.LEVEL_1,
   },
   requirementSpecificationCompliance: {
     level: {
