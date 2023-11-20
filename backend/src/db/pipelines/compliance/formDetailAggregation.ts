@@ -1,22 +1,13 @@
 import mongoose from "mongoose";
 import { validate as isUuid } from 'uuid';
 
-export const formDetailAggregationPipeline = (formId: string): any[] => {
+export const formDetailAggregationPipeline = (formId: string | undefined, draftUuid: string | undefined): any[] => {
   const matchStage = {};
 
-  let uuid: string | undefined;
-  let id: string | undefined;
-
-  if (isUuid(formId)) {
-    uuid = formId;
-  } else {
-    id = formId;
-  }
-
-  if (uuid) {
-    matchStage['uniqueId'] = uuid;
-  } else if (id) {
-    matchStage['_id'] = new mongoose.Types.ObjectId(id);
+  if (draftUuid) {
+    matchStage['uniqueId'] = draftUuid;
+  } else if (formId) {
+    matchStage['_id'] = new mongoose.Types.ObjectId(formId);
   }
 
   return [

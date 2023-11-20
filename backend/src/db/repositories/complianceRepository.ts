@@ -47,9 +47,9 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async getFormDetail(formId: string): Promise<FormDetailsResults> {
+  async getFormDetail(formId: string | undefined, draftUuid: string | undefined): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline(formId)).exec();
+      const results = await Compliance.aggregate(formDetailAggregationPipeline(formId, draftUuid)).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");

@@ -23,9 +23,9 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const getFormDetail = async (formId: string) => {
+  const getFormDetail = async (formId: string | undefined, draftUuid: string | undefined) => {
     try {
-      return await repository.getFormDetail(formId);
+      return await repository.getFormDetail(formId, draftUuid);
     } catch (error) {
       console.error('There was an error while aggregating the compliance reports:', error);
       throw error;

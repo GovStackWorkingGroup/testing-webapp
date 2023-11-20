@@ -8,6 +8,7 @@ import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
 import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBRequirements';
+import { validate as isUuid } from 'uuid';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -30,9 +31,16 @@ const complianceController = (
   };
 
   const getFormDetail = (req: Request, res: Response): void => {
-    const formId = req.params.id;
+    const id = req.params.id;
+    let draftUuid, formId;
+  
+    if (isUuid(id)) {
+      draftUuid = id;
+    } else {
+      formId = id;
+    }
 
-    new GetFormDetailRequestHandler(req, res, repository, formId)
+    new GetFormDetailRequestHandler(req, res, repository, formId, draftUuid)
       .getFormDetail()
       .catch((err: any) => default500Error(res, err));
   }

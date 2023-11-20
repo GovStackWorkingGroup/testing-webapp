@@ -4,21 +4,24 @@ import { ComplianceDbRepository } from "myTypes";
 export default class GetFormDetailRequestHandler {
 
     private repository: ComplianceDbRepository;
-    private formId: string;
+    private formId: string | undefined;
+    private draftUuid: string | undefined;
 
     constructor(
         private reg: Request,
         private res: Response,
         repository: ComplianceDbRepository,
-        formId: string
+        formId: string | undefined,
+        draftUuid: string | undefined,
     ) {
         this.repository = repository;
         this.formId = formId;
+        this.draftUuid = draftUuid;
     }
 
     async getFormDetail(): Promise<void> {
         try {
-            const formDetail = await this.repository.getFormDetail(this.formId);
+            const formDetail = await this.repository.getFormDetail(this.formId, this.draftUuid);
 
             if (!formDetail) {
                 this.res.status(404).send(`Form with ID '${this.formId}' not found.`)
