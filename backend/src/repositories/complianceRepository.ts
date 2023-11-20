@@ -41,23 +41,33 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const editDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
+    try {
+      return await repository.editDraftForm(draftId, updateData);
+    } catch (error) {
+      console.error('There was an error while editing the form:', error);
+      throw error;
+    }
+  };
+
+
   const getAllBBRequirements = async (): Promise<AllBBRequirements> => {
     try {
       return await repository.getAllBBRequirements();
     } catch (error) {
       console.error('There was an error while fetching all BB requirements:', error);
-      throw error;
-    }
+  throw error;
+}
   };
-  
-  const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
-    try {
-      return await repository.getBBRequirements(bbKey);
-    } catch (error) {
-      console.error('There was an error while fetching BB requirements:', error);
-      throw error;
-    }
-  };
+
+const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
+  try {
+    return await repository.getBBRequirements(bbKey);
+  } catch (error) {
+    console.error('There was an error while fetching BB requirements:', error);
+    throw error;
+  }
+};
 
   return {
     findAll,
@@ -65,6 +75,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    editDraftForm,
     getAllBBRequirements,
     getBBRequirements
   };

@@ -3,6 +3,7 @@ import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handle
 import GetSoftwareComplianceDetailRequestHandler from '../useCases/compliance/handleGetSoftwareComplianceDetail';
 import GetFormDetailRequestHandler from '../useCases/compliance/handleGetFormDetail';
 import CreateDraftRequestHandler from '../useCases/compliance/handleCreateDraft';
+import EditDraftRequestHandler from '../useCases/compliance/handleEditDraft';
 import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
@@ -38,11 +39,19 @@ const complianceController = (
 
   const createOrSubmitForm = async (req: Request, res: Response): Promise<void> => {
     const status = req.body.status || StatusEnum.DRAFT;
-    new CreateDraftRequestHandler(req, res, repository, status )
+    new CreateDraftRequestHandler(req, res, repository, status)
       .createOrSubmitForm()
       .catch((err: any) => default500Error(res, err));
   };
 
+  const editDraftForm = async (req: Request, res: Response): Promise<void> => {
+    const draftId = req.params.draftId;
+
+    new EditDraftRequestHandler(req, res, repository)
+      .editDraftForm(draftId)
+      .catch((err: any) => default500Error(res, err));
+  };
+  
   const getAllBBRequirements = (req: Request, res: Response): void => {
     new GetAllBBRequirementsRequestHandler(req, res, repository)
       .getAllBBRequirements()
@@ -61,6 +70,7 @@ const complianceController = (
     getSoftwareComplianceDetail,
     getFormDetail,
     createOrSubmitForm,
+    editDraftForm,
     getAllBBRequirements,
     getBBRequirements,
   };

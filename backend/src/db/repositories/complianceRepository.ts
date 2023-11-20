@@ -29,7 +29,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           return accumulatedResult;
         }, {})
       };
-      
+
       return reshapedResults;
     } catch (error) {
       console.error("Root cause of aggregation error:", error);
@@ -83,6 +83,29 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
+  async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
+    try {
+
+      const draft = await Compliance.findOne({ uniqueId: draftId });
+
+      if (!draft) {
+        throw new Error(`Draft with unique ID ${draftId} does not exist.`);
+      }
+      if (draft.expirationDate && draft.expirationDate < new Date()) {
+        throw new Error("You cannot edit an expired draft form.");
+      }
+      if (draft.status !== StatusEnum.DRAFT) {
+        throw new Error("You cannot edit a form that is not in the draft status.");
+      }
+
+      await Compliance.updateOne({ uniqueId: draftId }, updatedData);
+
+    } catch (error) {
+      console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
+      throw error;
+    }
+  },
+  
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
       return await BBRequirements.aggregate(aggregationPipeline()).exec();
@@ -100,6 +123,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   }
+
 
 };
 

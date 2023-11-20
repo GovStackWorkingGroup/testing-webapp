@@ -39,7 +39,7 @@ describe('Cron Job', () => {
       expirationDate: futureDate,
       compliance: [],
       description: "Sample description.",
-      uniqueId: '550e8400-e29b-41d4-a716-446655440000'
+      uniqueId: '550e8400-e29b-41d4-a716-446655440000',
     });
 
     await ComplianceReport.create({
