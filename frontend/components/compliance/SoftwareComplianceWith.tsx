@@ -22,6 +22,7 @@ const SoftwareComplianceWith = ({
   const headers = [
     'building_block.plural.label',
     'table.building_block_version.label',
+    'table.deployment_compliance.label',
     'table.compliance.label',
     'table.compliance_level.label',
     'table.notes',
@@ -43,6 +44,16 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               value: bbVersion.bbVersion,
+            })),
+        },
+        {
+          values: bbDetail.bbVersions
+            .slice()
+            .sort((a, b) => {
+              return b.bbVersion.localeCompare(a.bbVersion);
+            })
+            .map((bbVersion) => ({
+              value: bbVersion.deploymentCompliance[0].level,
             })),
         },
         {
