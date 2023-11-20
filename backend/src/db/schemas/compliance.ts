@@ -121,7 +121,7 @@ const ComplianceVersionSchema = new mongoose.Schema({
 });
 
 const deploymentComplianceSchema = new mongoose.Schema({
-  documentation: [{
+  documentation: {
     type: String,
     required: true,
     validate: {
@@ -131,7 +131,7 @@ const deploymentComplianceSchema = new mongoose.Schema({
       },
       message: props => `${props.value} is neither a valid URL nor a base64 string`
     }
-  }],
+  },
   deploymentInstructions: {
     type: String,
     required: true,
