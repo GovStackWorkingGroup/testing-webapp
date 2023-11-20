@@ -64,13 +64,17 @@ export const en = {
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
 
+  'form.container.label': 'Container',
+  'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.filling_required.label': 'Filling this form is required.',
   'form.form_invalid.message':
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
   'form.invalid_email_match.message': 'Email addresses do not match.',
   'form.invalid_file_format.message':
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
+  'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
   'form.form_saved_success.message': 'Draft submitted successfully',
   'form.tip_description.label': 'Provide description of your software.',

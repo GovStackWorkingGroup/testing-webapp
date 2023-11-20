@@ -11,11 +11,13 @@ import useTranslations from '../../hooks/useTranslation';
 type DragDrop = {
   selectedFile: (file: File | undefined) => void;
   isInvalid: boolean;
+  name?: string;
+  key?: string;
 };
 
 const allowedFormats = ['image/png', 'image/jpeg', 'image/svg+xml'];
 
-const DragDrop = ({ selectedFile, isInvalid }: DragDrop) => {
+const DragDrop = ({ selectedFile, isInvalid, name, key }: DragDrop) => {
   const [dragIsOver, setDragIsOver] = useState(false);
   const [isTypeFileError, setTypeFileError] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
@@ -110,6 +112,8 @@ const DragDrop = ({ selectedFile, isInvalid }: DragDrop) => {
         </label>
         <input
           id="files"
+          key={key}
+          name={name || ''}
           type="file"
           onChange={(e) => handleFileChange(e)}
           style={{ visibility: 'hidden' }}

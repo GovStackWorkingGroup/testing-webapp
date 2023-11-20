@@ -15,6 +15,7 @@ import SoftwareAttributesForm, {
 } from '../../components/form/SoftwareAttributesForm';
 import { saveSoftwareDraft } from '../../service/serviceAPI';
 import { softwareAttributesDefaultValues } from '../../components/form/helpers';
+import DeploymentComplianceForm from './Deployment ComplianceForm';
 
 const SoftwareComplianceForm = () => {
   const [currentProgressBarStep, setCurrentProgressBarStep] =
@@ -91,7 +92,7 @@ const SoftwareComplianceForm = () => {
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 2 && <div>step 2</div>}
+          {currentProgressBarStep === 2 && <DeploymentComplianceForm />}
           {currentProgressBarStep === 3 && <div>step 3</div>}
           {currentProgressBarStep === 4 && <div>step 4</div>}
         </>

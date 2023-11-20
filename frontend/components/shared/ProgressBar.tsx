@@ -23,7 +23,7 @@ const ProgressBar = ({
   goToNextStep,
   renderFormError,
 }: ProgressBarProps) => {
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
