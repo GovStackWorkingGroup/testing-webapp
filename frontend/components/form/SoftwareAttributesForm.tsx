@@ -22,6 +22,7 @@ export type SoftwareAttributedRef = {
 };
 
 type SoftwareAttributesFormProps = {
+  savedDraftDetail: any | undefined; //change type
   softwareAttributesFormValues: (value: FormValuesType) => void;
   isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
@@ -29,6 +30,7 @@ type SoftwareAttributesFormProps = {
 };
 
 const SoftwareAttributesForm = ({
+  savedDraftDetail,
   softwareAttributesFormValues,
   isSoftwareAttributesFormValid,
   customRef,
@@ -53,7 +55,15 @@ const SoftwareAttributesForm = ({
       );
 
       return;
-    } else {
+    }
+
+    if (savedDraftDetail) {
+      setFormValues(savedDraftDetail);
+
+      return;
+    }
+
+    if (!savedSoftwareAttributesInStorage && !savedDraftDetail) {
       setFormValues(softwareAttributesDefaultValues);
     }
   }, []);

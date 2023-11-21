@@ -157,9 +157,27 @@ p {
 .Toastify__toast--success {
   border-radius: 4px;
   border: 1px solid rgba(4, 129, 18, 0.2);
+  background-color: #f2f9f2 !important;
+  color: @text-main !important;
+  display: flex;
+  align-items: center;
 }
 
 .success-toast-icon {
   color: @success;
+  font-size: @icon-font-size-small;
+}
+
+.Toastify__toast--error {
+  border-radius: 4px;
+  border: 1px solid @fail-20;
+  background-color: #fdf2f2 !important;
+  color: @text-main !important;
+  display: flex;
+  align-items: center;
+}
+
+.error-toast-icon {
+  color: @fail;
   font-size: @icon-font-size-small;
 }

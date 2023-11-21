@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
-import { RiCheckboxCircleFill } from 'react-icons/ri';
+import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
@@ -16,7 +16,13 @@ import SoftwareAttributesForm, {
 } from './SoftwareAttributesForm';
 import { softwareAttributesDefaultValues } from './helpers';
 
-const SoftwareComplianceForm = () => {
+type SoftwareComplianceFormProps = {
+  savedDraftDetail?: any | undefined; //change type
+};
+
+const SoftwareComplianceForm = ({
+  savedDraftDetail,
+}: SoftwareComplianceFormProps) => {
   const [currentProgressBarStep, setCurrentProgressBarStep] =
     useState<number>(1);
   const [softwareAttributesFormValues, setSoftwareAttributesFormValues] =
@@ -45,6 +51,15 @@ const SoftwareComplianceForm = () => {
         setGoToNextStep(true);
         toast.success(format('form.form_saved_success.message'), {
           icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+        });
+
+        return;
+      }
+
+      if (!response.status) {
+        //errror
+        toast.error(format('form.form_saved_error.message'), {
+          icon: <RiErrorWarningFill className="error-toast-icon" />,
         });
       }
     });
@@ -85,6 +100,7 @@ const SoftwareComplianceForm = () => {
         <>
           {currentProgressBarStep === 1 && (
             <SoftwareAttributesForm
+              savedDraftDetail={savedDraftDetail}
               softwareAttributesFormValues={setSoftwareAttributesFormValues}
               isSoftwareAttributesFormValid={setIsSoftwareAttributesFormValid}
               customRef={softwareAttributedRef}

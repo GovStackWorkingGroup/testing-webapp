@@ -207,6 +207,28 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
     });
 };
 
+export const getDraftDetails = async (draftUUID: string) => {
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<any>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
 // This endpoint do not connect to project BE
 export const checkIfImageUrlExists = async (url: string): Promise<boolean> => {
   try {

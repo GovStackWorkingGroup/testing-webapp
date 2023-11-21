@@ -13,6 +13,7 @@ import '../components/shared/ProgressBar.less';
 import '../components/shared/DragAndDrop.less';
 import '../components/compliance/SoftwareDetails.less';
 import '../components/form/SoftwareForm.less';
+import { RiCloseFill } from 'react-icons/ri';
 import { ToastContainer } from 'react-toastify';
 import MainLayout from '../components/mainLayout/MainLayout';
 import '../components/shared/inputs/Inputs.less';
@@ -50,7 +51,10 @@ const App = ({ Component, pageProps }: AppProps) => {
         defaultLocale="en"
         messages={messages}
       >
-        <ToastContainer hideProgressBar={true} />
+        <ToastContainer
+          hideProgressBar={true}
+          closeButton={<RiCloseFill className="modal-close-icon" />}
+        />
         <MainLayout>
           <Component {...pageProps} />
         </MainLayout>
