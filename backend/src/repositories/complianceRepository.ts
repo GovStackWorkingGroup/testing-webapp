@@ -30,7 +30,16 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
       console.error('There was an error while aggregating the compliance reports:', error);
       throw error;
     }
-  }
+  };
+
+  const getDraftDetail = async (draftUuid: string) => {
+    try {
+      return await repository.getDraftDetail(draftUuid);
+    } catch (error) {
+      console.error('There was an error while aggregating the compliance reports:', error);
+      throw error;
+    }
+  };
 
   const createOrSubmitForm = async (draftData: Partial<ComplianceReport>) => {
     try {
@@ -74,6 +83,7 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,
+    getDraftDetail,
     createOrSubmitForm,
     editDraftForm,
     getAllBBRequirements,
