@@ -9,6 +9,7 @@ import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softw
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -59,7 +60,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline({ draftUuid })).exec();
+      const results = await Compliance.aggregate(draftDetailAggregationPipeline( draftUuid )).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
