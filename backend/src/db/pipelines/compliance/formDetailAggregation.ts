@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { validate as isUuid } from 'uuid';
 
 export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
   formId?: string,

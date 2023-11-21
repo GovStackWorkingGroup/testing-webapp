@@ -7,7 +7,6 @@ import { Cell, CellValue, CellValues, DataType } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
-import EvaluationSchemaTable from '../compliance/EvaluationSchemaTable';
 
 type TableProps = {
   data: DataType;
@@ -241,7 +240,9 @@ const Table = ({
                         >
                           <table
                             className={classNames('inside-table border-top', {
-                              'table-full-height': !doesValuesExistInsideValues && !isEvaluationSchema,
+                              'table-full-height':
+                                !doesValuesExistInsideValues &&
+                                !isEvaluationSchema,
                             })}
                           >
                             <tbody
@@ -380,27 +381,31 @@ const Table = ({
                 {!isEvaluationSchema &&
                   'values' in row.cell[1] &&
                   row.cell[1].values.length > 1 && (
-                  <div
-                    className="table-expand-div"
-                    onClick={() =>
-                      handleExpandRows(
-                        rowIndexKey,
-                        'value' in row.cell[0]
-                          ? (row.cell[0].value as string)
-                          : ''
-                      )
-                    }
-                  >
-                    <p>
-                      {expandedRow[
-                          `${rowIndexKey}-${
-                            'value' in row.cell[0] && row.cell[0].value
-                          }`
-                      ]
-                        ? format('table.hide_older_versions.label')
-                        : format('table.show_older_versions.label')}
-                    </p>
-                  </div>
+                  <tr className="table-expand-tr">
+                    <td colSpan={1}></td>
+                    <td
+                      colSpan={5}
+                      className="table-expand-div"
+                      onClick={() =>
+                        handleExpandRows(
+                          rowIndexKey,
+                          'value' in row.cell[0]
+                            ? (row.cell[0].value as string)
+                            : ''
+                        )
+                      }
+                    >
+                      <p>
+                        {expandedRow[
+                            `${rowIndexKey}-${
+                              'value' in row.cell[0] && row.cell[0].value
+                            }`
+                        ]
+                          ? format('table.hide_older_versions.label')
+                          : format('table.show_older_versions.label')}
+                      </p>
+                    </td>
+                  </tr>
                 )}
               </>
             ))}

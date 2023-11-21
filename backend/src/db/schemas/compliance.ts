@@ -79,10 +79,9 @@ const ComplianceDetailSchema = new mongoose.Schema({
     default: Date.now
   },
   deploymentCompliance: {
-    isCompliant: {
-      type: Boolean,
-      required: true
-    }
+    type: Number,
+    enum: Object.values(SpecificationComplianceLevel),
+    default: SpecificationComplianceLevel.LEVEL_1,
   },
   requirementSpecificationCompliance: {
     level: {
@@ -121,8 +120,8 @@ const ComplianceVersionSchema = new mongoose.Schema({
 
 const deploymentComplianceSchema = new mongoose.Schema({
   documentation: [{
-      type: String, // saved as string base64
-      required: true
+    type: String, // saved as string base64
+    required: true
   }],
   deploymentInstructions: {
     type: String,
