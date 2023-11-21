@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import SoftwareComplianceForm from '../../../components/form/SoftwareComlianceForm';
+import SoftwareComplianceForm from '../../../components/form/SoftwareComplianceForm';
 
 const SoftwareComplianceDraftWithUUID = () => {
   const router = useRouter();

@@ -76,6 +76,7 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.required_field.message': 'This field is required.',
   'form.form_saved_success.message': 'Draft submitted successfully',
+  'form.point_of_contact.label': 'Point of contact',
   'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
   'form.tip_max_characters.label': '400 characters max.',

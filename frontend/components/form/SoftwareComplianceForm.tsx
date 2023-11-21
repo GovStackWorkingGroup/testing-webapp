@@ -6,15 +6,15 @@ import {
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
   softwareComplianceFormSteps,
 } from '../../service/constants';
-import BackToPageButton from '../../components/shared/buttons/BackToPageButton';
+import BackToPageButton from '../shared/buttons/BackToPageButton';
 import useTranslations from '../../hooks/useTranslation';
-import ProgressBar from '../../components/shared/ProgressBar';
+import ProgressBar from '../shared/ProgressBar';
+import { saveSoftwareDraft } from '../../service/serviceAPI';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
-} from '../../components/form/SoftwareAttributesForm';
-import { saveSoftwareDraft } from '../../service/serviceAPI';
-import { softwareAttributesDefaultValues } from '../../components/form/helpers';
+} from './SoftwareAttributesForm';
+import { softwareAttributesDefaultValues } from './helpers';
 
 const SoftwareComplianceForm = () => {
   const [currentProgressBarStep, setCurrentProgressBarStep] =
@@ -91,9 +91,9 @@ const SoftwareComplianceForm = () => {
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 2 && <div>step 2</div>}
-          {currentProgressBarStep === 3 && <div>step 3</div>}
-          {currentProgressBarStep === 4 && <div>step 4</div>}
+          {currentProgressBarStep === 2 && <div></div>}
+          {currentProgressBarStep === 3 && <div></div>}
+          {currentProgressBarStep === 4 && <div></div>}
         </>
       </ProgressBar>
     </div>

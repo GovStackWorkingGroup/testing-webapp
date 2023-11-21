@@ -50,7 +50,6 @@ const ProgressBar = ({
   useEffect(() => {
     if (goToNextStep) {
       nextStep();
-      // isNextButtonClicked(true);
     }
   }, [goToNextStep]);
 
@@ -114,7 +113,6 @@ const ProgressBar = ({
                   <RiErrorWarningFill className="progress-bar-error-warning-icon" />
                   <p>{format('form.form_invalid.message')}</p>
                 </div>
-                {/* <RiCloseLine className="progress-bar-error-close-icon" /> */}
               </div>
             )}
             {activeStep > 1 && (

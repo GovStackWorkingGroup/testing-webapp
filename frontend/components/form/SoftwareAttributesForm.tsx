@@ -276,7 +276,7 @@ const SoftwareAttributesForm = ({
             )}
           </div>
           <div>
-            <p>Point of contact</p>
+            <p>{format('form.point_of_contact.label')}</p>
           </div>
           <div className="form-field-container">
             <Input
