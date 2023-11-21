@@ -24,8 +24,8 @@ const EvaluationSchemaTable = () => {
               'evaluation_schema.deployability_via_container.label'
             ),
           },
-          { value: 'checked' },
-          { value: 'checked' },
+          { value: format('table.deployable.label') },
+          { value: format('table.N/A.label') },
         ],
       },
       {

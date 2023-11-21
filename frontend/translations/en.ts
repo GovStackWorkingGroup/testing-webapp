@@ -72,6 +72,7 @@ export const en = {
   'table.building_block_version.label': 'Building Block Version',
   'table.compliance.label': 'Compliance',
   'table.compliance_level.label': 'Compliance Level',
+  'table.deployable.label': 'Deployable',
   'table.deployment_compliance.label': 'Deployment Compliance',
   'table.documentation.label': 'Documentation',
   'table.draft.label': 'Draft',
