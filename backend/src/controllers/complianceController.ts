@@ -3,11 +3,13 @@ import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handle
 import GetSoftwareComplianceDetailRequestHandler from '../useCases/compliance/handleGetSoftwareComplianceDetail';
 import GetFormDetailRequestHandler from '../useCases/compliance/handleGetFormDetail';
 import CreateDraftRequestHandler from '../useCases/compliance/handleCreateDraft';
+import EditDraftRequestHandler from '../useCases/compliance/handleEditDraft';
 import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
 import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBRequirements';
 import SubmitFormRequestHandler from '../useCases/compliance/handleSubmitForm';
+import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftDetail';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -35,11 +37,18 @@ const complianceController = (
     new GetFormDetailRequestHandler(req, res, repository, formId)
       .getFormDetail()
       .catch((err: any) => default500Error(res, err));
-  }
+  };
+
+  const getDraftDetail = (req: Request, res: Response): void => {
+    const draftUuid = req.params.id;
+    new GetDraftDetailRequestHandler(req, res, repository, draftUuid)
+      .getDraftDetail()
+      .catch((err: any) => default500Error(res, err));
+  };
 
   const createOrSubmitForm = async (req: Request, res: Response): Promise<void> => {
     const status = req.body.status || StatusEnum.DRAFT;
-    new CreateDraftRequestHandler(req, res, repository, status )
+    new CreateDraftRequestHandler(req, res, repository, status)
       .createOrSubmitForm()
       .catch((err: any) => default500Error(res, err));
   };
@@ -48,8 +57,16 @@ const complianceController = (
     new SubmitFormRequestHandler(req, res, repository)
       .submitForm()
       .catch((err:any) => default500Error(res, err));
-  }
+  };
 
+  const editDraftForm = async (req: Request, res: Response): Promise<void> => {
+    const draftId = req.params.draftId;
+
+    new EditDraftRequestHandler(req, res, repository)
+      .editDraftForm(draftId)
+      .catch((err: any) => default500Error(res, err));
+  };
+  
   const getAllBBRequirements = (req: Request, res: Response): void => {
     new GetAllBBRequirementsRequestHandler(req, res, repository)
       .getAllBBRequirements()
@@ -67,8 +84,10 @@ const complianceController = (
     getAllComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,
+    getDraftDetail,
     createOrSubmitForm,
     submitForm,
+    editDraftForm,
     getAllBBRequirements,
     getBBRequirements,
   };

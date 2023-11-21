@@ -29,7 +29,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           return accumulatedResult;
         }, {})
       };
-      
+
       return reshapedResults;
     } catch (error) {
       console.error("Root cause of aggregation error:", error);
@@ -49,7 +49,17 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getFormDetail(formId: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline(formId)).exec();
+      const results = await Compliance.aggregate(formDetailAggregationPipeline({ formId })).exec();
+      return results[0];
+    } catch (error) {
+      console.error("Root cause of teching compliance form details");
+      throw new Error('Error fetching compliance form details')
+    }
+  },
+
+  async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
+    try {
+      const results = await Compliance.aggregate(formDetailAggregationPipeline({ draftUuid })).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
@@ -107,6 +117,29 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw new Error('Error submitting form');
     }
   },
+  
+  async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
+    try {
+
+      const draft = await Compliance.findOne({ uniqueId: draftId });
+
+      if (!draft) {
+        throw new Error(`Draft with unique ID ${draftId} does not exist.`);
+      }
+      if (draft.expirationDate && draft.expirationDate < new Date()) {
+        throw new Error("You cannot edit an expired draft form.");
+      }
+      if (draft.status !== StatusEnum.DRAFT) {
+        throw new Error("You cannot edit a form that is not in the draft status.");
+      }
+
+      await Compliance.updateOne({ uniqueId: draftId }, updatedData);
+
+    } catch (error) {
+      console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
+      throw error;
+    }
+  },
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
@@ -116,7 +149,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   },
-  
+
   async getBBRequirements(bbKey: string): Promise<BBRequirement[]> {
     try {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
@@ -125,6 +158,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   }
+
 
 };
 

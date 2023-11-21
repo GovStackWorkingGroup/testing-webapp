@@ -6,6 +6,7 @@ type DefinitionType = {
   title: string;
   hasRedirecting?: boolean;
   description: string;
+  descriptionPartTwo?: string;
   note?: string;
   customStyle?: string;
 };
@@ -14,6 +15,7 @@ const Definition = ({
   title,
   hasRedirecting = false,
   description,
+  descriptionPartTwo,
   note,
   customStyle,
 }: DefinitionType) => (
@@ -23,9 +25,14 @@ const Definition = ({
     </p>
     <div data-testid="definition-description">
       {hasRedirecting ? (
-        <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {description}
-        </ReactMarkdown>
+        <div>
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {description}
+          </ReactMarkdown>
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {descriptionPartTwo || ''}
+          </ReactMarkdown>
+        </div>
       ) : (
         <div className="definition-description">{description}</div>
       )}

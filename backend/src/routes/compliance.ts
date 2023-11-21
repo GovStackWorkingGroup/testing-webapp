@@ -19,6 +19,7 @@ const buildComplianceRoutes = (controller: any) => {
   router.get('/compliance/list', limiter, PaginationMiddleware.handlePaginationFilters, controller.getAllComplianceReports);
   router.get('/compliance/:softwareName/detail', limiter, controller.getSoftwareComplianceDetail);
   router.get('/compliance/forms/:id', limiter, controller.getFormDetail);
+  router.get('/compliance/drafts/:id', limiter, controller.getDraftDetail);
 
   router.get('/compliance/requirements', limiter, controller.getAllBBRequirements);
   router.get('/compliance/requirements/:bbKey', limiter, controller.getBBRequirements);
@@ -27,6 +28,8 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.post('/compliance/drafts/submit', limiter, controller.submitForm);
 
+  router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editDraftForm);
+  
   return router;
 };
 
