@@ -9,7 +9,7 @@ const BBRequirementSchema = new mongoose.Schema({
     bbKey: {
         type: String,
         required: true,
-        unique: true
+        unique: false
     },
     bbVersion: {
         type: String,

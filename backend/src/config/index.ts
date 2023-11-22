@@ -10,9 +10,15 @@ interface AppConfig {
   isProduction: boolean;
   mongoConnection: MongoConnection;
   cron: {
+    syncGitBookRequirementsSchedule: string;
     removeExpiredDraftsSchedule: string;
   };
-  draftExpirationTime: number
+  draftExpirationTime: number;
+  gitBook: {
+    baseURL: string;
+    apiKey: string;
+    orgId: string;
+  };
 }
 
 const appConfig: AppConfig = {
@@ -21,6 +27,12 @@ const appConfig: AppConfig = {
   mongoConnection: new MongoConnection(),
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
+    syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
+  },
+  gitBook: {
+    baseURL: process.env.GITBOOK_URL || '',
+    apiKey: process.env.GITBOOK_API_KEY || '',
+    orgId: process.env.GITBOOK_ORG_ID || '',
   },
   // Time is specified in milliseconds.
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
