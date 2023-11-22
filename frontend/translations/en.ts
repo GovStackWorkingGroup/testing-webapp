@@ -20,22 +20,30 @@ export const en = {
     'The Software Requirements Compliance form allows software providers to self-assess their products against the functional requirements that have been developed by GovStack. These assessments help GovStack users validate that a particular software platform is able to meet the functional requirements for one or more Building Blocks, as well as whether it adheres to the cross-functional requirements specified for all GovStack implementations.',
   'app.definition_self_assessment_part_2.description':
     'Click on the ‘Check Compliance’ to start the assessment process for a particular product. For detailed instructions on filling out the self-assessment forms, please refer to [this document](https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance).',
+  'app.email.label': 'Email',
+  'app.email_confirm.label': 'Confirm email',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
   'app.evaluation_schema.label': 'Evaluation Schema',
+  'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
+  'app.interface_requirement_specification.label':
+    'Interface & Requirement Specification Compliance',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
   'app.compatibility.label': 'Compatibility',
   'app.scroll-loader.message': 'Loading more data...',
   'app.scenario.label': 'Scenario:',
-  'app.search': 'Software Name',
   'app.software_attributes.label': 'Software Attributes',
   'app.software_requirements_compliance.label':
     'Software Requirements Compliance',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
+
+  'drag_drop.format.label': 'PNG, JPG or SVG files accepted.',
+  'drag_drop.or_drop.label': 'or drag and drop it here',
+  'drag_drop.select_file.label': 'Select a file to upload',
 
   'evaluation_schema.all.label': 'All',
   'evaluation_schema.compliance.label': 'Compliance',
@@ -59,9 +67,33 @@ export const en = {
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
 
+  'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.form_invalid.message':
+    'To proceed you must fill in all the required fields.',
+  'form.invalid_email.message': 'Invalid email address.',
+  'form.invalid_email_match.message': 'Email addresses do not match.',
+  'form.invalid_file_format.message':
+    'Invalid file format. Please select a PNG, JPG, or SVG file.',
+  'form.required_field.message': 'This field is required.',
+  'form.form_saved_success.message': 'Draft submitted successfully',
+  'form.form_saved_error.message': 'Draft submission failed',
+  'form.point_of_contact.label': 'Point of contact',
+  'form.tip_description.label': 'Provide description of your software.',
+  'form.tip_documentation.label': 'Paste link to your documentation.',
+  'form.tip_max_characters.label': '400 characters max.',
+  'form.tip_website.label': 'Paste link to your website.',
+
   'image.alt.logoFor': 'Logo for: {name}',
 
+  'software_documentation.label': 'Software Documentation',
+  'software_description.label': 'Tool Description',
+  'software_logo.label': 'Software Logo',
   'software_name.label': 'Software Name',
+  'software_website.label': 'Software Website',
+
+  'progress_bar.next.label': 'Next',
+  'progress_bar.previous_step.label': 'Previous Step',
+  'progress_bar.save_draft.label': 'Save draft',
 
   'result_page.back_to_product_list': '< Back to Products List',
   'result_page.title': 'Tests for',
