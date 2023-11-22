@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
+import validator from 'validator';
 
 const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
@@ -121,13 +122,27 @@ const ComplianceVersionSchema = new mongoose.Schema({
 });
 
 const deploymentComplianceSchema = new mongoose.Schema({
-  documentation: [{
-    type: String, // saved as string base64
-    required: true
-  }],
+  documentation: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
+  },
   deploymentInstructions: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
   },
   requirements: [{
     requirement: {

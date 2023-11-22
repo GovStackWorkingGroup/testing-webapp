@@ -109,8 +109,26 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         throw new Error("You cannot edit a form that is not in the draft status.");
       }
 
-      await Compliance.updateOne({ uniqueId: draftId }, updatedData);
+      if (!updatedData) {
+        throw new Error("No update data provided.");
+      }
 
+      const updateObject = { $set: {} };
+      for (const key in updatedData) {
+          if (updatedData.hasOwnProperty(key)) {
+              if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+                  for (const subKey in updatedData[key]) {
+                      if (updatedData[key]!.hasOwnProperty(subKey)) {
+                          updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+                      }
+                  }
+              } else {
+                  updateObject.$set[key] = updatedData[key];
+              }
+          }
+      }
+
+      await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
       console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
       throw error;
