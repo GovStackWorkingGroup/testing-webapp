@@ -97,6 +97,20 @@ export type SoftwareDetailsType = [
   }
 ];
 
+export type SoftwareDraftDetailsType = {
+  deploymentCompliance: [];
+  description: string;
+  documentation: string;
+  email: string;
+  expirationDate: string;
+  formDetails: { bbDetails: [] | null }[];
+  logo: string;
+  softwareName: string;
+  status: number;
+  uniqueId: string;
+  website: string;
+};
+
 // All types used in Table.tsx and the data connected to it
 export type DataType = {
   rows: DataRow[];

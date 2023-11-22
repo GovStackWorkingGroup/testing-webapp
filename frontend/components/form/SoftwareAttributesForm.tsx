@@ -5,6 +5,7 @@ import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
 import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
+import { SoftwareDraftDetailsType } from '../../service/types';
 import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
@@ -22,7 +23,7 @@ export type SoftwareAttributedRef = {
 };
 
 type SoftwareAttributesFormProps = {
-  savedDraftDetail: any | undefined; //change type
+  savedDraftDetail: SoftwareDraftDetailsType | undefined;
   softwareAttributesFormValues: (value: FormValuesType) => void;
   isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
@@ -44,21 +45,35 @@ const SoftwareAttributesForm = ({
 
   useEffect(() => {
     const savedSoftwareAttributesInStorage = JSON.parse(
-      localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || ''
+      localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || 'null'
     );
 
     if (savedSoftwareAttributesInStorage) {
-      setFormValues(
-        JSON.parse(
-          localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || ''
-        )
-      );
+      setFormValues(savedSoftwareAttributesInStorage);
 
       return;
     }
 
     if (savedDraftDetail) {
-      setFormValues(savedDraftDetail);
+      const draftDetail = {
+        softwareName: { value: savedDraftDetail.softwareName, error: false },
+        softwareLogo: { value: undefined, error: false },
+        softwareWebsite: { value: savedDraftDetail.website, error: false },
+        softwareDocumentation: {
+          value: savedDraftDetail.documentation,
+          error: false,
+        },
+        toolDescription: { value: savedDraftDetail.description, error: false },
+        email: {
+          value: savedDraftDetail.email,
+          error: { error: false, message: '' },
+        },
+        confirmEmail: {
+          value: savedDraftDetail.email,
+          error: { error: false, message: '' },
+        },
+      };
+      setFormValues(draftDetail);
 
       return;
     }
@@ -66,7 +81,7 @@ const SoftwareAttributesForm = ({
     if (!savedSoftwareAttributesInStorage && !savedDraftDetail) {
       setFormValues(softwareAttributesDefaultValues);
     }
-  }, []);
+  }, [savedDraftDetail]);
 
   useEffect(() => {
     softwareAttributesFormValues(formValues);
@@ -131,10 +146,19 @@ const SoftwareAttributesForm = ({
     let isValid = true;
 
     for (const [fieldName, field] of entries) {
-      if (fieldName === 'softwareLogo' && !field.value) {
-        updatedValues.softwareLogo.error = true;
+      if (fieldName === 'softwareLogo') {
+        if (!field.value) {
+          updatedValues.softwareLogo.error = true;
 
-        isValid = false;
+          isValid = false;
+        } else if (
+          Object.keys(field.value as File).length === 0 &&
+          field.value?.constructor === Object
+        ) {
+          updatedValues.softwareLogo.error = true;
+
+          isValid = false;
+        }
       } else if (fieldName === 'email' && typeof field.value === 'string') {
         if (field.value.trim() === '') {
           updatedValues.email.error.error = true;

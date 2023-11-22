@@ -9,6 +9,7 @@ import {
   POSTSoftwareAttributesType,
   ProductsListType,
   SoftwareDetailsType,
+  SoftwareDraftDetailsType,
 } from './types';
 
 const baseUrl = process.env.API_URL;
@@ -221,7 +222,7 @@ export const getDraftDetails = async (draftUUID: string) => {
 
       return response.json();
     })
-    .then<Success<any>>((actualData) => {
+    .then<Success<SoftwareDraftDetailsType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

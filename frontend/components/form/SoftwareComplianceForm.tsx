@@ -10,6 +10,7 @@ import BackToPageButton from '../shared/buttons/BackToPageButton';
 import useTranslations from '../../hooks/useTranslation';
 import ProgressBar from '../shared/ProgressBar';
 import { saveSoftwareDraft } from '../../service/serviceAPI';
+import { SoftwareDraftDetailsType } from '../../service/types';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
@@ -17,7 +18,7 @@ import SoftwareAttributesForm, {
 import { softwareAttributesDefaultValues } from './helpers';
 
 type SoftwareComplianceFormProps = {
-  savedDraftDetail?: any | undefined; //change type
+  savedDraftDetail?: SoftwareDraftDetailsType | undefined;
 };
 
 const SoftwareComplianceForm = ({
@@ -57,7 +58,6 @@ const SoftwareComplianceForm = ({
       }
 
       if (!response.status) {
-        //errror
         toast.error(format('form.form_saved_error.message'), {
           icon: <RiErrorWarningFill className="error-toast-icon" />,
         });
