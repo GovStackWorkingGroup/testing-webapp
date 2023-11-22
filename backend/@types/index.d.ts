@@ -1,33 +1,19 @@
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
-    export const enum StatusEnum {
-      DRAFT = 0,
-      IN_REVIEW = 1,
-      APPROVED = 2,
-      REJECTED = 3
-    }
-  
-    export enum SpecificationComplianceLevel {
-      NA = -1,
-      LEVEL_1 = 1,
-      LEVEL_2 = 2
-    }
+  export const enum StatusEnum {
+    DRAFT = 0,
+    IN_REVIEW = 1,
+    APPROVED = 2,
+    REJECTED = 3
+  }
 
-    export interface ComplianceVersion {
-      version: string;
-      bbDetails: Map<string, ComplianceDetail>;
-    }
-  
-    export interface ComplianceReport {
-      softwareName: string;
-      logo: string;
-      website: string;
-      documentation: string;
-      pointOfContact: string;
-      compliance: ComplianceVersion[];
-    }
-  
+  export enum SpecificationComplianceLevel {
+    NA = -1,
+    LEVEL_1 = 1,
+    LEVEL_2 = 2
+  }
+
   export const enum RequirementStatusEnum {
     REQUIRED = 0,
     RECOMMENDED = 1,
@@ -54,7 +40,13 @@ declare module 'myTypes' {
     version: string;
     bbDetails: Map<string, ComplianceDetail>;
   }
-
+  
+  export interface DeploymentCompliance {
+    documentation: string;
+    deploymentInstructions: string;
+    requirements: Requirement[];
+  }
+  
   export interface ComplianceReport {
     softwareName: string;
     logo: string;
@@ -64,6 +56,7 @@ declare module 'myTypes' {
     compliance: ComplianceVersion[];
     uniqueId?: string;
     expirationDate?: Date;
+    deploymentCompliance: Partial<DeploymentCompliance>;
     status: StatusEnum;
   }
 
@@ -134,14 +127,18 @@ declare module 'myTypes' {
   }
 
   // BB Requirements
-  export interface BBRequirement{
+  export interface BBRequirement {
     bbName: string;
     bbKey: string;
     bbVersion: string;
     dateOfSave: Date;
-    crossCuttingRequirements: Requirement[];
-    functionalRequirements: Requirement[];
+    requirements: {
+      crossCutting: Requirement[];
+      functional: Requirement[];
+    }
   }
+
+  export type AllBBRequirements = BBRequirement[];
 
   type FindResult = ComplianceReport[];
   type SofwareDetailsResults = SoftwareDetailsResult[];
@@ -152,7 +149,10 @@ declare module 'myTypes' {
     aggregateComplianceReports: (limit: number, offset: number) => Promise<ComplianceAggregationListResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
+    getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
+    editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
+    getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
     getBBs(): Promise<Partial<BBRequirement>[]>;
   }

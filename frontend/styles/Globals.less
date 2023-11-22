@@ -82,7 +82,7 @@ main {
 }
 
 .close-icon {
-  font-size: 24px;
+  font-size: @icon-font-size-small;
 }
 
 .test-result-second-section-body {
@@ -129,7 +129,7 @@ p {
 
 .filters-and-button-container {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   width: 90vw;
 }
 
@@ -142,7 +142,42 @@ p {
   font-weight: 700;
 }
 
+.custom-error-message {
+  height: 12px;
+  color: @fail;
+  font-size: 12px;
+}
+
 // From Infinite scroll
 .infinite-scroll-component__outerdiv {
   width: 100%;
+}
+
+// Toasts
+.Toastify__toast--success {
+  border-radius: 4px;
+  border: 1px solid rgba(4, 129, 18, 0.2);
+  background-color: #f2f9f2 !important;
+  color: @text-main !important;
+  display: flex;
+  align-items: center;
+}
+
+.success-toast-icon {
+  color: @success;
+  font-size: @icon-font-size-small;
+}
+
+.Toastify__toast--error {
+  border-radius: 4px;
+  border: 1px solid @fail-20;
+  background-color: #fdf2f2 !important;
+  color: @text-main !important;
+  display: flex;
+  align-items: center;
+}
+
+.error-toast-icon {
+  color: @fail;
+  font-size: @icon-font-size-small;
 }

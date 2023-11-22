@@ -1,4 +1,4 @@
-import { ComplianceDbRepository, ComplianceReport, BBRequirement } from "myTypes";
+import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport } from "myTypes";
 
 const complianceRepository = (repository: ComplianceDbRepository) => {
   const findAll = async () => {
@@ -30,7 +30,16 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
       console.error('There was an error while aggregating the compliance reports:', error);
       throw error;
     }
-  }
+  };
+
+  const getDraftDetail = async (draftUuid: string) => {
+    try {
+      return await repository.getDraftDetail(draftUuid);
+    } catch (error) {
+      console.error('There was an error while aggregating the compliance reports:', error);
+      throw error;
+    }
+  };
 
   const createOrSubmitForm = async (draftData: Partial<ComplianceReport>) => {
     try {
@@ -41,11 +50,11 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
+  const editDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
     try {
-      return await repository.getBBRequirements(bbKey);
+      return await repository.editDraftForm(draftId, updateData);
     } catch (error) {
-      console.error('There was an error while fetching BB requirements:', error);
+      console.error('There was an error while editing the form:', error);
       throw error;
     }
   };
@@ -57,16 +66,37 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
       console.error('There was an error while fetching BBs:', error);
       throw error;
     }
+  };
+
+  const getAllBBRequirements = async (): Promise<AllBBRequirements> => {
+    try {
+      return await repository.getAllBBRequirements();
+    } catch (error) {
+      console.error('There was an error while fetching all BB requirements:', error);
+  throw error;
+}
+  };
+
+const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
+  try {
+    return await repository.getBBRequirements(bbKey);
+  } catch (error) {
+    console.error('There was an error while fetching BB requirements:', error);
+    throw error;
   }
+};
 
   return {
     findAll,
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,
+    getDraftDetail,
     createOrSubmitForm,
+    getBBs,
+    editDraftForm,
+    getAllBBRequirements,
     getBBRequirements,
-    getBBs
   };
 };
 

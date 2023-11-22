@@ -13,10 +13,10 @@ Frontend web application for the GovStack test platform.
 
 #### Application configuration for front-end development
 
-To configure and run the application, navigate to project directory - 'src' folder
+To configure and run the application, navigate to project directory - 'frontend' folder
 
 ```
-cd src
+cd frontend
 ```
 
 and run the following commands:
@@ -82,7 +82,7 @@ yarn less
 ### Backend
 
 Testing application has a simple backend written using express.js.
-A more detailed description of the backend's part can be found in `/server/README.md`.
+A more detailed description of the backend's part can be found in `/backend/README.md`.
 
 #### Setup
 
@@ -90,7 +90,7 @@ From the main directory (requires running mongoDB):
 
 ```bash
 # Go to the directory
-cd server/
+cd backend/
 # Use default environmental variables, which can be adjusted if necessary
 mv .env.example .env
 yarn install

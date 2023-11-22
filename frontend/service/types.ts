@@ -49,7 +49,7 @@ export type SingleComplianceItem = {
   _id: string;
   bb: string;
   bbVersion: string;
-  deploymentCompliance: boolean;
+  deploymentCompliance: number;
   interfaceCompliance: number;
   requirementSpecificationCompliance: number;
   softwareName: string;
@@ -73,6 +73,7 @@ export type ComplianceItem = {
   requirements: ComplianceDetails;
   interface: ComplianceDetails;
   bbVersion: string;
+  deploymentCompliance: { requirement: string; level: number }[];
 };
 
 export type Compliance = {
@@ -95,6 +96,20 @@ export type SoftwareDetailsType = [
     softwareName: string;
   }
 ];
+
+export type SoftwareDraftDetailsType = {
+  deploymentCompliance: [];
+  description: string;
+  documentation: string;
+  email: string;
+  expirationDate: string;
+  formDetails: { bbDetails: [] | null }[];
+  logo: string;
+  softwareName: string;
+  status: number;
+  uniqueId: string;
+  website: string;
+};
 
 // All types used in Table.tsx and the data connected to it
 export type DataType = {
@@ -122,4 +137,10 @@ export type Cell =
 export type DataRow = {
   cell: Cell[];
   subHeader?: string;
+};
+
+export type POSTSoftwareAttributesType = {
+  success: boolean;
+  details: string;
+  link: string;
 };

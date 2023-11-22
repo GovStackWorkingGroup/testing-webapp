@@ -1,8 +1,21 @@
 import mongoose from "mongoose";
+import { validate as isUuid } from 'uuid';
 
-export const formDetailAggregationPipeline = (formId: string): any[] => [
+export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
+  formId?: string,
+  draftUuid?: string
+} = {}): any[] => {
+  const matchStage = {};
+
+  if (draftUuid) {
+    matchStage['uniqueId'] = draftUuid;
+  } else if (formId) {
+    matchStage['_id'] = new mongoose.Types.ObjectId(formId);
+  }
+
+  return [
     {
-      $match: { "_id": new mongoose.Types.ObjectId(formId) }
+      $match: matchStage
     },
     {
       $unwind: "$compliance"
@@ -25,9 +38,7 @@ export const formDetailAggregationPipeline = (formId: string): any[] => [
                     crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
                     functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
                   },
-                  deploymentCompliance: {
-                    documentation: "$$bbDetail.v.deploymentCompliance.documentation"
-                  }
+                  deploymentCompliance: "$$bbDetail.v.deploymentCompliance"
                 }
               ]
             }
@@ -53,3 +64,4 @@ export const formDetailAggregationPipeline = (formId: string): any[] => [
       }
     }
   ];
+};

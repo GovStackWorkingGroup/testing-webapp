@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
+import validator from 'validator';
 
 const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
@@ -81,10 +82,9 @@ const ComplianceDetailSchema = new mongoose.Schema({
     default: Date.now
   },
   deploymentCompliance: {
-    isCompliant: {
-      type: Boolean,
-      required: true
-    }
+    type: Number,
+    enum: Object.values(SpecificationComplianceLevel),
+    default: SpecificationComplianceLevel.LEVEL_1,
   },
   requirementSpecificationCompliance: {
     level: {
@@ -122,13 +122,27 @@ const ComplianceVersionSchema = new mongoose.Schema({
 });
 
 const deploymentComplianceSchema = new mongoose.Schema({
-  documentation: [{
-    type: String, // saved as string base64
-    required: true
-  }],
+  documentation: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
+  },
   deploymentInstructions: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
   },
   requirements: [{
     requirement: {
@@ -206,14 +220,16 @@ ComplianceDetailSchema.pre('save', function (next) {
 
   // Ensure requirementSpecificationCompliance exists before proceeding
   if (complianceDetail.requirementSpecificationCompliance) {
-    // Custom validation for the 'fulfillment' field in RequirementSchema
-    complianceDetail.requirementSpecificationCompliance.crossCuttingRequirements.forEach(requirement => {
+    const { crossCuttingRequirements, functionalRequirements } = complianceDetail.requirementSpecificationCompliance;
+
+    // It's mandatory for IN_REVIEW status, but can be empty in DRAFT, where the user is expected to fill it out.
+    crossCuttingRequirements.forEach(requirement => {
       if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
         throw new Error('Fulfillment is required when status is not DRAFT.');
       }
     });
 
-    complianceDetail.requirementSpecificationCompliance.functionalRequirements.forEach(requirement => {
+    functionalRequirements.forEach(requirement => {
       if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
         throw new Error('Fulfillment is required when status is not DRAFT.');
       }

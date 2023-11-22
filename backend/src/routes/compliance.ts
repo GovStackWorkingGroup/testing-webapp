@@ -13,17 +13,23 @@ const buildComplianceRoutes = (controller: any) => {
   });
 
   const filesUpload = multer({ storage }).fields([
-    { name: 'logo', maxCount: 1 }
+    { name: 'logo', maxCount: 1 },
+    { name: 'deploymentCompliance[documentation]', maxCount: 1 },
+    { name: 'deploymentCompliance[deploymentInstructions]', maxCount: 1 }
   ]);
 
   router.get('/compliance/list', limiter, PaginationMiddleware.handlePaginationFilters, controller.getAllComplianceReports);
   router.get('/compliance/:softwareName/detail', limiter, controller.getSoftwareComplianceDetail);
   router.get('/compliance/forms/:id', limiter, controller.getFormDetail);
+  router.get('/compliance/drafts/:id', limiter, controller.getDraftDetail);
 
+  router.get('/compliance/requirements', limiter, controller.getAllBBRequirements);
   router.get('/compliance/requirements/:bbKey', limiter, controller.getBBRequirements);
   router.get('/compliance/bbs', limiter, controller.getBBs);
 
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
+
+  router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editDraftForm);
 
   return router;
 };

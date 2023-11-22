@@ -5,7 +5,7 @@ import syncGitBookBBRequirements from './syncGitBookBBRequirements';
 
 export const startCronJobs = (): void => {
   schedule(appConfig.cron.removeExpiredDraftsSchedule, async () => {
-    console.log('Running a job');
+    console.log('Running a job to remove sensitive data from expired drafts');
     try {
       await removeSensitiveDataFromExpiredDrafts();
     } catch (error) {

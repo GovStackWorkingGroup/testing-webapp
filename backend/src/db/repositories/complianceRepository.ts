@@ -1,4 +1,4 @@
-import { BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -7,8 +7,10 @@ import { createAggregationPipeline } from '../pipelines/compliance/complianceLis
 import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetailAggregation';
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 import BBRequirements from '../schemas/bbRequirements';
+import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
 import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
+import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -29,7 +31,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           return accumulatedResult;
         }, {})
       };
-      
+
       return reshapedResults;
     } catch (error) {
       console.error("Root cause of aggregation error:", error);
@@ -49,7 +51,17 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getFormDetail(formId: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline(formId)).exec();
+      const results = await Compliance.aggregate(formDetailAggregationPipeline({ formId })).exec();
+      return results[0];
+    } catch (error) {
+      console.error("Root cause of teching compliance form details");
+      throw new Error('Error fetching compliance form details')
+    }
+  },
+
+  async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
+    try {
+      const results = await Compliance.aggregate(draftDetailAggregationPipeline( draftUuid )).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
@@ -83,6 +95,56 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
+  async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
+    try {
+
+      const draft = await Compliance.findOne({ uniqueId: draftId });
+
+      if (!draft) {
+        throw new Error(`Draft with unique ID ${draftId} does not exist.`);
+      }
+      if (draft.expirationDate && draft.expirationDate < new Date()) {
+        throw new Error("You cannot edit an expired draft form.");
+      }
+      if (draft.status !== StatusEnum.DRAFT) {
+        throw new Error("You cannot edit a form that is not in the draft status.");
+      }
+
+      if (!updatedData) {
+        throw new Error("No update data provided.");
+      }
+
+      const updateObject = { $set: {} };
+      for (const key in updatedData) {
+          if (updatedData.hasOwnProperty(key)) {
+              if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+                  for (const subKey in updatedData[key]) {
+                      if (updatedData[key]!.hasOwnProperty(subKey)) {
+                          updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+                      }
+                  }
+              } else {
+                  updateObject.$set[key] = updatedData[key];
+              }
+          }
+      }
+
+      await Compliance.updateOne({ uniqueId: draftId }, updateObject);
+    } catch (error) {
+      console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
+      throw error;
+    }
+  },
+
+  async getAllBBRequirements(): Promise<AllBBRequirements> {
+    try {
+      return await BBRequirements.aggregate(aggregationPipeline()).exec();
+    } catch (error) {
+      console.error('There was an error while fetching all BB requirements:', error);
+      throw error;
+    }
+  },
+
   async getBBRequirements(bbKey: string): Promise<BBRequirement[]> {
     try {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
@@ -100,6 +162,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   }
+
 
 };
 

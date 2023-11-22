@@ -134,6 +134,7 @@ const ListOfCandidateResults = () => {
               setDisplayEvaluationSchemaModal(value)
             }
             isScrollX={true}
+            expandingRows={true}
           />
         </div>
       </InfiniteScroll>

@@ -7,12 +7,16 @@ table.main-table {
   border-spacing: 0;
   width: 100%;
   max-height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   thead:extend(.table-header-text) {
     height: @table-row;
     text-align: left;
     background-color: @blue-lightest;
+
+    tr {
+      height: @table-row;
+    }
 
     th {
       padding: 0 40px 0 10px;
@@ -29,6 +33,7 @@ table.main-table {
   }
 
   tbody {
+    width: 100%;
     tr {
       min-height: @table-row;
       height: @table-row;
@@ -53,6 +58,24 @@ table.main-table {
 
       td:last-child {
         border-right: none;
+      }
+    }
+
+    tr.table-expand-tr {
+      height: 24px;
+
+      td {
+        border: none;
+      }
+
+      td.table-expand-div {
+        background-color: @blue-10;
+        border-top: 1px solid #dfdfea;
+        border-left: 1px solid #dfdfea;
+        color: @accents-and-btn;
+        display: table-cell;
+        align-items: center;
+        cursor: pointer;
       }
     }
   }
@@ -128,6 +151,13 @@ table.inside-table {
   color: @text-main;
   text-decoration: none;
   align-items: center;
+  width: 100%;
+}
+
+.td-subheader {
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
 }
 
 .td-text-color-container {
@@ -197,23 +227,6 @@ table.inside-table {
   tr {
     height: 96px !important;
   }
-}
-
-.table-expand-div {
-  width: 395%;
-  margin-left: 100%;
-  background-color: @blue-10;
-  border-top: 1px solid #dfdfea;
-  border-left: 1px solid #dfdfea;
-  color: @accents-and-btn;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-}
-
-.table-expand-div > p {
-  padding-left: 16px;
 }
 
 .border-top {

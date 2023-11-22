@@ -12,7 +12,7 @@ type Props = {
   name: string;
 };
 
-const SearchInput = ({ value, name,...otherProps }: Props) => {
+const SearchInput = ({ value, name, ...otherProps }: Props) => {
   const { formatMessage } = useIntl();
   const format = useCallback(
     (id: string) => formatMessage({ id }),
@@ -20,13 +20,13 @@ const SearchInput = ({ value, name,...otherProps }: Props) => {
   );
 
   return (
-    <div className='search-input-container'>
+    <div className="search-input-container">
       <AsyncReactSelect
         {...otherProps}
         cacheOptions
         inputId={`async-select-id-${name}`}
         value={value}
-        placeholder={format('app.search')}
+        placeholder={format('software_name.label')}
         unstyled
         classNames={{
           dropdownIndicator: () => 'search-dropdown-indicator',
@@ -39,7 +39,7 @@ const SearchInput = ({ value, name,...otherProps }: Props) => {
           menu: () => 'search-menu',
         }}
       />
-      <div className='search-input-loupe'>
+      <div className="search-input-loupe">
         <RiSearchLine />
       </div>
     </div>
