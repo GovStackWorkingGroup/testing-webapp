@@ -6,6 +6,13 @@ type SpaceType = {
     title: string;
 };
 
+class GitBookCollectionManagerError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'GitBookCollectionManagerError';
+    }
+}
+
 class GitBookCollectionManager {
 
     private orgId: string;
@@ -18,12 +25,15 @@ class GitBookCollectionManager {
     validateGitBookConfig() {
         const { baseURL, apiKey } = appConfig.gitBook;
         if (!baseURL || !apiKey || !this.orgId) {
-            throw new Error('GitBook configuration is incomplete. Please check baseURL, apiKey, and orgId.');
+            throw new GitBookCollectionManagerError('GitBook configuration is incomplete. Please check baseURL, apiKey, and orgId.');
         }
     }
 
     async fetchCollections(titleStartsWith: string = '') {
         const response = await gitBookClient.get(`/v1/orgs/${this.orgId}/collections`);
+        if (!response || response.status !== 200 || !response.data || !response.data.items) {
+            throw new GitBookCollectionManagerError('Failed to fetch collections.');
+        }
         return response.data.items
             .filter(collection => collection.title.startsWith(titleStartsWith))
             .map(collection => ({
@@ -38,7 +48,7 @@ class GitBookCollectionManager {
         return response.data.items
     }
 
-    async fetchHighestVersionSpaceIdAndVersion(collectionId) {
+    async fetchLatestVersionSpaceIdAndVersion(collectionId) {
         const spaces = await this.fetchSpacesForCollection(collectionId);
         let highestVersionSpace: SpaceType | null = null;
 
@@ -58,6 +68,7 @@ class GitBookCollectionManager {
 
     };
 
+    // Checks if the title is in semantic versioning format (Major.Minor.Patch).
     isVersion(title: string) {
         return /^(\d+\.)?(\d+\.)?(\*|\d+)$/.test(title);
     };
@@ -67,15 +78,15 @@ class GitBookCollectionManager {
     };
 
     compareVersions(version1: string, version2: string) {
-        const num1 = this.versionToArray(version1);
-        const num2 = this.versionToArray(version2);
+        const version_parts1 = this.versionToArray(version1);
+        const version_parts2 = this.versionToArray(version2);
 
-        for (let i = 0; i < Math.max(num1.length, num2.length); i++) {
-            const val1 = num1[i] || 0;
-            const val2 = num2[i] || 0;
+        for (let versionIndex = 0; versionIndex < Math.max(version_parts1.length, version_parts2.length); versionIndex++) {
+            const versionComponent1 = version_parts1[versionIndex] || 0;
+            const versionComponent2 = version_parts2[versionIndex] || 0;
 
-            if (val1 > val2) return 1;
-            if (val1 < val2) return -1;
+            if (versionComponent1 > versionComponent2) return 1;
+            if (versionComponent1 < versionComponent2) return -1;
         }
 
         return 0;
@@ -83,13 +94,14 @@ class GitBookCollectionManager {
 
     formatCollectionTitle(title: string) {
         return title
-            .replace(/^bb/, '')
-            .replace(/-/g, ' ')
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ')
-            .trim();
+            .replace(/^bb/, '') // Remove 'bb' prefix
+            .replace(/-/g, ' ') // Replace hyphens with spaces
+            .split(' ') // Split into words
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
+            .join(' ') // Combine words with spaces
+            .trim(); // Trim whitespace
     }
+    // Example: "bb-payments" becomes "Payments"
 }
 
 export default GitBookCollectionManager;

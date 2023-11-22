@@ -5,15 +5,22 @@ type Requirement = {
     requirement: string;
 };
 
+class GitBookPageManagerError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'GitBookPageManagerError';
+    }
+}
+
 class GitBookPageContentManager {
 
-    constructor() {
-    }
+    static REQUIRED_TEXT = "(REQUIRED)";
+    static RECOMMENDED_TEXT = "(RECOMMENDED)";
+    static OPTIONAL_TEXT = "(OPTIONAL)";
 
-    extractRequirements(pageContent): Requirement[] {
-        if (!pageContent || !pageContent.document || !pageContent.document.nodes) {
-            console.log("Invalid page content format.");
-            return [];
+    extractRequirements(pageContent) {
+        if (!pageContent?.document?.nodes) {
+            return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
 
         const nodes = pageContent.document.nodes;
@@ -26,11 +33,11 @@ class GitBookPageContentManager {
                 textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
 
                 let status;
-                if (textContent.includes("(REQUIRED)")) {
+                if (textContent.includes(GitBookPageContentManager.REQUIRED_TEXT)) {
                     status = RequirementStatusEnum.REQUIRED;
-                } else if (textContent.includes("(RECOMMENDED)")) {
+                } else if (textContent.includes(GitBookPageContentManager.RECOMMENDED_TEXT)) {
                     status = RequirementStatusEnum.RECOMMENDED;
-                } else if (textContent.includes("(OPTIONAL)")) {
+                } else if (textContent.includes(GitBookPageContentManager.OPTIONAL_TEXT)) {
                     status = RequirementStatusEnum.OPTIONAL;
                 }
 
@@ -42,7 +49,7 @@ class GitBookPageContentManager {
             }
         });
 
-        return requirements;
+        return { requirements };
     };
 
 }

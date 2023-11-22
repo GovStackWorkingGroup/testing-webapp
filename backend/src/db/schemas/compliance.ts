@@ -206,14 +206,16 @@ ComplianceDetailSchema.pre('save', function (next) {
 
   // Ensure requirementSpecificationCompliance exists before proceeding
   if (complianceDetail.requirementSpecificationCompliance) {
-    // Custom validation for the 'fulfillment' field in RequirementSchema
-    complianceDetail.requirementSpecificationCompliance.crossCuttingRequirements.forEach(requirement => {
+    const { crossCuttingRequirements, functionalRequirements } = complianceDetail.requirementSpecificationCompliance;
+
+    // It's mandatory for IN_REVIEW status, but can be empty in DRAFT, where the user is expected to fill it out.
+    crossCuttingRequirements.forEach(requirement => {
       if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
         throw new Error('Fulfillment is required when status is not DRAFT.');
       }
     });
 
-    complianceDetail.requirementSpecificationCompliance.functionalRequirements.forEach(requirement => {
+    functionalRequirements.forEach(requirement => {
       if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
         throw new Error('Fulfillment is required when status is not DRAFT.');
       }
