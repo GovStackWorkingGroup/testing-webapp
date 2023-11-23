@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
@@ -19,10 +20,12 @@ import { softwareAttributesDefaultValues } from './helpers';
 
 type SoftwareComplianceFormProps = {
   savedDraftDetail?: SoftwareDraftDetailsType | undefined;
+  currentStep?: number | undefined;
 };
 
 const SoftwareComplianceForm = ({
   savedDraftDetail,
+  currentStep,
 }: SoftwareComplianceFormProps) => {
   const [currentProgressBarStep, setCurrentProgressBarStep] =
     useState<number>(1);
@@ -35,6 +38,7 @@ const SoftwareComplianceForm = ({
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const { format } = useTranslations();
+  const router = useRouter();
 
   const handleStepChange = (currentStep: number) => {
     setCurrentProgressBarStep(currentStep);
@@ -53,6 +57,9 @@ const SoftwareComplianceForm = ({
         toast.success(format('form.form_saved_success.message'), {
           icon: <RiCheckboxCircleFill className="success-toast-icon" />,
         });
+        localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+
+        router.push(`${response.data.link}/2`);
 
         return;
       }
@@ -65,20 +72,8 @@ const SoftwareComplianceForm = ({
     });
   };
 
-  const handleSaveInLocalStorage = (
-    localStorageName: string,
-    dataToSave: unknown
-  ) => {
-    localStorage.removeItem(localStorageName);
-    localStorage.setItem(localStorageName, JSON.stringify(dataToSave));
-  };
-
   useEffect(() => {
     if (isSoftwareAttributesFormValid && currentProgressBarStep === 1) {
-      handleSaveInLocalStorage(
-        SOFTWARE_ATTRIBUTES_STORAGE_NAME,
-        softwareAttributesFormValues
-      );
       handleSaveDraft(softwareAttributesFormValues);
     }
   }, [isSoftwareAttributesFormValid, currentProgressBarStep]);
@@ -96,6 +91,7 @@ const SoftwareComplianceForm = ({
         isCurrentFormValid={isSoftwareAttributesFormValid}
         goToNextStep={goToNextStep}
         renderFormError={renderFormError}
+        changeStepTo={currentStep}
       >
         <>
           {currentProgressBarStep === 1 && (

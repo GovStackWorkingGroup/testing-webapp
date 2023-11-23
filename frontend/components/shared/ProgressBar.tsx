@@ -12,6 +12,7 @@ type ProgressBarProps = {
   isCurrentFormValid: boolean | undefined;
   goToNextStep: boolean;
   renderFormError: boolean;
+  changeStepTo?: number | undefined;
 };
 
 const ProgressBar = ({
@@ -22,6 +23,7 @@ const ProgressBar = ({
   isCurrentFormValid,
   goToNextStep,
   renderFormError,
+  changeStepTo,
 }: ProgressBarProps) => {
   const [activeStep, setActiveStep] = useState(1);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
@@ -31,6 +33,12 @@ const ProgressBar = ({
   useEffect(() => {
     currentStep(activeStep);
   }, [activeStep, currentStep]);
+
+  useEffect(() => {
+    if (changeStepTo) {
+      setActiveStep(changeStepTo);
+    }
+  }, [changeStepTo]);
 
   const nextStep = () => {
     if (isCurrentFormValid) {
