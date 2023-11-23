@@ -6,6 +6,7 @@ import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
 import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
 import { SoftwareDraftDetailsType } from '../../service/types';
+import { fetchFileDetails } from '../../service/serviceAPI';
 import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
@@ -40,6 +41,8 @@ const SoftwareAttributesForm = ({
   const [formValues, setFormValues] = useState<FormValuesType>(
     softwareAttributesDefaultValues
   );
+  const [savedInLocalStorage, setSavedInLocalStorage] =
+    useState<FormValuesType | null>(null);
 
   const { format } = useTranslations();
 
@@ -47,41 +50,49 @@ const SoftwareAttributesForm = ({
     const savedSoftwareAttributesInStorage = JSON.parse(
       localStorage.getItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME as string) || 'null'
     );
+    setSavedInLocalStorage(savedSoftwareAttributesInStorage);
+  }, []);
 
-    if (savedSoftwareAttributesInStorage) {
-      setFormValues(savedSoftwareAttributesInStorage);
+  useEffect(() => {
+    if (savedInLocalStorage) {
+      setFormValues(savedInLocalStorage);
 
       return;
     }
 
     if (savedDraftDetail) {
-      const draftDetail = {
-        softwareName: { value: savedDraftDetail.softwareName, error: false },
-        softwareLogo: { value: undefined, error: false },
-        softwareWebsite: { value: savedDraftDetail.website, error: false },
-        softwareDocumentation: {
-          value: savedDraftDetail.documentation,
-          error: false,
-        },
-        toolDescription: { value: savedDraftDetail.description, error: false },
-        email: {
-          value: savedDraftDetail.email,
-          error: { error: false, message: '' },
-        },
-        confirmEmail: {
-          value: savedDraftDetail.email,
-          error: { error: false, message: '' },
-        },
-      };
-      setFormValues(draftDetail);
+      fetchFileDetails(savedDraftDetail.logo).then((logoFile) => {
+        const draftDetail = {
+          softwareName: { value: savedDraftDetail.softwareName, error: false },
+          softwareLogo: { value: logoFile as File, error: false },
+          softwareWebsite: { value: savedDraftDetail.website, error: false },
+          softwareDocumentation: {
+            value: savedDraftDetail.documentation,
+            error: false,
+          },
+          toolDescription: {
+            value: savedDraftDetail.description,
+            error: false,
+          },
+          email: {
+            value: savedDraftDetail.email,
+            error: { error: false, message: '' },
+          },
+          confirmEmail: {
+            value: savedDraftDetail.email,
+            error: { error: false, message: '' },
+          },
+        };
+        setFormValues(draftDetail);
+      });
 
       return;
     }
 
-    if (!savedSoftwareAttributesInStorage && !savedDraftDetail) {
+    if (!savedInLocalStorage && !savedDraftDetail) {
       setFormValues(softwareAttributesDefaultValues);
     }
-  }, [savedDraftDetail]);
+  }, [savedDraftDetail, savedInLocalStorage]);
 
   useEffect(() => {
     softwareAttributesFormValues(formValues);
@@ -119,6 +130,12 @@ const SoftwareAttributesForm = ({
         },
       }));
     }
+
+    localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+    localStorage.setItem(
+      SOFTWARE_ATTRIBUTES_STORAGE_NAME,
+      JSON.stringify(formValues)
+    );
   };
 
   useEffect(() => {
@@ -251,6 +268,7 @@ const SoftwareAttributesForm = ({
             <DragDrop
               selectedFile={(selectedFile) => handleSelectedFile(selectedFile)}
               isInvalid={formValues.softwareLogo.error}
+              defaultFile={formValues.softwareLogo.value}
             />
           </div>
           <div className="form-field-container">

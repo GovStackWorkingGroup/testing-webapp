@@ -12,7 +12,7 @@ import {
   SoftwareDraftDetailsType,
 } from './types';
 
-const baseUrl = process.env.API_URL;
+export const baseUrl = process.env.API_URL;
 
 type Success<T> = { status: true; data: T };
 type Failure = { status: false; error: Error };
@@ -238,5 +238,37 @@ export const checkIfImageUrlExists = async (url: string): Promise<boolean> => {
     return response.status === 200;
   } catch (error) {
     return false;
+  }
+};
+
+// Fetch file
+export const fetchFileDetails = async (file: string) => {
+  const filePath = `${baseUrl}/${file}`;
+  try {
+    const response = await fetch(filePath, {
+      method: 'GET',
+      mode: 'cors',
+      cache: 'no-cache',
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+
+    // Create a File object from the Blob
+    const url = new URL(filePath);
+    const pathname = url.pathname;
+    const parts = pathname.split('/');
+
+    const fileName = parts[parts.length - 1]; // Provide the desired file name
+    const file = new File([blob], fileName, { type: 'image/jpeg' });
+
+    return file;
+  } catch (error) {
+    console.error(`get: error occurred ${error}`);
+
+    return [null, null, error];
   }
 };

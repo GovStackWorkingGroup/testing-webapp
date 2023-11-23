@@ -11,16 +11,23 @@ import useTranslations from '../../hooks/useTranslation';
 type DragDrop = {
   selectedFile: (file: File | undefined) => void;
   isInvalid: boolean;
+  defaultFile: File | undefined;
 };
 
 const allowedFormats = ['image/png', 'image/jpeg', 'image/svg+xml'];
 
-const DragDrop = ({ selectedFile, isInvalid }: DragDrop) => {
+const DragDrop = ({ selectedFile, isInvalid, defaultFile }: DragDrop) => {
   const [dragIsOver, setDragIsOver] = useState(false);
   const [isTypeFileError, setTypeFileError] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
 
   const { format } = useTranslations();
+
+  useEffect(() => {
+    if (defaultFile) {
+      setFile(defaultFile);
+    }
+  }, [defaultFile]);
 
   useEffect(() => {
     selectedFile(file);
@@ -131,7 +138,7 @@ const DragDrop = ({ selectedFile, isInvalid }: DragDrop) => {
             <RiFileTextLine className="drag-drop-file-selected-icon" />
             <div className="drag-drop-file-selected-properties">
               <p>{file.name}</p>
-              <p>{file.size} kb</p>
+              <p>{(file.size / 1024).toFixed(2)} kb</p>
             </div>
           </div>
           <div>
