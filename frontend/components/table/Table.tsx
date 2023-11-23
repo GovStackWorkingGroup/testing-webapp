@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
+import { RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { useState } from 'react';
@@ -196,9 +196,6 @@ const Table = ({
                               }}
                             >
                               <p>{row.subHeader}</p>
-                              <div className="test-details-arrow">
-                                <RiArrowRightSLine />
-                              </div>
                             </Link>
                           </div>
                         </td>
@@ -236,9 +233,6 @@ const Table = ({
                             }}
                           >
                             <p>{row.subHeader}</p>
-                            <div className="test-details-arrow">
-                              <RiArrowRightSLine />
-                            </div>
                           </Link>
                         </div>
                       </td>
