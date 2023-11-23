@@ -2,8 +2,36 @@ import mongoose from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
 
-const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
-  return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
+const validateRequiredIfNotDraftForForm = function (this, value: any) {
+  const parent: ComplianceReport = this.parent();
+
+  if (parent && parent.status === StatusEnum.DRAFT) {
+    return true;
+  }
+
+  // If the status is DRAFT, validation always passes
+  if (this.status === StatusEnum.DRAFT) {
+    return true;
+  }
+
+  // For status other than DRAFT, check the presence and correctness of the value
+  // If value is an array
+  if (Array.isArray(value)) {
+    return value.length > 0;
+  }
+
+  // If value is an object
+  if (typeof value === 'object') {
+    return value && Object.keys(value).length > 0;
+  }
+
+  if (typeof value === 'string') {
+    return value.trim().length > 0;
+  }
+
+  // For other types of data (e.g., string, number)
+  return value !== undefined;
+
 };
 
 // SCHEMA FORM CONTENT
@@ -119,13 +147,21 @@ const ComplianceVersionSchema = new mongoose.Schema({
 });
 
 const deploymentComplianceSchema = new mongoose.Schema({
-  documentation: [{
+  documentation: {
     type: String, // saved as string base64
-    required: true
-  }],
+    default: "",
+    validate: {
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'DeploymentCompliance Documentation is required when status is not DRAFT'
+    }
+  },
   deploymentInstructions: {
     type: String,
-    required: true
+    default: "",
+    validate: {
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'DeploymentCompliance deploymentInstructions is required when status is not DRAFT'
+    }
   },
   requirements: [{
     requirement: {
@@ -183,7 +219,8 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: Date
   },
   deploymentCompliance: {
-    type: [deploymentComplianceSchema],
+    type: deploymentComplianceSchema,
+    default: () => ({}),
     validate: {
       validator: validateRequiredIfNotDraftForForm,
       message: 'DeploymentCompliance is required when status is not DRAFT'

@@ -94,7 +94,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   },
 
   async submitForm(uniqueId: string): Promise<boolean> {
-    try {
       const form = await Compliance.findOne({ uniqueId });
       if (!form) {
         throw new Error('Form not found');
@@ -111,11 +110,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       await form.save();
 
       return true;
-
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      throw new Error('Error submitting form');
-    }
   },
   
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {

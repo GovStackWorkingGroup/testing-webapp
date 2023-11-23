@@ -10,7 +10,7 @@
       "expirationDate": "2024-11-24T00:00:00.000Z",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ou.",
       "deploymentCompliance": {
-        "documentation": ["https://openIMIS.com/doc1"],
+        "documentation": "https://openIMIS.com/doc1",
         "deploymentInstructions": "github.com/openIMIS",
         "requirements": [ { "requirement": "re1", "level": 1 }]
       },
@@ -23,9 +23,7 @@
               "bbVersion": "1.2.0",
               "status": 1,
               "submissionDate": "2025-10-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "crossCuttingRequirements": [
@@ -135,9 +133,7 @@
               "bbVersion": "1.1.2",
               "status": 1,
               "submissionDate": "2022-11-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "crossCuttingRequirements": [
@@ -215,9 +211,7 @@
               "bbVersion": "2.0.0",
               "status": 2,
               "submissionDate": "2023-12-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -237,9 +231,7 @@
               "bbVersion": "1.2.1",
               "status": 2,
               "submissionDate": "2026-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "note": "Updated Note"
@@ -254,9 +246,7 @@
               "bbVersion": "1.1.3",
               "status": 1,
               "submissionDate": "2023-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -271,9 +261,7 @@
               "bbVersion": "2.0.1",
               "status": 1,
               "submissionDate": "2024-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "Updated Note"
@@ -298,7 +286,7 @@
       "expirationDate": "2022-11-24T00:00:00.000Z",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ou.",
       "deploymentCompliance": {
-        "documentation": ["https://openIMIS.com/doc1"],
+        "documentation": "https://openIMIS.com/doc1",
         "deploymentInstructions": "github.com/openIMIS",
         "requirements": [ { "requirement": "re1","level": 1 }]
       },
@@ -311,9 +299,7 @@
               "bbVersion": "1.2.0",
               "status": 1,
               "submissionDate": "2025-10-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "crossCuttingRequirements": [
@@ -423,9 +409,7 @@
               "bbVersion": "1.1.2",
               "status": 2,
               "submissionDate": "2022-11-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -440,9 +424,7 @@
               "bbVersion": "2.0.0",
               "status": 2,
               "submissionDate": "2023-12-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -462,9 +444,7 @@
               "bbVersion": "1.2.1",
               "status": 2,
               "submissionDate": "2026-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "note": "Updated Note"
@@ -479,9 +459,7 @@
               "bbVersion": "1.1.3",
               "status": 1,
               "submissionDate": "2023-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -496,9 +474,7 @@
               "bbVersion": "2.0.1",
               "status": 1,
               "submissionDate": "2024-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "Updated Note"
@@ -523,7 +499,7 @@
       "expirationDate": "2026-11-24T00:00:00.000Z",
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa ou.",
       "deploymentCompliance": {
-        "documentation": ["https://openIMIS.com/doc1"],
+        "documentation": "https://openIMIS.com/doc1",
         "deploymentInstructions": "github.com/openIMIS",
         "requirements": [ { "requirement": "re1","level": 1 }]
       },
@@ -536,10 +512,7 @@
               "bbVersion": "1.2.0",
               "status": 1,
               "submissionDate": "2025-10-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "crossCuttingRequirements": [
@@ -649,9 +622,7 @@
               "bbVersion": "1.1.2",
               "status": 2,
               "submissionDate": "2022-11-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -666,9 +637,7 @@
               "bbVersion": "2.0.0",
               "status": 2,
               "submissionDate": "2023-12-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -688,9 +657,7 @@
               "bbVersion": "1.2.1",
               "status": 2,
               "submissionDate": "2026-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 1,
                 "note": "Updated Note"
@@ -705,9 +672,7 @@
               "bbVersion": "1.1.3",
               "status": 1,
               "submissionDate": "2023-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "NoteD"
@@ -722,9 +687,7 @@
               "bbVersion": "2.0.1",
               "status": 1,
               "submissionDate": "2024-01-01T14:48:00.000Z",
-              "deploymentCompliance": {
-                "isCompliant": true
-              },
+              "deploymentCompliance": 1,
               "requirementSpecificationCompliance": {
                 "level": 2,
                 "note": "Updated Note"

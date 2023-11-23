@@ -25,6 +25,7 @@ declare module 'myTypes' {
       website: string;
       documentation: string;
       pointOfContact: string;
+      deploymentCompliance: any;
       compliance: ComplianceVersion[];
     }
 
