@@ -22,7 +22,14 @@ export default class CreateDraftRequestHandler {
     }
 
     private createFullUrl(path: string): string {
-        return `${this.req.protocol}://${this.req.get('host')}${path}`;
+        let host = this.req.get('host');
+    
+        if (host?.startsWith('api.')) {
+            host = host.substring(4); // delete 'api.' from URL
+        }
+    
+        let baseUrl = `${this.req.protocol}://${host}`;
+        return `${baseUrl}${path}`;
     }
 
     async createOrSubmitForm(): Promise<Response> {
