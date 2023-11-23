@@ -9,7 +9,9 @@ body {
   color: @text-main;
   padding: 0;
   margin: 0;
-  height: 100vh;
+  height: max-content;
+  /* Set the initial position of the scrollbar to the top */
+  scroll-snap-type: y mandatory;
 }
 
 .primary-btn:extend(.btn) {

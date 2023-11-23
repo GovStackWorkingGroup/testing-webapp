@@ -16,6 +16,7 @@ const ListOfCandidateResults = () => {
   const [allDataLength, setAllDataLength] = useState(0);
   const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
     useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(false);
 
   const { format } = useTranslations();
 
@@ -31,6 +32,7 @@ const ListOfCandidateResults = () => {
   ];
 
   const fetchData = async (offset: number, limit: number) => {
+    setIsLoadingData(true);
     const fetchedData = await getComplianceList(offset, limit);
     if (fetchedData.status) {
       setAllDataLength(fetchedData.data.count);
@@ -95,6 +97,7 @@ const ListOfCandidateResults = () => {
       setCurrentDataLength(
         transformedData.rows.filter((row) => row.subHeader).length
       );
+      setIsLoadingData(false);
       setResultData(transformedData);
     }
   };
@@ -119,10 +122,10 @@ const ListOfCandidateResults = () => {
       </div>
       <InfiniteScroll
         scrollableTarget="scrollableDiv"
-        dataLength={allDataLength}
+        dataLength={currentDataLength}
         next={handleLoadMoreData}
         hasMore={allDataLength > currentDataLength}
-        loader={<InfiniteScrollCustomLoader />}
+        loader={<></>}
         style={{ overflowX: 'hidden' }}
       >
         <div className="list-of-candidate-table-container">
@@ -136,6 +139,7 @@ const ListOfCandidateResults = () => {
             isScrollX={true}
             expandingRows={true}
           />
+          {isLoadingData && <InfiniteScrollCustomLoader />}
         </div>
       </InfiniteScroll>
       {displayEvaluationSchemaModal && (
