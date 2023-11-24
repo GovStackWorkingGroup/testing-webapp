@@ -21,7 +21,7 @@ export default class CreateDraftRequestHandler {
         this.status = status;
     }
 
-    private createFullUrl(path: string): string {
+    private getFrontendUrl(path: string): string {
         let host = this.req.get('host');
     
         if (host?.startsWith('api.')) {
@@ -49,7 +49,7 @@ export default class CreateDraftRequestHandler {
 
             const response: any = { success: true, details: "Form submitted successfully" };
             if (draftUniqueId) {
-                const fullPath = this.createFullUrl(`/softwareRequirementsCompliance/form/${draftUniqueId}`);
+                const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form/${draftUniqueId}`);
                 response.details = "Draft created successfully";
                 response.link = fullPath;
                 response.uniqueId = draftUniqueId;
