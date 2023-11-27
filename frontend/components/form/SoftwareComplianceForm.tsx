@@ -10,13 +10,26 @@ import {
 import BackToPageButton from '../shared/buttons/BackToPageButton';
 import useTranslations from '../../hooks/useTranslation';
 import ProgressBar from '../shared/ProgressBar';
-import { saveSoftwareDraft } from '../../service/serviceAPI';
-import { SoftwareDraftDetailsType } from '../../service/types';
+import {
+  saveSoftwareDraft,
+  updateDraftDetails,
+} from '../../service/serviceAPI';
+import {
+  SoftwareDraftDetailsType,
+  SoftwareDraftToUpdateType,
+} from '../../service/types';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
 } from './SoftwareAttributesForm';
-import { softwareAttributesDefaultValues } from './helpers';
+import {
+  deploymentComplianceDefaultValues,
+  softwareAttributesDefaultValues,
+} from './helpers';
+import DeploymentComplianceForm, {
+  DeploymentComplianceFormValuesType,
+  DeploymentComplianceRef,
+} from './DeploymentComplianceForm';
 
 type SoftwareComplianceFormProps = {
   savedDraftDetail?: SoftwareDraftDetailsType | undefined;
@@ -31,12 +44,20 @@ const SoftwareComplianceForm = ({
     useState<number>(1);
   const [softwareAttributesFormValues, setSoftwareAttributesFormValues] =
     useState<FormValuesType>(softwareAttributesDefaultValues);
+  const [deploymentComplianceFormValues, setDeploymentComplianceFormValues] =
+    useState<DeploymentComplianceFormValuesType>(
+      deploymentComplianceDefaultValues
+    );
   const [isSoftwareAttributesFormValid, setIsSoftwareAttributesFormValid] =
+    useState(false);
+  const [isDeploymentComplianceFormValid, setIsDeploymentComplianceFormValid] =
     useState(false);
   const [goToNextStep, setGoToNextStep] = useState(false);
   const [renderFormError, setRenderFormError] = useState(false);
+  const [isDraftSaved, setIsDraftSaved] = useState(false);
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
+  const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
   const { format } = useTranslations();
   const router = useRouter();
 
@@ -50,6 +71,11 @@ const SoftwareComplianceForm = ({
     }
   };
 
+  const handleSaveDraftButton = () => {
+    console.log('save button klikniety');
+    deploymentComplianceRef.current?.validate();
+  };
+
   const handleSaveDraft = async (softwareData: FormValuesType) => {
     await saveSoftwareDraft(softwareData).then((response) => {
       if (response.status) {
@@ -60,6 +86,7 @@ const SoftwareComplianceForm = ({
         localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
 
         router.push(`${response.data.link}/2`);
+        setIsDraftSaved(true);
 
         return;
       }
@@ -72,11 +99,53 @@ const SoftwareComplianceForm = ({
     });
   };
 
+  const handleUpdateDraft = async () => {
+    const updateData: SoftwareDraftToUpdateType = {};
+    if (currentProgressBarStep === 2) {
+      updateData.deploymentCompliance = {
+        // deploymentCompliance: {
+        documentation: deploymentComplianceFormValues.documentation.value,
+        deploymentInstructions:
+          deploymentComplianceFormValues.deploymentInstructions.value,
+        // },
+      };
+    }
+
+    // const updateData = {
+    //   softwareName: softwareAttributesFormValues.softwareName.value,
+    //   logo: softwareAttributesFormValues.softwareLogo.value as File,
+    //   website: softwareAttributesFormValues.softwareWebsite.value,
+    //   documentation: softwareAttributesFormValues.softwareDocumentation.value,
+    //   pointOfContact: softwareAttributesFormValues.email.value,
+    //   deploymentCompliance: {
+    //     documentation: deploymentComplianceFormValues.documentation.value,
+    //     deploymentInstructions: deploymentComplianceFormValues.container.value,
+    //   },
+    // };
+    if (savedDraftDetail?.uniqueId) {
+      await updateDraftDetails(savedDraftDetail?.uniqueId, updateData).then(
+        (resposne) => {
+          console.log('resposne', resposne);
+        }
+      );
+    }
+  };
+
   useEffect(() => {
     if (isSoftwareAttributesFormValid && currentProgressBarStep === 1) {
       handleSaveDraft(softwareAttributesFormValues);
     }
   }, [isSoftwareAttributesFormValid, currentProgressBarStep]);
+
+  useEffect(() => {
+    if (isDeploymentComplianceFormValid && currentProgressBarStep === 2) {
+      handleUpdateDraft();
+    }
+  }, [
+    isDeploymentComplianceFormValid,
+    deploymentComplianceDefaultValues,
+    currentProgressBarStep,
+  ]);
 
   return (
     <div>
@@ -92,6 +161,8 @@ const SoftwareComplianceForm = ({
         goToNextStep={goToNextStep}
         renderFormError={renderFormError}
         changeStepTo={currentStep}
+        isDraftSaved={isDraftSaved}
+        onSaveButton={handleSaveDraftButton}
       >
         <>
           {currentProgressBarStep === 1 && (
@@ -103,7 +174,16 @@ const SoftwareComplianceForm = ({
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 2 && <div></div>}
+          {currentProgressBarStep === 2 && (
+            <DeploymentComplianceForm
+              savedDraftDetail={savedDraftDetail}
+              deploymentComplianceFormValues={setDeploymentComplianceFormValues}
+              isDeploymentComplianceFormValid={
+                setIsDeploymentComplianceFormValid
+              }
+              customRef={deploymentComplianceRef}
+            />
+          )}
           {currentProgressBarStep === 3 && <div></div>}
           {currentProgressBarStep === 4 && <div></div>}
         </>

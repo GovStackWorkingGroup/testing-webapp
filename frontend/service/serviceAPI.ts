@@ -10,6 +10,7 @@ import {
   ProductsListType,
   SoftwareDetailsType,
   SoftwareDraftDetailsType,
+  SoftwareDraftToUpdateType,
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -209,11 +210,69 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
 };
 
 export const getDraftDetails = async (draftUUID: string) => {
+  console.log('draftUUID', draftUUID);
+
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
     },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDraftDetailsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetails = async (
+  draftUUID: string,
+  data: SoftwareDraftToUpdateType
+) => {
+  const formData = new FormData();
+  console.log('data', data);
+  if (data.deploymentCompliance?.documentation) {
+    if (data.deploymentCompliance?.documentation instanceof File) {
+      formData.append(
+        'deploymentCompliance[documentation]',
+        data.deploymentCompliance.documentation as File,
+        'deploymentCompliance[documentation]'
+      );
+    } else {
+      formData.append(
+        'deploymentCompliance[documentation]',
+        data.deploymentCompliance?.documentation
+      );
+    }
+  }
+
+  if (data.deploymentCompliance?.deploymentInstructions) {
+    if (data.deploymentCompliance?.deploymentInstructions instanceof File) {
+      formData.append(
+        'deploymentCompliance[deploymentInstructions]',
+        data.deploymentCompliance?.deploymentInstructions
+      );
+    } else {
+      formData.append(
+        'deploymentCompliance[deploymentInstruction]',
+        data.deploymentCompliance?.deploymentInstructions as string
+      );
+    }
+  }
+
+  console.log('formData', formData);
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
   })
     .then((response) => {
       if (!response.ok) {
@@ -267,8 +326,6 @@ export const fetchFileDetails = async (file: string) => {
 
     return file;
   } catch (error) {
-    console.error(`get: error occurred ${error}`);
-
-    return [null, null, error];
+    return undefined;
   }
 };

@@ -41,7 +41,9 @@ export const en = {
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
 
-  'drag_drop.format.label': 'PNG, JPG or SVG files accepted.',
+  'drag_drop.doc_format.label':
+    'PDF, word document or plain text files accepted.',
+  'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted.',
   'drag_drop.or_drop.label': 'or drag and drop it here',
   'drag_drop.select_file.label': 'Select a file to upload',
 
@@ -67,13 +69,20 @@ export const en = {
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
 
+  'form.container.label': 'Container',
+  'form.error_loading_file.message': 'Error loading file. Please try again.',
+  'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.filling_required.label': 'Filling this form is required.',
   'form.form_invalid.message':
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
   'form.invalid_email_match.message': 'Email addresses do not match.',
-  'form.invalid_file_format.message':
+  'form.invalid_doc_file_format.message':
+    'Invalid file format. Please select a PDF, word document, or plain text file.',
+  'form.invalid_image_file_format.message':
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
+  'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
   'form.form_saved_success.message': 'Draft submitted successfully',
   'form.form_saved_error.message': 'Draft submission failed',
@@ -81,6 +90,8 @@ export const en = {
   'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
   'form.tip_max_characters.label': '400 characters max.',
+  'form.tip_paste_link_container.label': 'Paste link to the container.',
+  'form.tip_paste_link_documentation.label': 'Paste link to the documentation.',
   'form.tip_website.label': 'Paste link to your website.',
 
   'image.alt.logoFor': 'Logo for: {name}',
