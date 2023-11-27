@@ -5,6 +5,7 @@ import { ComplianceDbRepository, ComplianceReport, StatusEnum } from "myTypes";
 type UploadedFiles = {
     logo?: Express.Multer.File[];
     documentation?: Express.Multer.File[];
+    deploymentInstructions?: Express.Multer.File[];
 };
 
 export default class EditDraftRequestHandler {
@@ -24,20 +25,26 @@ export default class EditDraftRequestHandler {
 
     async editDraftForm(draftId: string): Promise<Response> {
         try {
-            // const formId = this.req.params.id; // Assuming there's an ID in the URL parameters to identify the form
-            // if (!mongoose.Types.ObjectId.isValid(formId)) {
-            //     return this.res.status(400).send({ success: false, error: "Invalid form ID" });
-            // }
+
             const files = this.req.files as UploadedFiles;
             // Assuming that we may or may not have files to update.
             const updateData: Partial<ComplianceReport> = {
                 ...this.req.body
-              };
+            };
 
-            // Update the logo if a new one is provided
-            if (files && files.logo && files.logo[0]) {
-                updateData.logo = (files.logo[0] as Express.Multer.File).path;
+            updateData.logo = this.updateFilePath(files?.logo, updateData.logo);
+
+            if (!updateData.deploymentCompliance) {
+                updateData.deploymentCompliance = {};
             }
+            updateData.deploymentCompliance.documentation = this.updateFilePath(
+                files['deploymentCompliance[documentation]'],
+                updateData.deploymentCompliance.documentation
+            );
+            updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(
+                files['deploymentCompliance[deploymentInstructions]'],
+                updateData.deploymentCompliance.deploymentInstructions
+            );
 
             const updateResult = await this.repository.editDraftForm(draftId, updateData);
 
@@ -64,5 +71,9 @@ export default class EditDraftRequestHandler {
             console.error("Error editing form:", error);
             return this.res.status(500).send({ success: false, error: error.message || "Error editing form." });
         }
+    }
+
+    updateFilePath(fileArray, currentPath) {
+        return fileArray?.[0] ? (fileArray[0] as Express.Multer.File).path : currentPath;
     }
 }

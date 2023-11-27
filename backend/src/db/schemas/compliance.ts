@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
+import validator from 'validator';
 
 const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
   return this.status == StatusEnum.DRAFT || (value != null && value.length > 0);
 };
+
+
 
 // SCHEMA FORM CONTENT
 const StatusEnum = {
@@ -50,7 +53,7 @@ export const RequirementSchema = new mongoose.Schema({
   fulfillment: {
     type: Number,
     enum: Object.values(RequirementFulfillment),
-    required: true
+    required: false
   },
   status: {
     type: Number,
@@ -119,13 +122,27 @@ const ComplianceVersionSchema = new mongoose.Schema({
 });
 
 const deploymentComplianceSchema = new mongoose.Schema({
-  documentation: [{
-    type: String, // saved as string base64
-    required: true
-  }],
+  documentation: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
+  },
   deploymentInstructions: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+        // Check if it's a valid URL or a base64 string
+        return validator.isURL(v) || validator.isBase64(v);
+      },
+      message: props => `${props.value} is neither a valid URL nor a base64 string`
+    }
   },
   requirements: [{
     requirement: {
@@ -198,6 +215,29 @@ const ComplianceReportSchema = new mongoose.Schema({
   }
 });
 
+ComplianceDetailSchema.pre('save', function (next) {
+  const complianceDetail = this;
+
+  // Ensure requirementSpecificationCompliance exists before proceeding
+  if (complianceDetail.requirementSpecificationCompliance) {
+    const { crossCuttingRequirements, functionalRequirements } = complianceDetail.requirementSpecificationCompliance;
+
+    // It's mandatory for IN_REVIEW status, but can be empty in DRAFT, where the user is expected to fill it out.
+    crossCuttingRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+
+    functionalRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+  }
+
+  next();
+});
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);
 
 export default ComplianceReport;

@@ -1,9 +1,16 @@
 import Link from 'next/link';
-import { RiArrowRightSLine, RiCheckFill } from 'react-icons/ri';
+import { RiCheckFill } from 'react-icons/ri';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { useState } from 'react';
-import { Cell, CellValue, CellValues, DataType } from '../../service/types';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import {
+  Cell,
+  CellValue,
+  CellValues,
+  DataRow,
+  DataType,
+} from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
@@ -15,6 +22,7 @@ type TableProps = {
   handleOpenEvaluationSchemaModal?: (value: boolean) => void;
   isScrollX?: boolean;
   isEvaluationSchema?: boolean;
+  expandingRows?: boolean;
 };
 
 const Table = ({
@@ -24,10 +32,15 @@ const Table = ({
   headers,
   isScrollX = false,
   isEvaluationSchema = false,
+  expandingRows = false,
 }: TableProps) => {
   const [expandedRow, setExpandedRow] = useState<{ [key: string]: boolean }>(
     {}
   );
+  const [expandedSubHeaderRow, setExpandedSubHeaderRow] = useState<string[]>(
+    []
+  );
+
   const { format } = useTranslations();
 
   const formatDateIfDate = (value: Cell) => {
@@ -53,6 +66,48 @@ const Table = ({
       ...prevExpanded,
       [compoundKey]: !prevExpanded[compoundKey],
     }));
+  };
+
+  const handleExpandSubHeaderRows = (name: string) => {
+    const updatedExpandedSubHeaderRow = [...expandedSubHeaderRow];
+    const index = updatedExpandedSubHeaderRow.findIndex(
+      (rowName) => rowName === name
+    );
+    if (index === -1) {
+      setExpandedSubHeaderRow([...updatedExpandedSubHeaderRow, name]);
+
+      return;
+    }
+
+    setExpandedSubHeaderRow(
+      updatedExpandedSubHeaderRow.filter((rowName) => rowName !== name)
+    );
+  };
+
+  // Return rows indexes which should be visible
+  const findIndexesBySubHeaders = (rows: DataRow[], subHeaders: string[]) => {
+    const resultIndexes = [];
+
+    let foundSubHeader = false;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+
+      if (foundSubHeader && row.subHeader) {
+        // Stop when a new subHeader is encountered
+        foundSubHeader = false;
+      }
+
+      if (row.subHeader && subHeaders.includes(row.subHeader)) {
+        foundSubHeader = true;
+      }
+
+      if (foundSubHeader) {
+        // Add the index to the resultIndexes array
+        resultIndexes.push(i);
+      }
+    }
+
+    return resultIndexes;
   };
 
   return (
@@ -105,101 +160,172 @@ const Table = ({
         </thead>
         {data.rows.length ? (
           <tbody id="scrollableDiv">
-            {data.rows?.map((row, rowIndexKey) => (
-              <>
-                {row.subHeader && (
-                  <tr
-                    key={`subheader-${row.subHeader}-${rowIndexKey}`}
-                    className="tr-subheader"
-                  >
-                    <td colSpan={8}>
-                      <Link
-                        className="tr-subheader-container"
-                        href={{
-                          pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
-                        }}
+            {data.rows?.map((row, rowIndexKey) => {
+              if (
+                !findIndexesBySubHeaders(
+                  data.rows,
+                  expandedSubHeaderRow
+                ).includes(rowIndexKey) &&
+                expandingRows
+              ) {
+                return (
+                  <>
+                    {row.subHeader && (
+                      <tr
+                        key={`subheader-${row.subHeader}-${rowIndexKey}`}
+                        className="tr-subheader"
                       >
-                        <p>{row.subHeader}</p>
-                        <div className="test-details-arrow">
-                          <RiArrowRightSLine />
+                        <td colSpan={8}>
+                          <div className="td-subheader">
+                            {expandingRows && (
+                              <div
+                                className="details-arrow"
+                                onClick={() =>
+                                  handleExpandSubHeaderRows(
+                                    row.subHeader as string
+                                  )
+                                }
+                              >
+                                <RiArrowDownSLine />
+                              </div>
+                            )}
+                            <Link
+                              className="tr-subheader-container"
+                              href={{
+                                pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
+                              }}
+                            >
+                              <p>{row.subHeader}</p>
+                            </Link>
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </>
+                );
+              }
+
+              return (
+                <>
+                  {row.subHeader && (
+                    <tr
+                      key={`subheader-${row.subHeader}-${rowIndexKey}`}
+                      className="tr-subheader"
+                    >
+                      <td colSpan={8}>
+                        <div className="td-subheader">
+                          {expandingRows && (
+                            <div
+                              className="details-arrow"
+                              onClick={() =>
+                                handleExpandSubHeaderRows(
+                                  row.subHeader as string
+                                )
+                              }
+                            >
+                              <RiArrowUpSLine />
+                            </div>
+                          )}
+                          <Link
+                            className="tr-subheader-container"
+                            href={{
+                              pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
+                            }}
+                          >
+                            <p>{row.subHeader}</p>
+                          </Link>
                         </div>
-                      </Link>
-                    </td>
-                  </tr>
-                )}
-                <tr key={`row-${row}-${rowIndexKey}`}>
-                  {row.cell.map((cell, indexKey) => {
-                    if ('value' in cell) {
-                      if (cell.value === 'checked') {
-                        return (
-                          <td
-                            key={`details-cell-check-${cell.value}-${indexKey}`}
-                            className={`${
-                              hasVerticalBorders ? '' : 'no-vertical-border'
-                            }`}
-                          >
-                            <RiCheckFill className="check-icon" />
-                          </td>
-                        );
-                      }
+                      </td>
+                    </tr>
+                  )}
+                  <tr key={`row-${row}-${rowIndexKey}`}>
+                    {row.cell.map((cell, indexKey) => {
+                      if ('value' in cell) {
+                        if (cell.value === 'checked') {
+                          return (
+                            <td
+                              key={`details-cell-check-${cell.value}-${indexKey}`}
+                              className={`${
+                                hasVerticalBorders ? '' : 'no-vertical-border'
+                              }`}
+                            >
+                              <RiCheckFill className="check-icon" />
+                            </td>
+                          );
+                        }
 
-                      if (
-                        [
-                          'In Review',
-                          'Rejected',
-                          'Approved',
-                          -1,
-                          1,
-                          2,
-                          true,
-                        ].includes(cell.value)
-                      ) {
-                        return (
-                          <td
-                            key={`details-cell-status-${cell.value}-${indexKey}`}
-                            className={`${
-                              hasVerticalBorders ? '' : 'no-vertical-border'
-                            }`}
-                          >
-                            {cell.value === 'In Review' && (
-                              <p className="td-text-color-container status-in-review">
-                                {cell.value}
-                              </p>
-                            )}
-                            {cell.value === 'Rejected' && (
-                              <p className="td-text-color-container status-rejected">
-                                {cell.value}
-                              </p>
-                            )}
-                            {cell.value === 'Approved' && (
-                              <p className="td-text-color-container status-approved">
-                                {cell.value}
-                              </p>
-                            )}
-                            {cell.value === -1 && (
-                              <p className="td-text-color-container status-na">
-                                {format('table.N/A.label')}
-                              </p>
-                            )}
-                            {cell.value === 1 && (
-                              <p className="td-text-color-container status-level-one">
-                                {format('table.level_1.label')}
-                              </p>
-                            )}
-                            {cell.value === 2 && (
-                              <p className="td-text-color-container status-level-two">
-                                {format('table.level_2.label')}
-                              </p>
-                            )}
-                            {cell.value === true && <RiCheckFill />}
-                          </td>
-                        );
-                      }
+                        if (
+                          [
+                            'In Review',
+                            'Rejected',
+                            'Approved',
+                            -1,
+                            1,
+                            2,
+                            true,
+                          ].includes(cell.value)
+                        ) {
+                          return (
+                            <td
+                              key={`details-cell-status-${cell.value}-${indexKey}`}
+                              className={`${
+                                hasVerticalBorders ? '' : 'no-vertical-border'
+                              }`}
+                            >
+                              {cell.value === 'In Review' && (
+                                <p className="td-text-color-container status-in-review">
+                                  {cell.value}
+                                </p>
+                              )}
+                              {cell.value === 'Rejected' && (
+                                <p className="td-text-color-container status-rejected">
+                                  {cell.value}
+                                </p>
+                              )}
+                              {cell.value === 'Approved' && (
+                                <p className="td-text-color-container status-approved">
+                                  {cell.value}
+                                </p>
+                              )}
+                              {cell.value === -1 && (
+                                <p className="td-text-color-container status-na">
+                                  {format('table.N/A.label')}
+                                </p>
+                              )}
+                              {cell.value === 1 && (
+                                <p className="td-text-color-container status-level-one">
+                                  {format('table.level_1.label')}
+                                </p>
+                              )}
+                              {cell.value === 2 && (
+                                <p className="td-text-color-container status-level-two">
+                                  {format('table.level_2.label')}
+                                </p>
+                              )}
+                              {cell.value === true && <RiCheckFill />}
+                            </td>
+                          );
+                        }
 
-                      if (
-                        typeof cell.value === 'string' &&
-                        cell.value.startsWith('bb-')
-                      ) {
+                        if (
+                          typeof cell.value === 'string' &&
+                          cell.value.startsWith('bb-')
+                        ) {
+                          return (
+                            <td
+                              key={`details-cell-${cell.value}-${indexKey}`}
+                              className={`${
+                                hasVerticalBorders ? '' : 'no-vertical-border'
+                              }`}
+                            >
+                              <div className="td-bb-image-name-container">
+                                <BBImage imagePath={cell.value} />
+                                <p>{format(cell.value)}</p>
+                              </div>
+                            </td>
+                          );
+                        }
+
                         return (
                           <td
                             key={`details-cell-${cell.value}-${indexKey}`}
@@ -207,208 +333,201 @@ const Table = ({
                               hasVerticalBorders ? '' : 'no-vertical-border'
                             }`}
                           >
-                            <div className="td-bb-image-name-container">
-                              <BBImage imagePath={cell.value} />
-                              <p>{format(cell.value)}</p>
-                            </div>
+                            {/* @ts-ignore */}
+                            {formatDateIfDate(cell.value)}
                           </td>
                         );
                       }
 
-                      return (
-                        <td
-                          key={`details-cell-${cell.value}-${indexKey}`}
-                          className={`${
-                            hasVerticalBorders ? '' : 'no-vertical-border'
-                          }`}
-                        >
-                          {/* @ts-ignore */}
-                          {formatDateIfDate(cell.value)}
-                        </td>
-                      );
-                    }
+                      if ('values' in cell) {
+                        const doesValuesExistInsideValues = cell.values.some(
+                          (cellItem) => 'values' in cellItem
+                        );
 
-                    if ('values' in cell) {
-                      const doesValuesExistInsideValues = cell.values.some(
-                        (cellItem) => 'values' in cellItem
-                      );
-
-                      return (
-                        <td
-                          className="td-row-details"
-                          key={`divided-row-${cell}-${indexKey}`}
-                        >
-                          <table
-                            className={classNames('inside-table border-top', {
-                              'table-full-height':
-                                !doesValuesExistInsideValues &&
-                                !isEvaluationSchema,
-                            })}
+                        return (
+                          <td
+                            className="td-row-details"
+                            key={`divided-row-${cell}-${indexKey}`}
                           >
-                            <tbody
-                              className={classNames({
-                                'has-divided-inside-table':
-                                  doesValuesExistInsideValues,
+                            <table
+                              className={classNames('inside-table border-top', {
+                                'table-full-height':
+                                  !doesValuesExistInsideValues &&
+                                  !isEvaluationSchema,
                               })}
                             >
-                              {cell.values.map(
-                                (item: CellValue | CellValues, indexKey) => {
-                                  if (
-                                    !isEvaluationSchema &&
-                                    indexKey > 0 &&
-                                    !expandedRow[
-                                      `${rowIndexKey}-${
-                                        'value' in row.cell[0] &&
-                                        row.cell[0].value
-                                      }`
-                                    ]
-                                  ) {
-                                    return null;
-                                  }
-
-                                  if ('value' in item) {
+                              <tbody
+                                className={classNames({
+                                  'has-divided-inside-table':
+                                    doesValuesExistInsideValues,
+                                })}
+                              >
+                                {cell.values.map(
+                                  (item: CellValue | CellValues, indexKey) => {
                                     if (
-                                      [-1, 1, 2].includes(item.value as number)
+                                      !isEvaluationSchema &&
+                                      indexKey > 0 &&
+                                      !expandedRow[
+                                        `${rowIndexKey}-${
+                                          'value' in row.cell[0] &&
+                                          row.cell[0].value
+                                        }`
+                                      ]
                                     ) {
+                                      return null;
+                                    }
+
+                                    if ('value' in item) {
+                                      if (
+                                        [-1, 1, 2].includes(
+                                          item.value as number
+                                        )
+                                      ) {
+                                        return (
+                                          <tr
+                                            key={`details-divided-cell-${item.value}-${indexKey}`}
+                                          >
+                                            <td>
+                                              {(item.value as number) ===
+                                                -1 && (
+                                                <p className="td-text-color-container status-na">
+                                                  {format('table.N/A.label')}
+                                                </p>
+                                              )}
+                                              {(item.value as number) === 1 && (
+                                                <p className="td-text-color-container status-level-one">
+                                                  {format(
+                                                    'table.level_1.label'
+                                                  )}
+                                                </p>
+                                              )}
+                                              {(item.value as number) === 2 && (
+                                                <p className="td-text-color-container status-level-two">
+                                                  {format(
+                                                    'table.level_2.label'
+                                                  )}
+                                                </p>
+                                              )}
+                                            </td>
+                                          </tr>
+                                        );
+                                      }
+
                                       return (
                                         <tr
-                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                          key={`details-divided-cell-values-${item.value}-${indexKey}`}
                                         >
-                                          <td>
-                                            {(item.value as number) === -1 && (
-                                              <p className="td-text-color-container status-na">
-                                                {format('table.N/A.label')}
-                                              </p>
-                                            )}
-                                            {(item.value as number) === 1 && (
-                                              <p className="td-text-color-container status-level-one">
-                                                {format('table.level_1.label')}
-                                              </p>
-                                            )}
-                                            {(item.value as number) === 2 && (
-                                              <p className="td-text-color-container status-level-two">
-                                                {format('table.level_2.label')}
-                                              </p>
-                                            )}
-                                          </td>
+                                          <td>{item.value}</td>
                                         </tr>
                                       );
                                     }
 
-                                    return (
-                                      <tr
-                                        key={`details-divided-cell-values-${item.value}-${indexKey}`}
-                                      >
-                                        <td>{item.value}</td>
-                                      </tr>
-                                    );
-                                  }
+                                    if ('values' in item) {
+                                      return (
+                                        <td
+                                          className="td-row-details without-borders"
+                                          key={`divided-row-${cell}-${indexKey}`}
+                                        >
+                                          <table className="inside-table border-top">
+                                            <tbody>
+                                              {item.values.map(
+                                                (item: CellValue, indexKey) => {
+                                                  if ('value' in item) {
+                                                    if (
+                                                      [-1, 1, 2].includes(
+                                                        item.value as number
+                                                      )
+                                                    ) {
+                                                      return (
+                                                        <tr
+                                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                        >
+                                                          <td>
+                                                            {(item.value as number) ===
+                                                              -1 && (
+                                                              <p className="td-text-color-container status-na">
+                                                                {format(
+                                                                  'table.N/A.label'
+                                                                )}
+                                                              </p>
+                                                            )}
+                                                            {(item.value as number) ===
+                                                              1 && (
+                                                              <p className="td-text-color-container status-level-one">
+                                                                {format(
+                                                                  'table.level_1.label'
+                                                                )}
+                                                              </p>
+                                                            )}
+                                                            {(item.value as number) ===
+                                                              2 && (
+                                                              <p className="td-text-color-container status-level-two">
+                                                                {format(
+                                                                  'table.level_2.label'
+                                                                )}
+                                                              </p>
+                                                            )}
+                                                          </td>
+                                                        </tr>
+                                                      );
+                                                    }
 
-                                  if ('values' in item) {
-                                    return (
-                                      <td
-                                        className="td-row-details without-borders"
-                                        key={`divided-row-${cell}-${indexKey}`}
-                                      >
-                                        <table className="inside-table border-top">
-                                          <tbody>
-                                            {item.values.map(
-                                              (item: CellValue, indexKey) => {
-                                                if ('value' in item) {
-                                                  if (
-                                                    [-1, 1, 2].includes(
-                                                      item.value as number
-                                                    )
-                                                  ) {
                                                     return (
                                                       <tr
-                                                        key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                        key={`details-divided-cell-values-${item.value}-${indexKey}`}
                                                       >
-                                                        <td>
-                                                          {(item.value as number) ===
-                                                            -1 && (
-                                                            <p className="td-text-color-container status-na">
-                                                              {format(
-                                                                'table.N/A.label'
-                                                              )}
-                                                            </p>
-                                                          )}
-                                                          {(item.value as number) ===
-                                                            1 && (
-                                                            <p className="td-text-color-container status-level-one">
-                                                              {format(
-                                                                'table.level_1.label'
-                                                              )}
-                                                            </p>
-                                                          )}
-                                                          {(item.value as number) ===
-                                                            2 && (
-                                                            <p className="td-text-color-container status-level-two">
-                                                              {format(
-                                                                'table.level_2.label'
-                                                              )}
-                                                            </p>
-                                                          )}
-                                                        </td>
+                                                        <td>{item.value}</td>
                                                       </tr>
                                                     );
                                                   }
-
-                                                  return (
-                                                    <tr
-                                                      key={`details-divided-cell-values-${item.value}-${indexKey}`}
-                                                    >
-                                                      <td>{item.value}</td>
-                                                    </tr>
-                                                  );
                                                 }
-                                              }
-                                            )}
-                                          </tbody>
-                                        </table>
-                                      </td>
-                                    );
+                                              )}
+                                            </tbody>
+                                          </table>
+                                        </td>
+                                      );
+                                    }
                                   }
-                                }
-                              )}
-                            </tbody>
-                          </table>
-                        </td>
-                      );
-                    }
-                  })}
-                </tr>
-                {!isEvaluationSchema &&
-                  'values' in row.cell[1] &&
-                  row.cell[1].values.length > 1 && (
-                  <tr className="table-expand-tr">
-                    <td colSpan={1}></td>
-                    <td
-                      colSpan={5}
-                      className="table-expand-div"
-                      onClick={() =>
-                        handleExpandRows(
-                          rowIndexKey,
-                          'value' in row.cell[0]
-                            ? (row.cell[0].value as string)
-                            : ''
-                        )
+                                )}
+                              </tbody>
+                            </table>
+                          </td>
+                        );
                       }
-                    >
-                      <p>
-                        {expandedRow[
-                            `${rowIndexKey}-${
-                              'value' in row.cell[0] && row.cell[0].value
-                            }`
-                        ]
-                          ? format('table.hide_older_versions.label')
-                          : format('table.show_older_versions.label')}
-                      </p>
-                    </td>
+                    })}
                   </tr>
-                )}
-              </>
-            ))}
+                  {!isEvaluationSchema &&
+                    'values' in row.cell[1] &&
+                    row.cell[1].values.length > 1 && (
+                    <tr className="table-expand-tr">
+                      <td colSpan={1}></td>
+                      <td
+                        colSpan={5}
+                        className="table-expand-div"
+                        onClick={() =>
+                          handleExpandRows(
+                            rowIndexKey,
+                            'value' in row.cell[0]
+                              ? (row.cell[0].value as string)
+                              : ''
+                          )
+                        }
+                      >
+                        <p>
+                          {expandedRow[
+                              `${rowIndexKey}-${
+                                'value' in row.cell[0] && row.cell[0].value
+                              }`
+                          ]
+                            ? format('table.hide_older_versions.label')
+                            : format('table.show_older_versions.label')}
+                        </p>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              );
+            })}
           </tbody>
         ) : (
           <tbody>
