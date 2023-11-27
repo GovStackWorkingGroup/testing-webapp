@@ -7,3 +7,8 @@ export const softwareAttributesDefaultValues = {
   email: { value: '', error: { error: false, message: '' } },
   confirmEmail: { value: '', error: { error: false, message: '' } },
 };
+
+export const deploymentComplianceDefaultValues = {
+  documentation: { value: undefined, error: false },
+  deploymentInstructions: { value: undefined, error: false },
+};

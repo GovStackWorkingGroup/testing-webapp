@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { RiCheckboxCircleFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import Button from './buttons/Button';
 
@@ -13,6 +14,8 @@ type ProgressBarProps = {
   goToNextStep: boolean;
   renderFormError: boolean;
   changeStepTo?: number | undefined;
+  isDraftSaved: boolean;
+  onSaveButton: () => void;
 };
 
 const ProgressBar = ({
@@ -24,8 +27,10 @@ const ProgressBar = ({
   goToNextStep,
   renderFormError,
   changeStepTo,
+  isDraftSaved,
+  onSaveButton,
 }: ProgressBarProps) => {
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(2);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
@@ -53,6 +58,10 @@ const ProgressBar = ({
   const handleNextButton = () => {
     onNextButton();
     setIsNextButtonActive(isNextButtonActive + 1);
+  };
+
+  const handleSaveButton = () => {
+    onSaveButton();
   };
 
   useEffect(() => {
@@ -128,7 +137,8 @@ const ProgressBar = ({
                 type="button"
                 text={format('progress_bar.save_draft.label')}
                 styles="secondary-button"
-                onClick={prevStep}
+                onClick={() => handleSaveButton()}
+                showCheckIcon={isDraftSaved}
               ></Button>
             )}
             <Button

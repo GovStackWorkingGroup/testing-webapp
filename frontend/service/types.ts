@@ -98,7 +98,7 @@ export type SoftwareDetailsType = [
 ];
 
 export type SoftwareDraftDetailsType = {
-  deploymentCompliance: [];
+  deploymentCompliance: DeploymentCompliance;
   description: string;
   documentation: string;
   email: string;
@@ -109,6 +109,35 @@ export type SoftwareDraftDetailsType = {
   status: number;
   uniqueId: string;
   website: string;
+};
+
+export type Requirement = {
+  requirement: string;
+  comment: string;
+  fulfillment: number;
+  status: number;
+};
+export type DeploymentCompliance = {
+  documentation: string | File;
+  deploymentInstructions: string | File;
+  requirements: Requirement[];
+};
+
+export type ComplianceVersion = {
+  version: string;
+  bbDetails: Map<string, SingleComplianceItem>;
+};
+
+export type SoftwareDraftToUpdateType = {
+  softwareName?: string;
+  logo?: File;
+  website?: string;
+  documentation?: string;
+  pointOfContact?: string;
+  compliance?: ComplianceVersion[];
+  uniqueId?: string;
+  expirationDate?: Date;
+  deploymentCompliance?: Partial<DeploymentCompliance>;
 };
 
 // All types used in Table.tsx and the data connected to it

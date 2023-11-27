@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { validate } from 'email-validator';
+import { toast } from 'react-toastify';
+import { RiErrorWarningFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
@@ -62,9 +64,21 @@ const SoftwareAttributesForm = ({
 
     if (savedDraftDetail) {
       fetchFileDetails(savedDraftDetail.logo).then((logoFile) => {
+        if (!logoFile) {
+          toast.error(format('form.error_loading_file.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+
         const draftDetail = {
-          softwareName: { value: savedDraftDetail.softwareName, error: false },
-          softwareLogo: { value: logoFile as File, error: false },
+          softwareName: {
+            value: savedDraftDetail.softwareName,
+            error: false,
+          },
+          softwareLogo: {
+            value: logoFile ? (logoFile as File) : undefined,
+            error: false,
+          },
           softwareWebsite: { value: savedDraftDetail.website, error: false },
           softwareDocumentation: {
             value: savedDraftDetail.documentation,
@@ -269,6 +283,7 @@ const SoftwareAttributesForm = ({
               selectedFile={(selectedFile) => handleSelectedFile(selectedFile)}
               isInvalid={formValues.softwareLogo.error}
               defaultFile={formValues.softwareLogo.value}
+              uploadFileType="image"
             />
           </div>
           <div className="form-field-container">
