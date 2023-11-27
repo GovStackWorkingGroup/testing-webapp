@@ -9,6 +9,7 @@ import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softw
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
 import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
@@ -149,6 +150,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
     } catch (error) {
       console.error("Error fetching BB requirements:", error);
+      throw error;
+    }
+  },
+
+  async getBBs(): Promise<any[]> {
+    try{
+      return await BBRequirements.aggregate(uniqueBBsAggregationPipeline()).exec();
+    } catch (error) {
+      console.error("Error fetching BBs:", error)
       throw error;
     }
   }

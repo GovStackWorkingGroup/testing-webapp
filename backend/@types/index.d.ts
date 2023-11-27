@@ -154,5 +154,6 @@ declare module 'myTypes' {
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
+    getBBs(): Promise<Partial<BBRequirement>[]>;
   }
 }
