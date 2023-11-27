@@ -4,6 +4,9 @@ import DragDrop from '../shared/DragAndDrop';
 import Checkbox from '../shared/inputs/Checkbox';
 import Input from '../shared/inputs/Input';
 import { SoftwareDraftDetailsType } from '../../service/types';
+import { DEPLOYMENT_COMPLIANCE_STORAGE_NAME } from '../../service/constants';
+import { fetchFileDetails } from '../../service/serviceAPI';
+import { deploymentComplianceDefaultValues } from './helpers';
 
 export type DeploymentComplianceFormValuesType = {
   documentation: { value: string | File | undefined; error: boolean };
@@ -17,12 +20,13 @@ export type DeploymentComplianceRef = {
 type FieldType = 'link' | 'file';
 
 type DeploymentComplianceFormType = {
+  customRef: RefObject<DeploymentComplianceRef>;
+  savedDraftDetail: SoftwareDraftDetailsType | undefined;
   deploymentComplianceFormValues: (
     value: DeploymentComplianceFormValuesType
   ) => void;
-  customRef: RefObject<DeploymentComplianceRef>;
   isDeploymentComplianceFormValid: (value: boolean) => void;
-  savedDraftDetail: SoftwareDraftDetailsType | undefined;
+  onEdited: (hasError: boolean) => void;
 };
 
 const DeploymentComplianceForm = ({
@@ -30,6 +34,7 @@ const DeploymentComplianceForm = ({
   deploymentComplianceFormValues,
   customRef,
   isDeploymentComplianceFormValid,
+  onEdited,
 }: DeploymentComplianceFormType) => {
   const { format } = useTranslations();
 
@@ -42,6 +47,8 @@ const DeploymentComplianceForm = ({
       documentation: { value: '', error: false },
       deploymentInstructions: { value: '', error: false },
     });
+  const [savedInLocalStorage, setSavedInLocalStorage] =
+    useState<DeploymentComplianceFormValuesType | null>(null);
 
   const checkboxOptions: { label: string; value: FieldType }[] = [
     { label: format('form.link.label'), value: 'link' },
@@ -51,6 +58,116 @@ const DeploymentComplianceForm = ({
   useEffect(() => {
     deploymentComplianceFormValues(formValues);
   }, [formValues]);
+
+  useEffect(() => {
+    const savedSoftwareAttributesInStorage = JSON.parse(
+      localStorage.getItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME as string) ||
+        'null'
+    );
+    setSavedInLocalStorage(savedSoftwareAttributesInStorage);
+  }, []);
+
+  useEffect(() => {
+    if (savedInLocalStorage) {
+      const savedFormValues = savedInLocalStorage;
+      if (
+        Object.keys(savedInLocalStorage.deploymentInstructions.value as object)
+          .length === 0
+      ) {
+        savedFormValues.deploymentInstructions.value = '';
+      }
+
+      if (
+        Object.keys(savedInLocalStorage.documentation.value as object)
+          .length === 0
+      ) {
+        savedFormValues.documentation.value = '';
+      }
+
+      setFormValues(savedFormValues);
+
+      return;
+    }
+
+    if (savedDraftDetail) {
+      const fetchFile = async (path: string) => {
+        return await fetchFileDetails(path);
+      };
+
+      const documentationPromise =
+        typeof savedDraftDetail.deploymentCompliance.documentation ===
+          'string' &&
+        savedDraftDetail.deploymentCompliance.documentation.startsWith(
+          'uploads/'
+        )
+          ? fetchFile(savedDraftDetail.deploymentCompliance.documentation)
+          : Promise.resolve(null);
+
+      const deploymentInstructionsPromise =
+        typeof savedDraftDetail.deploymentCompliance.deploymentInstructions ===
+          'string' &&
+        savedDraftDetail.deploymentCompliance.deploymentInstructions.startsWith(
+          'uploads/'
+        )
+          ? fetchFile(
+              savedDraftDetail.deploymentCompliance.deploymentInstructions
+            )
+          : Promise.resolve(null);
+
+      Promise.all([documentationPromise, deploymentInstructionsPromise]).then(
+        ([documentation, deploymentInstructions]) => {
+          if (documentation) {
+            setSelectedDocumentationType('file');
+          }
+
+          if (deploymentInstructions) {
+            setSelectedContainerType('file');
+          }
+
+          const draftDetail = {
+            documentation: {
+              value:
+                documentation ??
+                savedDraftDetail.deploymentCompliance.documentation,
+              error: false,
+            },
+            deploymentInstructions: {
+              value:
+                deploymentInstructions ??
+                savedDraftDetail.deploymentCompliance.deploymentInstructions,
+              error: false,
+            },
+          };
+
+          setFormValues(draftDetail);
+        }
+      );
+
+      return;
+    }
+
+    if (!savedInLocalStorage && !savedDraftDetail) {
+      setFormValues(deploymentComplianceDefaultValues);
+    }
+  }, [savedDraftDetail, savedInLocalStorage]);
+
+  useEffect(() => {
+    const hasError = Object.values(formValues).some((value) => {
+      // if (typeof value.error === 'boolean') {
+      return value.error;
+      // }
+    });
+
+    onEdited(hasError);
+  }, [formValues]);
+
+  const handleSaveInLocalStorage = () => {
+    localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
+    localStorage.setItem(
+      DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
+      JSON.stringify(formValues)
+    );
+  };
 
   const handleCheckboxDocumentationChange = (value: FieldType) => {
     setFormValues((prevFormValues) => ({
@@ -63,7 +180,7 @@ const DeploymentComplianceForm = ({
   const handleCheckboxContainerChange = (value: FieldType) => {
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
-      container: { value: '', error: false },
+      deploymentInstructions: { value: '', error: false },
     }));
     setSelectedContainerType(value);
   };
@@ -78,6 +195,7 @@ const DeploymentComplianceForm = ({
         error: false,
       },
     }));
+    handleSaveInLocalStorage();
   };
 
   const handleDocumentationSelectedFile = (selectedFile: File | undefined) => {
@@ -90,7 +208,7 @@ const DeploymentComplianceForm = ({
   const handleContainerSelectedFile = (selectedFile: File | undefined) => {
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
-      container: { value: selectedFile, error: false },
+      deploymentInstructions: { value: selectedFile, error: false },
     }));
   };
 
@@ -166,7 +284,7 @@ const DeploymentComplianceForm = ({
                 }
                 isInvalid={formValues.documentation.error}
                 name="documentation"
-                defaultFile={undefined}
+                defaultFile={formValues.deploymentInstructions.value as File}
                 uploadFileType="document"
               />
             </div>
@@ -189,7 +307,7 @@ const DeploymentComplianceForm = ({
           {selectedContainerType === 'link' && (
             <div className="form-field-container">
               <Input
-                name="container"
+                name="deploymentInstructions"
                 errorMessage={format('form.required_field.message')}
                 inputKey="key-software-container"
                 isInvalid={formValues.deploymentInstructions.error}
@@ -207,8 +325,8 @@ const DeploymentComplianceForm = ({
                   handleContainerSelectedFile(selectedFile);
                 }}
                 isInvalid={formValues.deploymentInstructions.error}
-                name="container"
-                defaultFile={undefined}
+                name="deploymentInstructions"
+                defaultFile={formValues.deploymentInstructions.value as File}
                 uploadFileType="document"
               />
             </div>

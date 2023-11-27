@@ -4,6 +4,7 @@ import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
+  DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
   softwareComplianceFormSteps,
 } from '../../service/constants';
@@ -69,6 +70,10 @@ const SoftwareComplianceForm = ({
     if (currentProgressBarStep === 1) {
       softwareAttributedRef.current?.validate();
     }
+
+    if (currentProgressBarStep === 2) {
+      deploymentComplianceRef.current?.validate();
+    }
   };
 
   const handleSaveDraftButton = () => {
@@ -103,29 +108,28 @@ const SoftwareComplianceForm = ({
     const updateData: SoftwareDraftToUpdateType = {};
     if (currentProgressBarStep === 2) {
       updateData.deploymentCompliance = {
-        // deploymentCompliance: {
         documentation: deploymentComplianceFormValues.documentation.value,
         deploymentInstructions:
           deploymentComplianceFormValues.deploymentInstructions.value,
-        // },
       };
     }
 
-    // const updateData = {
-    //   softwareName: softwareAttributesFormValues.softwareName.value,
-    //   logo: softwareAttributesFormValues.softwareLogo.value as File,
-    //   website: softwareAttributesFormValues.softwareWebsite.value,
-    //   documentation: softwareAttributesFormValues.softwareDocumentation.value,
-    //   pointOfContact: softwareAttributesFormValues.email.value,
-    //   deploymentCompliance: {
-    //     documentation: deploymentComplianceFormValues.documentation.value,
-    //     deploymentInstructions: deploymentComplianceFormValues.container.value,
-    //   },
-    // };
     if (savedDraftDetail?.uniqueId) {
       await updateDraftDetails(savedDraftDetail?.uniqueId, updateData).then(
-        (resposne) => {
-          console.log('resposne', resposne);
+        (response) => {
+          if (response.status) {
+            setGoToNextStep(true);
+            toast.success(format('form.form_saved_success.message'), {
+              icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+            });
+            localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+          }
+
+          if (!response.status) {
+            toast.error(format('form.form_saved_error.message'), {
+              icon: <RiErrorWarningFill className="error-toast-icon" />,
+            });
+          }
         }
       );
     }
@@ -141,11 +145,7 @@ const SoftwareComplianceForm = ({
     if (isDeploymentComplianceFormValid && currentProgressBarStep === 2) {
       handleUpdateDraft();
     }
-  }, [
-    isDeploymentComplianceFormValid,
-    deploymentComplianceDefaultValues,
-    currentProgressBarStep,
-  ]);
+  }, [isDeploymentComplianceFormValid, currentProgressBarStep]);
 
   return (
     <div>
@@ -157,7 +157,9 @@ const SoftwareComplianceForm = ({
         steps={softwareComplianceFormSteps}
         currentStep={handleStepChange}
         onNextButton={handleNextButton}
-        isCurrentFormValid={isSoftwareAttributesFormValid}
+        isCurrentFormValid={
+          isSoftwareAttributesFormValid || isDeploymentComplianceFormValid
+        }
         goToNextStep={goToNextStep}
         renderFormError={renderFormError}
         changeStepTo={currentStep}
@@ -182,6 +184,7 @@ const SoftwareComplianceForm = ({
                 setIsDeploymentComplianceFormValid
               }
               customRef={deploymentComplianceRef}
+              onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
           {currentProgressBarStep === 3 && <div></div>}

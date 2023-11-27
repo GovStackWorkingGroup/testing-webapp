@@ -124,7 +124,7 @@ const ProgressBar = ({
             )}
           </div>
           <div className="progress-bar-buttons-right-section">
-            {renderFormError && isNextButtonActive > 0 && (
+            {renderFormError && (
               <div className="progress-bar-error-container">
                 <div>
                   <RiErrorWarningFill className="progress-bar-error-warning-icon" />

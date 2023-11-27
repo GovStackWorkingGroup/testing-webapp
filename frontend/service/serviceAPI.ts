@@ -243,7 +243,7 @@ export const updateDraftDetails = async (
     if (data.deploymentCompliance?.documentation instanceof File) {
       formData.append(
         'deploymentCompliance[documentation]',
-        data.deploymentCompliance.documentation as File,
+        data.deploymentCompliance.documentation,
         'deploymentCompliance[documentation]'
       );
     } else {
@@ -262,8 +262,8 @@ export const updateDraftDetails = async (
       );
     } else {
       formData.append(
-        'deploymentCompliance[deploymentInstruction]',
-        data.deploymentCompliance?.deploymentInstructions as string
+        'deploymentCompliance[deploymentInstructions]',
+        data.deploymentCompliance?.deploymentInstructions
       );
     }
   }
@@ -314,15 +314,25 @@ export const fetchFileDetails = async (file: string) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
+    const contentType = response.headers.get('content-type') || '';
+    console.log('contentType', contentType);
+    console.log('response.blob()', response);
     const blob = await response.blob();
 
     // Create a File object from the Blob
     const url = new URL(filePath);
+    console.log('1', url);
+
     const pathname = url.pathname;
+    console.log('2', pathname);
+
     const parts = pathname.split('/');
+    console.log('3', parts);
 
     const fileName = parts[parts.length - 1]; // Provide the desired file name
-    const file = new File([blob], fileName, { type: 'image/jpeg' });
+    // const file = new File([blob], fileName, { type: 'image/jpeg' });
+    const file = new File([blob], fileName, { type: contentType });
+    console.log('file', file);
 
     return file;
   } catch (error) {
