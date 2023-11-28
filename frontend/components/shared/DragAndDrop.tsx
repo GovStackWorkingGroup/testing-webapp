@@ -12,11 +12,24 @@ type DragDrop = {
   selectedFile: (file: File | undefined) => void;
   isInvalid: boolean;
   defaultFile: File | undefined;
+  name?: string;
+  uploadFileType: 'image' | 'document';
 };
 
 const allowedFormats = ['image/png', 'image/jpeg', 'image/svg+xml'];
+const allowedFormatsDocx = [
+  'application/pdf',
+  'application/msword',
+  'text/plain',
+];
 
-const DragDrop = ({ selectedFile, isInvalid, defaultFile }: DragDrop) => {
+const DragDrop = ({
+  selectedFile,
+  isInvalid,
+  defaultFile,
+  name,
+  uploadFileType,
+}: DragDrop) => {
   const [dragIsOver, setDragIsOver] = useState(false);
   const [isTypeFileError, setTypeFileError] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
@@ -34,7 +47,13 @@ const DragDrop = ({ selectedFile, isInvalid, defaultFile }: DragDrop) => {
   }, [file]);
 
   const isFileFormatAllowed = (fileType: string): boolean => {
-    return allowedFormats.includes(fileType);
+    if (uploadFileType === 'image') {
+      return allowedFormats.includes(fileType);
+    } else if (uploadFileType === 'document') {
+      return allowedFormatsDocx.includes(fileType);
+    } else {
+      return false;
+    }
   };
 
   // Define the event handlers
@@ -88,6 +107,8 @@ const DragDrop = ({ selectedFile, isInvalid, defaultFile }: DragDrop) => {
     }
   };
 
+  const inputId = `files_${name}`;
+
   return (
     <>
       <div
@@ -102,29 +123,35 @@ const DragDrop = ({ selectedFile, isInvalid, defaultFile }: DragDrop) => {
           { 'drag-drop-file-error': isTypeFileError || isInvalid }
         )}
       >
-        <label htmlFor="files" className="drag-drop-file-icons">
+        <label htmlFor={inputId} className="drag-drop-file-icons">
           <RiImage2Line className="drag-drop-file-icon-image" />
           <RiAddCircleFill className="drag-drop-file-icon-plus" />
         </label>
-        <label htmlFor="files" className="drag-drop-file-text-1">
+        <label htmlFor={inputId} className="drag-drop-file-text-1">
           {format('drag_drop.select_file.label')}
         </label>
-        <label htmlFor="files" className="drag-drop-file-text-2">
+        <label htmlFor={inputId} className="drag-drop-file-text-2">
           {format('drag_drop.or_drop.label')}
         </label>
-        <label htmlFor="files" className="drag-drop-file-text-3">
-          {format('drag_drop.format.label')}
+        <label htmlFor={inputId} className="drag-drop-file-text-3">
+          {uploadFileType === 'image' && format('drag_drop.image_format.label')}
+          {uploadFileType === 'document' &&
+            format('drag_drop.doc_format.label')}
         </label>
         <input
-          id="files"
+          id={inputId}
           type="file"
           onChange={(e) => handleFileChange(e)}
           style={{ visibility: 'hidden' }}
+          name={name || ''}
         ></input>
       </div>
       {isTypeFileError && (
         <p className="custom-error-message">
-          {format('form.invalid_file_format.message')}
+          {uploadFileType === 'image' &&
+            format('form.invalid_image_file_format.message')}
+          {uploadFileType === 'document' &&
+            format('form.invalid_doc_file_format.message')}
         </p>
       )}
       {isInvalid && (

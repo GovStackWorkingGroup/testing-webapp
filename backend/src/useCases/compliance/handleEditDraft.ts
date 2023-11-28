@@ -52,7 +52,7 @@ export default class EditDraftRequestHandler {
             //     return this.res.status(404).send({ success: false, error: "Form not found" });
             // }
 
-            const fullPath = this.createFullUrl(`/compliance/forms/${draftId}`);
+            const fullPath = this.createFullUrl(`/softwareRequirementsCompliance/form/${draftId}`);
             const response = {
                 success: true,
                 details: "Form updated successfully",

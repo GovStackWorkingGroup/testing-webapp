@@ -104,3 +104,41 @@
   height: 12px;
   font-size: 12px;
 }
+
+// Checkbox
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.checkbox {
+  /* removing default appearance */
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-right: 0.5em;
+  border: 2px solid @accents-and-btn;
+  outline: none;
+  cursor: pointer;
+}
+
+.checkbox.checked {
+  padding: 1px;
+  background-color: @accents-and-btn;
+  position: relative;
+}
+
+.checkbox:checked::before {
+  content: '';
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid @white;
+}

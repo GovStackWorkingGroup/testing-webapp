@@ -26,3 +26,4 @@ export const softwareComplianceFormSteps = [
 
 // Local storage
 export const SOFTWARE_ATTRIBUTES_STORAGE_NAME = 'software_attributes';
+export const DEPLOYMENT_COMPLIANCE_STORAGE_NAME = 'deployment_compliance';
