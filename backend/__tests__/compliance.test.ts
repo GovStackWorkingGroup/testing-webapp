@@ -3,7 +3,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../server';
-import ComplianceReport from '../src/db/schemas/compliance';
+import ComplianceReport from '../src/db/schemas/compliance/compliance';
 
 describe('Compliance API', () => {
   let mongod;
@@ -99,7 +99,7 @@ describe('Compliance API', () => {
           expect(item).to.have.property('bbVersion').that.is.a('string');
           expect(item).to.have.property('status').that.is.oneOf([0, 1, 2, 3]);
           expect(item).to.have.property('submissionDate').to.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z)$/);
-          expect(item).to.have.property('deploymentCompliance').that.is.a('boolean');
+          expect(item).to.have.property('deploymentCompliance').that.is.a('number');
           expect(item).to.have.property('requirementSpecificationCompliance').that.is.oneOf([null, -1, 1, 2]);
           expect(item).to.have.property('interfaceCompliance').that.is.oneOf([null, -1, 1, 2]);
         });

@@ -3,7 +3,7 @@ import request from 'supertest';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../server';
-import ComplianceReport from '../src/db/schemas/compliance';
+import ComplianceReport from '../src/db/schemas/compliance/compliance';
 import complianceData from './testData/complianceTestData.json';
 import { StatusEnum } from 'myTypes';
 
