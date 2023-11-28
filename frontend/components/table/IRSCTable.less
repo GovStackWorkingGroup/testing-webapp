@@ -1,0 +1,115 @@
+@import '../../styles/Variables.less';
+
+.irsc-table-container {
+  border-radius: 8px;
+  border: 1px solid @stroke;
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0
+}
+
+.irsc-table-header {
+  font-family: Arial;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: @text-secondary;
+  background-color: @light-blue;
+
+  th {
+    padding: 16px;
+    text-align: left;
+  }
+
+  th:nth-child(1) {
+    border-right: 1px solid @stroke;
+    border-bottom: 1px solid @stroke;
+    width: 25%;
+  }
+  th:nth-child(2) {
+    border-right: 1px solid @stroke;
+    border-bottom: 1px solid @stroke;
+    width: 65%;
+  }
+  th:nth-child(3) {
+    border-bottom: 1px solid @stroke;
+    width: 10%;
+  }
+
+}
+
+.irsc-table-header-required {
+  background-color: @blue-10;
+  border-bottom: 1px solid @stroke;
+  padding: 8px 16px;
+  font-family: Arial;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: @text-main
+}
+
+.irsc-table-rows {
+  border: 1px solid @stroke;
+
+  td {
+    padding: 16px;
+    color: @text-main;
+    height: 32px;
+    vertical-align: top;
+
+    textarea {
+      width: 96.5%;
+      padding: 16px;
+      border: none;
+      height: 32px;
+      resize: none;
+    }
+  }
+
+  td:nth-child(1) {
+    background-color: @light-blue;
+    border-right: 1px solid @stroke;
+    border-bottom: 1px solid @stroke;
+  }
+  td:nth-child(2) {
+    padding: 0;
+    border-right: 1px solid @stroke;
+    border-bottom: 1px solid @stroke;
+  }
+  td:nth-child(3) {
+    border-bottom: 1px solid @stroke;
+  }
+
+
+}
+
+.irsc-table-comment-counter {
+  display: none;
+  position: absolute;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: @text-secondary;
+  text-align: right;
+  bottom: 16px;
+  right: 16px;
+
+  input:focus {
+    outline: 1px solid #ccc;
+  }
+}
+
+.counter-active {
+  display: block;
+}
+
+.irsc-table-icons {
+  display: flex;
+  gap: 8px;
+  height: 32px;
+  align-items: center;
+}

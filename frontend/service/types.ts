@@ -140,6 +140,25 @@ export type SoftwareDraftToUpdateType = {
   deploymentCompliance?: Partial<DeploymentCompliance>;
 };
 
+export type ComplianceRequirementsType = {
+  bbName: string,
+  bbKey: string,
+  bbVersion: string,
+  dateOfSave: string,
+  requirements: {
+    crossCutting: [
+      {
+        requirement: string,
+        comment: string,
+        status: number,
+        fulfillment: number | null,
+        _id: string
+      }
+    ],
+    functional: []
+  }
+}
+
 // All types used in Table.tsx and the data connected to it
 export type DataType = {
   rows: DataRow[];
@@ -167,6 +186,16 @@ export type DataRow = {
   cell: Cell[];
   subHeader?: string;
 };
+
+export type InputOptionsProps = [{
+  value: never,
+  label: string
+}]
+
+export type InputSingleOptionProps = {
+  value: ComplianceRequirementsType,
+  label: string
+}
 
 export type POSTSoftwareAttributesType = {
   success: boolean;

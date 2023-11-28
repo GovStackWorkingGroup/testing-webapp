@@ -6,6 +6,7 @@ import {
 import {
   BuildingBlockTestSummary,
   ComplianceList,
+  ComplianceRequirementsType,
   POSTSoftwareAttributesType,
   ProductsListType,
   SoftwareDetailsType,
@@ -231,6 +232,28 @@ export const getDraftDetails = async (draftUUID: string) => {
     });
 };
 
+export const getComplianceRequirements = async () => {
+  return await fetch(`${baseUrl}/compliance/requirements/`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<ComplianceRequirementsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
 export const updateDraftDetails = async (
   draftUUID: string,
   data: SoftwareDraftToUpdateType
@@ -359,4 +382,28 @@ export const fetchFileDetails = async (file: string) => {
   } catch (error) {
     return undefined;
   }
+};
+
+export const patchDraftDetails = async (draftUUID: string, payload: ComplianceRequirementsType) => {
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'patch',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<ComplianceRequirementsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
 };

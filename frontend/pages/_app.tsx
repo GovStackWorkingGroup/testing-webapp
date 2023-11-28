@@ -12,6 +12,7 @@ import '../components/header/HeaderMenuButton.less';
 import '../components/shared/ProgressBar.less';
 import '../components/shared/DragAndDrop.less';
 import '../components/compliance/SoftwareDetails.less';
+import '../components/form/IRSCompliance.less';
 import '../components/form/SoftwareForm.less';
 import { RiCloseFill } from 'react-icons/ri';
 import { ToastContainer } from 'react-toastify';
@@ -28,6 +29,9 @@ import '../styles/Globals.less';
 import * as translations from '../translations';
 import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
+import '../components/shared/Pill.less';
+import '../components/shared/combined/SelectBBs.less';
+import '../components/table/IRSCTable.less';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();

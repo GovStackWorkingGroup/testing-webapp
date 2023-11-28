@@ -1,0 +1,70 @@
+@import '../../styles/Variables.less';
+
+.irsc-header {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: @text-main;
+}
+
+.irsc-tab-selector {
+  width: 100%;
+  display: flex;
+  padding-bottom: 24px;
+}
+
+.irsc-single-tab {
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid @border-grey;
+  color: @text-secondary;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &:hover {
+    color: @accents-and-btn;
+    cursor: pointer;
+  }
+}
+
+.active {
+  border-bottom: 1px solid @accents-and-btn;
+  color: @accents-and-btn;
+}
+
+.question-line {
+  display: flex;
+  width: fit-content;
+  padding: 16px;
+  border-radius: 4px;
+  background: @light-blue;
+  justify-content: center;
+  align-items: center;
+}
+
+.question-line-text {
+  margin-left: 16px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.question-line-link {
+  color: @accents-and-btn;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration-line: underline;
+}
+
+.interface-bb-selector {
+  margin: 16px 0;
+}

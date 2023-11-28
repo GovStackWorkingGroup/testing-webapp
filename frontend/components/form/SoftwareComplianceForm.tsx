@@ -21,6 +21,7 @@ import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
 } from './SoftwareAttributesForm';
+import IRSCompliance from './IRSCompliance';
 import {
   deploymentComplianceDefaultValues,
   softwareAttributesDefaultValues,
@@ -203,7 +204,7 @@ const SoftwareComplianceForm = ({
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 3 && <div></div>}
+          {currentProgressBarStep === 3 && <IRSCompliance />}}
           {currentProgressBarStep === 4 && <div></div>}
         </>
       </ProgressBar>
