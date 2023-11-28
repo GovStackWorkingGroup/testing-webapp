@@ -26,7 +26,7 @@ export async function removeSensitiveDataFromExpiredDrafts() {
                 ]
             }
         ]);
-        
+
         if (result.matchedCount > 0) {
             console.log(`Found and updated ${result.matchedCount} expired drafts. Removed sensitive data.`);
         } else {

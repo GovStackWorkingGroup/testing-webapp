@@ -1,18 +1,7 @@
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../service/constants';
-import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
-import useTranslations from '../../../hooks/useTranslation';
+import SoftwareComplianceForm from '../../../components/form/SoftwareComplianceForm';
 
-const SoftwareComplianceForm = () => {
-  const { format } = useTranslations();
-
-  return (
-    <div>
-      <BackToPageButton
-        text={format('app.back_to_reports_list.label')}
-        href={COMPLIANCE_TESTING_RESULT_PAGE}
-      />
-    </div>
-  );
+const SoftwareComplianceDraft = () => {
+  return <SoftwareComplianceForm />;
 };
 
-export default SoftwareComplianceForm;
+export default SoftwareComplianceDraft;

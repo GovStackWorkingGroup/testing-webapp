@@ -68,6 +68,15 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const getBBs = async (): Promise<Partial<BBRequirement>[]> => {
+    try {
+      return await repository.getBBs();
+    } catch (error) {
+      console.error('There was an error while fetching BBs:', error);
+      throw error;
+    }
+  };
+
   const getAllBBRequirements = async (): Promise<AllBBRequirements> => {
     try {
       return await repository.getAllBBRequirements();
@@ -94,9 +103,10 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     getDraftDetail,
     createOrSubmitForm,
     submitForm,
+    getBBs,
     editDraftForm,
     getAllBBRequirements,
-    getBBRequirements
+    getBBRequirements,
   };
 };
 

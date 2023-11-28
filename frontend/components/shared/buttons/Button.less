@@ -5,11 +5,25 @@
   width: max-content;
   font-weight: 700;
   text-decoration: none;
+  min-width: 150px;
+  cursor: pointer;
+  gap: 10px;
 }
 
 .custom-button.primary-button {
   background-color: @accents-and-btn;
   color: @white;
+}
+
+.custom-button.secondary-button {
+  border: 1px solid @accents-and-btn;
+  color: @accents-and-btn;
+}
+
+.custom-button.disabled {
+  background-color: @disabled;
+  color: @white;
+  cursor: not-allowed;
 }
 
 .back-to-btn {

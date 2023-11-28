@@ -10,6 +10,8 @@ import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
 import { validateRequirements } from '../schemas/compliance/complianceUtils';
+import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
+import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -60,7 +62,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline({ draftUuid })).exec();
+      const results = await Compliance.aggregate(draftDetailAggregationPipeline(draftUuid)).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
@@ -176,18 +178,14 @@ const mongoComplianceRepository: ComplianceDbRepository = {
             }
         }
       }
-      
 
-      await Compliance.updateOne({ uniqueId: draftId }, updatedData);
-
+      await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
       console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
       throw error;
     }
   },
   
-
-
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
       return await BBRequirements.aggregate(aggregationPipeline()).exec();
@@ -202,6 +200,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
     } catch (error) {
       console.error("Error fetching BB requirements:", error);
+      throw error;
+    }
+  },
+
+  async getBBs(): Promise<any[]> {
+    try {
+      return await BBRequirements.aggregate(uniqueBBsAggregationPipeline()).exec();
+    } catch (error) {
+      console.error("Error fetching BBs:", error)
       throw error;
     }
   }

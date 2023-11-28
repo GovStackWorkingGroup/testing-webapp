@@ -28,7 +28,7 @@ export const RequirementSchema = new mongoose.Schema({
   fulfillment: {
     type: Number,
     enum: Object.values(RequirementFulfillment),
-    required: true
+    required: false
   },
   status: {
     type: Number,
@@ -225,6 +225,29 @@ const ComplianceReportSchema = new mongoose.Schema({
   }
 });
 
+ComplianceDetailSchema.pre('save', function (next) {
+  const complianceDetail = this;
+
+  // Ensure requirementSpecificationCompliance exists before proceeding
+  if (complianceDetail.requirementSpecificationCompliance) {
+    const { crossCuttingRequirements, functionalRequirements } = complianceDetail.requirementSpecificationCompliance;
+
+    // It's mandatory for IN_REVIEW status, but can be empty in DRAFT, where the user is expected to fill it out.
+    crossCuttingRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+
+    functionalRequirements.forEach(requirement => {
+      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
+        throw new Error('Fulfillment is required when status is not DRAFT.');
+      }
+    });
+  }
+
+  next();
+});
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);
 
 export default ComplianceReport;
