@@ -82,7 +82,6 @@ export default class SubmitFormRequestHandler {
                 }
                         },
         };
-        console.log(jiraConfig.apiEndpoint);
         try {
             const response = await axios.post(jiraConfig.apiEndpoint, payload, {
                 headers: {

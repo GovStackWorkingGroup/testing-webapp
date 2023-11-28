@@ -1,6 +1,6 @@
 import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
-import Compliance from '../schemas/compliance';
+import Compliance from '../schemas/compliance/compliance';
 import mongoose from 'mongoose';
 import { appConfig } from '../../config/index';
 import { createAggregationPipeline } from '../pipelines/compliance/complianceListAggregation';
@@ -9,6 +9,7 @@ import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softw
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { validateRequirements } from '../schemas/compliance/complianceUtils';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -94,33 +95,57 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   },
 
   async submitForm(uniqueId: string): Promise<boolean> {
-    try {
-      const form = await Compliance.findOne({ uniqueId });
-      if (!form) {
-        throw new Error('Form not found');
-      }
-
-      if (form.status !== StatusEnum.DRAFT) {
-        throw new Error('Form is not in DRAFT status and cannot be submitted');
-      }
-
-      form.status = StatusEnum.IN_REVIEW;
-      form.uniqueId = undefined;
-      form.expirationDate = undefined;
-
-      await form.save();
-
-      return true;
-
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      throw new Error('Error submitting form');
+    const form = await Compliance.findOne({ uniqueId });
+    if (!form) {
+      throw new Error('Form not found');
     }
-  },
+
+    if (form.status !== StatusEnum.DRAFT) {
+      throw new Error('Form is not in DRAFT status and cannot be submitted');
+    }
+
+    const validationErrors: string[] = [];
+    form.compliance.forEach((item) => {
+      item.bbDetails.forEach(bbDetail => {
+        // Validate interfaceCompliance requirements
+        if (bbDetail.interfaceCompliance && bbDetail.interfaceCompliance.requirements) {
+          const interfaceComplianceResult = validateRequirements(bbDetail.interfaceCompliance.requirements);
+          if (!interfaceComplianceResult.isValid) {
+            validationErrors.push(...interfaceComplianceResult.errors);
+          }
+        }
   
+        // Validate combined crossCuttingRequirements and functionalRequirements
+        const combinedRequirements = bbDetail.requirementSpecificationCompliance.crossCuttingRequirements.concat(bbDetail.requirementSpecificationCompliance.functionalRequirements);
+        const combinedRequirementsResult = validateRequirements(combinedRequirements);
+        if (!combinedRequirementsResult.isValid) {
+          validationErrors.push(...combinedRequirementsResult.errors);
+        }
+      });
+    });
+  
+    if (validationErrors.length > 0) {
+      const validationError = new mongoose.Error.ValidationError();
+      validationErrors.forEach((errMsg, index) => {
+        const validatorError = new mongoose.Error.ValidatorError({
+          message: errMsg,
+          path: `\n${index}`, // Use a relevant field name or identifier
+        });
+        validationError.addError(`\n${index}`, validatorError);
+      });
+      throw validationError;
+    }
+    form.expirationDate = undefined;
+    form.status = StatusEnum.IN_REVIEW;
+    form.uniqueId = undefined;
+
+    await form.save();
+
+    return true;
+  },
+
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
-
       const draft = await Compliance.findOne({ uniqueId: draftId });
 
       if (!draft) {
@@ -133,6 +158,26 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         throw new Error("You cannot edit a form that is not in the draft status.");
       }
 
+      if (!updatedData) {
+        throw new Error("No update data provided.");
+      }
+
+      const updateObject = { $set: {} };
+      for (const key in updatedData) {
+        if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
+            if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+                for (const subKey in updatedData[key]!) {
+                    if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
+                        updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+                    }
+                }
+            } else {
+                updateObject.$set[key] = updatedData[key]!;
+            }
+        }
+      }
+      
+
       await Compliance.updateOne({ uniqueId: draftId }, updatedData);
 
     } catch (error) {
@@ -140,6 +185,8 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   },
+  
+
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
