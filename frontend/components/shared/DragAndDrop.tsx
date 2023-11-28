@@ -45,7 +45,7 @@ const DragDrop = ({
   useEffect(() => {
     selectedFile(file);
   }, [file]);
-  console.log(file?.size);
+
   const isFileFormatAllowed = (fileType: string): boolean => {
     if (uploadFileType === 'image') {
       return allowedFormats.includes(fileType);

@@ -14,7 +14,6 @@ const SoftwareComplianceRedirectDraftWithUUID = () => {
   const fetchData = async (draftUUID: string) => {
     const data = await getDraftDetails(draftUUID);
     if (data.status) {
-      console.log('datttt', data.data);
       setDraftDetail(data.data);
     }
   };

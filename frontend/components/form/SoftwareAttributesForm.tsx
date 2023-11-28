@@ -22,13 +22,13 @@ export type FormValuesType = {
 };
 
 export type SoftwareAttributedRef = {
-  validate: () => void;
+  validate: () => boolean;
 };
 
 type SoftwareAttributesFormProps = {
   savedDraftDetail: SoftwareDraftDetailsType | undefined;
   softwareAttributesFormValues: (value: FormValuesType) => void;
-  isSoftwareAttributesFormValid: (value: boolean) => void;
+  // isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
   onEdited: (hasError: boolean) => void;
 };
@@ -36,7 +36,7 @@ type SoftwareAttributesFormProps = {
 const SoftwareAttributesForm = ({
   savedDraftDetail,
   softwareAttributesFormValues,
-  isSoftwareAttributesFormValid,
+  // isSoftwareAttributesFormValid,
   customRef,
   onEdited,
 }: SoftwareAttributesFormProps) => {
@@ -250,10 +250,12 @@ const SoftwareAttributesForm = ({
     customRef,
     () => ({
       validate: () => {
-        isSoftwareAttributesFormValid(isFormValid(formValues));
+        const isValid = isFormValid(formValues);
+
+        return isValid;
       },
     }),
-    [formValues, isSoftwareAttributesFormValid]
+    [formValues]
   );
 
   return (

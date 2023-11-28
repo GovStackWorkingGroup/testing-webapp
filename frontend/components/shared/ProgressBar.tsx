@@ -1,21 +1,23 @@
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { RiErrorWarningFill } from 'react-icons/ri';
-import { RiCheckboxCircleFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import Button from './buttons/Button';
+
+export type ProgressBarRef = {
+  goNext: () => void;
+};
 
 type ProgressBarProps = {
   steps: { label: string; step: number }[];
   children: React.ReactNode;
   currentStep: (step: number) => void;
   onNextButton: () => void;
-  isCurrentFormValid: boolean | undefined;
-  goToNextStep: boolean;
   renderFormError: boolean;
   changeStepTo?: number | undefined;
   isDraftSaved: boolean;
   onSaveButton: () => void;
+  customRef?: RefObject<ProgressBarRef>;
 };
 
 const ProgressBar = ({
@@ -23,17 +25,20 @@ const ProgressBar = ({
   children,
   currentStep,
   onNextButton,
-  isCurrentFormValid,
-  goToNextStep,
   renderFormError,
   changeStepTo,
   isDraftSaved,
   onSaveButton,
+  customRef,
 }: ProgressBarProps) => {
-  const [activeStep, setActiveStep] = useState(2);
+  const [activeStep, setActiveStep] = useState(1);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
+
+  useImperativeHandle(customRef, () => ({
+    goNext: nextStep,
+  }));
 
   useEffect(() => {
     currentStep(activeStep);
@@ -46,9 +51,7 @@ const ProgressBar = ({
   }, [changeStepTo]);
 
   const nextStep = () => {
-    if (isCurrentFormValid) {
-      setActiveStep(activeStep + 1);
-    }
+    setActiveStep(activeStep + 1);
   };
 
   const prevStep = () => {
@@ -63,12 +66,6 @@ const ProgressBar = ({
   const handleSaveButton = () => {
     onSaveButton();
   };
-
-  useEffect(() => {
-    if (goToNextStep) {
-      nextStep();
-    }
-  }, [goToNextStep]);
 
   const totalSteps = steps.length;
 

@@ -210,8 +210,6 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
 };
 
 export const getDraftDetails = async (draftUUID: string) => {
-  console.log('draftUUID', draftUUID);
-
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'get',
     headers: {
@@ -238,7 +236,7 @@ export const updateDraftDetails = async (
   data: SoftwareDraftToUpdateType
 ) => {
   const formData = new FormData();
-  console.log('data', data);
+
   if (data.deploymentCompliance?.documentation) {
     if (data.deploymentCompliance?.documentation instanceof File) {
       formData.append(
@@ -268,8 +266,6 @@ export const updateDraftDetails = async (
     }
   }
 
-  console.log('formData', formData);
-
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
     body: formData,
@@ -282,6 +278,38 @@ export const updateDraftDetails = async (
       return response.json();
     })
     .then<Success<SoftwareDraftDetailsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetailsStepOne = async (
+  draftUUID: string,
+  data: FormValuesType
+) => {
+  const formData = new FormData();
+
+  formData.append('softwareName', data.softwareName.value);
+  formData.append('logo', data.softwareLogo.value as File);
+  formData.append('website', data.softwareWebsite.value);
+  formData.append('documentation', data.softwareDocumentation.value);
+  formData.append('description', data.toolDescription.value);
+  formData.append('email', data.email.value);
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -315,24 +343,17 @@ export const fetchFileDetails = async (file: string) => {
     }
 
     const contentType = response.headers.get('content-type') || '';
-    console.log('contentType', contentType);
-    console.log('response.blob()', response);
     const blob = await response.blob();
 
     // Create a File object from the Blob
     const url = new URL(filePath);
-    console.log('1', url);
 
     const pathname = url.pathname;
-    console.log('2', pathname);
 
     const parts = pathname.split('/');
-    console.log('3', parts);
 
     const fileName = parts[parts.length - 1]; // Provide the desired file name
-    // const file = new File([blob], fileName, { type: 'image/jpeg' });
     const file = new File([blob], fileName, { type: contentType });
-    console.log('file', file);
 
     return file;
   } catch (error) {

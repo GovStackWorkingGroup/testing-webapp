@@ -14,7 +14,7 @@ export type DeploymentComplianceFormValuesType = {
 };
 
 export type DeploymentComplianceRef = {
-  validate: () => void;
+  validate: () => boolean;
 };
 
 type FieldType = 'link' | 'file';
@@ -25,7 +25,7 @@ type DeploymentComplianceFormType = {
   deploymentComplianceFormValues: (
     value: DeploymentComplianceFormValuesType
   ) => void;
-  isDeploymentComplianceFormValid: (value: boolean) => void;
+  // isDeploymentComplianceFormValid: (value: boolean) => void;
   onEdited: (hasError: boolean) => void;
 };
 
@@ -33,7 +33,6 @@ const DeploymentComplianceForm = ({
   savedDraftDetail,
   deploymentComplianceFormValues,
   customRef,
-  isDeploymentComplianceFormValid,
   onEdited,
 }: DeploymentComplianceFormType) => {
   const { format } = useTranslations();
@@ -110,8 +109,8 @@ const DeploymentComplianceForm = ({
           'uploads/'
         )
           ? fetchFile(
-              savedDraftDetail.deploymentCompliance.deploymentInstructions
-            )
+            savedDraftDetail.deploymentCompliance.deploymentInstructions
+          )
           : Promise.resolve(null);
 
       Promise.all([documentationPromise, deploymentInstructionsPromise]).then(
@@ -153,9 +152,7 @@ const DeploymentComplianceForm = ({
 
   useEffect(() => {
     const hasError = Object.values(formValues).some((value) => {
-      // if (typeof value.error === 'boolean') {
       return value.error;
-      // }
     });
 
     onEdited(hasError);
@@ -236,10 +233,12 @@ const DeploymentComplianceForm = ({
     customRef,
     () => ({
       validate: () => {
-        isDeploymentComplianceFormValid(isFormValid(formValues));
+        const isValid = isFormValid(formValues);
+
+        return isValid;
       },
     }),
-    [formValues, isDeploymentComplianceFormValid]
+    [formValues]
   );
 
   return (

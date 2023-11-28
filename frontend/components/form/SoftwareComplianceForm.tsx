@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -10,10 +10,11 @@ import {
 } from '../../service/constants';
 import BackToPageButton from '../shared/buttons/BackToPageButton';
 import useTranslations from '../../hooks/useTranslation';
-import ProgressBar from '../shared/ProgressBar';
+import ProgressBar, { ProgressBarRef } from '../shared/ProgressBar';
 import {
   saveSoftwareDraft,
   updateDraftDetails,
+  updateDraftDetailsStepOne,
 } from '../../service/serviceAPI';
 import {
   SoftwareDraftDetailsType,
@@ -49,16 +50,13 @@ const SoftwareComplianceForm = ({
     useState<DeploymentComplianceFormValuesType>(
       deploymentComplianceDefaultValues
     );
-  const [isSoftwareAttributesFormValid, setIsSoftwareAttributesFormValid] =
-    useState(false);
-  const [isDeploymentComplianceFormValid, setIsDeploymentComplianceFormValid] =
-    useState(false);
-  const [goToNextStep, setGoToNextStep] = useState(false);
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
+  const nextStepRef = useRef<ProgressBarRef>(null);
+
   const { format } = useTranslations();
   const router = useRouter();
 
@@ -68,40 +66,80 @@ const SoftwareComplianceForm = ({
 
   const handleNextButton = () => {
     if (currentProgressBarStep === 1) {
-      softwareAttributedRef.current?.validate();
+      if (softwareAttributedRef.current?.validate()) {
+        handleSaveDraft(softwareAttributesFormValues);
+      }
+
+      return;
     }
 
     if (currentProgressBarStep === 2) {
-      deploymentComplianceRef.current?.validate();
+      if (deploymentComplianceRef.current?.validate()) {
+        handleUpdateDraft().then(() => {
+          nextStepRef.current?.goNext();
+        });
+      }
+
+      return;
     }
   };
 
   const handleSaveDraftButton = () => {
-    console.log('save button klikniety');
-    deploymentComplianceRef.current?.validate();
+    if (deploymentComplianceRef.current?.validate()) {
+      handleUpdateDraft();
+    }
   };
 
   const handleSaveDraft = async (softwareData: FormValuesType) => {
-    await saveSoftwareDraft(softwareData).then((response) => {
-      if (response.status) {
-        setGoToNextStep(true);
-        toast.success(format('form.form_saved_success.message'), {
-          icon: <RiCheckboxCircleFill className="success-toast-icon" />,
-        });
-        localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+    if (savedDraftDetail) {
+      await updateDraftDetailsStepOne(
+        savedDraftDetail?.uniqueId,
+        softwareData
+      ).then((response) => {
+        if (response.status) {
+          toast.success(format('form.form_saved_success.message'), {
+            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+          });
+          localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+          console.log('response.data', response.data);
+          router.push(`${response.data.link}/2`);
+          setIsDraftSaved(true);
+          nextStepRef.current?.goNext();
 
-        router.push(`${response.data.link}/2`);
-        setIsDraftSaved(true);
+          return;
+        }
 
-        return;
-      }
+        if (!response.status) {
+          toast.error(format('form.form_saved_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+      });
 
-      if (!response.status) {
-        toast.error(format('form.form_saved_error.message'), {
-          icon: <RiErrorWarningFill className="error-toast-icon" />,
-        });
-      }
-    });
+      return;
+    }
+
+    if (!savedDraftDetail) {
+      await saveSoftwareDraft(softwareData).then((response) => {
+        if (response.status) {
+          toast.success(format('form.form_saved_success.message'), {
+            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+          });
+          localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+
+          router.push(`${response.data.link}/2`);
+          setIsDraftSaved(true);
+
+          return;
+        }
+
+        if (!response.status) {
+          toast.error(format('form.form_saved_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+      });
+    }
   };
 
   const handleUpdateDraft = async () => {
@@ -118,11 +156,10 @@ const SoftwareComplianceForm = ({
       await updateDraftDetails(savedDraftDetail?.uniqueId, updateData).then(
         (response) => {
           if (response.status) {
-            setGoToNextStep(true);
             toast.success(format('form.form_saved_success.message'), {
               icon: <RiCheckboxCircleFill className="success-toast-icon" />,
             });
-            localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+            localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
           }
 
           if (!response.status) {
@@ -135,18 +172,6 @@ const SoftwareComplianceForm = ({
     }
   };
 
-  useEffect(() => {
-    if (isSoftwareAttributesFormValid && currentProgressBarStep === 1) {
-      handleSaveDraft(softwareAttributesFormValues);
-    }
-  }, [isSoftwareAttributesFormValid, currentProgressBarStep]);
-
-  useEffect(() => {
-    if (isDeploymentComplianceFormValid && currentProgressBarStep === 2) {
-      handleUpdateDraft();
-    }
-  }, [isDeploymentComplianceFormValid, currentProgressBarStep]);
-
   return (
     <div>
       <BackToPageButton
@@ -157,21 +182,17 @@ const SoftwareComplianceForm = ({
         steps={softwareComplianceFormSteps}
         currentStep={handleStepChange}
         onNextButton={handleNextButton}
-        isCurrentFormValid={
-          isSoftwareAttributesFormValid || isDeploymentComplianceFormValid
-        }
-        goToNextStep={goToNextStep}
         renderFormError={renderFormError}
         changeStepTo={currentStep}
         isDraftSaved={isDraftSaved}
         onSaveButton={handleSaveDraftButton}
+        customRef={nextStepRef}
       >
         <>
           {currentProgressBarStep === 1 && (
             <SoftwareAttributesForm
               savedDraftDetail={savedDraftDetail}
               softwareAttributesFormValues={setSoftwareAttributesFormValues}
-              isSoftwareAttributesFormValid={setIsSoftwareAttributesFormValid}
               customRef={softwareAttributedRef}
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
@@ -180,9 +201,6 @@ const SoftwareComplianceForm = ({
             <DeploymentComplianceForm
               savedDraftDetail={savedDraftDetail}
               deploymentComplianceFormValues={setDeploymentComplianceFormValues}
-              isDeploymentComplianceFormValid={
-                setIsDeploymentComplianceFormValid
-              }
               customRef={deploymentComplianceRef}
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
