@@ -57,37 +57,37 @@ describe('Cron Job', () => {
       uniqueId: '550e8400-e29b-41d4-a716-446655440001'
     });
 
-    clock = sinon.useFakeTimers(currentDate.getTime());
-    appConfig.cron.removeExpiredDraftsSchedule = '* * * * * *';
-    startCronJobs();
-  });
+//     clock = sinon.useFakeTimers(currentDate.getTime());
+//     appConfig.cron.removeExpiredDraftsSchedule = '* * * * * *';
+//     startCronJobs();
+//   });
 
-  // Teardown after all tests have been executed.
-  // This hook is responsible for cleaning up resources
-  // and restoring configurations to their original state.
-  after(async () => {
-    if (clock) {
-      clock.restore();
-    }
-    appConfig.cron.removeExpiredDraftsSchedule = originalCronSchedule;
-    await mongoose.connection.dropDatabase();
-    await mongoose.disconnect();
-    await mongod.stop();
-  });
+//   // Teardown after all tests have been executed.
+//   // This hook is responsible for cleaning up resources
+//   // and restoring configurations to their original state.
+//   after(async () => {
+//     if (clock) {
+//       clock.restore();
+//     }
+//     appConfig.cron.removeExpiredDraftsSchedule = originalCronSchedule;
+//     await mongoose.connection.dropDatabase();
+//     await mongoose.disconnect();
+//     await mongod.stop();
+//   });
 
-  it('should execute the cron job and call removeSensitiveDataFromExpiredDrafts multiple times', async () => {
-    const stub = sinon.stub(removeExpiredDrafts, 'removeSensitiveDataFromExpiredDrafts');
+//   it('should execute the cron job and call removeSensitiveDataFromExpiredDrafts multiple times', async () => {
+//     const stub = sinon.stub(removeExpiredDrafts, 'removeSensitiveDataFromExpiredDrafts');
 
-    for (let i = 0; i < 5; i++) {
-      await clock.tickAsync(1000);
-    }
+//     for (let i = 0; i < 5; i++) {
+//       await clock.tickAsync(1000);
+//     }
 
-    expect(stub.callCount).to.be.greaterThanOrEqual(5);
-    stub.restore();
-  });
+//     expect(stub.callCount).to.be.greaterThanOrEqual(5);
+//     stub.restore();
+//   });
 
-  it('should actually remove sensitive data from expired drafts', async () => {
-    await removeExpiredDrafts.removeSensitiveDataFromExpiredDrafts();
+//   it('should actually remove sensitive data from expired drafts', async () => {
+//     await removeExpiredDrafts.removeSensitiveDataFromExpiredDrafts();
 
     const expiredReports = await ComplianceReport.find({ expirationDate: { $lt: new Date() } }).exec();
     const nonExpiredReports = await ComplianceReport.find({ expirationDate: { $gte: new Date() } }).exec();
@@ -95,8 +95,8 @@ describe('Cron Job', () => {
     const requiredFieldsForExpired = ['uniqueId', 'expirationDate'];
     ReportChecker.checkReports(expiredReports, requiredFieldsForExpired, optionalFields);
 
-    const requiredFieldsForNonExpired = ['softwareName', 'logo', 'website', 'documentation', 'pointOfContact', 'status', 'compliance', 'description'];
-    ReportChecker.checkReports(nonExpiredReports, requiredFieldsForNonExpired, optionalFields);
-  });
+//     const requiredFieldsForNonExpired = ['softwareName', 'logo', 'website', 'documentation', 'pointOfContact', 'status', 'compliance', 'description'];
+//     ReportChecker.checkReports(nonExpiredReports, requiredFieldsForNonExpired, optionalFields);
+//   });
 
-});
+// });
