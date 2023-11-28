@@ -61,7 +61,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(draftDetailAggregationPipeline( draftUuid )).exec();
+      const results = await Compliance.aggregate(draftDetailAggregationPipeline(draftUuid)).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
@@ -122,7 +122,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
-
       const draft = await Compliance.findOne({ uniqueId: draftId });
 
       if (!draft) {
@@ -141,18 +140,19 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
       const updateObject = { $set: {} };
       for (const key in updatedData) {
-          if (updatedData.hasOwnProperty(key)) {
-              if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
-                  for (const subKey in updatedData[key]) {
-                      if (updatedData[key]!.hasOwnProperty(subKey)) {
-                          updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
-                      }
-                  }
-              } else {
-                  updateObject.$set[key] = updatedData[key];
-              }
-          }
+        if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
+            if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+                for (const subKey in updatedData[key]!) {
+                    if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
+                        updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+                    }
+                }
+            } else {
+                updateObject.$set[key] = updatedData[key]!;
+            }
+        }
       }
+      
 
       await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
@@ -160,6 +160,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   },
+  
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
@@ -180,7 +181,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   },
 
   async getBBs(): Promise<any[]> {
-    try{
+    try {
       return await BBRequirements.aggregate(uniqueBBsAggregationPipeline()).exec();
     } catch (error) {
       console.error("Error fetching BBs:", error)

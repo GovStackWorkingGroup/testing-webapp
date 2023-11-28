@@ -10,6 +10,7 @@ import {
   ProductsListType,
   SoftwareDetailsType,
   SoftwareDraftDetailsType,
+  SoftwareDraftToUpdateType,
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -230,6 +231,92 @@ export const getDraftDetails = async (draftUUID: string) => {
     });
 };
 
+export const updateDraftDetails = async (
+  draftUUID: string,
+  data: SoftwareDraftToUpdateType
+) => {
+  const formData = new FormData();
+
+  if (data.deploymentCompliance?.documentation) {
+    if (data.deploymentCompliance?.documentation instanceof File) {
+      formData.append(
+        'deploymentCompliance[documentation]',
+        data.deploymentCompliance.documentation,
+        'deploymentCompliance[documentation]'
+      );
+    } else {
+      formData.append(
+        'deploymentCompliance[documentation]',
+        data.deploymentCompliance?.documentation
+      );
+    }
+  }
+
+  if (data.deploymentCompliance?.deploymentInstructions) {
+    if (data.deploymentCompliance?.deploymentInstructions instanceof File) {
+      formData.append(
+        'deploymentCompliance[deploymentInstructions]',
+        data.deploymentCompliance?.deploymentInstructions
+      );
+    } else {
+      formData.append(
+        'deploymentCompliance[deploymentInstructions]',
+        data.deploymentCompliance?.deploymentInstructions
+      );
+    }
+  }
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDraftDetailsType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetailsStepOne = async (
+  draftUUID: string,
+  data: FormValuesType
+) => {
+  const formData = new FormData();
+
+  formData.append('softwareName', data.softwareName.value);
+  formData.append('logo', data.softwareLogo.value as File);
+  formData.append('website', data.softwareWebsite.value);
+  formData.append('documentation', data.softwareDocumentation.value);
+  formData.append('description', data.toolDescription.value);
+  formData.append('email', data.email.value);
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
 // This endpoint do not connect to project BE
 export const checkIfImageUrlExists = async (url: string): Promise<boolean> => {
   try {
@@ -255,20 +342,21 @@ export const fetchFileDetails = async (file: string) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
+    const contentType = response.headers.get('content-type') || '';
     const blob = await response.blob();
 
     // Create a File object from the Blob
     const url = new URL(filePath);
+
     const pathname = url.pathname;
+
     const parts = pathname.split('/');
 
     const fileName = parts[parts.length - 1]; // Provide the desired file name
-    const file = new File([blob], fileName, { type: 'image/jpeg' });
+    const file = new File([blob], fileName, { type: contentType });
 
     return file;
   } catch (error) {
-    console.error(`get: error occurred ${error}`);
-
-    return [null, null, error];
+    return undefined;
   }
 };

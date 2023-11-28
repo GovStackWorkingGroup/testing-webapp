@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { validate } from 'email-validator';
+import { toast } from 'react-toastify';
+import { RiErrorWarningFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
@@ -20,13 +22,13 @@ export type FormValuesType = {
 };
 
 export type SoftwareAttributedRef = {
-  validate: () => void;
+  validate: () => boolean;
 };
 
 type SoftwareAttributesFormProps = {
   savedDraftDetail: SoftwareDraftDetailsType | undefined;
   softwareAttributesFormValues: (value: FormValuesType) => void;
-  isSoftwareAttributesFormValid: (value: boolean) => void;
+  // isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
   onEdited: (hasError: boolean) => void;
 };
@@ -34,7 +36,7 @@ type SoftwareAttributesFormProps = {
 const SoftwareAttributesForm = ({
   savedDraftDetail,
   softwareAttributesFormValues,
-  isSoftwareAttributesFormValid,
+  // isSoftwareAttributesFormValid,
   customRef,
   onEdited,
 }: SoftwareAttributesFormProps) => {
@@ -62,9 +64,21 @@ const SoftwareAttributesForm = ({
 
     if (savedDraftDetail) {
       fetchFileDetails(savedDraftDetail.logo).then((logoFile) => {
+        if (!logoFile) {
+          toast.error(format('form.error_loading_file.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+
         const draftDetail = {
-          softwareName: { value: savedDraftDetail.softwareName, error: false },
-          softwareLogo: { value: logoFile as File, error: false },
+          softwareName: {
+            value: savedDraftDetail.softwareName,
+            error: false,
+          },
+          softwareLogo: {
+            value: logoFile ? (logoFile as File) : undefined,
+            error: false,
+          },
           softwareWebsite: { value: savedDraftDetail.website, error: false },
           softwareDocumentation: {
             value: savedDraftDetail.documentation,
@@ -236,10 +250,12 @@ const SoftwareAttributesForm = ({
     customRef,
     () => ({
       validate: () => {
-        isSoftwareAttributesFormValid(isFormValid(formValues));
+        const isValid = isFormValid(formValues);
+
+        return isValid;
       },
     }),
-    [formValues, isSoftwareAttributesFormValid]
+    [formValues]
   );
 
   return (
@@ -269,6 +285,7 @@ const SoftwareAttributesForm = ({
               selectedFile={(selectedFile) => handleSelectedFile(selectedFile)}
               isInvalid={formValues.softwareLogo.error}
               defaultFile={formValues.softwareLogo.value}
+              uploadFileType="image"
             />
           </div>
           <div className="form-field-container">

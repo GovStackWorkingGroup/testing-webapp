@@ -200,7 +200,7 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: Date
   },
   deploymentCompliance: {
-    type: [deploymentComplianceSchema],
+    type: deploymentComplianceSchema,
     validate: {
       validator: validateRequiredIfNotDraftForForm,
       message: 'DeploymentCompliance is required when status is not DRAFT'

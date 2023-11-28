@@ -19,8 +19,15 @@ export default class EditDraftRequestHandler {
         this.repository = repository;
     }
 
-    private createFullUrl(path: string): string {
-        return `${this.req.protocol}://${this.req.get('host')}${path}`;
+    private getFrontendUrl(path: string): string {
+        let host = this.req.get('host');
+    
+        if (host?.startsWith('api.')) {
+            host = host.substring(4); // delete 'api.' from URL
+        }
+    
+        let baseUrl = `${this.req.protocol}://${host}`;
+        return `${baseUrl}${path}`;
     }
 
     async editDraftForm(draftId: string): Promise<Response> {
@@ -52,7 +59,7 @@ export default class EditDraftRequestHandler {
             //     return this.res.status(404).send({ success: false, error: "Form not found" });
             // }
 
-            const fullPath = this.createFullUrl(`/compliance/forms/${draftId}`);
+            const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form/${draftId}`);
             const response = {
                 success: true,
                 details: "Form updated successfully",
