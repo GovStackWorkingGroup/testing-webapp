@@ -1,5 +1,6 @@
 import classNames from 'classnames';
 import Link from 'next/link';
+import { RiCheckboxCircleFill } from 'react-icons/ri';
 
 type ButtonProps = {
   text: string;
@@ -7,9 +8,19 @@ type ButtonProps = {
   styles: string;
   type: 'link' | 'button';
   href?: string | URL;
+  disabled?: boolean;
+  showCheckIcon?: boolean;
 };
 
-const Button = ({ text, onClick, styles, type, href }: ButtonProps) => {
+const Button = ({
+  text,
+  onClick,
+  styles,
+  type,
+  href,
+  disabled = false,
+  showCheckIcon,
+}: ButtonProps) => {
   return (
     <>
       {type === 'link' && (
@@ -20,9 +31,11 @@ const Button = ({ text, onClick, styles, type, href }: ButtonProps) => {
       {type === 'button' && (
         <button
           onClick={onClick}
-          className={classNames('custom-button', styles)}
+          className={classNames('custom-button', styles, { disabled })}
+          disabled={disabled}
         >
-          {text}
+          {showCheckIcon && <RiCheckboxCircleFill className="check-icon" />}
+          <p>{text}</p>
         </button>
       )}
     </>

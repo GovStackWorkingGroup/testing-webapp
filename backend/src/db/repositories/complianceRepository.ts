@@ -9,6 +9,8 @@ import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softw
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
+import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
 const mongoComplianceRepository: ComplianceDbRepository = {
   async findAll() {
@@ -59,7 +61,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async getDraftDetail(draftUuid: string): Promise<FormDetailsResults> {
     try {
-      const results = await Compliance.aggregate(formDetailAggregationPipeline({ draftUuid })).exec();
+      const results = await Compliance.aggregate(draftDetailAggregationPipeline(draftUuid)).exec();
       return results[0];
     } catch (error) {
       console.error("Root cause of teching compliance form details");
@@ -114,7 +116,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
   
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
-
       const draft = await Compliance.findOne({ uniqueId: draftId });
 
       if (!draft) {
@@ -127,13 +128,33 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         throw new Error("You cannot edit a form that is not in the draft status.");
       }
 
-      await Compliance.updateOne({ uniqueId: draftId }, updatedData);
+      if (!updatedData) {
+        throw new Error("No update data provided.");
+      }
 
+      const updateObject = { $set: {} };
+      for (const key in updatedData) {
+        if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
+            if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+                for (const subKey in updatedData[key]!) {
+                    if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
+                        updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+                    }
+                }
+            } else {
+                updateObject.$set[key] = updatedData[key]!;
+            }
+        }
+      }
+      
+
+      await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
       console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
       throw error;
     }
   },
+  
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
@@ -149,6 +170,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return await BBRequirements.aggregate(bbRequirementsAggregationPipeline(bbKey)).exec();
     } catch (error) {
       console.error("Error fetching BB requirements:", error);
+      throw error;
+    }
+  },
+
+  async getBBs(): Promise<any[]> {
+    try {
+      return await BBRequirements.aggregate(uniqueBBsAggregationPipeline()).exec();
+    } catch (error) {
+      console.error("Error fetching BBs:", error)
       throw error;
     }
   }

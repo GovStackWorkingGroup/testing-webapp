@@ -21,8 +21,15 @@ export default class CreateDraftRequestHandler {
         this.status = status;
     }
 
-    private createFullUrl(path: string): string {
-        return `${this.req.protocol}://${this.req.get('host')}${path}`;
+    private getFrontendUrl(path: string): string {
+        let host = this.req.get('host');
+    
+        if (host?.startsWith('api.')) {
+            host = host.substring(4); // delete 'api.' from URL
+        }
+    
+        let baseUrl = `${this.req.protocol}://${host}`;
+        return `${baseUrl}${path}`;
     }
 
     async createOrSubmitForm(): Promise<Response> {
@@ -42,7 +49,7 @@ export default class CreateDraftRequestHandler {
 
             const response: any = { success: true, details: "Form submitted successfully" };
             if (draftUniqueId) {
-                const fullPath = this.createFullUrl(`/softwareRequirementsCompliance/form/${draftUniqueId}`);
+                const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form/${draftUniqueId}`);
                 response.details = "Draft created successfully";
                 response.link = fullPath;
                 response.uniqueId = draftUniqueId;

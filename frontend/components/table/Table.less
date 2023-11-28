@@ -6,7 +6,7 @@ table.main-table {
   border-radius: 8px;
   border-spacing: 0;
   width: 100%;
-  max-height: 100vh;
+  height: calc(max-content - 10px);
   overflow-y: auto;
 
   thead:extend(.table-header-text) {
@@ -148,9 +148,18 @@ table.inside-table {
 .tr-subheader-container {
   display: flex;
   justify-content: space-between;
-  color: @text-main;
   text-decoration: none;
   align-items: center;
+  cursor: pointer;
+}
+
+.tr-subheader-container > p {
+  color: @accents-and-btn;
+}
+
+.td-subheader {
+  display: flex;
+  gap: 10px;
 }
 
 .td-text-color-container {
