@@ -24,7 +24,7 @@ interface AppConfig {
     labels: string[];
     titleTemplate: string;
     descriptionTemplate: string;
-  }
+  },
   gitBook: {
     baseURL: string;
     apiKey: string;
