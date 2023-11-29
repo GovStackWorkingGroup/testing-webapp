@@ -16,10 +16,7 @@ import {
   updateDraftDetails,
   updateDraftDetailsStepOne,
 } from '../../service/serviceAPI';
-import {
-  SoftwareDraftDetailsType,
-  SoftwareDraftToUpdateType,
-} from '../../service/types';
+import { SoftwareDraftToUpdateType } from '../../service/types';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
@@ -34,12 +31,10 @@ import DeploymentComplianceForm, {
 } from './DeploymentComplianceForm';
 
 type SoftwareComplianceFormProps = {
-  savedDraftDetail?: SoftwareDraftDetailsType | undefined;
   currentStep?: number | undefined;
 };
 
 const SoftwareComplianceForm = ({
-  savedDraftDetail,
   currentStep,
 }: SoftwareComplianceFormProps) => {
   const [currentProgressBarStep, setCurrentProgressBarStep] =
@@ -59,6 +54,7 @@ const SoftwareComplianceForm = ({
 
   const { format } = useTranslations();
   const router = useRouter();
+  const { draftUUID } = router.query;
 
   const handleStepChange = (currentStep: number) => {
     setCurrentProgressBarStep(currentStep);
@@ -91,35 +87,33 @@ const SoftwareComplianceForm = ({
   };
 
   const handleSaveDraft = async (softwareData: FormValuesType) => {
-    if (savedDraftDetail) {
-      await updateDraftDetailsStepOne(
-        savedDraftDetail?.uniqueId,
-        softwareData
-      ).then((response) => {
-        if (response.status) {
-          toast.success(format('form.form_saved_success.message'), {
-            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
-          });
-          localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
-          console.log('response.data', response.data);
-          router.push(`${response.data.link}/2`);
-          setIsDraftSaved(true);
-          nextStepRef.current?.goNext();
+    if (draftUUID) {
+      await updateDraftDetailsStepOne(draftUUID as string, softwareData).then(
+        (response) => {
+          if (response.status) {
+            toast.success(format('form.form_saved_success.message'), {
+              icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+            });
+            localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
 
-          return;
-        }
+            setIsDraftSaved(true);
+            nextStepRef.current?.goNext();
 
-        if (!response.status) {
-          toast.error(format('form.form_saved_error.message'), {
-            icon: <RiErrorWarningFill className="error-toast-icon" />,
-          });
+            return;
+          }
+
+          if (!response.status) {
+            toast.error(format('form.form_saved_error.message'), {
+              icon: <RiErrorWarningFill className="error-toast-icon" />,
+            });
+          }
         }
-      });
+      );
 
       return;
     }
 
-    if (!savedDraftDetail) {
+    if (!draftUUID) {
       await saveSoftwareDraft(softwareData).then((response) => {
         if (response.status) {
           toast.success(format('form.form_saved_success.message'), {
@@ -127,8 +121,12 @@ const SoftwareComplianceForm = ({
           });
           localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
 
-          router.push(`${response.data.link}/2`);
+          // router.replace only here because draftUUID is undefined
+          router.replace({
+            query: { draftUUID: response.data.uniqueId, formStep: 2 },
+          });
           setIsDraftSaved(true);
+          nextStepRef.current?.goNext();
 
           return;
         }
@@ -152,8 +150,8 @@ const SoftwareComplianceForm = ({
       };
     }
 
-    if (savedDraftDetail?.uniqueId) {
-      await updateDraftDetails(savedDraftDetail?.uniqueId, updateData).then(
+    if (draftUUID) {
+      await updateDraftDetails(draftUUID as string, updateData).then(
         (response) => {
           if (response.status) {
             toast.success(format('form.form_saved_success.message'), {
@@ -174,10 +172,12 @@ const SoftwareComplianceForm = ({
 
   return (
     <div>
-      <BackToPageButton
-        text={format('app.back_to_reports_list.label')}
-        href={COMPLIANCE_TESTING_RESULT_PAGE}
-      />
+      <div className="back-to-btn-container">
+        <BackToPageButton
+          text={format('app.back_to_reports_list.label')}
+          href={COMPLIANCE_TESTING_RESULT_PAGE}
+        />
+      </div>
       <ProgressBar
         steps={softwareComplianceFormSteps}
         currentStep={handleStepChange}
@@ -191,7 +191,6 @@ const SoftwareComplianceForm = ({
         <>
           {currentProgressBarStep === 1 && (
             <SoftwareAttributesForm
-              savedDraftDetail={savedDraftDetail}
               softwareAttributesFormValues={setSoftwareAttributesFormValues}
               customRef={softwareAttributedRef}
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
@@ -199,7 +198,6 @@ const SoftwareComplianceForm = ({
           )}
           {currentProgressBarStep === 2 && (
             <DeploymentComplianceForm
-              savedDraftDetail={savedDraftDetail}
               deploymentComplianceFormValues={setDeploymentComplianceFormValues}
               customRef={deploymentComplianceRef}
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}

@@ -101,6 +101,7 @@ const DragDrop = ({
       const selectedFile = e.target.files[0];
       if (isFileFormatAllowed(selectedFile.type)) {
         setFile(selectedFile);
+        setTypeFileError(false);
       } else {
         setTypeFileError(true);
       }
@@ -143,7 +144,6 @@ const DragDrop = ({
           type="file"
           onChange={(e) => handleFileChange(e)}
           style={{ visibility: 'hidden' }}
-          name={name || ''}
         ></input>
       </div>
       {isTypeFileError && (
