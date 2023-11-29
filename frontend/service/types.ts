@@ -172,4 +172,5 @@ export type POSTSoftwareAttributesType = {
   success: boolean;
   details: string;
   link: string;
+  uniqueId: string;
 };

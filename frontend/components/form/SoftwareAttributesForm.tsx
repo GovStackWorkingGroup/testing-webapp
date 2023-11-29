@@ -3,12 +3,13 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { validate } from 'email-validator';
 import { toast } from 'react-toastify';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
 import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
-import { SoftwareDraftDetailsType } from '../../service/types';
 import { fetchFileDetails } from '../../service/serviceAPI';
+import useGetDraftData from '../../hooks/useGetDraftDetail';
 import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
@@ -26,17 +27,13 @@ export type SoftwareAttributedRef = {
 };
 
 type SoftwareAttributesFormProps = {
-  savedDraftDetail: SoftwareDraftDetailsType | undefined;
   softwareAttributesFormValues: (value: FormValuesType) => void;
-  // isSoftwareAttributesFormValid: (value: boolean) => void;
   customRef: RefObject<SoftwareAttributedRef>;
   onEdited: (hasError: boolean) => void;
 };
 
 const SoftwareAttributesForm = ({
-  savedDraftDetail,
   softwareAttributesFormValues,
-  // isSoftwareAttributesFormValid,
   customRef,
   onEdited,
 }: SoftwareAttributesFormProps) => {
@@ -47,6 +44,12 @@ const SoftwareAttributesForm = ({
     useState<FormValuesType | null>(null);
 
   const { format } = useTranslations();
+  const router = useRouter();
+  const { draftUUID } = router.query;
+
+  const { draftData } = useGetDraftData({
+    draftUUID: (draftUUID as string) || undefined,
+  });
 
   useEffect(() => {
     const savedSoftwareAttributesInStorage = JSON.parse(
@@ -57,13 +60,21 @@ const SoftwareAttributesForm = ({
 
   useEffect(() => {
     if (savedInLocalStorage) {
-      setFormValues(savedInLocalStorage);
+      const savedFormValues = savedInLocalStorage;
+      if (
+        savedFormValues.softwareLogo.value &&
+        Object.keys(savedFormValues.softwareLogo.value as object).length === 0
+      ) {
+        savedFormValues.softwareLogo.value = undefined;
+      }
+
+      setFormValues(savedFormValues);
 
       return;
     }
 
-    if (savedDraftDetail) {
-      fetchFileDetails(savedDraftDetail.logo).then((logoFile) => {
+    if (draftData) {
+      fetchFileDetails(draftData.logo).then((logoFile) => {
         if (!logoFile) {
           toast.error(format('form.error_loading_file.message'), {
             icon: <RiErrorWarningFill className="error-toast-icon" />,
@@ -72,28 +83,28 @@ const SoftwareAttributesForm = ({
 
         const draftDetail = {
           softwareName: {
-            value: savedDraftDetail.softwareName,
+            value: draftData.softwareName,
             error: false,
           },
           softwareLogo: {
             value: logoFile ? (logoFile as File) : undefined,
             error: false,
           },
-          softwareWebsite: { value: savedDraftDetail.website, error: false },
+          softwareWebsite: { value: draftData.website, error: false },
           softwareDocumentation: {
-            value: savedDraftDetail.documentation,
+            value: draftData.documentation,
             error: false,
           },
           toolDescription: {
-            value: savedDraftDetail.description,
+            value: draftData.description,
             error: false,
           },
           email: {
-            value: savedDraftDetail.email,
+            value: draftData.email,
             error: { error: false, message: '' },
           },
           confirmEmail: {
-            value: savedDraftDetail.email,
+            value: draftData.email,
             error: { error: false, message: '' },
           },
         };
@@ -103,13 +114,25 @@ const SoftwareAttributesForm = ({
       return;
     }
 
-    if (!savedInLocalStorage && !savedDraftDetail) {
+    if (!savedInLocalStorage && !draftData) {
       setFormValues(softwareAttributesDefaultValues);
     }
-  }, [savedDraftDetail, savedInLocalStorage]);
+  }, [draftData, savedInLocalStorage]);
 
   useEffect(() => {
     softwareAttributesFormValues(formValues);
+  }, [formValues]);
+
+  useEffect(() => {
+    const hasError = Object.values(formValues).some((value) => {
+      if (typeof value.error === 'boolean') {
+        return value.error;
+      }
+
+      return value.error.error;
+    });
+
+    onEdited(hasError);
   }, [formValues]);
 
   const setFieldValues = (
@@ -151,18 +174,6 @@ const SoftwareAttributesForm = ({
       JSON.stringify(formValues)
     );
   };
-
-  useEffect(() => {
-    const hasError = Object.values(formValues).some((value) => {
-      if (typeof value.error === 'boolean') {
-        return value.error;
-      }
-
-      return value.error.error;
-    });
-
-    onEdited(hasError);
-  }, [formValues]);
 
   const handleSelectedFile = (selectedFile: File | undefined) => {
     setFormValues((prevFormValues) => ({

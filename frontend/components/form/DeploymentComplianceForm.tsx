@@ -1,11 +1,12 @@
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
+import { useRouter } from 'next/router';
 import useTranslations from '../../hooks/useTranslation';
 import DragDrop from '../shared/DragAndDrop';
 import Checkbox from '../shared/inputs/Checkbox';
 import Input from '../shared/inputs/Input';
-import { SoftwareDraftDetailsType } from '../../service/types';
 import { DEPLOYMENT_COMPLIANCE_STORAGE_NAME } from '../../service/constants';
 import { fetchFileDetails } from '../../service/serviceAPI';
+import useGetDraftData from '../../hooks/useGetDraftDetail';
 import { deploymentComplianceDefaultValues } from './helpers';
 
 export type DeploymentComplianceFormValuesType = {
@@ -21,16 +22,13 @@ type FieldType = 'link' | 'file';
 
 type DeploymentComplianceFormType = {
   customRef: RefObject<DeploymentComplianceRef>;
-  savedDraftDetail: SoftwareDraftDetailsType | undefined;
+  onEdited: (hasError: boolean) => void;
   deploymentComplianceFormValues: (
     value: DeploymentComplianceFormValuesType
   ) => void;
-  // isDeploymentComplianceFormValid: (value: boolean) => void;
-  onEdited: (hasError: boolean) => void;
 };
 
 const DeploymentComplianceForm = ({
-  savedDraftDetail,
   deploymentComplianceFormValues,
   customRef,
   onEdited,
@@ -43,11 +41,18 @@ const DeploymentComplianceForm = ({
     useState<FieldType>('link');
   const [formValues, setFormValues] =
     useState<DeploymentComplianceFormValuesType>({
-      documentation: { value: '', error: false },
-      deploymentInstructions: { value: '', error: false },
+      documentation: { value: undefined, error: false },
+      deploymentInstructions: { value: undefined, error: false },
     });
   const [savedInLocalStorage, setSavedInLocalStorage] =
     useState<DeploymentComplianceFormValuesType | null>(null);
+
+  const router = useRouter();
+  const { draftUUID } = router.query;
+
+  const { draftData } = useGetDraftData({
+    draftUUID: (draftUUID as string) || undefined,
+  });
 
   const checkboxOptions: { label: string; value: FieldType }[] = [
     { label: format('form.link.label'), value: 'link' },
@@ -70,17 +75,19 @@ const DeploymentComplianceForm = ({
     if (savedInLocalStorage) {
       const savedFormValues = savedInLocalStorage;
       if (
+        savedInLocalStorage.deploymentInstructions.value &&
         Object.keys(savedInLocalStorage.deploymentInstructions.value as object)
           .length === 0
       ) {
-        savedFormValues.deploymentInstructions.value = '';
+        savedFormValues.deploymentInstructions.value = undefined;
       }
 
       if (
+        savedInLocalStorage.documentation.value &&
         Object.keys(savedInLocalStorage.documentation.value as object)
           .length === 0
       ) {
-        savedFormValues.documentation.value = '';
+        savedFormValues.documentation.value = undefined;
       }
 
       setFormValues(savedFormValues);
@@ -88,29 +95,24 @@ const DeploymentComplianceForm = ({
       return;
     }
 
-    if (savedDraftDetail) {
+    if (draftData) {
       const fetchFile = async (path: string) => {
         return await fetchFileDetails(path);
       };
 
       const documentationPromise =
-        typeof savedDraftDetail.deploymentCompliance.documentation ===
-          'string' &&
-        savedDraftDetail.deploymentCompliance.documentation.startsWith(
-          'uploads/'
-        )
-          ? fetchFile(savedDraftDetail.deploymentCompliance.documentation)
+        typeof draftData.deploymentCompliance.documentation === 'string' &&
+        draftData.deploymentCompliance.documentation.startsWith('uploads/')
+          ? fetchFile(draftData.deploymentCompliance.documentation)
           : Promise.resolve(null);
 
       const deploymentInstructionsPromise =
-        typeof savedDraftDetail.deploymentCompliance.deploymentInstructions ===
+        typeof draftData.deploymentCompliance.deploymentInstructions ===
           'string' &&
-        savedDraftDetail.deploymentCompliance.deploymentInstructions.startsWith(
+        draftData.deploymentCompliance.deploymentInstructions.startsWith(
           'uploads/'
         )
-          ? fetchFile(
-            savedDraftDetail.deploymentCompliance.deploymentInstructions
-          )
+          ? fetchFile(draftData.deploymentCompliance.deploymentInstructions)
           : Promise.resolve(null);
 
       Promise.all([documentationPromise, deploymentInstructionsPromise]).then(
@@ -126,14 +128,13 @@ const DeploymentComplianceForm = ({
           const draftDetail = {
             documentation: {
               value:
-                documentation ??
-                savedDraftDetail.deploymentCompliance.documentation,
+                documentation ?? draftData.deploymentCompliance.documentation,
               error: false,
             },
             deploymentInstructions: {
               value:
                 deploymentInstructions ??
-                savedDraftDetail.deploymentCompliance.deploymentInstructions,
+                draftData.deploymentCompliance.deploymentInstructions,
               error: false,
             },
           };
@@ -145,10 +146,10 @@ const DeploymentComplianceForm = ({
       return;
     }
 
-    if (!savedInLocalStorage && !savedDraftDetail) {
+    if (!savedInLocalStorage && !draftData) {
       setFormValues(deploymentComplianceDefaultValues);
     }
-  }, [savedDraftDetail, savedInLocalStorage]);
+  }, [draftData, savedInLocalStorage]);
 
   useEffect(() => {
     const hasError = Object.values(formValues).some((value) => {
@@ -158,55 +159,66 @@ const DeploymentComplianceForm = ({
     onEdited(hasError);
   }, [formValues]);
 
-  const handleSaveInLocalStorage = () => {
+  const handleSaveInLocalStorage = (
+    values: DeploymentComplianceFormValuesType
+  ) => {
     localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
     localStorage.setItem(
       DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify(formValues)
+      JSON.stringify(values)
     );
   };
 
   const handleCheckboxDocumentationChange = (value: FieldType) => {
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
-      documentation: { value: '', error: false },
-    }));
+    const updatedValues = {
+      ...formValues,
+      documentation: { value: undefined, error: false },
+    };
+    setFormValues(updatedValues);
     setSelectedDocumentationType(value);
+    handleSaveInLocalStorage(updatedValues);
   };
 
   const handleCheckboxContainerChange = (value: FieldType) => {
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
-      deploymentInstructions: { value: '', error: false },
-    }));
+    const updatedValues = {
+      ...formValues,
+      deploymentInstructions: { value: undefined, error: false },
+    };
+    setFormValues(updatedValues);
     setSelectedContainerType(value);
+    handleSaveInLocalStorage(updatedValues);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
+    const updatedValues = {
+      ...formValues,
       [name]: {
-        value,
+        value: value.length === 0 ? '' : value,
         error: false,
       },
-    }));
-    handleSaveInLocalStorage();
+    };
+
+    setFormValues(updatedValues);
+    handleSaveInLocalStorage(updatedValues);
   };
 
   const handleDocumentationSelectedFile = (selectedFile: File | undefined) => {
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
+    const updatedValues = {
+      ...formValues,
       documentation: { value: selectedFile, error: false },
-    }));
+    };
+
+    setFormValues(updatedValues);
   };
 
   const handleContainerSelectedFile = (selectedFile: File | undefined) => {
-    setFormValues((prevFormValues) => ({
-      ...prevFormValues,
+    const updatedValues = {
+      ...formValues,
       deploymentInstructions: { value: selectedFile, error: false },
-    }));
+    };
+
+    setFormValues(updatedValues);
   };
 
   const isFormValid = (values: DeploymentComplianceFormValuesType): boolean => {
@@ -283,7 +295,11 @@ const DeploymentComplianceForm = ({
                 }
                 isInvalid={formValues.documentation.error}
                 name="documentation"
-                defaultFile={formValues.deploymentInstructions.value as File}
+                defaultFile={
+                  formValues.documentation.value instanceof File
+                    ? formValues.documentation.value
+                    : undefined
+                }
                 uploadFileType="document"
               />
             </div>
@@ -325,7 +341,11 @@ const DeploymentComplianceForm = ({
                 }}
                 isInvalid={formValues.deploymentInstructions.error}
                 name="deploymentInstructions"
-                defaultFile={formValues.deploymentInstructions.value as File}
+                defaultFile={
+                  formValues.deploymentInstructions.value instanceof File
+                    ? formValues.deploymentInstructions.value
+                    : undefined
+                }
                 uploadFileType="document"
               />
             </div>
