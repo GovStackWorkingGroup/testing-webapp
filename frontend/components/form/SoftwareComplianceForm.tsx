@@ -35,6 +35,7 @@ import DeploymentComplianceForm, {
   DeploymentComplianceFormValuesType,
   DeploymentComplianceRef,
 } from './DeploymentComplianceForm';
+import EvaluationSummary from './EvaluationSummary';
 import IRSForm from './IRSForm';
 
 type SoftwareComplianceFormProps = {
@@ -224,6 +225,10 @@ const SoftwareComplianceForm = ({
     }
   };
 
+  const handleSubmitForm = () => {
+    // submit form
+  };
+
   return (
     <div>
       <div className="back-to-btn-container">
@@ -240,6 +245,7 @@ const SoftwareComplianceForm = ({
         changeStepTo={currentStep}
         isDraftSaved={isDraftSaved}
         onSaveButton={handleSaveDraftButton}
+        onSubmitButton={handleSubmitForm}
         customRef={nextStepRef}
       >
         <>
@@ -260,7 +266,7 @@ const SoftwareComplianceForm = ({
           {currentProgressBarStep === 3 && (
             <IRSForm setUpdatedBBs={setUpdatedBBs} IRSCFormRef={IRSCFormRef} />
           )}
-          {currentProgressBarStep === 4 && <div></div>}
+          {currentProgressBarStep === 4 && <EvaluationSummary />}
         </>
       </ProgressBar>
     </div>

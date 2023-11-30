@@ -3,11 +3,15 @@
 exports[`Unit tests for SoftwareDetails component: should render the component and match snapshot 1`] = `
 <div>
   <div
-    class="software-attributes-section"
+    class="software-attributes-section "
   >
-    <p>
-      Test software
-    </p>
+    <div
+      class="software-attributes-title-with-link"
+    >
+      <p>
+        Test software
+      </p>
+    </div>
     <div>
       Test
     </div>
@@ -18,7 +22,7 @@ exports[`Unit tests for SoftwareDetails component: should render the component a
 exports[`Unit tests for SoftwareDetails component: should render the component and match snapshot when complianceSection is true 1`] = `
 <div>
   <div
-    class="software-attributes-section"
+    class="software-attributes-section "
   >
     <p>
       Test software

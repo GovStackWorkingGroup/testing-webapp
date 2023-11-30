@@ -1,8 +1,6 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import {
-  COMPLIANCE_TESTING_RESULT_PAGE,
-} from '../../../service/constants';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../service/constants';
 import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
 import { getSoftwareDetails } from '../../../service/serviceAPI';
 import SoftwareDetails from '../../../components/compliance/SoftwareDetails';
@@ -49,7 +47,10 @@ const SoftwareComplianceDetailsPage = () => {
         href={COMPLIANCE_TESTING_RESULT_PAGE}
       />
       <SoftwareDetails title={format('app.software_attributes.label')}>
-        <SoftwareAttributes softwareDetails={softwareDetail} />
+        <SoftwareAttributes
+          softwareDetails={softwareDetail}
+          showContactDetails={true}
+        />
       </SoftwareDetails>
       {softwareDetail[0].compliance.length
         ? softwareDetail[0].compliance.map((item, indexKey) => (

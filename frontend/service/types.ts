@@ -97,6 +97,14 @@ export type SoftwareDetailsType = [
   }
 ];
 
+export type BBDetailsType = {
+  [key: string]: {
+    requirementSpecificationCompliance: object;
+    interfaceCompliance: object;
+    deploymentCompliance: number;
+  };
+};
+
 export type SoftwareDraftDetailsType = {
   deploymentCompliance: DeploymentCompliance;
   description: string;

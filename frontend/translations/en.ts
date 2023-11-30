@@ -20,6 +20,7 @@ export const en = {
     'The Software Requirements Compliance form allows software providers to self-assess their products against the functional requirements that have been developed by GovStack. These assessments help GovStack users validate that a particular software platform is able to meet the functional requirements for one or more Building Blocks, as well as whether it adheres to the cross-functional requirements specified for all GovStack implementations.',
   'app.definition_self_assessment_part_2.description':
     'Click on the ‘Check Compliance’ to start the assessment process for a particular product. For detailed instructions on filling out the self-assessment forms, please refer to [this document](https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance).',
+  'app.edit.label': 'edit',
   'app.email.label': 'Email',
   'app.email_confirm.label': 'Confirm email',
   'app.error_fetching_data.message':
@@ -75,8 +76,11 @@ export const en = {
   'form.deployment_instruction.message':
     'Please provide links to documentation on how to install and deploy this product as well as links to Docker files or other files that show that the product can be run in a container system (usually Docker and/or Kubernetes). You can also directly upload files instead of providing links.',
   'form.error_loading_file.message': 'Error loading file. Please try again.',
+  'form.evaluation_summary_title.label':
+    'Make sure all data entered is correct',
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.filled_compliance_form.label': 'Filled Compliance Forms',
   'form.filling_required.label': 'Filling this form is required.',
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
@@ -124,6 +128,7 @@ export const en = {
 
   'progress_bar.next.label': 'Next',
   'progress_bar.previous_step.label': 'Previous Step',
+  'progress_bar.submit_form.label': 'Submit Form',
   'progress_bar.save_draft.label': 'Save draft',
 
   'result_page.back_to_product_list': '< Back to Products List',
