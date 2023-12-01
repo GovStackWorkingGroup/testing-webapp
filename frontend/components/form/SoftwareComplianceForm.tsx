@@ -204,7 +204,7 @@ const SoftwareComplianceForm = ({
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 3 && <IRSCompliance />}}
+          {currentProgressBarStep === 3 && <IRSCompliance />}
           {currentProgressBarStep === 4 && <div></div>}
         </>
       </ProgressBar>
