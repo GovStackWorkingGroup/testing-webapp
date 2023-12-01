@@ -8,6 +8,7 @@ import { default500Error } from './controllerUtils';
 import { ComplianceDbRepository, StatusEnum } from 'myTypes';
 import GetAllBBRequirementsRequestHandler from '../useCases/compliance/handleGetAllBBRequirements';
 import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBRequirements';
+import SubmitFormRequestHandler from '../useCases/compliance/handleSubmitForm';
 import GetBBsRequestHandler from '../useCases/compliance/handleGetBBs';
 import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftDetail';
 
@@ -53,6 +54,12 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   };
 
+  const submitForm = async (req: Request, res: Response): Promise<void> => {
+    new SubmitFormRequestHandler(req, res, repository)
+      .submitForm()
+      .catch((err:any) => default500Error(res, err));
+  };
+
   const editDraftForm = async (req: Request, res: Response): Promise<void> => {
     const draftId = req.params.draftId;
 
@@ -86,6 +93,7 @@ const complianceController = (
     getFormDetail,
     getDraftDetail,
     createOrSubmitForm,
+    submitForm,
     editDraftForm,
     getAllBBRequirements,
     getBBRequirements,

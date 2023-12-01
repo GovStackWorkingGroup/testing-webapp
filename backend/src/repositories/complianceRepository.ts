@@ -1,4 +1,4 @@
-import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport } from "myTypes";
+import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport, draftDataForRollback } from "myTypes";
 
 const complianceRepository = (repository: ComplianceDbRepository) => {
   const findAll = async () => {
@@ -50,6 +50,24 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const submitForm = async (uniqueId: string) => {
+    try {
+      return await repository.submitForm(uniqueId);
+    } catch (error) {
+      console.error('There was an error while submitting the form');
+      throw error;
+    }
+  };
+
+  const rollbackFormStatus = async (originalData: draftDataForRollback) => {
+    try {
+      return await repository.rollbackFormStatus(originalData);
+    } catch (error) {
+      console.error('There was an error while submitting the form');
+      throw error;
+    }
+  };
+  
   const editDraftForm = async (draftId: string, updateData: Partial<ComplianceReport>) => {
     try {
       return await repository.editDraftForm(draftId, updateData);
@@ -93,6 +111,8 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     getFormDetail,
     getDraftDetail,
     createOrSubmitForm,
+    submitForm,
+    rollbackFormStatus,
     getBBs,
     editDraftForm,
     getAllBBRequirements,
