@@ -24,7 +24,7 @@ declare module 'myTypes' {
     status: number,
     uniqueId: string | undefined,
     expirationDate: Date | undefined,
-    _id: mongoose.Types.ObjectId
+    id: mongoose.Types.ObjectId
   }
 
   export interface ComplianceDetail {

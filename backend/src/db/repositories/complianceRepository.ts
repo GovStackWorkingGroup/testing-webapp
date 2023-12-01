@@ -113,7 +113,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           status: form.status,
           uniqueId: form.uniqueId,
           expirationDate: form.expirationDate,
-          _id: form._id
+          id: form._id
         };
 
         form.status = StatusEnum.IN_REVIEW;
@@ -129,7 +129,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async rollbackFormStatus(originalData: draftDataForRollback): Promise<{ success: boolean, errors: string[] }> {
     const errors: string[] = [];
-    const _id = originalData._id;
+    const _id = originalData.id;
     const form = await Compliance.findOne({ _id });
     if (!form) {
       errors.push('Form not found');

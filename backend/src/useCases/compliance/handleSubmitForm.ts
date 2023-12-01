@@ -23,7 +23,8 @@ export default class SubmitFormRequestHandler {
     }
 
     async submitForm(): Promise<Response> {
-        let originalData;
+        let draftDataForRollback;
+        console.log("o1", draftDataForRollback);
         try {
             const uniqueId = this.req.body.uniqueId;
             if (!uniqueId) {
@@ -31,10 +32,10 @@ export default class SubmitFormRequestHandler {
             }
 
             const { success, errors, originalData } = await this.repository.submitForm(uniqueId);
+            draftDataForRollback = originalData;
             if (!success) {
                 return this.res.status(400).send({ success: false, errors });
             }
-
             const jiraTicketResult = await this.createJiraTicket();
             if (jiraTicketResult instanceof Error) {
                 throw jiraTicketResult;
@@ -47,7 +48,7 @@ export default class SubmitFormRequestHandler {
             });
         } catch (error: any) {
             if (error instanceof JiraTicketCreationError) {
-                await this.repository.rollbackFormStatus(originalData);
+                await this.repository.rollbackFormStatus(draftDataForRollback);
             }
 
             if (error instanceof mongoose.Error.ValidationError) {
