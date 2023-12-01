@@ -95,29 +95,27 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async submitForm(uniqueId: string): Promise<boolean> {
-    try {
-      const form = await Compliance.findOne({ uniqueId });
-      if (!form) {
-        throw new Error('Form not found');
-      }
-
+  async submitForm(uniqueId: string): Promise<{ success: boolean; errors: string[] }> {
+    const errors: string[] = [];
+  
+    const form = await Compliance.findOne({ uniqueId });
+    if (!form) {
+      errors.push('Form not found');
+    } else {
       if (form.status !== StatusEnum.DRAFT) {
-        throw new Error('Form is not in DRAFT status and cannot be submitted');
+        errors.push('Form is not in DRAFT status and cannot be submitted');
       }
-
-      form.status = StatusEnum.IN_REVIEW;
-      form.uniqueId = undefined;
-      form.expirationDate = undefined;
-
-      await form.save();
-
-      return true;
-
-    } catch (error: any) {
-      console.error("Error submitting form:", error);
-      throw new Error('Error submitting form');
+  
+      if (errors.length === 0) {
+        form.status = StatusEnum.IN_REVIEW;
+        form.uniqueId = undefined;
+        form.expirationDate = undefined;
+  
+        await form.save();
+      }
     }
+  
+    return { success: errors.length === 0, errors };
   },
   
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {

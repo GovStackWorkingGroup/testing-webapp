@@ -22,9 +22,9 @@ export default class SubmitFormRequestHandler {
                 return this.res.status(400).send({ success: false, error: "Unique ID is required" });
             }
 
-            const updateResult = await this.repository.submitForm(uniqueId);
-            if (!updateResult) {
-                return this.res.status(404).send({ success: false, error: "Form not found" });
+            const { success, errors } = await this.repository.submitForm(uniqueId);
+            if (!success) {
+                return this.res.status(400).send({ success: false, errors });
             }
 
             const jiraTicketLink = await this.createJiraTicket();
@@ -32,7 +32,7 @@ export default class SubmitFormRequestHandler {
             return this.res.status(200).send({
                 success: true,
                 details: "Form status updated to 'In Review'",
-                link: "placeholder for Jira ticket link"
+                link: jiraTicketLink
             });
         } catch (error: any) {
             if (error instanceof mongoose.Error.ValidationError) {
@@ -46,9 +46,9 @@ export default class SubmitFormRequestHandler {
 
     async createJiraTicket(): Promise<string> {
 
-        
+
         const jiraConfig = appConfig.jira;
-    
+
         const descriptionText = jiraConfig.descriptionTemplate.replace('{{submitter}}', 'Submitter Name');
 
         const descriptionADF = {
@@ -80,7 +80,7 @@ export default class SubmitFormRequestHandler {
                 assignee: {
                     id: jiraConfig.assigneeId,
                 }
-                        },
+            },
         };
         console.log(jiraConfig.apiEndpoint);
         try {
@@ -90,7 +90,7 @@ export default class SubmitFormRequestHandler {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             return response.data.self; // Ensure this field exists in the response
         } catch (error: any) {
             console.error('Failed to create Jira ticket:', error.response ? error.response.data : error);

@@ -151,7 +151,7 @@ declare module 'myTypes' {
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
-    submitForm: (uniqueId: string) => Promise<boolean>;
+    submitForm: (uniqueId: string) => Promise<{ success: boolean; errors: string[] }>;
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
