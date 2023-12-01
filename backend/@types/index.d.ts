@@ -20,6 +20,13 @@ declare module 'myTypes' {
     OPTIONAL = 2
   }
 
+  export interface draftDataForRollback {
+    status: number,
+    uniqueId: string | undefined,
+    expirationDate: Date | undefined,
+    _id: mongoose.Types.ObjectId
+  }
+
   export interface ComplianceDetail {
     bbSpecification: string;
     bbVersion: string;
@@ -151,7 +158,8 @@ declare module 'myTypes' {
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
-    submitForm: (uniqueId: string) => Promise<{ success: boolean; errors: string[] }>;
+    submitForm: (uniqueId: string) => Promise<{ success: boolean; errors: string[], originalData: draftDataForRollback | undefined}>;
+    rollbackFormStatus: (orignalData: draftDataForRollback) => Promise<{success: boolean, errors: string[]}>;
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;

@@ -1,4 +1,4 @@
-import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance';
 import mongoose from 'mongoose';
@@ -95,9 +95,10 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async submitForm(uniqueId: string): Promise<{ success: boolean; errors: string[] }> {
+  async submitForm(uniqueId: string): Promise<{ success: boolean; errors: string[]; originalData: draftDataForRollback | undefined }> {
     const errors: string[] = [];
-  
+    let originalData: draftDataForRollback | undefined;
+
     const form = await Compliance.findOne({ uniqueId });
     if (!form) {
       errors.push('Form not found');
@@ -105,19 +106,42 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       if (form.status !== StatusEnum.DRAFT) {
         errors.push('Form is not in DRAFT status and cannot be submitted');
       }
-  
+
       if (errors.length === 0) {
+        // save oryginal data for rollback
+        originalData = {
+          status: form.status,
+          uniqueId: form.uniqueId,
+          expirationDate: form.expirationDate,
+          _id: form._id
+        };
+
         form.status = StatusEnum.IN_REVIEW;
         form.uniqueId = undefined;
         form.expirationDate = undefined;
-  
+
         await form.save();
       }
     }
-  
-    return { success: errors.length === 0, errors };
+
+    return { success: errors.length === 0, errors, originalData };
   },
-  
+
+  async rollbackFormStatus(originalData: draftDataForRollback): Promise<{ success: boolean, errors: string[] }> {
+    const errors: string[] = [];
+    const _id = originalData._id;
+    const form = await Compliance.findOne({ _id });
+    if (!form) {
+      errors.push('Form not found');
+    } else {
+      form.status = StatusEnum.DRAFT;
+      form.uniqueId = originalData.uniqueId;
+      form.expirationDate = originalData.expirationDate;
+      await form.save();
+    }
+    return { success: errors.length === 0, errors }
+  },
+
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
       const draft = await Compliance.findOne({ uniqueId: draftId });
@@ -139,18 +163,18 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       const updateObject = { $set: {} };
       for (const key in updatedData) {
         if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
-            if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
-                for (const subKey in updatedData[key]!) {
-                    if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
-                        updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
-                    }
-                }
-            } else {
-                updateObject.$set[key] = updatedData[key]!;
+          if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+            for (const subKey in updatedData[key]!) {
+              if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
+                updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+              }
             }
+          } else {
+            updateObject.$set[key] = updatedData[key]!;
+          }
         }
       }
-      
+
 
       await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
@@ -158,7 +182,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   },
-  
+
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {

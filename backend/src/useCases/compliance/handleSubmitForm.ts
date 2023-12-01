@@ -4,6 +4,13 @@ import { ComplianceDbRepository } from "myTypes";
 import { appConfig } from '../../config';
 import axios from 'axios';
 
+class JiraTicketCreationError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'JiraTicketCreationError';
+    }
+}
+
 export default class SubmitFormRequestHandler {
     private repository: ComplianceDbRepository;
 
@@ -16,25 +23,33 @@ export default class SubmitFormRequestHandler {
     }
 
     async submitForm(): Promise<Response> {
+        let originalData;
         try {
             const uniqueId = this.req.body.uniqueId;
             if (!uniqueId) {
                 return this.res.status(400).send({ success: false, error: "Unique ID is required" });
             }
 
-            const { success, errors } = await this.repository.submitForm(uniqueId);
+            const { success, errors, originalData } = await this.repository.submitForm(uniqueId);
             if (!success) {
                 return this.res.status(400).send({ success: false, errors });
             }
 
-            const jiraTicketLink = await this.createJiraTicket();
+            const jiraTicketResult = await this.createJiraTicket();
+            if (jiraTicketResult instanceof Error) {
+                throw jiraTicketResult;
+            }
 
             return this.res.status(200).send({
                 success: true,
                 details: "Form status updated to 'In Review'",
-                link: jiraTicketLink
+                link: jiraTicketResult
             });
         } catch (error: any) {
+            if (error instanceof JiraTicketCreationError) {
+                await this.repository.rollbackFormStatus(originalData);
+            }
+
             if (error instanceof mongoose.Error.ValidationError) {
                 return this.res.status(400).send({ success: false, error: error.message });
             }
@@ -44,13 +59,10 @@ export default class SubmitFormRequestHandler {
         }
     }
 
-    async createJiraTicket(): Promise<string> {
-
+    async createJiraTicket(): Promise<string | Error> {
 
         const jiraConfig = appConfig.jira;
-
         const descriptionText = jiraConfig.descriptionTemplate.replace('{{submitter}}', 'Submitter Name');
-
         const descriptionADF = {
             type: "doc",
             version: 1,
@@ -82,7 +94,6 @@ export default class SubmitFormRequestHandler {
                 }
             },
         };
-        console.log(jiraConfig.apiEndpoint);
         try {
             const response = await axios.post(jiraConfig.apiEndpoint, payload, {
                 headers: {
@@ -91,10 +102,10 @@ export default class SubmitFormRequestHandler {
                 },
             });
 
-            return response.data.self; // Ensure this field exists in the response
+            return response.data.self;
         } catch (error: any) {
             console.error('Failed to create Jira ticket:', error.response ? error.response.data : error);
-            throw new Error('Failed to create Jira ticket');
+            return new JiraTicketCreationError('Failed to create Jira ticket');
         }
     }
 }
