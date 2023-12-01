@@ -70,6 +70,8 @@ export const en = {
     'Requirement Specification',
 
   'form.container.label': 'Container',
+  'form.deployment_instruction.message':
+    'Please provide links to documentation on how to install and deploy this product as well as links to Docker files or other files that show that the product can be run in a container system (usually Docker and/or Kubernetes). You can also directly upload files instead of providing links.',
   'form.error_loading_file.message': 'Error loading file. Please try again.',
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
@@ -116,6 +118,7 @@ export const en = {
   'table.compliance.label': 'Compliance',
   'table.compliance_level.label': 'Compliance Level',
   'table.deployable.label': 'Deployable',
+  'table.deployment.label': 'Deployment',
   'table.deployment_compliance.label': 'Deployment Compliance',
   'table.documentation.label': 'Documentation',
   'table.draft.label': 'Draft',

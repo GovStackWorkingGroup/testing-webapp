@@ -256,8 +256,11 @@ const DeploymentComplianceForm = ({
   return (
     <>
       <div className="form-step-title">
-        {format('form.filling_required.label')}
+        {format('form.fill_in_all_the_fields_below.label')}
       </div>
+      <p className="form-step-instruction">
+        {format('form.deployment_instruction.message')}
+      </p>
       <div className="form-main-container">
         <div className="form-side-container">
           <div className="form-field-container">
