@@ -38,6 +38,7 @@ import DeploymentComplianceForm, {
 } from './DeploymentComplianceForm';
 import EvaluationSummary from './EvaluationSummary';
 import IRSForm from './IRSForm';
+import FormSuccessComponent from './FormSuccessComponent';
 
 type SoftwareComplianceFormProps = {
   currentStep?: number | undefined;
@@ -253,38 +254,47 @@ const SoftwareComplianceForm = ({
           href={COMPLIANCE_TESTING_RESULT_PAGE}
         />
       </div>
-      <ProgressBar
-        steps={softwareComplianceFormSteps}
-        currentStep={handleStepChange}
-        onNextButton={handleNextButton}
-        renderFormError={renderFormError}
-        changeStepTo={currentStep}
-        isDraftSaved={isDraftSaved}
-        onSaveButton={handleSaveDraftButton}
-        onSubmitButton={handleSubmitForm}
-        customRef={nextStepRef}
-      >
-        <>
-          {currentProgressBarStep === 1 && (
-            <SoftwareAttributesForm
-              softwareAttributesFormValues={setSoftwareAttributesFormValues}
-              customRef={softwareAttributedRef}
-              onEdited={(hasError: boolean) => setRenderFormError(hasError)}
-            />
-          )}
-          {currentProgressBarStep === 2 && (
-            <DeploymentComplianceForm
-              deploymentComplianceFormValues={setDeploymentComplianceFormValues}
-              customRef={deploymentComplianceRef}
-              onEdited={(hasError: boolean) => setRenderFormError(hasError)}
-            />
-          )}
-          {currentProgressBarStep === 3 && (
-            <IRSForm setUpdatedBBs={setUpdatedBBs} IRSCFormRef={IRSCFormRef} />
-          )}
-          {currentProgressBarStep === 4 && <EvaluationSummary />}
-        </>
-      </ProgressBar>
+      {isFormSubmitted ? (
+        <FormSuccessComponent />
+      ) : (
+        <ProgressBar
+          steps={softwareComplianceFormSteps}
+          currentStep={handleStepChange}
+          onNextButton={handleNextButton}
+          renderFormError={renderFormError}
+          changeStepTo={currentStep}
+          isDraftSaved={isDraftSaved}
+          onSaveButton={handleSaveDraftButton}
+          onSubmitButton={handleSubmitForm}
+          customRef={nextStepRef}
+        >
+          <>
+            {currentProgressBarStep === 1 && (
+              <SoftwareAttributesForm
+                softwareAttributesFormValues={setSoftwareAttributesFormValues}
+                customRef={softwareAttributedRef}
+                onEdited={(hasError: boolean) => setRenderFormError(hasError)}
+              />
+            )}
+            {currentProgressBarStep === 2 && (
+              <DeploymentComplianceForm
+                deploymentComplianceFormValues={
+                  setDeploymentComplianceFormValues
+                }
+                customRef={deploymentComplianceRef}
+                onEdited={(hasError: boolean) => setRenderFormError(hasError)}
+              />
+            )}
+            {currentProgressBarStep === 3 && (
+              <IRSForm
+                setUpdatedBBs={setUpdatedBBs}
+                IRSCFormRef={IRSCFormRef}
+              />
+            )}
+            {currentProgressBarStep === 4 && <EvaluationSummary />}
+          </>
+        </ProgressBar>
+      )}
     </div>
   );
 };
