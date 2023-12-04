@@ -11,12 +11,12 @@ type SelectorWithPillsProps = {
 }
 
 // @TODO - Fix typescript errors
-const SelectBBs = ({ data }: SelectorWithPillsProps) => {
+const SelectBBs = ({ data, setUpdatedBBs }: SelectorWithPillsProps) => {
   const { formatMessage } = useIntl();
   const format = useCallback((id: string) => formatMessage({ id }), [formatMessage]);
 
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [updatedRows, setUpdatedRows] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<ComplianceRequirementsType[]>([]);
+  const [updatedData, setUpdatedData] = useState<ComplianceRequirementsType>();
   const [options, setOptions] = useState([]);
 
   const handleSetOptions = () => setOptions(data?.map((item) => ({ value: item, label: item.bbName })));
@@ -26,14 +26,9 @@ const SelectBBs = ({ data }: SelectorWithPillsProps) => {
   }, [data]);
 
   useEffect(() => {
-    // @TODO - pass to 'updatedRows' and update updated rows from IRSCTable 'data' variable to main object 'selectedItems'
-    updatedRows?.map((row) => {
-      selectedItems?.value?.requirements.crossCutting.map((item: RequirementType) => item._id === row._id ? row : item);
-    });
-
-    console.log(selectedItems);
-
-  }, [updatedRows]);
+    setUpdatedBBs(selectedItems?.map(item =>
+      (item?.value?.bbKey === updatedData?.bbKey) ? updatedData : item.value));
+  }, [updatedData]);
 
   const handleOnSelect = (value: { value: ComplianceRequirementsType, label: string }) => {
     setOptions([...options.filter(({ label }) => label !== value.label)]);
@@ -74,7 +69,8 @@ const SelectBBs = ({ data }: SelectorWithPillsProps) => {
         />
         <p style={{ margin: '32px 0 16px' }}>{format('form.table.title.label')}</p>
         <IRSCTable
-          selectedData={item.value.requirements.crossCutting}
+          selectedData={item.value}
+          setUpdatedData={setUpdatedData}
         />
       </div>
     );

@@ -289,6 +289,12 @@ export const updateDraftDetails = async (
     }
   }
 
+  if (data.compliance?.bbDetails) {
+    formData.append('compliance[bbDetails]',data);
+  }
+
+  console.log(data, formData);
+
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
     body: formData,
@@ -391,7 +397,7 @@ export const patchDraftDetails = async (draftUUID: string, payload: ComplianceRe
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   })
     .then((response) => {
       if (!response.ok) {

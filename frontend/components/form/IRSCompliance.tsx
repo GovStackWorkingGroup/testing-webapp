@@ -6,7 +6,7 @@ import SpecificationCompliance from './SpecificationCompliance';
 
 type activeTabProps = 'interface' | 'specification'
 
-const IRSCompliance = () => {
+const IRSCompliance = ({ setUpdatedBBs }) => {
   const { formatMessage } = useIntl();
   const format = useCallback((id: string) => formatMessage({ id }), [formatMessage]);
 
@@ -29,7 +29,11 @@ const IRSCompliance = () => {
           {format('table.requirement_specification_compliance.label')}
         </div>
       </div>
-      {activeTab === 'interface' && <InterfaceCompliance />}
+      {activeTab === 'interface' && (
+        <InterfaceCompliance
+          setUpdatedBBs={setUpdatedBBs}
+        />
+      )}
       {activeTab === 'specification' && <SpecificationCompliance />}
     </div>
   );

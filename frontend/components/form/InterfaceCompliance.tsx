@@ -6,12 +6,11 @@ import SelectBBs from '../shared/combined/SelectBBs';
 import { getComplianceRequirements } from '../../service/serviceAPI';
 import { ComplianceRequirementsType } from '../../service/types';
 
-const InterfaceCompliance = () => {
+const InterfaceCompliance = ({ setUpdatedBBs }) => {
   const { formatMessage } = useIntl();
   const format = useCallback((id: string) => formatMessage({ id }), [formatMessage]);
 
   const [interfaceRequirementsData, setInterfaceRequirementsData] = useState<ComplianceRequirementsType>();
-  const selectedBuildingBlocks: [] = [];
 
   const fetchData = async () => {
     const data = await getComplianceRequirements();
@@ -23,8 +22,6 @@ const InterfaceCompliance = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
-  console.log(interfaceRequirementsData);
 
   return (
     <div>
@@ -39,7 +36,10 @@ const InterfaceCompliance = () => {
       </div>
       <div className='interface-bb-selector'>
         <p className='text-18'>{format('form.select_building_blocks.label')}</p>
-        <SelectBBs data={interfaceRequirementsData}/>
+        <SelectBBs
+          data={interfaceRequirementsData}
+          setUpdatedBBs={setUpdatedBBs}
+        />
       </div>
     </div>
   );

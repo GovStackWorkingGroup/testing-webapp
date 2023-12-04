@@ -111,7 +111,7 @@ export type SoftwareDraftDetailsType = {
   website: string;
 };
 
-export type Requirement = {
+export type   Requirement = {
   requirement: string;
   comment: string;
   fulfillment: number;
@@ -138,6 +138,7 @@ export type SoftwareDraftToUpdateType = {
   uniqueId?: string;
   expirationDate?: Date;
   deploymentCompliance?: Partial<DeploymentCompliance>;
+
 };
 
 export type ComplianceRequirementsType = {

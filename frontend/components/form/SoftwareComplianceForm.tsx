@@ -46,6 +46,8 @@ const SoftwareComplianceForm = ({
     useState<DeploymentComplianceFormValuesType>(
       deploymentComplianceDefaultValues
     );
+  const [updatedBBs, setUpdatedBBs] = useState();
+
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
 
@@ -76,6 +78,14 @@ const SoftwareComplianceForm = ({
           nextStepRef.current?.goNext();
         });
       }
+
+      return;
+    }
+
+    if (currentProgressBarStep === 3) {
+      handleUpdateDraft().then(() => {
+        nextStepRef.current?.goNext();
+      });
 
       return;
     }
@@ -151,6 +161,12 @@ const SoftwareComplianceForm = ({
       };
     }
 
+    if (currentProgressBarStep === 3) {
+      updateData.compliance = {
+        bbDetails: updatedBBs
+      };
+    }
+
     if (draftUUID) {
       await updateDraftDetails(draftUUID as string, updateData).then(
         (response) => {
@@ -204,7 +220,11 @@ const SoftwareComplianceForm = ({
               onEdited={(hasError: boolean) => setRenderFormError(hasError)}
             />
           )}
-          {currentProgressBarStep === 3 && <IRSCompliance />}
+          {currentProgressBarStep === 3 && (
+            <IRSCompliance
+              setUpdatedBBs={setUpdatedBBs}
+            />
+          )}
           {currentProgressBarStep === 4 && <div></div>}
         </>
       </ProgressBar>
