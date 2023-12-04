@@ -22,7 +22,6 @@ const SoftwareComplianceWith = ({
   const headers = [
     'building_block.plural.label',
     'table.building_block_version.label',
-    'table.deployment_compliance.label',
     'table.compliance.label',
     'table.compliance_level.label',
     'table.notes',
@@ -47,18 +46,9 @@ const SoftwareComplianceWith = ({
             })),
         },
         {
-          values: bbDetail.bbVersions
-            .slice()
-            .sort((a, b) => {
-              return b.bbVersion.localeCompare(a.bbVersion);
-            })
-            .map((bbVersion) => ({
-              value: bbVersion.deploymentCompliance[0].level,
-            })),
-        },
-        {
           values: bbDetail.bbVersions.map(() => ({
             values: [
+              { value: format('table.deployment.label') },
               { value: format('table.interface.label') },
               { value: format('table.requirement_specification.label') },
             ],
@@ -72,6 +62,7 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
+                { value: bbVersion.deploymentCompliance[0].level },
                 { value: bbVersion.interface.level },
                 { value: bbVersion.requirements.level },
               ],
@@ -85,6 +76,7 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
+                { value: '' },
                 { value: bbVersion.interface.note ?? '' },
                 { value: bbVersion.requirements.note ?? '' },
               ],

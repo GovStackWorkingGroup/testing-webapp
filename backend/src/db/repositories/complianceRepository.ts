@@ -1,4 +1,4 @@
-import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance/compliance';
 import mongoose from 'mongoose';
@@ -96,54 +96,82 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async submitForm(uniqueId: string): Promise<boolean> {
-    const form = await Compliance.findOne({ uniqueId });
-    if (!form) {
-      throw new Error('Form not found');
-    }
-
-    if (form.status !== StatusEnum.DRAFT) {
-      throw new Error('Form is not in DRAFT status and cannot be submitted');
-    }
-
+  async submitForm(uniqueId: string): Promise<{ success: boolean; errors: string[]; originalData: draftDataForRollback | undefined }> {
+    const errors: string[] = [];
     const validationErrors: string[] = [];
-    form.compliance.forEach((item) => {
-      item.bbDetails.forEach(bbDetail => {
-        // Validate interfaceCompliance requirements
-        if (bbDetail.interfaceCompliance && bbDetail.interfaceCompliance.requirements) {
-          const interfaceComplianceResult = validateRequirements(bbDetail.interfaceCompliance.requirements);
-          if (!interfaceComplianceResult.isValid) {
-            validationErrors.push(...interfaceComplianceResult.errors);
+    let originalData: draftDataForRollback | undefined;
+    const form = await Compliance.findOne({ uniqueId });
+
+    if (!form) {
+      errors.push('Form not found');
+    } else {
+      if (form.status !== StatusEnum.DRAFT) {
+        errors.push('Form is not in DRAFT status and cannot be submitted');
+      }
+
+      form.compliance.forEach((item) => {
+        item.bbDetails.forEach(bbDetail => {
+          // Validate interfaceCompliance requirements
+          if (bbDetail.interfaceCompliance && bbDetail.interfaceCompliance.requirements) {
+            const interfaceComplianceResult = validateRequirements(bbDetail.interfaceCompliance.requirements);
+            if (!interfaceComplianceResult.isValid) {
+              validationErrors.push(...interfaceComplianceResult.errors);
+            }
           }
-        }
-  
-        // Validate combined crossCuttingRequirements and functionalRequirements
-        const combinedRequirements = bbDetail.requirementSpecificationCompliance.crossCuttingRequirements.concat(bbDetail.requirementSpecificationCompliance.functionalRequirements);
-        const combinedRequirementsResult = validateRequirements(combinedRequirements);
-        if (!combinedRequirementsResult.isValid) {
-          validationErrors.push(...combinedRequirementsResult.errors);
-        }
-      });
-    });
-  
-    if (validationErrors.length > 0) {
-      const validationError = new mongoose.Error.ValidationError();
-      validationErrors.forEach((errMsg, index) => {
-        const validatorError = new mongoose.Error.ValidatorError({
-          message: errMsg,
-          path: `\n${index}`, // Use a relevant field name or identifier
+          // Validate combined crossCuttingRequirements and functionalRequirements
+          const combinedRequirements = bbDetail.requirementSpecificationCompliance.crossCuttingRequirements.concat(bbDetail.requirementSpecificationCompliance.functionalRequirements);
+          const combinedRequirementsResult = validateRequirements(combinedRequirements);
+          if (!combinedRequirementsResult.isValid) {
+            validationErrors.push(...combinedRequirementsResult.errors);
+          }
         });
-        validationError.addError(`\n${index}`, validatorError);
       });
-      throw validationError;
+
+      if (validationErrors.length > 0) {
+        const validationError = new mongoose.Error.ValidationError();
+        validationErrors.forEach((errMsg, index) => {
+          const validatorError = new mongoose.Error.ValidatorError({
+            message: errMsg,
+            path: `\n${index}`, // Use a relevant field name or identifier
+          });
+          validationError.addError(`\n${index}`, validatorError);
+        });
+        throw validationError;
+      }
+
+      if (errors.length === 0) {
+        // save oryginal data for rollback
+        originalData = {
+          status: form.status,
+          uniqueId: form.uniqueId,
+          expirationDate: form.expirationDate,
+          id: form._id
+        };
+
+        form.status = StatusEnum.IN_REVIEW;
+        form.uniqueId = undefined;
+        form.expirationDate = undefined;
+
+        await form.save();
+      }
     }
-    form.expirationDate = undefined;
-    form.status = StatusEnum.IN_REVIEW;
-    form.uniqueId = undefined;
 
-    await form.save();
+    return { success: errors.length === 0, errors, originalData };
+  },
 
-    return true;
+  async rollbackFormStatus(originalData: draftDataForRollback): Promise<{ success: boolean, errors: string[] }> {
+    const errors: string[] = [];
+    const _id = originalData.id;
+    const form = await Compliance.findOne({ _id });
+    if (!form) {
+      errors.push('Form not found');
+    } else {
+      form.status = StatusEnum.DRAFT;
+      form.uniqueId = originalData.uniqueId;
+      form.expirationDate = originalData.expirationDate;
+      await form.save();
+    }
+    return { success: errors.length === 0, errors }
   },
 
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
@@ -167,15 +195,15 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       const updateObject = { $set: {} };
       for (const key in updatedData) {
         if (Object.prototype.hasOwnProperty.call(updatedData, key)) {
-            if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
-                for (const subKey in updatedData[key]!) {
-                    if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
-                        updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
-                    }
-                }
-            } else {
-                updateObject.$set[key] = updatedData[key]!;
+          if (key === 'deploymentCompliance' && typeof updatedData[key] === 'object') {
+            for (const subKey in updatedData[key]!) {
+              if (Object.prototype.hasOwnProperty.call(updatedData[key]!, subKey)) {
+                updateObject.$set[`deploymentCompliance.${subKey}`] = updatedData[key]![subKey];
+              }
             }
+          } else {
+            updateObject.$set[key] = updatedData[key]!;
+          }
         }
       }
 
@@ -185,7 +213,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       throw error;
     }
   },
-  
+
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {
       return await BBRequirements.aggregate(aggregationPipeline()).exec();

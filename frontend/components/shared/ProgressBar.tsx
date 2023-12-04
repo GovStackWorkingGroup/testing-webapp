@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { RiErrorWarningFill } from 'react-icons/ri';
+import { useRouter } from 'next/router';
 import useTranslations from '../../hooks/useTranslation';
 import Button from './buttons/Button';
 
@@ -35,14 +36,22 @@ const ProgressBar = ({
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
+  const router = useRouter();
 
   useImperativeHandle(customRef, () => ({
     goNext: nextStep,
   }));
 
   useEffect(() => {
+    if (router.query.formStep) {
+      currentStep(Number(router.query.formStep));
+      setActiveStep(Number(router.query.formStep));
+
+      return;
+    }
+
     currentStep(activeStep);
-  }, [activeStep, currentStep]);
+  }, [activeStep, currentStep, router]);
 
   useEffect(() => {
     if (changeStepTo) {
@@ -51,11 +60,23 @@ const ProgressBar = ({
   }, [changeStepTo]);
 
   const nextStep = () => {
+    if (router.query.draftUUID) {
+      router.replace({
+        query: { draftUUID: router.query.draftUUID, formStep: activeStep + 1 },
+      });
+      setActiveStep(activeStep + 1);
+
+      return;
+    }
+
     setActiveStep(activeStep + 1);
   };
 
   const prevStep = () => {
     setActiveStep(activeStep - 1);
+    router.replace({
+      query: { draftUUID: router.query.draftUUID, formStep: activeStep - 1 },
+    });
   };
 
   const handleNextButton = () => {
