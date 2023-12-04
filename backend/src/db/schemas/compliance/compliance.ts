@@ -12,7 +12,6 @@ import {
   validateRequiredString,
   validateRequiredList,
   validateComplianceDetailRequiredString,
-  validateRequiredString2
 } from './complianceUtils';
 
 // Requirements Schema
