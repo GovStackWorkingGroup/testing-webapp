@@ -52,3 +52,21 @@ Uses `nodemon` for hot reload.
 
 ## Endpoints
 [To Be added; ]
+
+## Environment Configuration
+**Feature Flags**
+
+The application supports various functionalities that can be toggled using feature flags. These flags enable or disable specific features in the application. To configure these, set the appropriate environment variables in the .env file in your backend setup.
+
+**Configuring Feature Flags**
+
+1. Open .env file in the backend directory of the project.
+2. Set the feature flags as needed. For example:
+```ENABLE_JIRA_INTEGRATION=true```
+This enables the Jira integration feature. Set it to false to disable the automatic creation of Jira tickets.
+
+**Impact of Feature Flags**
+
+The use of feature flags allows specific functionalities to be enabled or disabled, facilitating testing and feature-specific development:
+
+- Jira Ticket Creation: Controlled by ENABLE_JIRA_INTEGRATION. When set to true, the application will create Jira tickets upon form submission. Set to false to prevent the generation of test data in your Jira project.
