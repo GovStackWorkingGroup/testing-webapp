@@ -24,7 +24,6 @@ export default class SubmitFormRequestHandler {
 
     async submitForm(): Promise<Response> {
         let draftDataForRollback;
-        console.log("o1", draftDataForRollback);
         try {
             const uniqueId = this.req.body.uniqueId;
             if (!uniqueId) {

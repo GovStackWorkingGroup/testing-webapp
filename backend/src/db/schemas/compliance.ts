@@ -123,25 +123,19 @@ const ComplianceVersionSchema = new mongoose.Schema({
 
 const deploymentComplianceSchema = new mongoose.Schema({
   documentation: {
-    type: String,
-    required: true,
+    type: String, // saved as string base64
+    default: "",
     validate: {
-      validator: function(v) {
-        // Check if it's a valid URL or a base64 string
-        return validator.isURL(v) || validator.isBase64(v);
-      },
-      message: props => `${props.value} is neither a valid URL nor a base64 string`
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'DeploymentCompliance Documentation is required when status is not DRAFT'
     }
   },
   deploymentInstructions: {
     type: String,
-    required: true,
+    default: "",
     validate: {
-      validator: function(v) {
-        // Check if it's a valid URL or a base64 string
-        return validator.isURL(v) || validator.isBase64(v);
-      },
-      message: props => `${props.value} is neither a valid URL nor a base64 string`
+      validator: validateRequiredIfNotDraftForForm,
+      message: 'DeploymentCompliance deploymentInstructions is required when status is not DRAFT'
     }
   },
   requirements: [{
@@ -201,6 +195,7 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   deploymentCompliance: {
     type: deploymentComplianceSchema,
+    default: () => ({}),
     validate: {
       validator: validateRequiredIfNotDraftForForm,
       message: 'DeploymentCompliance is required when status is not DRAFT'

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
-import ComplianceReport from '../src/db/schemas/compliance';
+import ComplianceReport from '../src/db/schemas/compliance/compliance';
 import { startCronJobs } from '../src/cronJobs';
 import * as removeExpiredDrafts from '../src/cronJobs/removeExpiredDrafts';
 import { appConfig } from '../src/config';
@@ -38,6 +38,7 @@ describe('Cron Job', () => {
       status: 0,
       expirationDate: futureDate,
       compliance: [],
+      deploymentCompliance: {},
       description: "Sample description.",
       uniqueId: '550e8400-e29b-41d4-a716-446655440000',
     });
@@ -51,6 +52,7 @@ describe('Cron Job', () => {
       status: 0,
       expirationDate: expiredDate,
       compliance: [],
+      deploymentCompliance: {},
       description: "Sample description.",
       uniqueId: '550e8400-e29b-41d4-a716-446655440001'
     });
@@ -89,8 +91,7 @@ describe('Cron Job', () => {
 
     const expiredReports = await ComplianceReport.find({ expirationDate: { $lt: new Date() } }).exec();
     const nonExpiredReports = await ComplianceReport.find({ expirationDate: { $gte: new Date() } }).exec();
-    const optionalFields = ['__v', 'id', 'uniqueId', 'status'];
-
+    const optionalFields = ['__v', 'id', 'uniqueId', 'status', 'deploymentCompliance'];
     const requiredFieldsForExpired = ['uniqueId', 'expirationDate'];
     ReportChecker.checkReports(expiredReports, requiredFieldsForExpired, optionalFields);
 
