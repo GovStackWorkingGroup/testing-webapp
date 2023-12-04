@@ -1,44 +1,19 @@
-import mongoose from 'mongoose';
+import mongoose, { mongo } from 'mongoose';
 import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
-import validator from 'validator';
-
-const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
-  return this.status == StatusEnum.DRAFT || (value != null || value.length > 0);
-};
-
-
-
-// SCHEMA FORM CONTENT
-const StatusEnum = {
-  DRAFT: 0,
-  IN_REVIEW: 1,
-  APPROVED: 2,
-  REJECTED: 3
-};
-
-const BBStatusEnum = {
-  IN_REVIEW: 1,
-  APPROVED: 2,
-  REJECTED: 3
-}
-
-const RequirementStatusEnum = {
-  REQUIRED: 0,
-  RECOMMENDED: 1,
-  OPTIONAL: 2
-};
-
-const SpecificationComplianceLevel = {
-  NA: -1,
-  LEVEL_1: 1,
-  LEVEL_2: 2
-};
-
-const RequirementFulfillment = {
-  MET: 1,
-  NOT_MET: 0
-};
+import {
+  BBStatusEnum,
+  RequirementFulfillment,
+  RequirementStatusEnum,
+  SpecificationComplianceLevel,
+  StatusEnum,
+  validateComplianceDetailObject,
+  validateRequiredObject,
+  validateRequiredString,
+  validateRequiredList,
+  validateComplianceDetailRequiredString,
+  validateRequiredString2
+} from './complianceUtils';
 
 // Requirements Schema
 export const RequirementSchema = new mongoose.Schema({
@@ -62,15 +37,55 @@ export const RequirementSchema = new mongoose.Schema({
   },
 });
 
+const interfaceComplianceSchema = new mongoose.Schema({
+  level: {
+    type: Number,
+    enum: Object.values(SpecificationComplianceLevel),
+    default: SpecificationComplianceLevel.NA,
+  },
+  testHarnessResult: {
+    type: String,
+    default: '',
+  },
+  requirements: {
+    type: [RequirementSchema],
+    default: [], // Set the default value as an empty array
+  }
+})
+
+const requirementSpecificationComplianceSchema = new mongoose.Schema({
+  level: {
+    type: Number,
+    enum: Object.values(SpecificationComplianceLevel),
+    default: SpecificationComplianceLevel.NA,
+  },
+  crossCuttingRequirements: {
+    type: [RequirementSchema],
+    default: [],
+  },
+  functionalRequirements: {
+    type: [RequirementSchema],
+    default: [],
+  }
+})
+
 // SCHEMA FORM CONTENT
 const ComplianceDetailSchema = new mongoose.Schema({
   bbSpecification: {
     type: String,
-    required: true
+    default: "",
+    validate: {
+      validator: validateComplianceDetailRequiredString,
+      message: 'compliance bbDetails bbSpecification is required when status is not DRAFT'
+    }
   },
   bbVersion: {
     type: String,
-    required: true
+    default: "",
+    validate: {
+      validator: validateComplianceDetailRequiredString,
+      message: 'compliance bbDetails bbVersion is required when status is not DRAFT'
+    }
   },
   status: {
     type: Number,
@@ -86,47 +101,46 @@ const ComplianceDetailSchema = new mongoose.Schema({
     enum: Object.values(SpecificationComplianceLevel),
     default: SpecificationComplianceLevel.LEVEL_1,
   },
-  requirementSpecificationCompliance: {
-    level: {
-      type: Number,
-      enum: Object.values(SpecificationComplianceLevel),
-      default: SpecificationComplianceLevel.NA,
-    },
-    crossCuttingRequirements: [RequirementSchema],
-    functionalRequirements: [RequirementSchema]
-  },
   interfaceCompliance: {
-    level: {
-      type: Number,
-      enum: Object.values(SpecificationComplianceLevel),
-      default: SpecificationComplianceLevel.NA,
-    },
-    testHarnessResult: {
-      type: String,
-      default: ''
-    },
-    requirements: [RequirementSchema]
+    default: {},
+    type: interfaceComplianceSchema,
+    validate: {
+      validator: validateComplianceDetailObject,
+      message: 'interfaceCompliance is required when status is not DRAFT'
+    }
+  },
+  requirementSpecificationCompliance: {
+    default: {},
+    type: requirementSpecificationComplianceSchema,
+    validate: {
+      validator: validateComplianceDetailObject,
+      message: 'requirementSpecificationCompliance is required when status is not DRAFT'
+    }
   }
 });
 
 const ComplianceVersionSchema = new mongoose.Schema({
   version: {
     type: String,
-    required: true
+    default: "",
+    validate: {
+      validator: validateRequiredString,
+      message: 'compliance version is required when status is not DRAFT'
+    }
   },
   bbDetails: {
     type: Map,
     of: ComplianceDetailSchema,
     required: true
   }
-});
+}); // Allow partial updates
 
 const deploymentComplianceSchema = new mongoose.Schema({
   documentation: {
     type: String, // saved as string base64
     default: "",
     validate: {
-      validator: validateRequiredIfNotDraftForForm,
+      validator: validateRequiredString,
       message: 'DeploymentCompliance Documentation is required when status is not DRAFT'
     }
   },
@@ -134,7 +148,7 @@ const deploymentComplianceSchema = new mongoose.Schema({
     type: String,
     default: "",
     validate: {
-      validator: validateRequiredIfNotDraftForForm,
+      validator: validateRequiredString,
       message: 'DeploymentCompliance deploymentInstructions is required when status is not DRAFT'
     }
   },
@@ -197,14 +211,15 @@ const ComplianceReportSchema = new mongoose.Schema({
     type: deploymentComplianceSchema,
     default: () => ({}),
     validate: {
-      validator: validateRequiredIfNotDraftForForm,
+      validator: validateRequiredObject,
       message: 'DeploymentCompliance is required when status is not DRAFT'
     }
   },
   compliance: {
     type: [ComplianceVersionSchema],
+    default: () => ([]),
     validate: {
-      validator: validateRequiredIfNotDraftForForm,
+      validator: validateRequiredList,
       message: 'Compliance is required when status is not DRAFT'
     }
   }

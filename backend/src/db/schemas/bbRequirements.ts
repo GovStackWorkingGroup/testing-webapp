@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { RequirementSchema } from './compliance';
+import { RequirementSchema } from './compliance/compliance';
 
 const BBRequirementSchema = new mongoose.Schema({
     bbName: {

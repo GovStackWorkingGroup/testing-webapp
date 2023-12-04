@@ -1,6 +1,6 @@
 import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
-import Compliance from '../schemas/compliance';
+import Compliance from '../schemas/compliance/compliance';
 import mongoose from 'mongoose';
 import { appConfig } from '../../config/index';
 import { createAggregationPipeline } from '../pipelines/compliance/complianceListAggregation';
@@ -9,6 +9,7 @@ import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softw
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
 import { bbRequirementsAggregationPipeline } from '../pipelines/compliance/bbRequirements';
+import { validateRequirements } from '../schemas/compliance/complianceUtils';
 import { uniqueBBsAggregationPipeline } from '../pipelines/compliance/uniqueBBsAggregationPipeline';
 import { draftDetailAggregationPipeline } from '../pipelines/compliance/draftDetailAggregation';
 
@@ -97,14 +98,45 @@ const mongoComplianceRepository: ComplianceDbRepository = {
 
   async submitForm(uniqueId: string): Promise<{ success: boolean; errors: string[]; originalData: draftDataForRollback | undefined }> {
     const errors: string[] = [];
+    const validationErrors: string[] = [];
     let originalData: draftDataForRollback | undefined;
-
     const form = await Compliance.findOne({ uniqueId });
+
     if (!form) {
       errors.push('Form not found');
     } else {
       if (form.status !== StatusEnum.DRAFT) {
         errors.push('Form is not in DRAFT status and cannot be submitted');
+      }
+
+      form.compliance.forEach((item) => {
+        item.bbDetails.forEach(bbDetail => {
+          // Validate interfaceCompliance requirements
+          if (bbDetail.interfaceCompliance && bbDetail.interfaceCompliance.requirements) {
+            const interfaceComplianceResult = validateRequirements(bbDetail.interfaceCompliance.requirements);
+            if (!interfaceComplianceResult.isValid) {
+              validationErrors.push(...interfaceComplianceResult.errors);
+            }
+          }
+          // Validate combined crossCuttingRequirements and functionalRequirements
+          const combinedRequirements = bbDetail.requirementSpecificationCompliance.crossCuttingRequirements.concat(bbDetail.requirementSpecificationCompliance.functionalRequirements);
+          const combinedRequirementsResult = validateRequirements(combinedRequirements);
+          if (!combinedRequirementsResult.isValid) {
+            validationErrors.push(...combinedRequirementsResult.errors);
+          }
+        });
+      });
+
+      if (validationErrors.length > 0) {
+        const validationError = new mongoose.Error.ValidationError();
+        validationErrors.forEach((errMsg, index) => {
+          const validatorError = new mongoose.Error.ValidatorError({
+            message: errMsg,
+            path: `\n${index}`, // Use a relevant field name or identifier
+          });
+          validationError.addError(`\n${index}`, validatorError);
+        });
+        throw validationError;
       }
 
       if (errors.length === 0) {
@@ -175,14 +207,12 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         }
       }
 
-
       await Compliance.updateOne({ uniqueId: draftId }, updateObject);
     } catch (error) {
       console.error(`Error updating the draft form with unique ID ${draftId}:`, error);
       throw error;
     }
   },
-
 
   async getAllBBRequirements(): Promise<AllBBRequirements> {
     try {

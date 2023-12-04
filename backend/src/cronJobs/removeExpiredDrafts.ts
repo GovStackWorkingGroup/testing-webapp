@@ -1,5 +1,5 @@
 import { StatusEnum } from 'myTypes';
-import ComplianceReport from '../db/schemas/compliance'
+import ComplianceReport from '../db/schemas/compliance/compliance'
 
 export async function removeSensitiveDataFromExpiredDrafts() {
     try {
@@ -18,10 +18,11 @@ export async function removeSensitiveDataFromExpiredDrafts() {
                     "softwareName",
                     "logo",
                     "website",
+                    "deploymentCompliance",
                     "documentation",
                     "pointOfContact",
                     "compliance",
-                    "description"
+                    "description",
                 ]
             }
         ]);
