@@ -41,17 +41,16 @@ export default class EditDraftRequestHandler {
 
             updateData.logo = this.updateFilePath(files?.logo, updateData.logo);
 
-            if (!updateData.deploymentCompliance) {
-                updateData.deploymentCompliance = {};
-            }
-            updateData.deploymentCompliance.documentation = this.updateFilePath(
-                files['deploymentCompliance[documentation]'],
-                updateData.deploymentCompliance.documentation
-            );
-            updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(
-                files['deploymentCompliance[deploymentInstructions]'],
-                updateData.deploymentCompliance.deploymentInstructions
-            );
+            if (updateData.deploymentCompliance) {
+                updateData.deploymentCompliance.documentation = this.updateFilePath(
+                  files['deploymentCompliance[documentation]'],
+                  updateData.deploymentCompliance.documentation
+                );
+                updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(
+                  files['deploymentCompliance[deploymentInstructions]'],
+                  updateData.deploymentCompliance.deploymentInstructions
+                );
+              }
 
             const updateResult = await this.repository.editDraftForm(draftId, updateData);
 
