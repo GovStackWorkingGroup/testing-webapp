@@ -208,16 +208,16 @@ export type ComplianceRequirementsType = {
   };
 };
 
-export type BBDetailsType = {
-  bbName: string;
-  bbKey: string;
-  bbVersion: string;
-  dateOfSave: string;
-  requirements: {
-    crossCutting: CrossCuttingType[];
-    functional: [];
-  };
-}[];
+// export type BBDetailsType = {
+//   bbName: string;
+//   bbKey: string;
+//   bbVersion: string;
+//   dateOfSave: string;
+//   requirements: {
+//     crossCutting: CrossCuttingType[];
+//     functional: [];
+//   };
+// }[];
 
 export type CrossCuttingType = {
   requirement: string;
@@ -272,6 +272,12 @@ export type POSTSoftwareAttributesType = {
 };
 
 export type PATCHSoftwareAttributesType = {
+  success: boolean;
+  details: string;
+  link: string;
+};
+
+export type SubmitDraftResponseType = {
   success: boolean;
   details: string;
   link: string;

@@ -85,7 +85,8 @@ export const en = {
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
   'form.header.requirement.label': 'Requirement',
-  'form.fill_in_at_least_1_of_the_below_forms.label': 'Fill in at least 1 of the below forms',
+  'form.fill_in_at_least_1_of_the_below_forms.label':
+    'Fill in at least 1 of the below forms',
   'form.form_invalid.message':
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
@@ -96,16 +97,18 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
-  'form.required_label': 'Required',
+  'form.form_submit_error.message': 'Draft submitting failed',
   'form.form_saved_success.message': 'Draft saved successfully',
   'form.form_saved_error.message': 'Draft saving failed',
   'form.point_of_contact.label': 'Point of contact',
   'form.clear_selection.label': 'Clear selection',
   'form.select_building_blocks.label':
     'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.required_label': 'Required',
   'form.test_harness.title.label': 'Test Harness Result',
   'form.table.title.label': 'Architectural Cross-Cutting Requirements',
-  'form.test_harness.tip_message.label': 'Paste link link to test harness result.',
+  'form.test_harness.tip_message.label':
+    'Paste link link to test harness result.',
   'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
   'form.tip_max_characters.label': '400 characters max.',
