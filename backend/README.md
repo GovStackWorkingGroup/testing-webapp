@@ -52,3 +52,21 @@ Uses `nodemon` for hot reload.
 
 ## Endpoints
 [To Be added; ]
+
+## Environment Configuration
+**Development Mode**
+
+Application supports a development mode which alters its behavior for testing and development purposes. To enable this mode, a specific environment variable needs to be set in the .env file of your backend setup.
+
+**Setting Development Mode**
+
+Open .env file in the backend directory of the project.
+Add the following line to the file:
+```BE_DEVELOPMENT_MODE=true```
+This sets the application in development mode. Set it to false or remove it to run the application in production mode.
+
+**Impact of Development Mode**
+
+When the application is in development mode, certain features are modified or disabled to facilitate testing and development:
+
+- Jira Ticket Creation: The application will skip the creation of Jira tickets when forms are submitted. This prevents the generation of test data in your Jira project.
