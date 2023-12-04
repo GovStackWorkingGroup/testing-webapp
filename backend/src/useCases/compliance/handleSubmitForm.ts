@@ -61,6 +61,11 @@ export default class SubmitFormRequestHandler {
 
     async createJiraTicket(): Promise<string | Error> {
 
+        if (appConfig.beDevelopmentMode) {
+            console.log('Development mode is on, returning dummy Jira ticket link.');
+            return 'http://dummy-jira-link-for-development-mode.com';
+        }
+
         const jiraConfig = appConfig.jira;
         const descriptionText = jiraConfig.descriptionTemplate.replace('{{submitter}}', 'Submitter Name');
         const descriptionADF = {

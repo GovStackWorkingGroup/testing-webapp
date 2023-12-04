@@ -13,6 +13,7 @@ interface AppConfig {
     syncGitBookRequirementsSchedule: string;
     removeExpiredDraftsSchedule: string;
   };
+  beDevelopmentMode: boolean,
   draftExpirationTime: number,
   jira: {
     apiEndpoint: string;
@@ -40,6 +41,7 @@ const appConfig: AppConfig = {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
     syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
   },
+  beDevelopmentMode: process.env.BE_DEVELOPMENT_MODE ? process.env.BE_DEVELOPMENT_MODE === 'true' : false,
   gitBook: {
     baseURL: process.env.GITBOOK_URL || '',
     apiKey: process.env.GITBOOK_API_KEY || '',
