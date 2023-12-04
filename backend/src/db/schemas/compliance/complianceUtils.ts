@@ -41,11 +41,6 @@ export const isGrandparentStatusDraft = function (this): boolean {
     return grandparent?.status == StatusEnum.DRAFT;
 };
 
-export const validateRequiredString2 = function (this, value: any): boolean {
-    return typeof value === 'string' &&
-        (isParentStatusDraft.call(this) || value.trim().length > 0);
-};
-
 export const validateRequiredString = function (this, value: any): boolean {
     return typeof value === 'string' &&
         (isParentStatusDraft.call(this) || value.trim().length > 0);

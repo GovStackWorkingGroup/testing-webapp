@@ -140,7 +140,7 @@ const deploymentComplianceSchema = new mongoose.Schema({
     type: String, // saved as string base64
     default: "",
     validate: {
-      validator: validateRequiredString2,
+      validator: validateRequiredString,
       message: 'DeploymentCompliance Documentation is required when status is not DRAFT'
     }
   },
