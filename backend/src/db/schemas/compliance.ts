@@ -3,36 +3,8 @@ import { validate as uuidValidate, version as uuidVersion } from 'uuid';
 import { ComplianceReport } from 'myTypes';
 import validator from 'validator';
 
-const validateRequiredIfNotDraftForForm = function (this, value: any) {
-  const parent: ComplianceReport = this.parent();
-
-  if (parent && parent.status === StatusEnum.DRAFT) {
-    return true;
-  }
-
-  // If the status is DRAFT, validation always passes
-  if (this.status === StatusEnum.DRAFT) {
-    return true;
-  }
-
-  // For status other than DRAFT, check the presence and correctness of the value
-  // If value is an array
-  if (Array.isArray(value)) {
-    return value.length > 0;
-  }
-
-  // If value is an object
-  if (typeof value === 'object') {
-    return value && Object.keys(value).length > 0;
-  }
-
-  if (typeof value === 'string') {
-    return value.trim().length > 0;
-  }
-
-  // For other types of data (e.g., string, number)
-  return value !== undefined;
-
+const validateRequiredIfNotDraftForForm = function (this: ComplianceReport, value: any) {
+  return this.status == StatusEnum.DRAFT || (value != null || value.length > 0);
 };
 
 
@@ -238,29 +210,6 @@ const ComplianceReportSchema = new mongoose.Schema({
   }
 });
 
-ComplianceDetailSchema.pre('save', function (next) {
-  const complianceDetail = this;
-
-  // Ensure requirementSpecificationCompliance exists before proceeding
-  if (complianceDetail.requirementSpecificationCompliance) {
-    const { crossCuttingRequirements, functionalRequirements } = complianceDetail.requirementSpecificationCompliance;
-
-    // It's mandatory for IN_REVIEW status, but can be empty in DRAFT, where the user is expected to fill it out.
-    crossCuttingRequirements.forEach(requirement => {
-      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
-        throw new Error('Fulfillment is required when status is not DRAFT.');
-      }
-    });
-
-    functionalRequirements.forEach(requirement => {
-      if (complianceDetail.status !== StatusEnum.DRAFT && !requirement.fulfillment) {
-        throw new Error('Fulfillment is required when status is not DRAFT.');
-      }
-    });
-  }
-
-  next();
-});
 const ComplianceReport = mongoose.model('ComplianceReport', ComplianceReportSchema);
 
 export default ComplianceReport;
