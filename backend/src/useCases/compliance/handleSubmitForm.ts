@@ -61,7 +61,7 @@ export default class SubmitFormRequestHandler {
 
     async createJiraTicket(): Promise<string | Error> {
 
-        if (appConfig.beDevelopmentMode) {
+        if (appConfig.enableJiraIntegration === false) {
             console.log('Development mode is on, returning dummy Jira ticket link.');
             return 'http://dummy-jira-link-for-development-mode.com';
         }

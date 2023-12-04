@@ -54,19 +54,19 @@ Uses `nodemon` for hot reload.
 [To Be added; ]
 
 ## Environment Configuration
-**Development Mode**
+**Feature Flags**
 
-Application supports a development mode which alters its behavior for testing and development purposes. To enable this mode, a specific environment variable needs to be set in the .env file of your backend setup.
+The application supports various functionalities that can be toggled using feature flags. These flags enable or disable specific features in the application. To configure these, set the appropriate environment variables in the .env file in your backend setup.
 
-**Setting Development Mode**
+**Configuring Feature Flags**
 
-Open .env file in the backend directory of the project.
-Add the following line to the file:
-```BE_DEVELOPMENT_MODE=true```
-This sets the application in development mode. Set it to false or remove it to run the application in production mode.
+1. Open .env file in the backend directory of the project.
+2. Set the feature flags as needed. For example:
+```ENABLE_JIRA_INTEGRATION=true```
+This enables the Jira integration feature. Set it to false to disable the automatic creation of Jira tickets.
 
-**Impact of Development Mode**
+**Impact of Feature Flags**
 
-When the application is in development mode, certain features are modified or disabled to facilitate testing and development:
+The use of feature flags allows specific functionalities to be enabled or disabled, facilitating testing and feature-specific development:
 
-- Jira Ticket Creation: The application will skip the creation of Jira tickets when forms are submitted. This prevents the generation of test data in your Jira project.
+- Jira Ticket Creation: Controlled by ENABLE_JIRA_INTEGRATION. When set to true, the application will create Jira tickets upon form submission. Set to false to prevent the generation of test data in your Jira project.
