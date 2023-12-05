@@ -12,7 +12,6 @@ import '../components/header/HeaderMenuButton.less';
 import '../components/shared/ProgressBar.less';
 import '../components/shared/DragAndDrop.less';
 import '../components/compliance/SoftwareDetails.less';
-import '../components/form/IRSCompliance.less';
 import '../components/form/SoftwareForm.less';
 import { RiCloseFill } from 'react-icons/ri';
 import { ToastContainer } from 'react-toastify';

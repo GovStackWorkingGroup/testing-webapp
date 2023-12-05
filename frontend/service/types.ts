@@ -111,7 +111,7 @@ export type SoftwareDraftDetailsType = {
   website: string;
 };
 
-export type   Requirement = {
+export type Requirement = {
   requirement: string;
   comment: string;
   fulfillment: number;
@@ -138,27 +138,67 @@ export type SoftwareDraftToUpdateType = {
   uniqueId?: string;
   expirationDate?: Date;
   deploymentCompliance?: Partial<DeploymentCompliance>;
+};
 
+export type IRSCSoftwareDraftToUpdateType = {
+  bbSpecification: string;
+  bbVersion: string;
+  dateOfSave: string;
+  requirements: {
+    crossCutting: {
+      requirement: string;
+      comment: string;
+      fulfillment: number | null;
+      _id: string;
+    }[];
+    functional: [];
+  };
+  interfaceCompliance: {
+    testHarnessResult: string;
+    requirements: [];
+  };
 };
 
 export type ComplianceRequirementsType = {
-  bbName: string,
-  bbKey: string,
-  bbVersion: string,
-  dateOfSave: string,
+  bbName: string;
+  bbKey: string;
+  bbVersion: string;
+  dateOfSave: string;
   requirements: {
     crossCutting: [
       {
-        requirement: string,
-        comment: string,
-        status: number,
-        fulfillment: number | null,
-        _id: string
+        requirement: string;
+        comment: string;
+        status: number;
+        fulfillment: number | null;
+        _id: string;
       }
-    ],
-    functional: []
-  }
-}
+    ];
+    functional: [];
+  };
+  interfaceCompliance: {
+    testHarnessResult: string;
+    requirements: [];
+  };
+};
+
+export type BBDetailsType = {
+  bbName: string;
+  bbKey: string;
+  bbVersion: string;
+  dateOfSave: string;
+  requirements: {
+    crossCutting: CrossCuttingType[];
+    functional: [];
+  };
+}[];
+
+export type CrossCuttingType = {
+  requirement: string;
+  comment: string;
+  fulfillment: number;
+  _id: string;
+};
 
 // All types used in Table.tsx and the data connected to it
 export type DataType = {
@@ -188,19 +228,25 @@ export type DataRow = {
   subHeader?: string;
 };
 
-export type InputOptionsProps = [{
-  value: never,
-  label: string
-}]
+export type InputOptionsProps = {
+  value: unknown;
+  label: string;
+};
 
 export type InputSingleOptionProps = {
-  value: ComplianceRequirementsType,
-  label: string
-}
+  value: ComplianceRequirementsType;
+  label: string;
+};
 
 export type POSTSoftwareAttributesType = {
   success: boolean;
   details: string;
   link: string;
   uniqueId: string;
+};
+
+export type PATCHSoftwareAttributesType = {
+  success: boolean;
+  details: string;
+  link: string;
 };

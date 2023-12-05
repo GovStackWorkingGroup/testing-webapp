@@ -4,8 +4,8 @@
   border-radius: 8px;
   border: 1px solid @stroke;
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0
+  border-spacing: 0;
+  border-collapse: collapse;
 }
 
 .irsc-table-header {
@@ -36,19 +36,12 @@
     border-bottom: 1px solid @stroke;
     width: 10%;
   }
-
 }
 
 .irsc-table-header-required {
   background-color: @blue-10;
-  border-bottom: 1px solid @stroke;
   padding: 8px 16px;
-  font-family: Arial;
   font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-  color: @text-main
 }
 
 .irsc-table-rows {
@@ -72,18 +65,33 @@
   td:nth-child(1) {
     background-color: @light-blue;
     border-right: 1px solid @stroke;
-    border-bottom: 1px solid @stroke;
   }
   td:nth-child(2) {
     padding: 0;
     border-right: 1px solid @stroke;
-    border-bottom: 1px solid @stroke;
   }
   td:nth-child(3) {
-    border-bottom: 1px solid @stroke;
   }
+}
 
+.irsc-invalid-row {
+  border: 1px solid @fail;
 
+  td:nth-child(1) {
+    border-left: 1px solid @fail;
+    border-bottom: 1px solid @fail;
+    border-top: 1px solid @fail;
+  }
+  td:nth-child(2) {
+    border-right: 1px solid @fail;
+    border-bottom: 1px solid @fail;
+    border-top: 1px solid @fail;
+  }
+  td:nth-child(3) {
+    border-bottom: 1px solid @fail;
+    border-top: 1px solid @fail;
+    border-right: 1px solid @fail;
+  }
 }
 
 .irsc-table-comment-counter {
@@ -112,4 +120,12 @@
   gap: 8px;
   height: 32px;
   align-items: center;
+}
+
+.irsc-table-textarea {
+  position: relative;
+}
+
+.irsc-table-icon {
+  font-size: @icon-font-size-small;
 }

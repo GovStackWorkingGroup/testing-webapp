@@ -13,15 +13,19 @@ import useTranslations from '../../hooks/useTranslation';
 import ProgressBar, { ProgressBarRef } from '../shared/ProgressBar';
 import {
   saveSoftwareDraft,
-  updateDraftDetails,
   updateDraftDetailsStepOne,
+  updateDraftDetailsStepThree,
+  updateDraftDetailsStepTwo,
 } from '../../service/serviceAPI';
-import { SoftwareDraftToUpdateType } from '../../service/types';
+import {
+  ComplianceRequirementsType,
+  SoftwareDraftToUpdateType,
+} from '../../service/types';
+import { IRSCFormRef } from '../shared/combined/SelectBBs';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
 } from './SoftwareAttributesForm';
-import IRSCompliance from './IRSCompliance';
 import {
   deploymentComplianceDefaultValues,
   softwareAttributesDefaultValues,
@@ -30,6 +34,7 @@ import DeploymentComplianceForm, {
   DeploymentComplianceFormValuesType,
   DeploymentComplianceRef,
 } from './DeploymentComplianceForm';
+import IRSForm from './IRSForm';
 
 type SoftwareComplianceFormProps = {
   currentStep?: number | undefined;
@@ -46,13 +51,17 @@ const SoftwareComplianceForm = ({
     useState<DeploymentComplianceFormValuesType>(
       deploymentComplianceDefaultValues
     );
-  const [updatedBBs, setUpdatedBBs] = useState();
+  const [updatedBBs, setUpdatedBBs] = useState<
+    ComplianceRequirementsType[] | undefined
+  >();
+  console.log('TOP updatedBBs', updatedBBs);
 
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
+  const IRSCFormRef = useRef<IRSCFormRef>(null);
   const nextStepRef = useRef<ProgressBarRef>(null);
 
   const { format } = useTranslations();
@@ -83,9 +92,11 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
-      handleUpdateDraft().then(() => {
-        nextStepRef.current?.goNext();
-      });
+      if (IRSCFormRef.current?.validate()) {
+        handleUpdateDraft().then(() => {
+          nextStepRef.current?.goNext();
+        });
+      }
 
       return;
     }
@@ -162,13 +173,16 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
-      updateData.compliance = {
-        bbDetails: updatedBBs
-      };
+      await updateDraftDetailsStepThree(
+        draftUUID as string,
+        updatedBBs as ComplianceRequirementsType[]
+      ).then((response) => {
+        console.log('response', response);
+      });
     }
 
     if (draftUUID) {
-      await updateDraftDetails(draftUUID as string, updateData).then(
+      await updateDraftDetailsStepTwo(draftUUID as string, updateData).then(
         (response) => {
           if (response.status) {
             toast.success(format('form.form_saved_success.message'), {
@@ -221,9 +235,7 @@ const SoftwareComplianceForm = ({
             />
           )}
           {currentProgressBarStep === 3 && (
-            <IRSCompliance
-              setUpdatedBBs={setUpdatedBBs}
-            />
+            <IRSForm setUpdatedBBs={setUpdatedBBs} IRSCFormRef={IRSCFormRef} />
           )}
           {currentProgressBarStep === 4 && <div></div>}
         </>

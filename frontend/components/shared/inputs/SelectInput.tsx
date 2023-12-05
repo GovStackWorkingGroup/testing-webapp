@@ -1,16 +1,19 @@
 import React from 'react';
 import classNames from 'classnames';
 import AsyncSelect from 'react-select/async';
+import { GroupBase, OptionsOrGroups } from 'react-select';
 import { InputOptionsProps } from '../../../service/types';
 
 type SelectProps = {
-  onChange: (args0: never) => void,
-  onBlur?: () => void,
-  placeholder: string,
-  className?: string,
-  options: InputOptionsProps | undefined,
-  handleSetOptions: () => void,
-}
+  onChange: (args0: any) => void;
+  onBlur?: () => void;
+  placeholder: string;
+  className?: string;
+  options:
+    | OptionsOrGroups<InputOptionsProps[], GroupBase<InputOptionsProps[]>>
+    | undefined;
+  handleSetOptions: () => void;
+};
 
 const SelectInput = ({
   onBlur,
@@ -20,17 +23,16 @@ const SelectInput = ({
   options,
   handleSetOptions,
   ...otherProps
-} : SelectProps) => {
-
+}: SelectProps) => {
   return (
     <AsyncSelect
       {...otherProps}
       defaultOptions={options}
       placeholder={placeholder}
       loadOptions={() => handleSetOptions()}
-      onChange={(newValue: never) => onChange(newValue)}
+      onChange={(newValue: any) => onChange(newValue)}
       onBlur={onBlur}
-      classNamePrefix='react-select'
+      classNamePrefix="react-select"
       className={classNames(className)}
     />
   );

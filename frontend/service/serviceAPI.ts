@@ -7,6 +7,7 @@ import {
   BuildingBlockTestSummary,
   ComplianceList,
   ComplianceRequirementsType,
+  PATCHSoftwareAttributesType,
   POSTSoftwareAttributesType,
   ProductsListType,
   SoftwareDetailsType,
@@ -246,7 +247,9 @@ export const getComplianceRequirements = async () => {
 
       return response.json();
     })
-    .then<Success<ComplianceRequirementsType>>((actualData) => {
+    .then<Success<ComplianceRequirementsType[]>>((actualData) => {
+      console.log('actualData', actualData);
+
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -254,7 +257,39 @@ export const getComplianceRequirements = async () => {
     });
 };
 
-export const updateDraftDetails = async (
+export const updateDraftDetailsStepOne = async (
+  draftUUID: string,
+  data: FormValuesType
+) => {
+  const formData = new FormData();
+
+  formData.append('softwareName', data.softwareName.value);
+  formData.append('logo', data.softwareLogo.value as File);
+  formData.append('website', data.softwareWebsite.value);
+  formData.append('documentation', data.softwareDocumentation.value);
+  formData.append('description', data.toolDescription.value);
+  formData.append('email', data.email.value);
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetailsStepTwo = async (
   draftUUID: string,
   data: SoftwareDraftToUpdateType
 ) => {
@@ -289,12 +324,6 @@ export const updateDraftDetails = async (
     }
   }
 
-  if (data.compliance?.bbDetails) {
-    formData.append('compliance[bbDetails]',data);
-  }
-
-  console.log(data, formData);
-
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
     body: formData,
@@ -306,7 +335,7 @@ export const updateDraftDetails = async (
 
       return response.json();
     })
-    .then<Success<SoftwareDraftDetailsType>>((actualData) => {
+    .then<Success<PATCHSoftwareAttributesType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -314,22 +343,54 @@ export const updateDraftDetails = async (
     });
 };
 
-export const updateDraftDetailsStepOne = async (
+export const updateDraftDetailsStepThree = async (
   draftUUID: string,
-  data: FormValuesType
+  data: ComplianceRequirementsType[]
 ) => {
-  const formData = new FormData();
+  const transformedData = {
+    compliance: data.map((item) => {
+      const {
+        bbKey,
+        bbName,
+        bbVersion,
+        dateOfSave,
+        requirements,
+        interfaceCompliance,
+      } = item;
 
-  formData.append('softwareName', data.softwareName.value);
-  formData.append('logo', data.softwareLogo.value as File);
-  formData.append('website', data.softwareWebsite.value);
-  formData.append('documentation', data.softwareDocumentation.value);
-  formData.append('description', data.toolDescription.value);
-  formData.append('email', data.email.value);
+      const bbDetails = {
+        [bbKey]: {
+          bbSpecification: bbName,
+          bbVersion,
+          dateOfSave,
+          requirements: {
+            crossCutting: requirements.crossCutting.map((crossCuttingItem) => ({
+              requirement: crossCuttingItem.requirement,
+              comment: crossCuttingItem.comment,
+              fulfillment: crossCuttingItem.fulfillment,
+              _id: crossCuttingItem._id,
+            })),
+            functional: [],
+          },
+          interfaceCompliance: {
+            testHarnessResult: interfaceCompliance.testHarnessResult,
+          },
+        },
+      };
+
+      return {
+        bbDetails,
+      };
+    }),
+  };
+  console.log(JSON.stringify(transformedData));
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
-    body: formData,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(transformedData),
   })
     .then((response) => {
       if (!response.ok) {
@@ -338,7 +399,7 @@ export const updateDraftDetailsStepOne = async (
 
       return response.json();
     })
-    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
+    .then<Success<PATCHSoftwareAttributesType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -388,28 +449,4 @@ export const fetchFileDetails = async (file: string) => {
   } catch (error) {
     return undefined;
   }
-};
-
-export const patchDraftDetails = async (draftUUID: string, payload: ComplianceRequirementsType) => {
-
-  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
-    method: 'patch',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload)
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-
-      return response.json();
-    })
-    .then<Success<ComplianceRequirementsType>>((actualData) => {
-      return { data: actualData, status: true };
-    })
-    .catch<Failure>((error) => {
-      return { error, status: false };
-    });
 };

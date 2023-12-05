@@ -1,55 +1,79 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useTable, usePagination } from 'react-table';
-import { useIntl } from 'react-intl';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useTable, usePagination, Cell } from 'react-table';
 import classNames from 'classnames';
-import { FaRegCircleCheck, FaCircleCheck, FaCircleXmark, FaRegCircleXmark } from 'react-icons/fa6';
+import {
+  FaRegCircleCheck,
+  FaCircleCheck,
+  FaCircleXmark,
+  FaRegCircleXmark,
+} from 'react-icons/fa6';
 import { ComplianceRequirementsType } from '../../service/types';
+import useTranslations from '../../hooks/useTranslation';
 
 export type RequirementType = {
-  requirement: string,
-  comment: string,
-  status: number,
-  fulfillment: number | null,
-  _id: string
-}
+  requirement: string;
+  comment: string;
+  status: number;
+  fulfillment: number | null;
+  _id: string;
+};
 
 type IRSCTableType = {
-  selectedData: ComplianceRequirementsType
-}
+  selectedData: ComplianceRequirementsType;
+  setUpdatedData: (data: ComplianceRequirementsType) => void;
+  isTableValid: boolean;
+};
 
-const IRSCTable = ({ selectedData, setUpdatedData }: IRSCTableType) => {
-  const { formatMessage } = useIntl();
-  const format = useCallback((id: string) => formatMessage({ id }), [formatMessage]);
-
+const IRSCTable = ({
+  selectedData,
+  setUpdatedData,
+  isTableValid,
+}: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
-  const [crossCuttings, setCrossCuttings] = useState<RequirementType[]>(selectedData?.requirements.crossCutting);
 
-  const updateData = (cellId: string, type: string, value: string | number | null) => {
+  const { format } = useTranslations();
+
+  useEffect(() => setUpdatedData(data), [data]);
+
+  const updateData = (
+    cellId: string,
+    type: string,
+    value: string | number | null
+  ) => {
     if (type === 'fulfillment') {
       return data.requirements.crossCutting.map((item) =>
         item._id === cellId
           ? {
             ...item,
-            fulfillment: value,
+            fulfillment: value as number,
           }
           : item
       );
-    }
-    else if (type === 'comment') {
+    } else if (type === 'comment') {
       return data.requirements.crossCutting.map((item) =>
         item._id === cellId
           ? {
             ...item,
-            comment: value,
+            comment: value as string,
           }
           : item
       );
     }
   };
 
-  const handleUpdateField = (cellId: string, type: string, value: string | number | null) => {
+  const handleUpdateField = (
+    cellId: string,
+    type: string,
+    value: string | number | null
+  ) => {
+    let updatedCrossCuttings;
+    if (type === 'fulfillment') {
+      updatedCrossCuttings = updateData(cellId, type, value as number);
+    }
 
-    const updatedCrossCuttings = updateData(cellId, type, value);
+    if (type === 'comment') {
+      updatedCrossCuttings = updateData(cellId, type, value as string);
+    }
 
     const updatedData = {
       ...data,
@@ -58,11 +82,8 @@ const IRSCTable = ({ selectedData, setUpdatedData }: IRSCTableType) => {
         crossCutting: updatedCrossCuttings,
       },
     };
-
-    setData(updatedData);
+    setData(updatedData as ComplianceRequirementsType);
   };
-
-  useEffect(() =>setUpdatedData(data), [data]);
 
   const columns = useMemo(
     () => [
@@ -72,29 +93,36 @@ const IRSCTable = ({ selectedData, setUpdatedData }: IRSCTableType) => {
       },
       {
         Header: format('form.header.comment.label'),
-        accessor:'comment',
-        Cell: ({ row }) => {
+        accessor: 'comment',
+        Cell: ({ row }: Cell<RequirementType>) => {
           const [comment, setComment] = useState<string>(row.values.comment);
           const [active, setActive] = useState(false);
 
           const counter = (
-            <div className={classNames('irsc-table-comment-counter', { 'counter-active': active })}>
+            <div
+              className={classNames('irsc-table-comment-counter', {
+                'counter-active': active,
+              })}
+            >
               {comment.length}/100
             </div>
           );
 
           return (
-            <div style={{ position: 'relative' }}>
+            <div className="irsc-table-textarea">
               <textarea
                 name="comment"
                 maxLength={100}
                 value={comment}
-                onChange={(event) =>  {
+                onChange={(event) => {
                   setComment(event.target.value);
-
                 }}
                 onBlur={(event) => {
-                  handleUpdateField(row.original._id, 'comment', event.target.value);
+                  handleUpdateField(
+                    row.original._id,
+                    'comment',
+                    event.target.value
+                  );
                   setActive(false);
                 }}
                 onClick={() => setActive(true)}
@@ -102,106 +130,149 @@ const IRSCTable = ({ selectedData, setUpdatedData }: IRSCTableType) => {
               {counter}
             </div>
           );
-        }
+        },
       },
       {
         Header: format('form.header.fulfillment.label'),
         accessor: 'fulfillment',
         Cell: ({ row }) => {
           return (
-            <div className='irsc-table-icons'>
-              {row.values.fulfillment === 0 ?
+            <div className="irsc-table-icons">
+              {row.values.fulfillment === 0 ? (
                 <FaCircleXmark
-                  fill='#CF0B0B'
-                  style={{ height: '24px', width: '24px' }}
-                  onClick={() => handleUpdateField(row.original._id, 'fulfillment', null)}
+                  fill="#CF0B0B"
+                  className="irsc-table-icon"
+                  onClick={() =>
+                    handleUpdateField(row.original._id, 'fulfillment', null)
+                  }
                 />
-                : <FaRegCircleXmark
-                  style={{ height: '24px', width: '24px' }}
-                  onClick={() => handleUpdateField(row.original._id, 'fulfillment', 0)}
+              ) : (
+                <FaRegCircleXmark
+                  className="irsc-table-icon"
+                  onClick={() =>
+                    handleUpdateField(row.original._id, 'fulfillment', 0)
+                  }
                 />
-              }
-              {row.values.fulfillment === 1 ?
+              )}
+              {row.values.fulfillment === 1 ? (
                 <FaCircleCheck
-                  fill='#048112'
-                  style={{ height: '24px', width: '24px' }}
-                  onClick={() => handleUpdateField(row.original._id, 'fulfillment', null)}
+                  fill="#048112"
+                  className="irsc-table-icon"
+                  onClick={() =>
+                    handleUpdateField(row.original._id, 'fulfillment', null)
+                  }
                 />
-                : <FaRegCircleCheck
-                  style={{ height: '24px', width: '24px' }}
-                  onClick={() => handleUpdateField(row.original._id, 'fulfillment', 1)}
+              ) : (
+                <FaRegCircleCheck
+                  className="irsc-table-icon"
+                  onClick={() =>
+                    handleUpdateField(row.original._id, 'fulfillment', 1)
+                  }
                 />
-              }
-
+              )}
             </div>
           );
         },
-      }
+      },
     ],
     [data.requirements.crossCutting]
   );
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    prepareRow,
-    page
-  } = useTable(
-    {
-      columns,
-      data: data.requirements.crossCutting,
-    },
-    usePagination
-  );
+  // @ts-ignore
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
+    useTable(
+      {
+        // @ts-ignore
+        columns,
+        data: data.requirements.crossCutting,
+      },
+      usePagination
+    );
 
   return (
-    data.requirements.crossCutting?.length &&
+    data.requirements.crossCutting?.length && (
       <div>
-        <table {...getTableProps()} className='irsc-table-container'>
+        <table
+          {...getTableProps()}
+          className="irsc-table-container"
+          // role="presentation"
+        >
           <thead>
-            {headerGroups.map(headerGroup => {
+            {headerGroups.map((headerGroup, indexKey) => {
               return (
                 <tr
-                  key={headerGroup.id}
-                  className='irsc-table-header'
-                  {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map(column => (
-                    <th key={column._id} {...column.getHeaderProps()}>{column.render('Header')}</th>
+                  {...headerGroup.getHeaderGroupProps()}
+                  key={`${headerGroup.id}}-${indexKey}`}
+                  className="irsc-table-header"
+                >
+                  {headerGroup.headers.map((column, indexKey) => (
+                    <th
+                      {...column.getHeaderProps()}
+                      key={`header-th-${indexKey}`}
+                    >
+                      {column.render('Header')}
+                    </th>
                   ))}
                 </tr>
-              );}
-            )}
+              );
+            })}
           </thead>
           <tbody {...getTableBodyProps()}>
             <tr>
-              <td className='irsc-table-header-required' colSpan={3}>
+              <td className="irsc-table-header-required" colSpan={3}>
                 {format('form.required_label')}
               </td>
             </tr>
-            {page.map((row) => {
-              if (row.original.hasOwnProperty('displayCategory')) {
+            {page.map((row: any, indexKey: number) => {
+              prepareRow(row);
+              if (!isTableValid && !row.values.fulfillment) {
                 return (
-                  <tr className='irsc-table-rows' key={row.original.displayCategory}>
-                    <td colSpan="100%">{row.original.displayCategory}</td>
+                  <tr
+                    {...row.getRowProps()}
+                    key={`row-${indexKey}`}
+                    className="irsc-table-rows irsc-invalid-row"
+                    // style={{ border: '1px solid red' }}
+                  >
+                    {row.cells.map((cell: any, indexKey: number) => {
+                      return (
+                        <td
+                          {...cell.getCellProps()}
+                          key={`cell-td-${indexKey}`}
+                          // style={{ border: '1px solid red' }}
+                        >
+                          {cell.render('Cell')}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               }
 
-              prepareRow(row);
-
               return (
-                <tr {...row.getRowProps()} className='irsc-table-rows'>
-                  {row.cells.map(cell => {
-                    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>;
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className="irsc-table-rows"
+                  // style={{ border: '1px solid red' }}
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td
+                        {...cell.getCellProps()}
+                        key={`cell-td-${indexKey}`}
+                        // style={{ border: '1px solid red' }}
+                      >
+                        {cell.render('Cell')}
+                      </td>
+                    );
                   })}
                 </tr>
               );
             })}
           </tbody>
         </table>
-        <div className="h-4" />
       </div>
+    )
   );
 };
 
