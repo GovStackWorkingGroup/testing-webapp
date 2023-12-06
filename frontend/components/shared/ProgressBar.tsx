@@ -34,7 +34,7 @@ const ProgressBar = ({
   onSubmitButton,
   customRef,
 }: ProgressBarProps) => {
-  const [activeStep, setActiveStep] = useState(4);
+  const [activeStep, setActiveStep] = useState(1);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();

@@ -58,10 +58,10 @@ const SoftwareComplianceForm = ({
   const [updatedBBs, setUpdatedBBs] = useState<
     ComplianceRequirementsType[] | undefined
   >();
-
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [progressJiraLink, setProgressJiraLink] = useState('');
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
@@ -233,6 +233,7 @@ const SoftwareComplianceForm = ({
       await submitDraft(draftUUID as string).then((response) => {
         if (response.status) {
           setIsFormSubmitted(true);
+          setProgressJiraLink(response.data.link);
 
           return;
         }
@@ -255,7 +256,7 @@ const SoftwareComplianceForm = ({
         />
       </div>
       {isFormSubmitted ? (
-        <FormSuccessComponent />
+        <FormSuccessComponent progressJiraLink={progressJiraLink} />
       ) : (
         <ProgressBar
           steps={softwareComplianceFormSteps}

@@ -7,12 +7,17 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useTranslations from '../../hooks/useTranslation';
 
-const FormSuccessComponent = () => {
+type FormSuccessComponentProps = {
+  progressJiraLink: string;
+};
+
+const FormSuccessComponent = ({
+  progressJiraLink,
+}: FormSuccessComponentProps) => {
   const [isLinkCopied, setIsLinkCopied] = useState(false);
   const { format } = useTranslations();
 
-  // to be changed
-  const link = 'www.test_link.com';
+  const link = progressJiraLink;
 
   useEffect(() => {
     if (isLinkCopied) {

@@ -13,7 +13,7 @@ const SoftwareComplianceTestingPage = () => {
         <meta name="description" content="GovStack Testing App" />
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <main>
+      <main className="software-compliance-main-container">
         <Definition
           title={format('app.definition_self_assessment.title')}
           description={format(

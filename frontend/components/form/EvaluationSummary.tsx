@@ -149,7 +149,7 @@ const EvaluationSummary = () => {
       <SoftwareDetails
         title={format('form.filled_compliance_form.label')}
         editButton={true}
-        redirectToStep={2}
+        redirectToStep={3}
         customStyles="software-detail-evaluation-summary"
       >
         <Table
