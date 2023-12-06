@@ -99,8 +99,19 @@ export type SoftwareDetailsType = [
 
 export type BBDetailsType = {
   [key: string]: {
-    requirementSpecificationCompliance: object;
-    interfaceCompliance: object;
+    requirementSpecificationCompliance: {
+      crossCuttingRequirements: {
+        requirement: string;
+        comment: string;
+        fulfillment: number | null;
+        _id: string;
+      }[];
+      functionalRequirements: [];
+    };
+    interfaceCompliance: {
+      testHarnessResult: string;
+      requirements: [];
+    };
     deploymentCompliance: number;
   };
 };
@@ -112,7 +123,7 @@ export type SoftwareDraftDetailsType = {
   email: string;
   expirationDate: string;
   formDetails: {
-    bbDetails: { [bbKey: string]: SoftwareDraftBBDetailsType };
+    bbDetails: BBDetailsType;
   }[];
   logo: string;
   softwareName: string;
@@ -169,22 +180,6 @@ export type IRSCSoftwareDraftToUpdateType = {
   };
 };
 
-export type SoftwareDraftBBDetailsType = {
-  requirementSpecificationCompliance: {
-    crossCuttingRequirements: {
-      requirement: string;
-      comment: string;
-      fulfillment: number | null;
-      _id: string;
-    }[];
-    functionalRequirements: [];
-  };
-  interfaceCompliance: {
-    testHarnessResult: string;
-    requirements: [];
-  };
-};
-
 export type ComplianceRequirementsType = {
   bbName: string;
   bbKey: string;
@@ -207,17 +202,6 @@ export type ComplianceRequirementsType = {
     requirements: [];
   };
 };
-
-// export type BBDetailsType = {
-//   bbName: string;
-//   bbKey: string;
-//   bbVersion: string;
-//   dateOfSave: string;
-//   requirements: {
-//     crossCutting: CrossCuttingType[];
-//     functional: [];
-//   };
-// }[];
 
 export type CrossCuttingType = {
   requirement: string;

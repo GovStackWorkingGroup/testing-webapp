@@ -393,6 +393,7 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
+      version: '1',
       bbDetails: transformedDataObject,
     },
   };
@@ -420,9 +421,14 @@ export const updateDraftDetailsStepThree = async (
 };
 
 export const submitDraft = async (uniqueId: string) => {
+  const payload = { uniqueId };
+
   return await fetch(`${baseUrl}/compliance/drafts/submit`, {
     method: 'POST',
-    body: JSON.stringify(uniqueId),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
   })
     .then((response) => {
       if (!response.ok) {
