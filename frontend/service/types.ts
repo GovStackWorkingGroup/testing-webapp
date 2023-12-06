@@ -103,7 +103,9 @@ export type SoftwareDraftDetailsType = {
   documentation: string;
   email: string;
   expirationDate: string;
-  formDetails: { bbDetails: [] | null }[];
+  formDetails: {
+    bbDetails: { [bbKey: string]: SoftwareDraftBBDetailsType };
+  }[];
   logo: string;
   softwareName: string;
   status: number;
@@ -152,6 +154,22 @@ export type IRSCSoftwareDraftToUpdateType = {
       _id: string;
     }[];
     functional: [];
+  };
+  interfaceCompliance: {
+    testHarnessResult: string;
+    requirements: [];
+  };
+};
+
+export type SoftwareDraftBBDetailsType = {
+  requirementSpecificationCompliance: {
+    crossCuttingRequirements: {
+      requirement: string;
+      comment: string;
+      fulfillment: number | null;
+      _id: string;
+    }[];
+    functionalRequirements: [];
   };
   interfaceCompliance: {
     testHarnessResult: string;

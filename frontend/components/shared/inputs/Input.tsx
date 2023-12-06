@@ -11,6 +11,7 @@ type InputProps = {
   name: string;
   value?: string;
   className?: string;
+  defaultValue?: string;
 };
 
 const Input = ({
@@ -24,10 +25,14 @@ const Input = ({
   name,
   value,
   className,
+  defaultValue,
   ...props
 }: InputProps) => {
   return (
-    <div className={classNames('custom-input-container', className)} key={inputKey}>
+    <div
+      className={classNames('custom-input-container', className)}
+      key={inputKey}
+    >
       {inputTitle && (
         <p className={classNames({ 'required-field': required })}>
           {inputTitle}
@@ -40,6 +45,7 @@ const Input = ({
         maxLength={50}
         onChange={onChange}
         value={value}
+        defaultValue={defaultValue}
       ></input>
       {isInvalid ? (
         <p className="custom-input-error-message">{errorMessage}</p>

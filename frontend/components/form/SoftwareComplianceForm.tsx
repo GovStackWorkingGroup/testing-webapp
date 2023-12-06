@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
+  INTERFACE_COMPLIANCE_STORAGE_NAME,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
   softwareComplianceFormSteps,
 } from '../../service/constants';
@@ -54,7 +55,6 @@ const SoftwareComplianceForm = ({
   const [updatedBBs, setUpdatedBBs] = useState<
     ComplianceRequirementsType[] | undefined
   >();
-  console.log('TOP updatedBBs', updatedBBs);
 
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
@@ -83,9 +83,7 @@ const SoftwareComplianceForm = ({
 
     if (currentProgressBarStep === 2) {
       if (deploymentComplianceRef.current?.validate()) {
-        handleUpdateDraft().then(() => {
-          nextStepRef.current?.goNext();
-        });
+        handleUpdateDraft(true);
       }
 
       return;
@@ -93,9 +91,7 @@ const SoftwareComplianceForm = ({
 
     if (currentProgressBarStep === 3) {
       if (IRSCFormRef.current?.validate()) {
-        handleUpdateDraft().then(() => {
-          nextStepRef.current?.goNext();
-        });
+        handleUpdateDraft(true);
       }
 
       return;
@@ -103,8 +99,20 @@ const SoftwareComplianceForm = ({
   };
 
   const handleSaveDraftButton = () => {
-    if (deploymentComplianceRef.current?.validate()) {
-      handleUpdateDraft();
+    if (currentProgressBarStep === 2) {
+      if (deploymentComplianceRef.current?.validate()) {
+        handleUpdateDraft(false);
+      }
+
+      return;
+    }
+
+    if (currentProgressBarStep === 3) {
+      if (IRSCFormRef.current?.validate()) {
+        handleUpdateDraft(false);
+      }
+
+      return;
     }
   };
 
@@ -162,26 +170,15 @@ const SoftwareComplianceForm = ({
     }
   };
 
-  const handleUpdateDraft = async () => {
-    const updateData: SoftwareDraftToUpdateType = {};
+  const handleUpdateDraft = async (redirectToNextPage: boolean) => {
     if (currentProgressBarStep === 2) {
+      const updateData: SoftwareDraftToUpdateType = {};
       updateData.deploymentCompliance = {
         documentation: deploymentComplianceFormValues.documentation.value,
         deploymentInstructions:
           deploymentComplianceFormValues.deploymentInstructions.value,
       };
-    }
 
-    if (currentProgressBarStep === 3) {
-      await updateDraftDetailsStepThree(
-        draftUUID as string,
-        updatedBBs as ComplianceRequirementsType[]
-      ).then((response) => {
-        console.log('response', response);
-      });
-    }
-
-    if (draftUUID) {
       await updateDraftDetailsStepTwo(draftUUID as string, updateData).then(
         (response) => {
           if (response.status) {
@@ -189,6 +186,9 @@ const SoftwareComplianceForm = ({
               icon: <RiCheckboxCircleFill className="success-toast-icon" />,
             });
             localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
+            if (redirectToNextPage) {
+              nextStepRef.current?.goNext();
+            }
           }
 
           if (!response.status) {
@@ -198,6 +198,29 @@ const SoftwareComplianceForm = ({
           }
         }
       );
+    }
+
+    if (currentProgressBarStep === 3) {
+      await updateDraftDetailsStepThree(
+        draftUUID as string,
+        updatedBBs as ComplianceRequirementsType[]
+      ).then((response) => {
+        if (response.status) {
+          toast.success(format('form.form_saved_success.message'), {
+            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+          });
+          localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+          if (redirectToNextPage) {
+            nextStepRef.current?.goNext();
+          }
+        }
+
+        if (!response.status) {
+          toast.error(format('form.form_saved_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+      });
     }
   };
 

@@ -56,7 +56,7 @@ const InterfaceComplianceForm = ({
       <div className="interface-bb-selector">
         <p className="text-18">{format('form.select_building_blocks.label')}</p>
         <SelectBBs
-          data={interfaceRequirementsData}
+          interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCFormRef={IRSCFormRef}
         />

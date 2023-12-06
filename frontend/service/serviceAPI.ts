@@ -248,8 +248,6 @@ export const getComplianceRequirements = async () => {
       return response.json();
     })
     .then<Success<ComplianceRequirementsType[]>>((actualData) => {
-      console.log('actualData', actualData);
-
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -347,50 +345,63 @@ export const updateDraftDetailsStepThree = async (
   draftUUID: string,
   data: ComplianceRequirementsType[]
 ) => {
-  const transformedData = {
-    compliance: data.map((item) => {
-      const {
-        bbKey,
-        bbName,
-        bbVersion,
-        dateOfSave,
-        requirements,
-        interfaceCompliance,
-      } = item;
+  const transformedData = data.map((item) => {
+    const {
+      bbKey,
+      bbName,
+      bbVersion,
+      dateOfSave,
+      requirements,
+      interfaceCompliance,
+    } = item;
 
-      const bbDetails = {
-        [bbKey]: {
-          bbSpecification: bbName,
-          bbVersion,
-          dateOfSave,
-          requirements: {
-            crossCutting: requirements.crossCutting.map((crossCuttingItem) => ({
-              requirement: crossCuttingItem.requirement,
-              comment: crossCuttingItem.comment,
-              fulfillment: crossCuttingItem.fulfillment,
-              _id: crossCuttingItem._id,
-            })),
-            functional: [],
-          },
-          interfaceCompliance: {
-            testHarnessResult: interfaceCompliance.testHarnessResult,
-          },
-        },
-      };
+    const test = {
+      bbSpecification: bbName,
+      bbVersion,
+      dateOfSave,
+      requirementSpecificationCompliance: {
+        crossCuttingRequirements: requirements.crossCutting.map(
+          (crossCuttingItem) => ({
+            requirement: crossCuttingItem.requirement,
+            comment: crossCuttingItem.comment,
+            fulfillment: crossCuttingItem.fulfillment,
+            _id: crossCuttingItem._id,
+          })
+        ),
+        functionalRequirements: [],
+      },
+      interfaceCompliance: {
+        testHarnessResult: interfaceCompliance.testHarnessResult,
+      },
+    };
 
-      return {
-        bbDetails,
-      };
-    }),
+    return {
+      [bbKey]: test,
+    };
+  });
+
+  const transformedDataObject = transformedData.reduce((acc, item) => {
+    const bbKey = Object.keys(item)[0];
+
+    if (bbKey) {
+      acc[bbKey] = item[bbKey];
+    }
+
+    return acc;
+  }, {});
+
+  const payload = {
+    compliance: {
+      bbDetails: transformedDataObject,
+    },
   };
-  console.log(JSON.stringify(transformedData));
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify(transformedData),
+    body: JSON.stringify(payload),
   })
     .then((response) => {
       if (!response.ok) {

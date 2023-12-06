@@ -1,33 +1,30 @@
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
+import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
-import {
-  ComplianceRequirementsType,
-  InputSingleOptionProps,
-} from '../../../service/types';
+import { ComplianceRequirementsType } from '../../../service/types';
 import Input from '../inputs/Input';
 import IRSCTable from '../../table/IRSCTable';
 import useTranslations from '../../../hooks/useTranslation';
+import useGetDraftData from '../../../hooks/useGetDraftDetail';
+import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../../service/constants';
 
 export type IRSCFormRef = {
   validate: () => boolean;
 };
 
 type SelectorWithPillsProps = {
-  data: ComplianceRequirementsType[] | undefined;
+  interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
   setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
   IRSCFormRef: RefObject<IRSCFormRef>;
 };
 
 const SelectBBs = ({
-  data,
+  interfaceRequirementsData,
   setUpdatedBBs,
   IRSCFormRef,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
-    ComplianceRequirementsType[]
-  >([]);
-  const [updatedSelectedItems, setUpdatedSelectedItems] = useState<
     ComplianceRequirementsType[]
   >([]);
   const [updatedData, setUpdatedData] = useState<ComplianceRequirementsType>();
@@ -37,41 +34,150 @@ const SelectBBs = ({
   const [isTableValid, setIsTableValid] = useState(true);
   const [isTestHarnessInputValid, setIsTestHarnessInputValid] =
     useState<boolean>(true);
+  const [savedInLocalStorage, setSavedInLocalStorage] = useState<
+    ComplianceRequirementsType[] | null
+  >(null);
 
+  const router = useRouter();
   const { format } = useTranslations();
 
-  const handleSetOptions = () => {
-    if (data) {
-      const options = data?.map((item) => ({
-        value: item,
-        label: item.bbName,
-      }));
-      setOptions(options);
-    }
-  };
+  const { draftUUID } = router.query;
+  const { draftData } = useGetDraftData({
+    draftUUID: (draftUUID as string) || undefined,
+  });
+
+  useEffect(() => {
+    const savedIRSCInStorage = JSON.parse(
+      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
+        'null'
+    );
+    setSavedInLocalStorage(savedIRSCInStorage);
+  }, []);
+
+  useEffect(() => {
+    handleAlreadySavedData();
+  }, [draftData]);
 
   useEffect(() => {
     handleSetOptions();
-  }, [data]);
+  }, [interfaceRequirementsData]);
 
   useEffect(() => {
-    setUpdatedBBs(
-      selectedItems?.map((item) =>
-        item?.bbKey === updatedData?.bbKey ? updatedData : item
-      )
+    const updatedSelectedItemsData = selectedItems?.map((item) =>
+      item?.bbKey === updatedData?.bbKey ? updatedData : item
     );
-    setUpdatedSelectedItems(
-      selectedItems?.map((item) =>
-        item?.bbKey === updatedData?.bbKey ? updatedData : item
-      )
-    );
-  }, [updatedData, selectedItems]);
+    setSelectedItems(updatedSelectedItemsData);
+    setUpdatedBBs(updatedSelectedItemsData);
+  }, [updatedData]);
 
   useEffect(() => {
     options?.sort((prevItem: { label: string }, nextItem: { label: string }) =>
       prevItem.label.localeCompare(nextItem.label)
     );
   }, [options]);
+
+  const handleAlreadySavedData = () => {
+    if (savedInLocalStorage?.length) {
+      setSelectedItems(savedInLocalStorage);
+
+      return;
+    }
+
+    if (draftData) {
+      const combinedArray = draftData?.formDetails
+        .map((formDetail) => {
+          const bbKeys = Object.keys(formDetail.bbDetails);
+
+          const combinedItems = bbKeys.map((bbKey) => {
+            const matchingFirstArrItem = interfaceRequirementsData?.find(
+              (item) => item.bbKey === bbKey
+            );
+
+            let combinedItem;
+
+            if (matchingFirstArrItem) {
+              combinedItem = {
+                bbName: matchingFirstArrItem.bbName,
+                bbKey: matchingFirstArrItem.bbKey,
+                bbVersion: matchingFirstArrItem.bbVersion,
+                dateOfSave: matchingFirstArrItem.dateOfSave,
+                requirements: {
+                  crossCutting: formDetail.bbDetails[
+                    bbKey
+                  ].requirementSpecificationCompliance.crossCuttingRequirements.map(
+                    (crossCuttingItem) => ({
+                      requirement: crossCuttingItem.requirement,
+                      comment: crossCuttingItem.comment,
+                      fulfillment: crossCuttingItem.fulfillment,
+                      _id: crossCuttingItem._id,
+                    })
+                  ),
+                  functional:
+                    formDetail.bbDetails[bbKey]
+                      .requirementSpecificationCompliance
+                      .functionalRequirements,
+                },
+                interfaceCompliance: {
+                  testHarnessResult:
+                    formDetail.bbDetails[bbKey].interfaceCompliance
+                      ?.testHarnessResult || '',
+                  requirements:
+                    formDetail.bbDetails[bbKey].interfaceCompliance
+                      ?.requirements || [],
+                },
+              };
+            } else {
+              // If no matching bbKey, return the object from interfaceRequirementsData
+              const matchingFirstArrItem = interfaceRequirementsData?.find(
+                (item) => item.bbKey === bbKey
+              );
+              combinedItem = matchingFirstArrItem || null;
+            }
+
+            return combinedItem;
+          });
+
+          return combinedItems.filter(Boolean); // Remove null values from the combined items
+        })
+        .flat();
+
+      if (combinedArray) {
+        setSelectedItems(combinedArray as ComplianceRequirementsType[]);
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(combinedArray)
+        );
+      }
+    }
+  };
+
+  const handleSetOptions = () => {
+    if (interfaceRequirementsData) {
+      if (selectedItems) {
+        const filteredInterfaceRequirementsData =
+          interfaceRequirementsData.filter(
+            (item) =>
+              !selectedItems.some(
+                (combinedItem) => combinedItem.bbKey === item.bbKey
+              )
+          );
+        const options = filteredInterfaceRequirementsData?.map((item) => ({
+          value: item,
+          label: item.bbName,
+        }));
+        setOptions(options);
+
+        return;
+      }
+
+      const options = interfaceRequirementsData?.map((item) => ({
+        value: item,
+        label: item.bbName,
+      }));
+      setOptions(options);
+    }
+  };
 
   const handleOnSelect = (value: {
     value: ComplianceRequirementsType;
@@ -95,6 +201,7 @@ const SelectBBs = ({
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     const { value, name } = event.target;
+
     setIsTestHarnessInputValid(true);
 
     const foundIndex = selectedItems.findIndex((item) => item.bbKey === name);
@@ -106,14 +213,17 @@ const SelectBBs = ({
       selectedItems[foundIndex].interfaceCompliance.requirements = [];
 
       setSelectedItems(selectedItems);
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify(selectedItems)
+      );
     }
   };
 
   const handleClearAllSelectedItems = () => setSelectedItems([]);
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
-    console.log('data validacja', data);
-
     const isTableValid = data.every((dataItem) =>
       dataItem.requirements.crossCutting.every(
         (item) => item.fulfillment !== undefined && item.fulfillment !== null
@@ -126,8 +236,6 @@ const SelectBBs = ({
         dataItem.interfaceCompliance.testHarnessResult !== undefined &&
         dataItem.interfaceCompliance.testHarnessResult !== ''
     );
-    console.log('isTestHarnessInputValid', isTestHarnessInputValid);
-    console.log('isTableValid', isTableValid);
 
     setIsTestHarnessInputValid(isTestHarnessInputValid);
 
@@ -136,19 +244,17 @@ const SelectBBs = ({
     return isValid;
   };
 
-  console.log('selectedItems', selectedItems);
-
   useImperativeHandle(
     IRSCFormRef,
     () => ({
       validate: () => {
-        const isValid = isFulfillmentValid(updatedSelectedItems);
+        const isValid = isFulfillmentValid(selectedItems);
         setIsTableValid(isValid);
 
         return isValid;
       },
     }),
-    [updatedSelectedItems]
+    [selectedItems]
   );
 
   const displayPills = selectedItems.map((item) => {
@@ -175,6 +281,11 @@ const SelectBBs = ({
           className="input-width-400"
           onChange={(event) => handleTestHarnessLink(event)}
           errorMessage={format('form.required_field.message')}
+          defaultValue={
+            item?.interfaceCompliance
+              ? item.interfaceCompliance.testHarnessResult
+              : ''
+          }
         />
         <p className="table-container-title">
           {format('form.table.title.label')}

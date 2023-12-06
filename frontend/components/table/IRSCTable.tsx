@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fa6';
 import { ComplianceRequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
+import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../service/constants';
 
 export type RequirementType = {
   requirement: string;
@@ -30,10 +31,21 @@ const IRSCTable = ({
   isTableValid,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
+  const [savedInLocalStorage, setSavedInLocalStorage] = useState<
+    ComplianceRequirementsType[] | null
+  >(null);
 
   const { format } = useTranslations();
 
   useEffect(() => setUpdatedData(data), [data]);
+
+  useEffect(() => {
+    const savedIRSCInStorage = JSON.parse(
+      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
+        'null'
+    );
+    setSavedInLocalStorage(savedIRSCInStorage);
+  }, []);
 
   const updateData = (
     cellId: string,
@@ -83,6 +95,36 @@ const IRSCTable = ({
       },
     };
     setData(updatedData as ComplianceRequirementsType);
+    handleSaveInLocalStorage(updatedData as ComplianceRequirementsType);
+  };
+
+  const handleSaveInLocalStorage = (
+    updatedData: ComplianceRequirementsType
+  ) => {
+    if (savedInLocalStorage) {
+      const updatedLocalStorage = savedInLocalStorage?.map(
+        (item: ComplianceRequirementsType) =>
+          item?.bbKey === updatedData?.bbKey ? updatedData : item
+      );
+
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify(updatedLocalStorage)
+      );
+
+      return;
+    }
+
+    if (!savedInLocalStorage) {
+      const updatedLocalStorage = [updatedData];
+
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify(updatedLocalStorage)
+      );
+    }
   };
 
   const columns = useMemo(
@@ -191,12 +233,8 @@ const IRSCTable = ({
 
   return (
     data.requirements.crossCutting?.length && (
-      <div>
-        <table
-          {...getTableProps()}
-          className="irsc-table-container"
-          // role="presentation"
-        >
+      <div className="irsc-table-container">
+        <table {...getTableProps()} className="irsc-table">
           <thead>
             {headerGroups.map((headerGroup, indexKey) => {
               return (
@@ -225,20 +263,22 @@ const IRSCTable = ({
             </tr>
             {page.map((row: any, indexKey: number) => {
               prepareRow(row);
-              if (!isTableValid && !row.values.fulfillment) {
+              if (
+                !isTableValid &&
+                (row.values.fulfillment === undefined ||
+                  row.values.fulfillment === null)
+              ) {
                 return (
                   <tr
                     {...row.getRowProps()}
                     key={`row-${indexKey}`}
                     className="irsc-table-rows irsc-invalid-row"
-                    // style={{ border: '1px solid red' }}
                   >
                     {row.cells.map((cell: any, indexKey: number) => {
                       return (
                         <td
                           {...cell.getCellProps()}
                           key={`cell-td-${indexKey}`}
-                          // style={{ border: '1px solid red' }}
                         >
                           {cell.render('Cell')}
                         </td>
@@ -253,15 +293,10 @@ const IRSCTable = ({
                   {...row.getRowProps()}
                   key={`row-${indexKey}`}
                   className="irsc-table-rows"
-                  // style={{ border: '1px solid red' }}
                 >
                   {row.cells.map((cell: any, indexKey: number) => {
                     return (
-                      <td
-                        {...cell.getCellProps()}
-                        key={`cell-td-${indexKey}`}
-                        // style={{ border: '1px solid red' }}
-                      >
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
                         {cell.render('Cell')}
                       </td>
                     );

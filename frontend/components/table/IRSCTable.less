@@ -1,40 +1,44 @@
 @import '../../styles/Variables.less';
 
 .irsc-table-container {
+  width: 100%;
+  overflow: hidden;
   border-radius: 8px;
   border: 1px solid @stroke;
+}
+
+table.irsc-table {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
-}
 
-.irsc-table-header {
-  font-family: Arial;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  color: @text-secondary;
-  background-color: @light-blue;
+  thead {
+    font-size: 13px;
+    font-weight: 700;
+    color: @text-secondary;
+    background-color: @light-blue;
 
-  th {
-    padding: 16px;
-    text-align: left;
-  }
+    tr {
+      th {
+        padding: 16px;
+        text-align: left;
+      }
 
-  th:nth-child(1) {
-    border-right: 1px solid @stroke;
-    border-bottom: 1px solid @stroke;
-    width: 25%;
-  }
-  th:nth-child(2) {
-    border-right: 1px solid @stroke;
-    border-bottom: 1px solid @stroke;
-    width: 65%;
-  }
-  th:nth-child(3) {
-    border-bottom: 1px solid @stroke;
-    width: 10%;
+      th:nth-child(1) {
+        border-right: 1px solid @stroke;
+        border-bottom: 1px solid @stroke;
+        width: 25%;
+      }
+      th:nth-child(2) {
+        border-right: 1px solid @stroke;
+        border-bottom: 1px solid @stroke;
+        width: 65%;
+      }
+      th:nth-child(3) {
+        border-bottom: 1px solid @stroke;
+        width: 10%;
+      }
+    }
   }
 }
 
@@ -52,6 +56,7 @@
     color: @text-main;
     height: 32px;
     vertical-align: top;
+    line-height: 32px;
 
     textarea {
       width: 96.5%;
@@ -70,27 +75,22 @@
     padding: 0;
     border-right: 1px solid @stroke;
   }
-  td:nth-child(3) {
-  }
 }
 
 .irsc-invalid-row {
-  border: 1px solid @fail;
-
   td:nth-child(1) {
-    border-left: 1px solid @fail;
-    border-bottom: 1px solid @fail;
-    border-top: 1px solid @fail;
+    border-left: 2px solid @fail;
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
   }
   td:nth-child(2) {
-    border-right: 1px solid @fail;
-    border-bottom: 1px solid @fail;
-    border-top: 1px solid @fail;
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
   }
-  td:nth-child(3) {
-    border-bottom: 1px solid @fail;
-    border-top: 1px solid @fail;
-    border-right: 1px solid @fail;
+  td:last-child {
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
+    border-right: 2px solid @fail;
   }
 }
 
@@ -124,6 +124,7 @@
 
 .irsc-table-textarea {
   position: relative;
+  width: 98%;
 }
 
 .irsc-table-icon {
