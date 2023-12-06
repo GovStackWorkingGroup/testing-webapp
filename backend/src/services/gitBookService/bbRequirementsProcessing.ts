@@ -7,14 +7,24 @@ const processBBRequirements = async () => {
     const collectionManager = new GitBookCollectionManager();
     const spaceManager = new GitBookSpaceManager();
     const pageContentManager = new GitBookPageContentManager();
+
+    const CROSS_CUTTING_REQUIREMENTS_REGEX = /cross[\s-]?cutting[\s-]?requirements/i;
+    const FUNCTIONAL_REQUIREMENTS_REGEX = /functional[\s-]?requirements/i;
+
     let errors: string[] = [];
 
-    const processPages = async (spaceInfo, pageType) => {
-        const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, pageType);
+    const processPages = async (spaceInfo, pageTypeRegex) => {
+        const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, pageTypeRegex);
         const results = await Promise.all(pageIds.map(async (pageId) => {
             try {
                 const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
-                const extractResult = pageContentManager.extractRequirements(pageContent);
+                
+                let extractResult;
+                if(pageTypeRegex === CROSS_CUTTING_REQUIREMENTS_REGEX){
+                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent);
+                } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX){
+                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent);
+                }
 
                 if (extractResult.error) {
                     errors.push(`Error extracting requirements for page ID ${pageId}: ${extractResult.error.message}`);
@@ -41,8 +51,8 @@ const processBBRequirements = async () => {
                     throw new Error('No valid space found for the collection');
                 }
     
-                const crossCutting = await processPages(spaceInfo, '5');
-                const functional = await processPages(spaceInfo, '6');
+                const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
+                const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
                 
                 const requirements = { crossCutting, functional };
                 const dateOfSave = new Date().toISOString();
