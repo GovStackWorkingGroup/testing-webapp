@@ -83,7 +83,7 @@ const SelectBBs = ({
       return;
     }
 
-    if (draftData) {
+    if (draftData?.formDetails[0].bbDetails) {
       const combinedArray = draftData?.formDetails
         .map((formDetail) => {
           const bbKeys = Object.keys(formDetail.bbDetails);
@@ -149,6 +149,8 @@ const SelectBBs = ({
           JSON.stringify(combinedArray)
         );
       }
+
+      return;
     }
   };
 

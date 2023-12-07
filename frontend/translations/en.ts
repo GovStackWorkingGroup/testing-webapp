@@ -73,6 +73,7 @@ export const en = {
     'Requirement Specification',
 
   'form.container.label': 'Container',
+  'form.copied_to_clipboard.message': 'Link copied to clipboard!',
   'form.deployment_instruction.message':
     'Please provide links to documentation on how to install and deploy this product as well as links to Docker files or other files that show that the product can be run in a container system (usually Docker and/or Kubernetes). You can also directly upload files instead of providing links.',
   'form.error_loading_file.message': 'Error loading file. Please try again.',
@@ -100,6 +101,9 @@ export const en = {
   'form.form_submit_error.message': 'Draft submitting failed',
   'form.form_saved_success.message': 'Draft saved successfully',
   'form.form_saved_error.message': 'Draft saving failed',
+  'form.form_submit_success.message': 'Form has been successfully submitted!',
+  'form.form_submit_success_inform.message':
+    'We will inform you about the progress of the process via email provided in the form. You can also use this unique link to follow the progress:',
   'form.point_of_contact.label': 'Point of contact',
   'form.clear_selection.label': 'Clear selection',
   'form.select_building_blocks.label':

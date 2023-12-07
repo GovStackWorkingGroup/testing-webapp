@@ -40,7 +40,6 @@ const EvaluationSummary = () => {
           logo: draftData.logo,
           website: draftData.website,
           documentation: draftData.documentation,
-
           softwareName: draftData.softwareName,
         },
       ]);
@@ -149,7 +148,7 @@ const EvaluationSummary = () => {
       <SoftwareDetails
         title={format('form.filled_compliance_form.label')}
         editButton={true}
-        redirectToStep={2}
+        redirectToStep={3}
         customStyles="software-detail-evaluation-summary"
       >
         <Table

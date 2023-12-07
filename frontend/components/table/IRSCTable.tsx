@@ -168,6 +168,7 @@ const IRSCTable = ({
                   setActive(false);
                 }}
                 onClick={() => setActive(true)}
+                className="form-textarea"
               />
               {counter}
             </div>
