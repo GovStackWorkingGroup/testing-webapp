@@ -39,6 +39,13 @@ const Header = () => {
             active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
           />
         </div>
+        <div className="header-login">
+          <HeaderMenuButton
+            buttonTitle={format('app.login.label')}
+            href={'/login'}
+            active={currentPath === '/login'}
+          />
+        </div>
         <div className="header-help">
           {/* should be added in the scope of TECH-957 */}
           {/* <div className="header-help-section">
