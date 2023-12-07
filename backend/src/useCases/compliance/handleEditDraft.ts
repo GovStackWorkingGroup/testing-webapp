@@ -21,11 +21,11 @@ export default class EditDraftRequestHandler {
 
     private getFrontendUrl(path: string): string {
         let host = this.req.get('host');
-    
+
         if (host?.startsWith('api.')) {
             host = host.substring(4); // delete 'api.' from URL
         }
-    
+
         let baseUrl = `${this.req.protocol}://${host}`;
         return `${baseUrl}${path}`;
     }
@@ -43,14 +43,14 @@ export default class EditDraftRequestHandler {
 
             if (updateData.deploymentCompliance) {
                 updateData.deploymentCompliance.documentation = this.updateFilePath(
-                  files['deploymentCompliance[documentation]'],
-                  updateData.deploymentCompliance.documentation
+                    files['deploymentCompliance[documentation]'],
+                    updateData.deploymentCompliance.documentation
                 );
                 updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(
-                  files['deploymentCompliance[deploymentInstructions]'],
-                  updateData.deploymentCompliance.deploymentInstructions
+                    files['deploymentCompliance[deploymentInstructions]'],
+                    updateData.deploymentCompliance.deploymentInstructions
                 );
-              }
+            }
 
             const updateResult = await this.repository.editDraftForm(draftId, updateData);
 
