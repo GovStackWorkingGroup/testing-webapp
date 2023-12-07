@@ -121,11 +121,6 @@ const ComplianceDetailSchema = new mongoose.Schema({
 const ComplianceVersionSchema = new mongoose.Schema({
   version: {
     type: String,
-    default: "",
-    validate: {
-      validator: validateRequiredString,
-      message: 'compliance version is required when status is not DRAFT'
-    }
   },
   bbDetails: {
     type: Map,
