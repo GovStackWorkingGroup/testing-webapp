@@ -110,7 +110,7 @@ const ComplianceDetailSchema = new mongoose.Schema({
 const ComplianceVersionSchema = new mongoose.Schema({
   version: {
     type: String,
-    required: true
+    required: false
   },
   bbDetails: {
     type: Map,
