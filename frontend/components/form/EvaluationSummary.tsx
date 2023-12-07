@@ -40,7 +40,6 @@ const EvaluationSummary = () => {
           logo: draftData.logo,
           website: draftData.website,
           documentation: draftData.documentation,
-
           softwareName: draftData.softwareName,
         },
       ]);

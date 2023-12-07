@@ -42,7 +42,7 @@ const SoftwareDetails = ({
       {complianceSection ? (
         <p>
           {title}{' '}
-          <span className="bold">Software version {softwareVersion}</span>
+          <span className="bold">{`${format('table.software_name.label')} ${softwareVersion}`}</span>
         </p>
       ) : (
         <div className="software-attributes-title-with-link">
