@@ -30,8 +30,7 @@ exports[`Unit tests for SoftwareDetails component: should render the component a
       <span
         class="bold"
       >
-        Software version 
-        2.0
+        Software Version 2.0
       </span>
     </p>
     <div>
