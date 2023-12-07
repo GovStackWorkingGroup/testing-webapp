@@ -23,6 +23,7 @@ type TableProps = {
   isScrollX?: boolean;
   isEvaluationSchema?: boolean;
   expandingRows?: boolean;
+  evaluationSummaryTable?: boolean;
 };
 
 const Table = ({
@@ -33,6 +34,7 @@ const Table = ({
   isScrollX = false,
   isEvaluationSchema = false,
   expandingRows = false,
+  evaluationSummaryTable = false,
 }: TableProps) => {
   const [expandedRow, setExpandedRow] = useState<{ [key: string]: boolean }>(
     {}
@@ -331,6 +333,10 @@ const Table = ({
                             key={`details-cell-${cell.value}-${indexKey}`}
                             className={`${
                               hasVerticalBorders ? '' : 'no-vertical-border'
+                            } ${
+                              evaluationSummaryTable
+                                ? 'evaluation-summary-table-td'
+                                : ''
                             }`}
                           >
                             {/* @ts-ignore */}
@@ -425,7 +431,13 @@ const Table = ({
                                     if ('values' in item) {
                                       return (
                                         <td
-                                          className="td-row-details without-borders"
+                                          className={classNames(
+                                            'td-row-details without-borders',
+                                            {
+                                              'evaluation-summary-table-td-divided':
+                                                evaluationSummaryTable,
+                                            }
+                                          )}
                                           key={`divided-row-${cell}-${indexKey}`}
                                         >
                                           <table className="inside-table border-top">
@@ -467,6 +479,29 @@ const Table = ({
                                                                 )}
                                                               </p>
                                                             )}
+                                                          </td>
+                                                        </tr>
+                                                      );
+                                                    }
+
+                                                    if (
+                                                      typeof item.value === 'string' &&
+                                                      item.value.startsWith('bb-')
+                                                    ) {
+                                                      return (
+                                                        <tr
+                                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                        >
+                                                          <td
+                                                            key={`details-cell-${item.value}-${indexKey}`}
+                                                            className={`${
+                                                            hasVerticalBorders ? '' : 'no-vertical-border'
+                                                          }`}
+                                                          >
+                                                            <div className="td-bb-image-name-container">
+                                                              <BBImage imagePath={item.value} />
+                                                              <p>{format(item.value)}</p>
+                                                            </div>
                                                           </td>
                                                         </tr>
                                                       );

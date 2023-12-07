@@ -14,6 +14,7 @@ import useTranslations from '../../hooks/useTranslation';
 import ProgressBar, { ProgressBarRef } from '../shared/ProgressBar';
 import {
   saveSoftwareDraft,
+  submitDraft,
   updateDraftDetailsStepOne,
   updateDraftDetailsStepThree,
   updateDraftDetailsStepTwo,
@@ -35,6 +36,7 @@ import DeploymentComplianceForm, {
   DeploymentComplianceFormValuesType,
   DeploymentComplianceRef,
 } from './DeploymentComplianceForm';
+import EvaluationSummary from './EvaluationSummary';
 import IRSForm from './IRSForm';
 
 type SoftwareComplianceFormProps = {
@@ -58,6 +60,7 @@ const SoftwareComplianceForm = ({
 
   const [renderFormError, setRenderFormError] = useState(false);
   const [isDraftSaved, setIsDraftSaved] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
@@ -224,6 +227,24 @@ const SoftwareComplianceForm = ({
     }
   };
 
+  const handleSubmitForm = async () => {
+    if (draftUUID) {
+      await submitDraft(draftUUID as string).then((response) => {
+        if (response.status) {
+          setIsFormSubmitted(true);
+
+          return;
+        }
+
+        if (!response.status) {
+          toast.error(format('form.form_submit_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+      });
+    }
+  };
+
   return (
     <div>
       <div className="back-to-btn-container">
@@ -240,6 +261,7 @@ const SoftwareComplianceForm = ({
         changeStepTo={currentStep}
         isDraftSaved={isDraftSaved}
         onSaveButton={handleSaveDraftButton}
+        onSubmitButton={handleSubmitForm}
         customRef={nextStepRef}
       >
         <>
@@ -260,7 +282,7 @@ const SoftwareComplianceForm = ({
           {currentProgressBarStep === 3 && (
             <IRSForm setUpdatedBBs={setUpdatedBBs} IRSCFormRef={IRSCFormRef} />
           )}
-          {currentProgressBarStep === 4 && <div></div>}
+          {currentProgressBarStep === 4 && <EvaluationSummary />}
         </>
       </ProgressBar>
     </div>

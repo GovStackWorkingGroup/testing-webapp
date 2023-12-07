@@ -1,14 +1,27 @@
 import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import useTranslations from '../../hooks/useTranslation';
-import { checkIfImageUrlExists } from '../../service/serviceAPI';
-import { SoftwareDetailsType } from '../../service/types';
+import { baseUrl, checkIfImageUrlExists } from '../../service/serviceAPI';
+
+export type SoftwareAttributesType = [
+  {
+    logo: string;
+    website: string;
+    documentation: string;
+    pointOfContact?: string;
+    softwareName: string;
+  }
+];
 
 type SoftwareAttributesProps = {
-  softwareDetails: SoftwareDetailsType;
+  softwareDetails: SoftwareAttributesType;
+  showContactDetails?: boolean;
 };
 
-const SoftwareAttributes = ({ softwareDetails }: SoftwareAttributesProps) => {
+const SoftwareAttributes = ({
+  softwareDetails,
+  showContactDetails = false,
+}: SoftwareAttributesProps) => {
   const [softwareLogoExist, setSoftwareLogoExist] = useState(false);
   const { format } = useTranslations();
 
@@ -48,7 +61,7 @@ const SoftwareAttributes = ({ softwareDetails }: SoftwareAttributesProps) => {
           {softwareLogoExist ? (
             <img
               className="img-logo"
-              src={softwareLogo.value}
+              src={`${baseUrl}/${softwareDetailsParams.logo}`}
               alt={softwareLogo.title}
             />
           ) : (
@@ -92,14 +105,16 @@ const SoftwareAttributes = ({ softwareDetails }: SoftwareAttributesProps) => {
           </a>
         </div>
       </div>
-      <div className="software-attribute">
-        <div>
-          <p>{format('table.point_of_contact.label')}</p>
+      {showContactDetails && (
+        <div className="software-attribute">
+          <div>
+            <p>{format('table.point_of_contact.label')}</p>
+          </div>
+          <div>
+            <p>{softwareDetailsParams.pointOfContact}</p>
+          </div>
         </div>
-        <div>
-          <p>{softwareDetailsParams.pointOfContact}</p>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

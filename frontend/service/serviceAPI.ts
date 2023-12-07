@@ -13,6 +13,7 @@ import {
   SoftwareDetailsType,
   SoftwareDraftDetailsType,
   SoftwareDraftToUpdateType,
+  SubmitDraftResponseType,
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -392,6 +393,7 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
+      version: '1',
       bbDetails: transformedDataObject,
     },
   };
@@ -411,6 +413,31 @@ export const updateDraftDetailsStepThree = async (
       return response.json();
     })
     .then<Success<PATCHSoftwareAttributesType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const submitDraft = async (uniqueId: string) => {
+  const payload = { uniqueId };
+
+  return await fetch(`${baseUrl}/compliance/drafts/submit`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SubmitDraftResponseType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
