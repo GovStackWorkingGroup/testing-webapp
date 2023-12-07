@@ -1,0 +1,208 @@
+{
+  "id": "dLknOQdUnOC9W9PpibGr",
+  "title": "6 Functional Requirements",
+  "kind": "sheet",
+  "type": "document",
+  "description": "This section lists the technical capabilities of this Building Block.",
+  "path": "7-functional-requirements",
+  "slug": "7-functional-requirements",
+  "documentId": "LxsycDqu9OuwMBTkmx2R",
+  "createdAt": "2023-04-19T21:18:34.741Z",
+  "updatedAt": "2023-06-27T15:27:00.847Z",
+  "git": {
+    "oid": "510b7d81b476c4d581f252689df243d6a85fdeaf",
+    "path": "spec/7-functional-requirements.md"
+  },
+  "pages": [],
+  "layout": {
+    "cover": true,
+    "coverSize": "full",
+    "title": true,
+    "description": true,
+    "tableOfContents": true,
+    "outline": true,
+    "pagination": true
+  },
+  "document": {
+    "object": "document",
+    "data": {
+      "schemaVersion": 5
+    },
+    "nodes": [
+      {
+        "object": "block",
+        "type": "heading-1",
+        "isVoid": false,
+        "data": {},
+        "nodes": [
+          {
+            "object": "text",
+            "leaves": [
+              {
+                "object": "leaf",
+                "text": "6.1 Payment Orchestration",
+                "marks": [],
+                "selections": []
+              }
+            ],
+            "key": "afac2fb518f14ecfb52432942fb2df3c"
+          }
+        ],
+        "key": "75200469ef494d4a94847d0e493cd453",
+        "meta": {
+          "id": "6.1-payment-orchestration"
+        }
+      },
+      {
+        "object": "block",
+        "type": "paragraph",
+        "isVoid": false,
+        "data": {},
+        "nodes": [
+          {
+            "object": "text",
+            "leaves": [
+              {
+                "object": "leaf",
+                "text": "Payment orchestration is an overarching concern which relates different sub-components or microservices whereby it:",
+                "marks": [],
+                "selections": []
+              }
+            ],
+            "key": "5a4d3d6b2191426e9e9b0a6dec5d0c46"
+          }
+        ],
+        "key": "eee7aaa099c14f8d998a06d04570ea84"
+      },
+      {
+        "object": "block",
+        "type": "list-unordered",
+        "isVoid": false,
+        "data": {},
+        "nodes": [
+          {
+            "object": "block",
+            "type": "list-item",
+            "isVoid": false,
+            "data": {},
+            "nodes": [
+              {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "object": "leaf",
+                        "text": "Explicitly defines and models workflows that span multiple microservices (REQUIRED)",
+                        "marks": [],
+                        "selections": []
+                      }
+                    ],
+                    "key": "28bee49a86a648df825aaea05f06f7fb"
+                  }
+                ],
+                "key": "d5cd806b5c7a4d15b43a51bf2786ddda"
+              }
+            ],
+            "key": "7c27110ad66f492980ef9642d20c554d"
+          },
+          {
+            "object": "block",
+            "type": "list-item",
+            "isVoid": false,
+            "data": {},
+            "nodes": [
+              {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "object": "leaf",
+                        "text": "Provides detailed visibility into how a workflow is performing and identifying where there are issues (RECOMMENDED)",
+                        "marks": [],
+                        "selections": []
+                      }
+                    ],
+                    "key": "bf7f8d8f776646c4a511a2bec797eeed"
+                  }
+                ],
+                "key": "23743cd5d7684f9d871bd296bcf35f91"
+              }
+            ],
+            "key": "e16175dba0ff4f9eb0b6d60cc7e906df"
+          },
+          {
+            "object": "block",
+            "type": "list-item",
+            "isVoid": false,
+            "data": {},
+            "nodes": [
+              {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "object": "leaf",
+                        "text": "Ensure that within a defined workflow, all workflow instances are completed according to plan, even when there are issues along the way (OPTIONAL)",
+                        "marks": [],
+                        "selections": []
+                      }
+                    ],
+                    "key": "25fe363c775b46f9a719762fc2316d1e"
+                  }
+                ],
+                "key": "1b7222eb1db642bf8a0f4ff751590740"
+              }
+            ],
+            "key": "f952fca05be049029ecd10085789a0b8"
+          },
+          {
+            "object": "block",
+            "type": "list-item",
+            "isVoid": false,
+            "data": {},
+            "nodes": [
+              {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                  {
+                    "object": "text",
+                    "leaves": [
+                      {
+                        "object": "leaf",
+                        "text": "This requirement is missing the status",
+                        "marks": [],
+                        "selections": []
+                      }
+                    ],
+                    "key": "28bee49a86a648df825aaea05f06f7fc"
+                  }
+                ],
+                "key": "d5cd806b5c7a4d15b43a51bf2786dddc"
+              }
+            ],
+            "key": "7c27110ad66f492980ef9642d20c554c"
+          }
+        ],
+        "key": "4e86c1119f1e4866aec88f0671c35e0c"
+      }
+    ]
+  }
+}

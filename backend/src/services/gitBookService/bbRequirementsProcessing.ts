@@ -7,53 +7,66 @@ const processBBRequirements = async () => {
     const collectionManager = new GitBookCollectionManager();
     const spaceManager = new GitBookSpaceManager();
     const pageContentManager = new GitBookPageContentManager();
+
+    const CROSS_CUTTING_REQUIREMENTS_REGEX = /cross[\s-]?cutting[\s-]?requirements/i;
+    const FUNCTIONAL_REQUIREMENTS_REGEX = /functional[\s-]?requirements/i;
+
     let errors: string[] = [];
+
+    const processPages = async (spaceInfo, pageTypeRegex) => {
+        const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, pageTypeRegex);
+        const results = await Promise.all(pageIds.map(async (pageId) => {
+            try {
+                const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
+                
+                let extractResult;
+                if(pageTypeRegex === CROSS_CUTTING_REQUIREMENTS_REGEX){
+                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent);
+                } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX){
+                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent);
+                }
+
+                if (extractResult.error) {
+                    errors.push(`Error extracting requirements for page ID ${pageId}: ${extractResult.error.message}`);
+                    return null;
+                }
+
+                return extractResult.requirements; // Return the extracted requirements
+            } catch (error: any) {
+                errors.push(`Error processing page ID ${pageId}: ${error.message}`);
+                return null;
+            }
+        }));
+
+        // Flatten the results and filter out null values
+        return results.flat().filter(r => r !== null);
+    };
 
     try {
         const bbCollections = await collectionManager.fetchCollections('bb');
-        const allPageContentsPromises = bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
-            try {
+        const allPageContents = await Promise.all(bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
+           try {
                 const spaceInfo = await collectionManager.fetchLatestVersionSpaceIdAndVersion(collectionId);
                 if (!spaceInfo) {
                     throw new Error('No valid space found for the collection');
                 }
     
-                const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, '5');
-                const pageContentsPromises = pageIds.map(async (pageId) => {
-                    try {
-                        const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
-                        const extractResult = pageContentManager.extractRequirements(pageContent);
-    
-                        // Check if the result contains an error
-                        if (extractResult.error) {
-                            errors.push(`Error extracting requirements for page ID ${pageId}: ${extractResult.error.message}`);
-                            return null; // Skip processing this page
-                        }
-    
-                        // Assuming successful extraction
-                        const crossCutting = extractResult.requirements; 
-                        const dateOfSave = new Date().toISOString();
-    
-                        const requirements = { crossCutting };
-                        const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
-                        await bbRequirement.save();
-    
-                        return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
-                    } catch (innerError) {
-                        errors.push(`Error processing page ID ${pageId}: ${(innerError as Error).message}`);
-                        return null;
-                    }
-                });
-    
-                return Promise.all(pageContentsPromises);
+                const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
+                const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
+                
+                const requirements = { crossCutting, functional };
+                const dateOfSave = new Date().toISOString();
+                const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
+                await bbRequirement.save();
+
+                return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
             } catch (outerError) {
                 errors.push(`Error processing collection: ${(outerError as Error).message}`);
                 return [];
             }
-        });
+        }));
 
-        const allPageContentsNested = await Promise.all(allPageContentsPromises);
-        const flattenedContents = allPageContentsNested.flat().filter(content => content !== null);
+        const flattenedContents = allPageContents.flat().filter(content => content !== null);
 
         return {
             success: errors.length === 0,
