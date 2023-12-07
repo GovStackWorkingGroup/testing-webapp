@@ -1,7 +1,6 @@
 import { RiSearchLine } from 'react-icons/ri';
 import dynamic from 'next/dynamic';
-import { useIntl } from 'react-intl';
-import { useCallback } from 'react';
+import useTranslations from '../../../hooks/useTranslation';
 
 const AsyncReactSelect = dynamic(() => import('react-select/async'), {
   ssr: false,
@@ -13,11 +12,7 @@ type Props = {
 };
 
 const SearchInput = ({ value, name, ...otherProps }: Props) => {
-  const { formatMessage } = useIntl();
-  const format = useCallback(
-    (id: string) => formatMessage({ id }),
-    [formatMessage]
-  );
+  const { format } = useTranslations();
 
   return (
     <div className="search-input-container">

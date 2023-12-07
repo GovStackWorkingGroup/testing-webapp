@@ -6,6 +6,8 @@ import {
 import {
   BuildingBlockTestSummary,
   ComplianceList,
+  ComplianceRequirementsType,
+  PATCHSoftwareAttributesType,
   POSTSoftwareAttributesType,
   ProductsListType,
   SoftwareDetailsType,
@@ -231,7 +233,61 @@ export const getDraftDetails = async (draftUUID: string) => {
     });
 };
 
-export const updateDraftDetails = async (
+export const getComplianceRequirements = async () => {
+  return await fetch(`${baseUrl}/compliance/requirements/`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<ComplianceRequirementsType[]>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetailsStepOne = async (
+  draftUUID: string,
+  data: FormValuesType
+) => {
+  const formData = new FormData();
+
+  formData.append('softwareName', data.softwareName.value);
+  formData.append('logo', data.softwareLogo.value as File);
+  formData.append('website', data.softwareWebsite.value);
+  formData.append('documentation', data.softwareDocumentation.value);
+  formData.append('description', data.toolDescription.value);
+  formData.append('email', data.email.value);
+
+  return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
+    method: 'PATCH',
+    body: formData,
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const updateDraftDetailsStepTwo = async (
   draftUUID: string,
   data: SoftwareDraftToUpdateType
 ) => {
@@ -277,7 +333,7 @@ export const updateDraftDetails = async (
 
       return response.json();
     })
-    .then<Success<SoftwareDraftDetailsType>>((actualData) => {
+    .then<Success<PATCHSoftwareAttributesType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -285,22 +341,67 @@ export const updateDraftDetails = async (
     });
 };
 
-export const updateDraftDetailsStepOne = async (
+export const updateDraftDetailsStepThree = async (
   draftUUID: string,
-  data: FormValuesType
+  data: ComplianceRequirementsType[]
 ) => {
-  const formData = new FormData();
+  const transformedData = data.map((item) => {
+    const {
+      bbKey,
+      bbName,
+      bbVersion,
+      dateOfSave,
+      requirements,
+      interfaceCompliance,
+    } = item;
 
-  formData.append('softwareName', data.softwareName.value);
-  formData.append('logo', data.softwareLogo.value as File);
-  formData.append('website', data.softwareWebsite.value);
-  formData.append('documentation', data.softwareDocumentation.value);
-  formData.append('description', data.toolDescription.value);
-  formData.append('email', data.email.value);
+    const test = {
+      bbSpecification: bbName,
+      bbVersion,
+      dateOfSave,
+      requirementSpecificationCompliance: {
+        crossCuttingRequirements: requirements.crossCutting.map(
+          (crossCuttingItem) => ({
+            requirement: crossCuttingItem.requirement,
+            comment: crossCuttingItem.comment,
+            fulfillment: crossCuttingItem.fulfillment,
+            _id: crossCuttingItem._id,
+          })
+        ),
+        functionalRequirements: [],
+      },
+      interfaceCompliance: {
+        testHarnessResult: interfaceCompliance.testHarnessResult,
+      },
+    };
+
+    return {
+      [bbKey]: test,
+    };
+  });
+
+  const transformedDataObject = transformedData.reduce((acc, item) => {
+    const bbKey = Object.keys(item)[0];
+
+    if (bbKey) {
+      acc[bbKey] = item[bbKey];
+    }
+
+    return acc;
+  }, {});
+
+  const payload = {
+    compliance: {
+      bbDetails: transformedDataObject,
+    },
+  };
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
-    body: formData,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
   })
     .then((response) => {
       if (!response.ok) {
@@ -309,7 +410,7 @@ export const updateDraftDetailsStepOne = async (
 
       return response.json();
     })
-    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
+    .then<Success<PATCHSoftwareAttributesType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

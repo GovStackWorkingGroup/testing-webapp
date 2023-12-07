@@ -24,8 +24,8 @@ export default class SubmitFormRequestHandler {
 
     async submitForm(): Promise<Response> {
         let draftDataForRollback;
-        console.log("o1", draftDataForRollback);
         try {
+            let jiraTicketResult: string | Error = "";
             const uniqueId = this.req.body.uniqueId;
             if (!uniqueId) {
                 return this.res.status(400).send({ success: false, error: "Unique ID is required" });
@@ -36,9 +36,15 @@ export default class SubmitFormRequestHandler {
             if (!success) {
                 return this.res.status(400).send({ success: false, errors });
             }
-            const jiraTicketResult = await this.createJiraTicket();
-            if (jiraTicketResult instanceof Error) {
-                throw jiraTicketResult;
+
+            // Create Jira ticket only if integration is enabled
+            if (appConfig.enableJiraIntegration) {
+                jiraTicketResult = await this.createJiraTicket();
+                if (jiraTicketResult instanceof Error) {
+                    throw jiraTicketResult;
+                }
+            } else {
+                console.log('Jira integration is disabled.');
             }
 
             return this.res.status(200).send({
@@ -61,7 +67,6 @@ export default class SubmitFormRequestHandler {
     }
 
     async createJiraTicket(): Promise<string | Error> {
-
         const jiraConfig = appConfig.jira;
         const descriptionText = jiraConfig.descriptionTemplate.replace('{{submitter}}', 'Submitter Name');
         const descriptionADF = {

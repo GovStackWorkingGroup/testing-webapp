@@ -53,6 +53,7 @@ export const en = {
   'evaluation_schema.deployability_via_container.label':
     'Deployability via container',
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
+  'evaluation_schema.fulfillment.label': 'Fulfillment',
   'evaluation_schema.fulfillment_of_required_api.label':
     'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
   'evaluation_schema.fulfillment_of_required_key.label':
@@ -66,6 +67,7 @@ export const en = {
   'evaluation_schema.level_1.label': 'Level 1',
   'evaluation_schema.level_2.label': 'Level 2',
   'evaluation_schema.optional.label': 'Optional',
+  'evaluation_schema.comment.label': 'Comment',
   'evaluation_schema.requirement.label': 'Requirement',
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
@@ -77,6 +79,10 @@ export const en = {
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
   'form.filling_required.label': 'Filling this form is required.',
+  'form.header.comment.label': 'Comment',
+  'form.header.fulfillment.label': 'Fulfillment',
+  'form.header.requirement.label': 'Requirement',
+  'form.fill_in_at_least_1_of_the_below_forms.label': 'Fill in at least 1 of the below forms',
   'form.form_invalid.message':
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
@@ -87,15 +93,27 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
+  'form.required_label': 'Required',
   'form.form_saved_success.message': 'Draft saved successfully',
   'form.form_saved_error.message': 'Draft saving failed',
   'form.point_of_contact.label': 'Point of contact',
+  'form.clear_selection.label': 'Clear selection',
+  'form.select_building_blocks.label':
+    'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.test_harness.title.label': 'Test Harness Result',
+  'form.table.title.label': 'Architectural Cross-Cutting Requirements',
+  'form.test_harness.tip_message.label': 'Paste link link to test harness result.',
   'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
   'form.tip_max_characters.label': '400 characters max.',
   'form.tip_paste_link_container.label': 'Paste link to the container.',
   'form.tip_paste_link_documentation.label': 'Paste link to the documentation.',
   'form.tip_website.label': 'Paste link to your website.',
+  'form.question_line.not_sure_how_to_start': 'Not sure how to start? ',
+  'form.question_line.click': 'Click ',
+  'form.question_line.here': 'here',
+  'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance':
+    ' and see instructions on how to configure interface compliance.',
 
   'image.alt.logoFor': 'Logo for: {name}',
 
