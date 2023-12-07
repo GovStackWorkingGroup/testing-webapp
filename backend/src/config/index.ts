@@ -56,7 +56,7 @@ const appConfig: AppConfig = {
     email: process.env.JIRA_USER_EMAIL!,
     issueType: process.env.JIRA_ISSUE_TYPE!,
     assigneeId: process.env.JIRA_ASSIGNEE_ID!,
-    labels: process.env.JIRA_LABELS!.split(','),
+    labels: process.env.JIRA_LABELS ? process.env.JIRA_LABELS.split(',') : [],
     titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
     descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
   },
