@@ -3,7 +3,6 @@ import useTranslations from '../../hooks/useTranslation';
 import Button from '../../components/shared/buttons/Button';
 
 const MyLogin = () => {
-
   const { format } = useTranslations();
 
   const handleLogin = () => {
@@ -19,7 +18,7 @@ const MyLogin = () => {
         text={format('app.login_with_github.label')}
         type="button"
         styles="primary-button"
-        />
+      />
     </div>
   );
 };
