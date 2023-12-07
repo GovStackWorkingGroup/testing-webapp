@@ -183,16 +183,8 @@ export type ComplianceRequirementsType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: [
-      {
-        requirement: string;
-        comment: string;
-        status: number;
-        fulfillment: number | null;
-        _id: string;
-      }
-    ];
-    functional: [];
+    crossCutting: RequirementsType[];
+    functional: RequirementsType[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -206,16 +198,17 @@ export type BBDetailsType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: CrossCuttingType[];
-    functional: [];
+    crossCutting: RequirementsType[];
+    functional: RequirementsType[];
   };
 }[];
 
-export type CrossCuttingType = {
+export type RequirementsType = {
   requirement: string;
   comment: string;
   fulfillment: number;
   _id: string;
+  status: number;
 };
 
 // All types used in Table.tsx and the data connected to it

@@ -4,7 +4,7 @@ import { ComplianceRequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { IRSCFormRef } from '../shared/combined/SelectBBs';
 import InterfaceCompliance from './InterfaceCompliance';
-import SpecificationCompliance from './SpecificationCompliance';
+import RequirementSpecificationComplianceForm from './RequirementSpecificationCompliance';
 
 type activeTabProps = 'interface' | 'specification';
 
@@ -54,7 +54,9 @@ const IRSForm = ({ setUpdatedBBs, IRSCFormRef }: IRSFormProps) => {
           IRSCFormRef={IRSCFormRef}
         />
       )}
-      {activeTab === 'specification' && <SpecificationCompliance />}
+      {activeTab === 'specification' && (
+        <RequirementSpecificationComplianceForm />
+      )}
     </div>
   );
 };
