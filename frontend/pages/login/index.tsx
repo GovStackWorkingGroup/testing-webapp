@@ -6,9 +6,9 @@ const MyLogin = () => {
   const { format } = useTranslations();
 
   const handleLogin = () => {
-    // Redirect to your backend's GitHub auth endpoint
-    // on stagging it must be a host name not "localhost"
-    window.location.href = 'http://localhost:5000/auth/github';
+    // Directly use process.env.API_URL as set in your Next.js config
+    const apiUrl = process.env.API_URL;
+    window.location.href = `${apiUrl}/auth/github`;
   };
 
   return (
