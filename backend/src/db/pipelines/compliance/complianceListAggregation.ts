@@ -4,7 +4,7 @@ export const createAggregationPipeline = (limit: number, offset: number, filters
     let softwareConditions = filters.software.map(filter => {
         return {
             "softwareName": filter.name,
-            // ..(filter.version && {"softwareVersion": { $in: filter.version }}) To be clarified if this will be used 
+            ...(filter.version && {"softwareVersion": { $in: filter.version }}) 
         };
     });
 
