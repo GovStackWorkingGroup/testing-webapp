@@ -42,7 +42,6 @@ const appConfig: AppConfig = {
   appName: process.env.appName || 'testing-webapp-api',
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
-  draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
     syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
@@ -59,6 +58,7 @@ const appConfig: AppConfig = {
     callbackUrl: process.env.GITHUB_CALLBACK_URL!
   },
   // Time is specified in milliseconds.
+  draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
   jira: {
     apiEndpoint: process.env.JIRA_API_ENDPOINT!,
     apiKey: process.env.JIRA_API_KEY!,
