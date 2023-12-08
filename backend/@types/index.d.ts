@@ -1,3 +1,6 @@
+type ObjectId = import('mongoose').Types.ObjectId
+type ErrorObject = import('ajv').ErrorObject;
+
 declare type ErrorType = (err: Error | null) => void;
 
 declare module 'myTypes' {
@@ -24,7 +27,7 @@ declare module 'myTypes' {
     status: number,
     uniqueId: string | undefined,
     expirationDate: Date | undefined,
-    id: mongoose.Types.ObjectId
+    id: ObjectId
   }
 
   export interface ComplianceDetail {
@@ -145,6 +148,21 @@ declare module 'myTypes' {
     }
   }
 
+  export interface ComplianceListFilter {
+    name: string
+    version: string[]
+  }
+
+  export interface ComplianceListFilters {
+    software: ComplianceListFilter[],
+    bb: ComplianceListFilter[]
+  }
+
+  export interface ComplianceListValidationResult {
+    errors: string|ErrorObject[]|undefined|null
+    filters: ComplianceListFilters
+  }
+
   export type AllBBRequirements = BBRequirement[];
 
   type FindResult = ComplianceReport[];
@@ -153,7 +171,7 @@ declare module 'myTypes' {
 
   export interface ComplianceDbRepository {
     findAll: () => Promise<FindResult>;
-    aggregateComplianceReports: (limit: number, offset: number) => Promise<ComplianceAggregationListResult>;
+    aggregateComplianceReports: (limit: number, offset: number, filters: ComplianceListFilters) => Promise<ComplianceAggregationListResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
