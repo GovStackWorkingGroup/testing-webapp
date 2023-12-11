@@ -31,6 +31,11 @@ interface AppConfig {
     apiKey: string;
     orgId: string;
   };
+  gitHub: {
+    clientId: string;
+    clientSecret: string;
+    callbackUrl: string
+  };
 }
 
 const appConfig: AppConfig = {
@@ -46,6 +51,11 @@ const appConfig: AppConfig = {
     baseURL: process.env.GITBOOK_URL || '',
     apiKey: process.env.GITBOOK_API_KEY || '',
     orgId: process.env.GITBOOK_ORG_ID || '',
+  },
+  gitHub: {
+    clientId: process.env.GITHUB_CLIENT_ID!,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    callbackUrl: process.env.GITHUB_CALLBACK_URL!
   },
   // Time is specified in milliseconds.
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days

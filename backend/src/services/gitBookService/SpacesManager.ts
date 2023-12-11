@@ -10,7 +10,6 @@ class GitBookSpaceManager {
         if (!response.data.pages || !Array.isArray(response.data.pages)) {
             throw new Error(`Pages not found or not in an array format in space with ID ${spaceId}`);
         }
-
         return response.data.pages
             .filter(page => titlePattern.test(page.title))
             .map(page => page.id);  // Return only the IDs of the pages
