@@ -1,5 +1,23 @@
-export const createAggregationPipeline = (limit: number, offset: number): any[] => {
+import {ComplianceListFilters} from "myTypes"
+
+export const createAggregationPipeline = (limit: number, offset: number, filters: ComplianceListFilters): any[] => {
+    let softwareConditions = filters.software.map(filter => {
+        return {
+            "softwareName": filter.name,
+            ...(filter.version && {"softwareVersion": { $in: filter.version }}) 
+        };
+    });
+
+    let bbConditions = filters.bb.map(filter => {
+        return {
+            "bb": filter.name,
+            ...(filter.version && {"bbVersion": { $in: filter.version }})
+        };
+    });
+    console.log(bbConditions, filters.bb)
+
     const aggregationPipeline: unknown[] = [
+        ...(softwareConditions.length > 0 ? [{ $match: { $or: softwareConditions } }] : []),
         { $unwind: "$compliance" },
         { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
         { $unwind: "$bbDetailsArray" },
@@ -16,6 +34,7 @@ export const createAggregationPipeline = (limit: number, offset: number): any[] 
                 interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
             }
         },
+        ...(bbConditions.length > 0 ? [{ $match: { $or: bbConditions } }] : []),
         {
             $group: {
                 _id: "$softwareName",

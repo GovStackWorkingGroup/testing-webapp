@@ -1,4 +1,4 @@
-import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback, ComplianceListFilters } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance/compliance';
 import mongoose from 'mongoose';
@@ -22,9 +22,9 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async aggregateComplianceReports(limit: number, offset: number): Promise<ComplianceAggregationListResult> {
+  async aggregateComplianceReports(limit: number, offset: number, filters: ComplianceListFilters): Promise<ComplianceAggregationListResult> {
     try {
-      const results = await Compliance.aggregate(createAggregationPipeline(limit, offset)).exec();
+      const results = await Compliance.aggregate(createAggregationPipeline(limit, offset, filters)).exec();
       const reshapedResults = {
         count: results[0].totalSoftwareNames,
         data: results[0].records.reduce((accumulatedResult, currentItem) => {
