@@ -112,10 +112,6 @@ describe('GitBook API', () => {
             }
             const { requirements } = result;
 
-            console.log("--------");
-            console.log(requirements);
-            console.log("--------");
-
             expect(requirements).to.be.an('array').with.lengthOf(3);
             expect(requirements[0]).to.have.property('status', RequirementStatusEnum.REQUIRED);
             expect(requirements[0]).to.have.property('requirement');

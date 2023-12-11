@@ -72,7 +72,6 @@ const processBBRequirements = async () => {
 
                 const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
                 const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
-                console.log(architecturalRequirements);
                 const requirements = { crossCutting, functional, interface: architecturalRequirements.requirements };
                 const dateOfSave = new Date().toISOString();
                 const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
