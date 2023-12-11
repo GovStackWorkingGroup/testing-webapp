@@ -1,4 +1,4 @@
-@import '../../styles/Variables.less';
+@import '../../../styles/Variables.less';
 
 .irsc-table-container {
   width: 100%;
@@ -11,6 +11,7 @@ table.irsc-table {
   width: 100%;
   border-spacing: 0;
   border-collapse: collapse;
+  height: 1px;
 
   thead {
     font-size: 13px;
@@ -40,6 +41,13 @@ table.irsc-table {
       }
     }
   }
+  tbody {
+    tr {
+      td {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .irsc-table-header-required {
@@ -62,8 +70,9 @@ table.irsc-table {
       width: 96.5%;
       padding: 16px;
       border: none;
-      height: 32px;
+      height: 55%;
       resize: none;
+      font-family: Arial, Helvetica, sans-serif;
     }
   }
 
@@ -107,7 +116,7 @@ table.irsc-table {
   right: 16px;
 
   input:focus {
-    outline: 1px solid #ccc;
+    outline: 1px solid @text-secondary;
   }
 }
 
@@ -118,15 +127,20 @@ table.irsc-table {
 .irsc-table-icons {
   display: flex;
   gap: 8px;
-  height: 32px;
+  height: 100%;
   align-items: center;
 }
 
 .irsc-table-textarea {
   position: relative;
   width: 98%;
+  height: 100%;
+}
+
+.irsc-table-textarea textarea:focus {
+  outline: none;
 }
 
 .irsc-table-icon {
-  font-size: @icon-font-size-small;
+  font-size: @icon-font-size-middle;
 }

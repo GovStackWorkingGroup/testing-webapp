@@ -3,11 +3,11 @@ import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
 import { ComplianceRequirementsType } from '../../../service/types';
-import Input from '../inputs/Input';
-import IRSCInterfaceTable from '../../table/IRSC/IRSCInterfaceTable';
 import useTranslations from '../../../hooks/useTranslation';
 import useGetDraftData from '../../../hooks/useGetDraftDetail';
-import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../../service/constants';
+import { REQUIREMENT_SPEC_STORAGE_NAME } from '../../../service/constants';
+import IRSCFunctionalTable from '../../table/IRSC/IRSCFunctionalTable';
+import IRSCCrossCuttingTableType from '../../table/IRSC/IRSCCrossCuttingTable';
 
 export type IRSCFormRef = {
   validate: () => boolean;
@@ -16,29 +16,31 @@ export type IRSCFormRef = {
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
   setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
-  IRSCFormRef: RefObject<IRSCFormRef>;
+  IRSCRequirementsFormRef: RefObject<IRSCFormRef>;
 };
 
-const SelectBBs = ({
+const RequirementSpecificationSelectBBs = ({
   interfaceRequirementsData,
   setUpdatedBBs,
-  IRSCFormRef,
+  IRSCRequirementsFormRef,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
   >(
     JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
+      localStorage.getItem(REQUIREMENT_SPEC_STORAGE_NAME as string) || 'null'
     ) || []
   );
-  const [updatedData, setUpdatedData] = useState<ComplianceRequirementsType>();
+  const [updatedCrossCuttingData, setUpdatedCrossCuttingData] =
+    useState<ComplianceRequirementsType>();
+  const [updatedFunctionalData, setUpdatedFunctionalData] =
+    useState<ComplianceRequirementsType>();
   const [options, setOptions] = useState<
     { value: ComplianceRequirementsType | undefined; label: string }[]
   >([{ value: undefined, label: '' }]);
-  const [isTableValid, setIsTableValid] = useState(true);
-  const [isTestHarnessInputValid, setIsTestHarnessInputValid] =
-    useState<boolean>(true);
+  const [isCrossCuttingTableValid, setIsCrossCuttingTableTableValid] =
+    useState(true);
+  const [isFunctionalTableValid, setIsFunctionalTableValid] = useState(true);
   const [savedInLocalStorage, setSavedInLocalStorage] = useState<
     ComplianceRequirementsType[] | null
   >(null);
@@ -53,8 +55,7 @@ const SelectBBs = ({
 
   useEffect(() => {
     const savedIRSCInStorage = JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
+      localStorage.getItem(REQUIREMENT_SPEC_STORAGE_NAME as string) || 'null'
     );
     setSavedInLocalStorage(savedIRSCInStorage);
   }, []);
@@ -68,19 +69,52 @@ const SelectBBs = ({
   }, [interfaceRequirementsData]);
 
   useEffect(() => {
-    const updatedSelectedItemsData = selectedItems?.map((item) =>
-      item?.bbKey === updatedData?.bbKey ? updatedData : item
-    );
-    setSelectedItems(updatedSelectedItemsData);
+    if (updatedCrossCuttingData) {
+      const updatedSecondArrFromObjectOne = selectedItems.map((item) => {
+        if (item.bbKey === updatedCrossCuttingData.bbKey) {
+          return {
+            ...item,
+            requirements: {
+              ...item.requirements,
+              crossCutting: updatedCrossCuttingData.requirements.crossCutting,
+            },
+          };
+        }
 
-    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        return item;
+      });
+      setSelectedItems(updatedSecondArrFromObjectOne);
+    }
+  }, [updatedCrossCuttingData]);
+
+  useEffect(() => {
+    if (updatedFunctionalData) {
+      const updatedSecondArrFromObjectTwo = selectedItems.map((item) => {
+        if (item.bbKey === updatedFunctionalData.bbKey) {
+          return {
+            ...item,
+            requirements: {
+              ...item.requirements,
+              functional: updatedFunctionalData.requirements.functional,
+            },
+          };
+        }
+
+        return item;
+      });
+
+      setSelectedItems(updatedSecondArrFromObjectTwo);
+    }
+  }, [updatedFunctionalData]);
+
+  useEffect(() => {
+    localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
     localStorage.setItem(
-      INTERFACE_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify(updatedSelectedItemsData)
+      REQUIREMENT_SPEC_STORAGE_NAME,
+      JSON.stringify(selectedItems)
     );
-
-    setUpdatedBBs(updatedSelectedItemsData);
-  }, [updatedData]);
+    setUpdatedBBs(selectedItems);
+  }, [selectedItems]);
 
   useEffect(() => {
     options?.sort((prevItem: { label: string }, nextItem: { label: string }) =>
@@ -95,7 +129,7 @@ const SelectBBs = ({
       return;
     }
 
-    if (draftData?.formDetails[0].bbDetails) {
+    if (draftData) {
       const combinedArray = draftData?.formDetails
         .map((formDetail) => {
           const bbKeys = Object.keys(formDetail.bbDetails);
@@ -155,14 +189,12 @@ const SelectBBs = ({
 
       if (combinedArray) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
-        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
         localStorage.setItem(
-          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          REQUIREMENT_SPEC_STORAGE_NAME,
           JSON.stringify(combinedArray)
         );
       }
-
-      return;
     }
   };
 
@@ -211,59 +243,55 @@ const SelectBBs = ({
     setOptions([...options, item]);
   };
 
-  const handleTestHarnessLink = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const { value, name } = event.target;
-
-    setIsTestHarnessInputValid(true);
-
-    const foundIndex = selectedItems.findIndex((item) => item.bbKey === name);
-    if (foundIndex !== -1) {
-      selectedItems[foundIndex].interfaceCompliance =
-        selectedItems[foundIndex].interfaceCompliance || {};
-
-      selectedItems[foundIndex].interfaceCompliance.testHarnessResult = value;
-      selectedItems[foundIndex].interfaceCompliance.requirements = [];
-
-      setSelectedItems(selectedItems);
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(selectedItems)
-      );
-    }
-  };
-
   const handleClearAllSelectedItems = () => setSelectedItems([]);
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
-    const isTableValid = data.every((dataItem) =>
-      dataItem.requirements.crossCutting.every(
-        (item) => item.fulfillment !== undefined && item.fulfillment !== null
-      )
-    );
-    const isTestHarnessInputValid = data.every(
-      (dataItem) =>
-        dataItem.interfaceCompliance &&
-        dataItem.interfaceCompliance.testHarnessResult !== null &&
-        dataItem.interfaceCompliance.testHarnessResult !== undefined &&
-        dataItem.interfaceCompliance.testHarnessResult !== ''
-    );
+    const isTableValid = data.every((item) => {
+      let isValidCrossCutting = true;
+      let isValidFunctional = true;
 
-    setIsTestHarnessInputValid(isTestHarnessInputValid);
+      if (
+        item.requirements.crossCutting &&
+        item.requirements.crossCutting.length > 0
+      ) {
+        isValidCrossCutting = item.requirements.crossCutting.every(
+          (crossCuttingItem) => {
+            return (
+              crossCuttingItem.status !== 0 ||
+              crossCuttingItem.fulfillment != null
+            );
+          }
+        );
+      }
 
-    const isValid = isTableValid && isTestHarnessInputValid;
+      if (
+        item.requirements.functional &&
+        item.requirements.functional.length > 0
+      ) {
+        isValidFunctional = item.requirements.functional.every(
+          (functionalItem) => {
+            return (
+              functionalItem.status !== 0 || functionalItem.fulfillment != null
+            );
+          }
+        );
+      }
 
-    return isValid;
+      setIsCrossCuttingTableTableValid(isValidCrossCutting);
+      setIsFunctionalTableValid(isValidFunctional);
+
+      return isValidCrossCutting && isValidFunctional;
+    });
+
+    return isTableValid;
   };
 
   useImperativeHandle(
-    IRSCFormRef,
+    IRSCRequirementsFormRef,
     () => ({
       validate: () => {
+        console.log('wykonuje');
         const isValid = isFulfillmentValid(selectedItems);
-        setIsTableValid(isValid);
 
         return isValid;
       },
@@ -285,30 +313,26 @@ const SelectBBs = ({
     return (
       <div key={item.bbKey}>
         <p className="table-container-name">{item.bbName} BB</p>
-        <Input
-          inputKey={`input-${item.bbKey}`}
-          tipMessage={format('form.test_harness.tip_message.label')}
-          isInvalid={!isTestHarnessInputValid}
-          required
-          name={item.bbKey}
-          inputTitle={format('form.test_harness.title.label')}
-          className="input-width-400"
-          onChange={(event) => handleTestHarnessLink(event)}
-          errorMessage={format('form.required_field.message')}
-          defaultValue={
-            item?.interfaceCompliance
-              ? item.interfaceCompliance.testHarnessResult
-              : ''
-          }
-        />
         <p className="table-container-title">
-          {format('form.table.title.label')}
+          {format('form.cross_cutting_requirements.label')}
         </p>
-        <IRSCInterfaceTable
+        <IRSCCrossCuttingTableType
           selectedData={item}
-          setUpdatedData={setUpdatedData}
-          isTableValid={isTableValid}
+          setUpdatedData={setUpdatedCrossCuttingData}
+          isTableValid={isCrossCuttingTableValid}
         />
+        {item.requirements.functional.length ? (
+          <>
+            <p className="table-container-title">
+              {format('form.functional_requirements.label')}
+            </p>
+            <IRSCFunctionalTable
+              selectedData={item}
+              setUpdatedData={setUpdatedFunctionalData}
+              isTableValid={isFunctionalTableValid}
+            />
+          </>
+        ) : null}
       </div>
     );
   });
@@ -341,4 +365,4 @@ const SelectBBs = ({
   );
 };
 
-export default SelectBBs;
+export default RequirementSpecificationSelectBBs;

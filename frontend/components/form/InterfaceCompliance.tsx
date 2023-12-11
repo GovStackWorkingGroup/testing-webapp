@@ -5,6 +5,7 @@ import SelectBBs, { IRSCFormRef } from '../shared/combined/SelectBBs';
 import { getComplianceRequirements } from '../../service/serviceAPI';
 import { ComplianceRequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
+import { CONFLUENCE_INSTRUCTIONS_LINK } from '../../service/constants';
 
 type InterfaceComplianceFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
@@ -45,7 +46,10 @@ const InterfaceComplianceForm = ({
         <p className="question-line-text">
           {format('form.question_line.not_sure_how_to_start')}
           {format('form.question_line.click')}
-          <Link className="question-line-link" href="">
+          <Link
+            className="question-line-link"
+            href={CONFLUENCE_INSTRUCTIONS_LINK}
+          >
             {format('form.question_line.here')}
           </Link>
           {format(

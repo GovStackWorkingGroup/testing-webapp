@@ -355,7 +355,7 @@ export const updateDraftDetailsStepThree = async (
       requirements,
       interfaceCompliance,
     } = item;
-
+    console.log('item', item);
     const test = {
       bbSpecification: bbName,
       bbVersion,
@@ -369,10 +369,18 @@ export const updateDraftDetailsStepThree = async (
             _id: crossCuttingItem._id,
           })
         ),
-        functionalRequirements: [],
+        functionalRequirements: requirements.functional.map(
+          (functionalItem) => ({
+            requirement: functionalItem.requirement,
+            comment: functionalItem.comment,
+            fulfillment: functionalItem.fulfillment,
+            _id: functionalItem._id,
+          })
+        ),
       },
       interfaceCompliance: {
         testHarnessResult: interfaceCompliance.testHarnessResult,
+        requirements: interfaceCompliance.requirements,
       },
     };
 
@@ -393,7 +401,7 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
-      version: '1',
+      version: '2.01',
       bbDetails: transformedDataObject,
     },
   };
