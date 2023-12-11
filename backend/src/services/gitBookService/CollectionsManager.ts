@@ -31,11 +31,13 @@ class GitBookCollectionManager {
 
     async fetchCollections(titleStartsWith: string = '') {
         const response = await gitBookClient.get(`/v1/orgs/${this.orgId}/collections`);
+        const lowerCaseTitleStartsWith = titleStartsWith.toLowerCase();
+
         if (!response || response.status !== 200 || !response.data || !response.data.items) {
             throw new GitBookCollectionManagerError('Failed to fetch collections.');
         }
         return response.data.items
-            .filter(collection => collection.title.startsWith(titleStartsWith))
+            .filter(collection => collection.title.toLowerCase().startsWith(lowerCaseTitleStartsWith))
             .map(collection => ({
                 id: collection.id,
                 bbKey: collection.title,

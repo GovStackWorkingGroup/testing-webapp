@@ -27,7 +27,7 @@ export const RequirementSchema = new mongoose.Schema({
   fulfillment: {
     type: Number,
     enum: Object.values(RequirementFulfillment),
-    required: false
+    default: RequirementFulfillment.NA,
   },
   status: {
     type: Number,

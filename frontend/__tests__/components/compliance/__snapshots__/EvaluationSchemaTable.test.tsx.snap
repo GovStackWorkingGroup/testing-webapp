@@ -34,29 +34,29 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
     >
       <tr>
         <td
-          class=""
+          class=" "
         >
           Deployment Compliance
         </td>
         <td
-          class=""
+          class=" "
         >
           Deployability via container
         </td>
         <td
-          class=""
+          class=" "
         >
           Deployable
         </td>
         <td
-          class=""
+          class=" "
         >
           N/A
         </td>
       </tr>
       <tr>
         <td
-          class=""
+          class=" "
         >
           Requirement Specification
         </td>
@@ -144,7 +144,7 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
       </tr>
       <tr>
         <td
-          class=""
+          class=" "
         >
           Interface Compliance
         </td>

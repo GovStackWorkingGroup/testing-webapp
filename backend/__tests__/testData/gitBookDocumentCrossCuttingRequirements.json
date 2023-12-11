@@ -1,0 +1,149 @@
+{
+    "id": "GDe9Wcx6qW3fCWj7awUe",
+    "title": "5 Cross-Cutting Requirements",
+    "kind": "sheet",
+    "type": "document",
+    "description": "This section will highlight important requirements or describe any additional cross-cutting requirements that apply to this Building Block.",
+    "path": "6-cross-cutting-requirements",
+    "slug": "6-cross-cutting-requirements",
+    "documentId": "vjLBnV8ZKdqi1HclnXvk",
+    "createdAt": "2023-04-14T09:25:47.102Z",
+    "updatedAt": "2023-04-22T19:37:29.712Z",
+    "git": {
+        "oid": "94a96e971f0304c2f42433eda1a3c2ab6ecc835a",
+        "path": "spec/6-cross-cutting-requirements.md"
+    },
+    "pages": [],
+    "layout": {
+        "cover": true,
+        "coverSize": "full",
+        "title": true,
+        "description": true,
+        "tableOfContents": true,
+        "outline": true,
+        "pagination": true
+    },
+    "document": {
+        "object": "document",
+        "data": {
+            "schemaVersion": 5
+        },
+        "nodes": [
+            {
+                "object": "block",
+                "type": "heading-1",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "leaves": [
+                            {
+                                "object": "leaf",
+                                "text": "5.1 External Identification, Registration, and Enrollment Logic (REQUIRED)",
+                                "marks": [],
+                                "selections": []
+                            }
+                        ],
+                        "key": "18804086ddb54399a41aad37916fd2b4"
+                    }
+                ],
+                "key": "01bea29d250545e7ac65bf27d8720ecf",
+                "meta": {
+                    "id": "5.1-external-identification-registration-and-enrollment-logic-required"
+                }
+            },
+            {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "leaves": [
+                            {
+                                "object": "leaf",
+                                "text": "The Payments Building Block assumes that all identification, registration, and enrollment logic is done externally and are compliant with regulated payments and banking systems within a jurisdiction.",
+                                "marks": [],
+                                "selections": []
+                            }
+                        ],
+                        "key": "ac9d77d5ce804b778d8bc10d5c14dcfa"
+                    }
+                ],
+                "key": "37b77c8cdb464692be3d1e5b395aca79"
+            },
+            {
+                "object": "block",
+                "type": "heading-1",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "leaves": [
+                            {
+                                "object": "leaf",
+                                "text": "5.2 Registration Requirements (RECOMMENDED)",
+                                "marks": [],
+                                "selections": []
+                            }
+                        ],
+                        "key": "9f07da1b6ae040bf93630947d3936ee9"
+                    }
+                ],
+                "key": "878fa1c91ccf4a04b7b26f1f6d6537d8",
+                "meta": {
+                    "id": "5.2-registration-requirements-recommended"
+                }
+            },
+            {
+                "object": "block",
+                "type": "paragraph",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "leaves": [
+                            {
+                                "object": "leaf",
+                                "text": "The Payment System or Scheme in a country may require that participating payor or payee entities, whether health clinics, ministries, or individuals must have been registered with a regulated banking or non-banking entity prior to the use of the Payments Building Block.",
+                                "marks": [],
+                                "selections": []
+                            }
+                        ],
+                        "key": "f8b8eaf2190143e5abc3e16024cf9cf5"
+                    }
+                ],
+                "key": "9ba554357dde4aec8ea7bd1e68db7e34"
+            },
+            {
+                "object": "block",
+                "type": "heading-1",
+                "isVoid": false,
+                "data": {},
+                "nodes": [
+                    {
+                        "object": "text",
+                        "leaves": [
+                            {
+                                "object": "leaf",
+                                "text": "5.3 Compliance Verification (OPTIONAL)",
+                                "marks": [],
+                                "selections": []
+                            }
+                        ],
+                        "key": "86d1a326be9b401e9979bcadf426c4f6"
+                    }
+                ],
+                "key": "9569721acc0d4050826dbd70d72acff8",
+                "meta": {
+                    "id": "5.3-compliance-verification-optional"
+                }
+            }
+        ],
+        "key": "546ca9516a4d481fb39ef96205ca0359"
+    }
+}

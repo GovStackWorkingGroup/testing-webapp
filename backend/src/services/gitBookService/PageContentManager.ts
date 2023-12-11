@@ -17,6 +17,36 @@ class GitBookPageContentManager {
     static RECOMMENDED_TEXT = "(RECOMMENDED)";
     static OPTIONAL_TEXT = "(OPTIONAL)";
 
+    extractInterfaceRequirements(documentObject, _) {
+        if (!documentObject.pages || !Array.isArray(documentObject.pages)) {
+            return { error: new Error("Invalid or missing 'pages' property in documentObject") };
+        }
+
+        const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
+        const CROSS_CUTTING_REQUIREMENTS_REGEX = /cross[\s-]?cutting[\s-]?requirements/i;
+
+        const pageTitleRegex = new RegExp(numericPrefixRegex.source + CROSS_CUTTING_REQUIREMENTS_REGEX.source, 'i');
+
+        const filteredPages = documentObject.pages.filter(page => pageTitleRegex.test(page.title));
+        const requirements: Requirement[] = [];
+
+        filteredPages.forEach(doc => {
+            doc.pages.forEach(page => {
+                let textContent = page.header; // assuming 'header' is the property containing the text
+                textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
+
+                let status = this.extractStatus(textContent); // Assuming extractStatus function exists
+                if (status !== undefined) {
+                    textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+                    requirements.push({ status, requirement: textContent });
+                }
+            });
+        });
+
+        return { requirements };
+    }
+
+
     extractCrossCuttingRequirements(pageContent) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
@@ -89,6 +119,20 @@ class GitBookPageContentManager {
             return RequirementStatusEnum.OPTIONAL;
         }
         return undefined;
+    }
+
+    async filterPagesByTitle(documentObject, titleRegex: RegExp): Promise<string[]> {
+        // Ensure that the document object has a 'pages' property and it's an array
+        if (!documentObject.pages || !Array.isArray(documentObject.pages)) {
+            throw new Error("Invalid or missing 'pages' property in documentObject");
+        }
+    
+        // Filter the pages based on the regex applied to their titles
+        const filteredPageIds: string[] = documentObject.pages
+            .filter(page => titleRegex.test(page.title))
+            .map(page => page.id); // Extract the page IDs
+    
+        return filteredPageIds;
     }
 }
 

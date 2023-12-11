@@ -2,7 +2,7 @@
 
 .progress-bar-main-container {
   width: 100vw;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 140px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,14 +95,15 @@
 }
 
 .progress-bar-body-container {
-  height: calc(100% - 170px);
+  height: 100%;
   margin-top: 80px;
   padding-bottom: 10px;
   overflow: auto;
 }
 
 .progress-bar-body-container > div {
-  height: max-content;
+  overflow-y: auto;
+  max-height: calc(100% - 55px);
   width: 80vw;
   padding: 24px 16px;
   border-radius: 8px;

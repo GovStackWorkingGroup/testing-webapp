@@ -20,6 +20,7 @@ export const en = {
     'The Software Requirements Compliance form allows software providers to self-assess their products against the functional requirements that have been developed by GovStack. These assessments help GovStack users validate that a particular software platform is able to meet the functional requirements for one or more Building Blocks, as well as whether it adheres to the cross-functional requirements specified for all GovStack implementations.',
   'app.definition_self_assessment_part_2.description':
     'Click on the ‘Check Compliance’ to start the assessment process for a particular product. For detailed instructions on filling out the self-assessment forms, please refer to [this document](https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance).',
+  'app.edit.label': 'edit',
   'app.email.label': 'Email',
   'app.email_confirm.label': 'Confirm email',
   'app.error_fetching_data.message':
@@ -72,16 +73,21 @@ export const en = {
     'Requirement Specification',
 
   'form.container.label': 'Container',
+  'form.copied_to_clipboard.message': 'Link copied to clipboard!',
   'form.deployment_instruction.message':
     'Please provide links to documentation on how to install and deploy this product as well as links to Docker files or other files that show that the product can be run in a container system (usually Docker and/or Kubernetes). You can also directly upload files instead of providing links.',
   'form.error_loading_file.message': 'Error loading file. Please try again.',
+  'form.evaluation_summary_title.label':
+    'Make sure all data entered is correct',
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
+  'form.filled_compliance_form.label': 'Filled Compliance Forms',
   'form.filling_required.label': 'Filling this form is required.',
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
   'form.header.requirement.label': 'Requirement',
-  'form.fill_in_at_least_1_of_the_below_forms.label': 'Fill in at least 1 of the below forms',
+  'form.fill_in_at_least_1_of_the_below_forms.label':
+    'Fill in at least 1 of the below forms',
   'form.form_invalid.message':
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
@@ -92,16 +98,21 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
-  'form.required_label': 'Required',
+  'form.form_submit_error.message': 'Draft submitting failed',
   'form.form_saved_success.message': 'Draft saved successfully',
   'form.form_saved_error.message': 'Draft saving failed',
+  'form.form_submit_success.message': 'Form has been successfully submitted!',
+  'form.form_submit_success_inform.message':
+    'We will inform you about the progress of the process via email provided in the form. You can also use this unique link to follow the progress:',
   'form.point_of_contact.label': 'Point of contact',
   'form.clear_selection.label': 'Clear selection',
   'form.select_building_blocks.label':
     'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.required_label': 'Required',
   'form.test_harness.title.label': 'Test Harness Result',
   'form.table.title.label': 'Architectural Cross-Cutting Requirements',
-  'form.test_harness.tip_message.label': 'Paste link link to test harness result.',
+  'form.test_harness.tip_message.label':
+    'Paste link link to test harness result.',
   'form.tip_description.label': 'Provide description of your software.',
   'form.tip_documentation.label': 'Paste link to your documentation.',
   'form.tip_max_characters.label': '400 characters max.',
@@ -124,6 +135,7 @@ export const en = {
 
   'progress_bar.next.label': 'Next',
   'progress_bar.previous_step.label': 'Previous Step',
+  'progress_bar.submit_form.label': 'Submit Form',
   'progress_bar.save_draft.label': 'Save draft',
 
   'result_page.back_to_product_list': '< Back to Products List',

@@ -18,6 +18,7 @@ type ProgressBarProps = {
   changeStepTo?: number | undefined;
   isDraftSaved: boolean;
   onSaveButton: () => void;
+  onSubmitButton: () => void;
   customRef?: RefObject<ProgressBarRef>;
 };
 
@@ -30,9 +31,10 @@ const ProgressBar = ({
   changeStepTo,
   isDraftSaved,
   onSaveButton,
+  onSubmitButton,
   customRef,
 }: ProgressBarProps) => {
-  const [activeStep, setActiveStep] = useState(3);
+  const [activeStep, setActiveStep] = useState(1);
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
@@ -86,6 +88,10 @@ const ProgressBar = ({
 
   const handleSaveButton = () => {
     onSaveButton();
+  };
+
+  const handleSubmitButton = () => {
+    onSubmitButton();
   };
 
   const totalSteps = steps.length;
@@ -150,7 +156,7 @@ const ProgressBar = ({
                 </div>
               </div>
             )}
-            {activeStep > 1 && (
+            {activeStep > 1 && activeStep > totalSteps && (
               <Button
                 type="button"
                 text={format('progress_bar.save_draft.label')}
@@ -159,13 +165,21 @@ const ProgressBar = ({
                 showCheckIcon={isDraftSaved}
               ></Button>
             )}
-            <Button
-              type="button"
-              text={format('progress_bar.next.label')}
-              styles="primary-button"
-              onClick={() => handleNextButton()}
-              disabled={activeStep === totalSteps}
-            ></Button>
+            {activeStep !== totalSteps ? (
+              <Button
+                type="button"
+                text={format('progress_bar.next.label')}
+                styles="primary-button"
+                onClick={() => handleNextButton()}
+              ></Button>
+            ) : (
+              <Button
+                type="button"
+                text={format('progress_bar.submit_form.label')}
+                styles="primary-button"
+                onClick={() => handleSubmitButton()}
+              ></Button>
+            )}
           </div>
         </div>
       </div>

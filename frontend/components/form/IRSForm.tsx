@@ -26,7 +26,7 @@ const IRSForm = ({ setUpdatedBBs, IRSCFormRef }: IRSFormProps) => {
   }, [updatedData]);
 
   return (
-    <div>
+    <div className="irsc-form-container">
       <div className="irsc-header">
         {format('form.fill_in_at_least_1_of_the_below_forms.label')}
       </div>
