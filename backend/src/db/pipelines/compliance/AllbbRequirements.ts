@@ -26,7 +26,8 @@ export const aggregationPipeline = (): any[] => [
         dateOfSave: 1,
         requirements: {
           crossCutting: "$requirements.crossCutting",
-          functional: "$requirements.functional"
+          functional: "$requirements.functional",
+          interface: "$requirements.interface",
         }
       }
     }
