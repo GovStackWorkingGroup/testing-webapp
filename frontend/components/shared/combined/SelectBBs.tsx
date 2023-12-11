@@ -264,6 +264,7 @@ const SelectBBs = ({
       validate: () => {
         const isValid = isFulfillmentValid(selectedItems);
         setIsTableValid(isValid);
+        console.log('isValid inte', isValid);
 
         return isValid;
       },

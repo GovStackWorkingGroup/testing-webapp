@@ -24,6 +24,7 @@ import {
   SoftwareDraftToUpdateType,
 } from '../../service/types';
 import { IRSCFormRef } from '../shared/combined/SelectBBs';
+import { IRSCRequirementsFormRef } from '../shared/combined/RequirementSpecificationSelectBB';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
@@ -66,7 +67,7 @@ const SoftwareComplianceForm = ({
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
   const IRSCInterfaceFormRef = useRef<IRSCFormRef>(null);
-  const IRSCRequirementsFormRef = useRef<IRSCFormRef>(null);
+  const IRSCRequirementsFormRef = useRef<IRSCRequirementsFormRef>(null);
   const nextStepRef = useRef<ProgressBarRef>(null);
 
   const { format } = useTranslations();
@@ -95,6 +96,12 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
+      IRSCRequirementsFormRef.current?.validate();
+      IRSCInterfaceFormRef.current?.validate();
+      console.log(
+        IRSCRequirementsFormRef.current?.validate(),
+        IRSCInterfaceFormRef.current?.validate()
+      );
       if (
         IRSCInterfaceFormRef.current?.validate() &&
         IRSCRequirementsFormRef.current?.validate()

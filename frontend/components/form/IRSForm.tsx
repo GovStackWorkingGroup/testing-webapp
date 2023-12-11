@@ -130,18 +130,18 @@ const IRSForm = ({
           {format('table.requirement_specification_compliance.label')}
         </div>
       </div>
-      {activeTab === 'interface' && (
-        <InterfaceCompliance
-          setUpdatedBBs={setUpdatedInterfaceData}
-          IRSCFormRef={IRSCInterfaceFormRef}
-        />
-      )}
-      {activeTab === 'specification' && (
-        <RequirementSpecificationComplianceForm
-          setUpdatedBBs={setUpdatedRequirementSpecData}
-          IRSCRequirementsFormRef={IRSCRequirementsFormRef}
-        />
-      )}
+      {/* {activeTab === 'interface' && ( */}
+      <InterfaceCompliance
+        setUpdatedBBs={setUpdatedInterfaceData}
+        IRSCFormRef={IRSCInterfaceFormRef}
+      />
+      {/* )} */}
+      {/* {activeTab === 'specification' && ( */}
+      <RequirementSpecificationComplianceForm
+        setUpdatedBBs={setUpdatedRequirementSpecData}
+        IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+      />
+      {/* )} */}
     </div>
   );
 };

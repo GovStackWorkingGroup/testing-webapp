@@ -35,6 +35,7 @@ const InterfaceComplianceForm = ({
     }
   };
 
+  console.log('interfaceRequirementsData', interfaceRequirementsData);
   useEffect(() => {
     fetchData();
   }, []);

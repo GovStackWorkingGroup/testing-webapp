@@ -249,6 +249,8 @@ export const getComplianceRequirements = async () => {
       return response.json();
     })
     .then<Success<ComplianceRequirementsType[]>>((actualData) => {
+      console.log('actualData', actualData);
+
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

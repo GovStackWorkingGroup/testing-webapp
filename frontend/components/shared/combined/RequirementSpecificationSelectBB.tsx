@@ -9,14 +9,14 @@ import { REQUIREMENT_SPEC_STORAGE_NAME } from '../../../service/constants';
 import IRSCFunctionalTable from '../../table/IRSC/IRSCFunctionalTable';
 import IRSCCrossCuttingTableType from '../../table/IRSC/IRSCCrossCuttingTable';
 
-export type IRSCFormRef = {
+export type IRSCRequirementsFormRef = {
   validate: () => boolean;
 };
 
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
   setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
-  IRSCRequirementsFormRef: RefObject<IRSCFormRef>;
+  IRSCRequirementsFormRef: RefObject<IRSCRequirementsFormRef>;
 };
 
 const RequirementSpecificationSelectBBs = ({
@@ -290,8 +290,8 @@ const RequirementSpecificationSelectBBs = ({
     IRSCRequirementsFormRef,
     () => ({
       validate: () => {
-        console.log('wykonuje');
         const isValid = isFulfillmentValid(selectedItems);
+        console.log('isValid req', isValid);
 
         return isValid;
       },
