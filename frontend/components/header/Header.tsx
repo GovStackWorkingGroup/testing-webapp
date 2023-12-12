@@ -3,7 +3,7 @@ import React from 'react';
 import '../../public/images/logo.png';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
+import { COMPLIANCE_TESTING_LOGIN, COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
 
@@ -37,6 +37,13 @@ const Header = () => {
             buttonTitle={format('app.software_requirements_compliance.label')}
             href={COMPLIANCE_TESTING_RESULT_PAGE}
             active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
+          />
+        </div>
+        <div className="header-login">
+          <HeaderMenuButton
+            buttonTitle={format('app.login.label')}
+            href={COMPLIANCE_TESTING_LOGIN}
+            active={currentPath?.includes(COMPLIANCE_TESTING_LOGIN)}
           />
         </div>
         <div className="header-help">

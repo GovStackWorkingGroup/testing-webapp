@@ -19,6 +19,7 @@ import mongoComplianceRepository from "./src/db/repositories/complianceRepositor
 import buildReportRoutes from './src/routes/record';
 import buildComplianceRoutes from "./src/routes/compliance";
 import { startCronJobs } from "./src/cronJobs";
+import buildAuthRoutes from "./src/routes/auth";
 
 const port: number = parseInt(process.env.PORT as string, 10) || 5000;
 const app =  express();
@@ -31,6 +32,7 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(buildReportRoutes(reportController(reportRepository, mongoReportRepository)));
 app.use(buildComplianceRoutes(complianceController(complianceRepository, mongoComplianceRepository)));
+app.use(buildAuthRoutes());
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
