@@ -5,15 +5,18 @@ import SelectBBs, { IRSCFormRef } from '../shared/combined/SelectBBs';
 import { getComplianceRequirements } from '../../service/serviceAPI';
 import { ComplianceRequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
+import { CONFLUENCE_INSTRUCTIONS_LINK } from '../../service/constants';
 
 type InterfaceComplianceFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
   IRSCFormRef: RefObject<IRSCFormRef>;
+  display: boolean;
 };
 
 const InterfaceComplianceForm = ({
   setUpdatedBBs,
   IRSCFormRef,
+  display,
 }: InterfaceComplianceFormProps) => {
   const [interfaceRequirementsData, setInterfaceRequirementsData] =
     useState<ComplianceRequirementsType[]>();
@@ -39,13 +42,16 @@ const InterfaceComplianceForm = ({
   }, []);
 
   return (
-    <div>
+    <div style={{ display: display ? 'block' : 'none' }}>
       <div className="question-line">
         <AiOutlineQuestionCircle size={24} color="#325BE3" />
         <p className="question-line-text">
           {format('form.question_line.not_sure_how_to_start')}
           {format('form.question_line.click')}
-          <Link className="question-line-link" href="">
+          <Link
+            className="question-line-link"
+            href={CONFLUENCE_INSTRUCTIONS_LINK}
+          >
             {format('form.question_line.here')}
           </Link>
           {format(
