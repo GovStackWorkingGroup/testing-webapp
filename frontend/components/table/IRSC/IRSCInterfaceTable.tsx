@@ -201,11 +201,6 @@ const IRSCInterfaceTable = ({
           })}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {/* <tr>
-            <td className="irsc-table-header-required" colSpan={3}>
-              {format('form.required_label')}
-            </td>
-          </tr> */}
           {rows.some((item) => item.original.status === 0) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
