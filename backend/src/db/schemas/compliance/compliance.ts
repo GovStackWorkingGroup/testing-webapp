@@ -191,6 +191,8 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   uniqueId: {
     type: String,
+    unique: true,
+    sparse: true,
     validate: {
       validator: function (v) {
         return uuidValidate(v) && uuidVersion(v) === 4;
