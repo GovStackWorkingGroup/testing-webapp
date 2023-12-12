@@ -125,7 +125,7 @@ const ComplianceVersionSchema = new mongoose.Schema({
   bbDetails: {
     type: Map,
     of: ComplianceDetailSchema,
-    required: true
+    default: {}
   }
 }); // Allow partial updates
 
@@ -191,8 +191,6 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   uniqueId: {
     type: String,
-    unique: true,
-    sparse: true,
     validate: {
       validator: function (v) {
         return uuidValidate(v) && uuidVersion(v) === 4;
