@@ -193,6 +193,7 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
   formData.append('description', software.toolDescription.value);
   formData.append('email', software.email.value);
   formData.append('version', software.softwareVersion.value);
+  formData.append('compliance[0][version]', software.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts`, {
     method: 'post',
@@ -269,7 +270,7 @@ export const updateDraftDetailsStepOne = async (
   formData.append('documentation', data.softwareDocumentation.value);
   formData.append('description', data.toolDescription.value);
   formData.append('email', data.email.value);
-  formData.append('version', data.softwareVersion.value);
+  formData.append('compliance[0][version]', data.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
@@ -402,7 +403,6 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
-      version: '2.01',
       bbDetails: transformedDataObject,
     },
   };

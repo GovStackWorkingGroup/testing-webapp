@@ -123,6 +123,7 @@ export type SoftwareDraftDetailsType = {
   email: string;
   expirationDate: string;
   formDetails: {
+    version: string;
     bbDetails: BBDetailsType;
   }[];
   logo: string;
