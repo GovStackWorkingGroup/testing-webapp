@@ -109,7 +109,7 @@ const SoftwareAttributesForm = ({
             error: { error: false, message: '' },
           },
           softwareVersion: {
-            value: draftData.,
+            value: draftData.version,
             error: false,
           },
         };

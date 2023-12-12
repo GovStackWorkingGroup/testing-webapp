@@ -192,6 +192,7 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
   formData.append('documentation', software.softwareDocumentation.value);
   formData.append('description', software.toolDescription.value);
   formData.append('email', software.email.value);
+  formData.append('version', software.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts`, {
     method: 'post',
@@ -268,6 +269,7 @@ export const updateDraftDetailsStepOne = async (
   formData.append('documentation', data.softwareDocumentation.value);
   formData.append('description', data.toolDescription.value);
   formData.append('email', data.email.value);
+  formData.append('version', data.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',

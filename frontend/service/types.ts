@@ -130,6 +130,7 @@ export type SoftwareDraftDetailsType = {
   status: number;
   uniqueId: string;
   website: string;
+  version: string;
 };
 
 export type Requirement = {
