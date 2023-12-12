@@ -30,7 +30,7 @@ import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 import '../components/shared/Pill.less';
 import '../components/shared/combined/SelectBBs.less';
-import '../components/table/IRSCTable.less';
+import '../components/table/IRSC/IRSCTable.less';
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();

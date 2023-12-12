@@ -24,6 +24,7 @@ import {
   SoftwareDraftToUpdateType,
 } from '../../service/types';
 import { IRSCFormRef } from '../shared/combined/SelectBBs';
+import { IRSCRequirementsFormRef } from '../shared/combined/RequirementSpecificationSelectBB';
 import SoftwareAttributesForm, {
   FormValuesType,
   SoftwareAttributedRef,
@@ -65,7 +66,8 @@ const SoftwareComplianceForm = ({
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
-  const IRSCFormRef = useRef<IRSCFormRef>(null);
+  const IRSCInterfaceFormRef = useRef<IRSCFormRef>(null);
+  const IRSCRequirementsFormRef = useRef<IRSCRequirementsFormRef>(null);
   const nextStepRef = useRef<ProgressBarRef>(null);
 
   const { format } = useTranslations();
@@ -94,7 +96,12 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
-      if (IRSCFormRef.current?.validate()) {
+      IRSCRequirementsFormRef.current?.validate();
+      IRSCInterfaceFormRef.current?.validate();
+      if (
+        IRSCInterfaceFormRef.current?.validate() &&
+        IRSCRequirementsFormRef.current?.validate()
+      ) {
         handleUpdateDraft(true);
       }
 
@@ -112,7 +119,10 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
-      if (IRSCFormRef.current?.validate()) {
+      if (
+        IRSCInterfaceFormRef.current?.validate() &&
+        IRSCRequirementsFormRef.current?.validate()
+      ) {
         handleUpdateDraft(false);
       }
 
@@ -289,7 +299,9 @@ const SoftwareComplianceForm = ({
             {currentProgressBarStep === 3 && (
               <IRSForm
                 setUpdatedBBs={setUpdatedBBs}
-                IRSCFormRef={IRSCFormRef}
+                IRSCInterfaceFormRef={IRSCInterfaceFormRef}
+                IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+                onEdited={(hasError: boolean) => setRenderFormError(hasError)}
               />
             )}
             {currentProgressBarStep === 4 && <EvaluationSummary />}

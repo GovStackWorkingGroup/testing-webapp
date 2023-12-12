@@ -1,6 +1,8 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
+  'app.login.label': 'Login',
+  'app.login_with_github.label': 'Login with GitHub',
   'app.back_to_reports_list.label': '< Back to Report List',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
@@ -74,6 +76,7 @@ export const en = {
 
   'form.container.label': 'Container',
   'form.copied_to_clipboard.message': 'Link copied to clipboard!',
+  'form.cross_cutting_requirements.label': 'Cross-Cutting Requirements',
   'form.deployment_instruction.message':
     'Please provide links to documentation on how to install and deploy this product as well as links to Docker files or other files that show that the product can be run in a container system (usually Docker and/or Kubernetes). You can also directly upload files instead of providing links.',
   'form.error_loading_file.message': 'Error loading file. Please try again.',
@@ -83,6 +86,7 @@ export const en = {
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
   'form.filled_compliance_form.label': 'Filled Compliance Forms',
   'form.filling_required.label': 'Filling this form is required.',
+  'form.functional_requirements.label': 'Functional Requirements',
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
   'form.header.requirement.label': 'Requirement',
@@ -164,11 +168,13 @@ export const en = {
   'table.no_data_available.message': 'No Data Available',
   'table.no_result_count.message': 'No results count found',
   'table.notes': 'Notes',
+  'table.optional_not_required.label': 'OPTIONAL (not required)',
   'table.overall_compatibility.label': 'Overall Compatibility',
   'table.point_of_contact.label': 'Point of contact',
   'table.show_older_versions.label': 'Show older versions',
   'table.software_name.label': 'Software Version',
   'table.submission_date.label': 'Submission Date',
+  'table.recommended_not_required.label': 'RECOMMENDED (not required)',
   'table.rejected.label': 'Rejected',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',

@@ -166,13 +166,9 @@ export type IRSCSoftwareDraftToUpdateType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: {
-      requirement: string;
-      comment: string;
-      fulfillment: number | null;
-      _id: string;
-    }[];
-    functional: [];
+    crossCutting: RequirementsType[];
+    functional: RequirementsType[];
+    interface: RequirementsType[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -186,28 +182,22 @@ export type ComplianceRequirementsType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: [
-      {
-        requirement: string;
-        comment: string;
-        status: number;
-        fulfillment: number | null;
-        _id: string;
-      }
-    ];
-    functional: [];
+    crossCutting: RequirementsType[];
+    functional: RequirementsType[];
+    interface: RequirementsType[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
-    requirements: [];
+    requirements: RequirementsType[] | [];
   };
 };
 
-export type CrossCuttingType = {
+export type RequirementsType = {
   requirement: string;
   comment: string;
   fulfillment: number;
   _id: string;
+  status: number;
 };
 
 // All types used in Table.tsx and the data connected to it
@@ -265,4 +255,11 @@ export type SubmitDraftResponseType = {
   success: boolean;
   details: string;
   link: string;
+};
+
+// Types used in IRSC/IRSC...Table.tsx and the data connected to it
+export type IRSCTableType = {
+  selectedData: ComplianceRequirementsType;
+  setUpdatedData: (data: ComplianceRequirementsType) => void;
+  isTableValid: boolean;
 };

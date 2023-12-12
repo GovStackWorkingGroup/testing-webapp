@@ -156,7 +156,7 @@ const ProgressBar = ({
                 </div>
               </div>
             )}
-            {activeStep > 1 && activeStep > totalSteps && (
+            {activeStep > 1 && activeStep < totalSteps && (
               <Button
                 type="button"
                 text={format('progress_bar.save_draft.label')}

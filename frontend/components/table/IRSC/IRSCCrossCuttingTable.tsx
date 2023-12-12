@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTable, usePagination, Cell } from 'react-table';
+import { useTable, Cell } from 'react-table';
 import classNames from 'classnames';
 import {
   FaRegCircleCheck,
@@ -7,45 +7,19 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
-import { ComplianceRequirementsType } from '../../service/types';
-import useTranslations from '../../hooks/useTranslation';
-import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../service/constants';
+import { ComplianceRequirementsType, IRSCTableType, RequirementsType } from '../../../service/types';
+import useTranslations from '../../../hooks/useTranslation';
 
-export type RequirementType = {
-  requirement: string;
-  comment: string;
-  status: number;
-  fulfillment: number | null;
-  _id: string;
-};
-
-type IRSCTableType = {
-  selectedData: ComplianceRequirementsType;
-  setUpdatedData: (data: ComplianceRequirementsType) => void;
-  isTableValid: boolean;
-};
-
-const IRSCTable = ({
+const IRSCCrossCuttingTableType = ({
   selectedData,
   setUpdatedData,
   isTableValid,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
-  const [savedInLocalStorage, setSavedInLocalStorage] = useState<
-    ComplianceRequirementsType[] | null
-  >(null);
 
   const { format } = useTranslations();
 
   useEffect(() => setUpdatedData(data), [data]);
-
-  useEffect(() => {
-    const savedIRSCInStorage = JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
-    );
-    setSavedInLocalStorage(savedIRSCInStorage);
-  }, []);
 
   const updateData = (
     cellId: string,
@@ -95,36 +69,6 @@ const IRSCTable = ({
       },
     };
     setData(updatedData as ComplianceRequirementsType);
-    handleSaveInLocalStorage(updatedData as ComplianceRequirementsType);
-  };
-
-  const handleSaveInLocalStorage = (
-    updatedData: ComplianceRequirementsType
-  ) => {
-    if (savedInLocalStorage) {
-      const updatedLocalStorage = savedInLocalStorage?.map(
-        (item: ComplianceRequirementsType) =>
-          item?.bbKey === updatedData?.bbKey ? updatedData : item
-      );
-
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(updatedLocalStorage)
-      );
-
-      return;
-    }
-
-    if (!savedInLocalStorage) {
-      const updatedLocalStorage = [updatedData];
-
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(updatedLocalStorage)
-      );
-    }
   };
 
   const columns = useMemo(
@@ -136,7 +80,7 @@ const IRSCTable = ({
       {
         Header: format('form.header.comment.label'),
         accessor: 'comment',
-        Cell: ({ row }: Cell<RequirementType>) => {
+        Cell: ({ row }: Cell<RequirementsType>) => {
           const [comment, setComment] = useState<string>(row.values.comment);
           const [active, setActive] = useState(false);
 
@@ -222,94 +166,76 @@ const IRSCTable = ({
   );
 
   // @ts-ignore
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     useTable(
       {
         // @ts-ignore
         columns,
         data: data.requirements.crossCutting,
-      },
-      usePagination
+      }
     );
 
-  return (
-    data.requirements.crossCutting?.length && (
-      <div className="irsc-table-container">
-        <table {...getTableProps()} className="irsc-table">
-          <thead>
-            {headerGroups.map((headerGroup, indexKey) => {
-              return (
-                <tr
-                  {...headerGroup.getHeaderGroupProps()}
-                  key={`${headerGroup.id}}-${indexKey}`}
-                  className="irsc-table-header"
-                >
-                  {headerGroup.headers.map((column, indexKey) => (
-                    <th
-                      {...column.getHeaderProps()}
-                      key={`header-th-${indexKey}`}
-                    >
-                      {column.render('Header')}
-                    </th>
-                  ))}
-                </tr>
-              );
-            })}
-          </thead>
-          <tbody {...getTableBodyProps()}>
-            <tr>
-              <td className="irsc-table-header-required" colSpan={3}>
-                {format('form.required_label')}
-              </td>
-            </tr>
-            {page.map((row: any, indexKey: number) => {
-              prepareRow(row);
-              if (
-                !isTableValid &&
-                (row.values.fulfillment === undefined ||
-                  row.values.fulfillment === null)
-              ) {
-                return (
-                  <tr
-                    {...row.getRowProps()}
-                    key={`row-${indexKey}`}
-                    className="irsc-table-rows irsc-invalid-row"
+  return data.requirements.crossCutting?.length ? (
+    <div className="irsc-table-container">
+      <table {...getTableProps()} className="irsc-table">
+        <thead>
+          {headerGroups.map((headerGroup, indexKey) => {
+            return (
+              <tr
+                {...headerGroup.getHeaderGroupProps()}
+                key={`${headerGroup.id}}-${indexKey}`}
+                className="irsc-table-header"
+              >
+                {headerGroup.headers.map((column, indexKey) => (
+                  <th
+                    {...column.getHeaderProps()}
+                    key={`header-th-${indexKey}`}
                   >
-                    {row.cells.map((cell: any, indexKey: number) => {
-                      return (
-                        <td
-                          {...cell.getCellProps()}
-                          key={`cell-td-${indexKey}`}
-                        >
-                          {cell.render('Cell')}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              }
+                    {column.render('Header')}
+                  </th>
+                ))}
+              </tr>
+            );
+          })}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          <tr>
+            <td className="irsc-table-header-required" colSpan={3}>
+              {format('form.required_label')}
+            </td>
+          </tr>
+          {rows.map((row: any, indexKey: number) => {
+            prepareRow(row);
 
-              return (
-                <tr
-                  {...row.getRowProps()}
-                  key={`row-${indexKey}`}
-                  className="irsc-table-rows"
-                >
-                  {row.cells.map((cell: any, indexKey: number) => {
-                    return (
-                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    )
+            return (
+              <tr
+                {...row.getRowProps()}
+                key={`row-${indexKey}`}
+                className={`irsc-table-rows ${
+                  !isTableValid &&
+                  (row.values.fulfillment === undefined ||
+                    row.values.fulfillment === null ||
+                    row.values.fulfillment === -1)
+                    ? 'irsc-invalid-row'
+                    : ''
+                }`}
+              >
+                {row.cells.map((cell: any, indexKey: number) => {
+                  return (
+                    <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                      {cell.render('Cell')}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  ) : (
+    <></>
   );
 };
 
-export default IRSCTable;
+export default IRSCCrossCuttingTableType;
