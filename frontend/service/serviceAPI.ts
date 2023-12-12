@@ -347,7 +347,8 @@ export const updateDraftDetailsStepTwo = async (
 
 export const updateDraftDetailsStepThree = async (
   draftUUID: string,
-  data: ComplianceRequirementsType[]
+  data: ComplianceRequirementsType[],
+  softwareVersion: string
 ) => {
   const transformedData = data.map((item) => {
     const {
@@ -403,6 +404,7 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
+      version: softwareVersion,
       bbDetails: transformedDataObject,
     },
   };
