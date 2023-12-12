@@ -58,8 +58,6 @@ const IRSForm = ({
           );
 
         if (matchingItem) {
-          console.log('matchingItem', matchingItem);
-
           return {
             ...item,
             interfaceCompliance: {
