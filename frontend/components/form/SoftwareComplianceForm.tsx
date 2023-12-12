@@ -98,10 +98,6 @@ const SoftwareComplianceForm = ({
     if (currentProgressBarStep === 3) {
       IRSCRequirementsFormRef.current?.validate();
       IRSCInterfaceFormRef.current?.validate();
-      console.log(
-        IRSCRequirementsFormRef.current?.validate(),
-        IRSCInterfaceFormRef.current?.validate()
-      );
       if (
         IRSCInterfaceFormRef.current?.validate() &&
         IRSCRequirementsFormRef.current?.validate()
@@ -219,7 +215,6 @@ const SoftwareComplianceForm = ({
     }
 
     if (currentProgressBarStep === 3) {
-      console.log('updatedBBs', updatedBBs);
       await updateDraftDetailsStepThree(
         draftUUID as string,
         updatedBBs as ComplianceRequirementsType[]
@@ -306,6 +301,7 @@ const SoftwareComplianceForm = ({
                 setUpdatedBBs={setUpdatedBBs}
                 IRSCInterfaceFormRef={IRSCInterfaceFormRef}
                 IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+                onEdited={(hasError: boolean) => setRenderFormError(hasError)}
               />
             )}
             {currentProgressBarStep === 4 && <EvaluationSummary />}

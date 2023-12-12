@@ -10,11 +10,13 @@ import { CONFLUENCE_INSTRUCTIONS_LINK } from '../../service/constants';
 type InterfaceComplianceFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
   IRSCFormRef: RefObject<IRSCFormRef>;
+  display: boolean;
 };
 
 const InterfaceComplianceForm = ({
   setUpdatedBBs,
   IRSCFormRef,
+  display,
 }: InterfaceComplianceFormProps) => {
   const [interfaceRequirementsData, setInterfaceRequirementsData] =
     useState<ComplianceRequirementsType[]>();
@@ -35,13 +37,12 @@ const InterfaceComplianceForm = ({
     }
   };
 
-  console.log('interfaceRequirementsData', interfaceRequirementsData);
   useEffect(() => {
     fetchData();
   }, []);
 
   return (
-    <div>
+    <div style={{ display: display ? 'block' : 'none' }}>
       <div className="question-line">
         <AiOutlineQuestionCircle size={24} color="#325BE3" />
         <p className="question-line-text">

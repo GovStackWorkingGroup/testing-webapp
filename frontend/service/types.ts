@@ -166,13 +166,9 @@ export type IRSCSoftwareDraftToUpdateType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: {
-      requirement: string;
-      comment: string;
-      fulfillment: number | null;
-      _id: string;
-    }[];
-    functional: [];
+    crossCutting: RequirementsType[];
+    functional: RequirementsType[];
+    interface: RequirementsType[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -188,13 +184,11 @@ export type ComplianceRequirementsType = {
   requirements: {
     crossCutting: RequirementsType[];
     functional: RequirementsType[];
+    interface: RequirementsType[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
-    requirements: {
-      crossCutting: RequirementsType[];
-      functional: RequirementsType[];
-    };
+    requirements: RequirementsType[] | [];
   };
 };
 

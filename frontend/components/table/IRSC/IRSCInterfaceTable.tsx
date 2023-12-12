@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTable, usePagination, Cell } from 'react-table';
+import { useTable, Cell } from 'react-table';
 import classNames from 'classnames';
 import {
   FaRegCircleCheck,
@@ -7,7 +7,11 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
-import { ComplianceRequirementsType, IRSCTableType, RequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  IRSCTableType,
+  RequirementsType,
+} from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
 
 const IRSCInterfaceTable = ({
@@ -27,7 +31,7 @@ const IRSCInterfaceTable = ({
     value: string | number | null
   ) => {
     if (type === 'fulfillment') {
-      return data.requirements.crossCutting.map((item) =>
+      return data.requirements.interface.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -36,7 +40,7 @@ const IRSCInterfaceTable = ({
           : item
       );
     } else if (type === 'comment') {
-      return data.requirements.crossCutting.map((item) =>
+      return data.requirements.interface.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -65,7 +69,7 @@ const IRSCInterfaceTable = ({
       ...data,
       requirements: {
         ...data.requirements,
-        crossCutting: updatedCrossCuttings,
+        interface: updatedCrossCuttings,
       },
     };
     setData(updatedData as ComplianceRequirementsType);
@@ -162,21 +166,20 @@ const IRSCInterfaceTable = ({
         },
       },
     ],
-    [data.requirements.crossCutting]
+    [data.requirements.interface]
   );
 
   // @ts-ignore
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     useTable(
       {
         // @ts-ignore
         columns,
-        data: data.requirements.crossCutting,
-      },
-      usePagination
+        data: data.requirements.interface,
+      }
     );
 
-  return data.requirements.crossCutting?.length ? (
+  return data.requirements.interface?.length ? (
     <div className="irsc-table-container">
       <table {...getTableProps()} className="irsc-table">
         <thead>
@@ -205,7 +208,7 @@ const IRSCInterfaceTable = ({
               {format('form.required_label')}
             </td>
           </tr>
-          {page.map((row: any, indexKey: number) => {
+          {rows.map((row: any, indexKey: number) => {
             prepareRow(row);
 
             return (
@@ -215,7 +218,8 @@ const IRSCInterfaceTable = ({
                 className={`irsc-table-rows ${
                   !isTableValid &&
                   (row.values.fulfillment === undefined ||
-                    row.values.fulfillment === null)
+                    row.values.fulfillment === null ||
+                    row.values.fulfillment === -1)
                     ? 'irsc-invalid-row'
                     : ''
                 }`}

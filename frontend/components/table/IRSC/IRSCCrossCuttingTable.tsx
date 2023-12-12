@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTable, usePagination, Cell } from 'react-table';
+import { useTable, Cell } from 'react-table';
 import classNames from 'classnames';
 import {
   FaRegCircleCheck,
@@ -166,14 +166,13 @@ const IRSCCrossCuttingTableType = ({
   );
 
   // @ts-ignore
-  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, page } =
+  const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
     useTable(
       {
         // @ts-ignore
         columns,
         data: data.requirements.crossCutting,
-      },
-      usePagination
+      }
     );
 
   return data.requirements.crossCutting?.length ? (
@@ -205,7 +204,7 @@ const IRSCCrossCuttingTableType = ({
               {format('form.required_label')}
             </td>
           </tr>
-          {page.map((row: any, indexKey: number) => {
+          {rows.map((row: any, indexKey: number) => {
             prepareRow(row);
 
             return (
@@ -215,7 +214,8 @@ const IRSCCrossCuttingTableType = ({
                 className={`irsc-table-rows ${
                   !isTableValid &&
                   (row.values.fulfillment === undefined ||
-                    row.values.fulfillment === null)
+                    row.values.fulfillment === null ||
+                    row.values.fulfillment === -1)
                     ? 'irsc-invalid-row'
                     : ''
                 }`}

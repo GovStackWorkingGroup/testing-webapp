@@ -132,62 +132,66 @@ const RequirementSpecificationSelectBBs = ({
     if (draftData) {
       const combinedArray = draftData?.formDetails
         .map((formDetail) => {
-          const bbKeys = Object.keys(formDetail.bbDetails);
+          if (formDetail.bbDetails) {
+            const bbKeys = Object.keys(formDetail.bbDetails);
 
-          const combinedItems = bbKeys.map((bbKey) => {
-            const matchingFirstArrItem = interfaceRequirementsData?.find(
-              (item) => item.bbKey === bbKey
-            );
-
-            let combinedItem;
-
-            if (matchingFirstArrItem) {
-              combinedItem = {
-                bbName: matchingFirstArrItem.bbName,
-                bbKey: matchingFirstArrItem.bbKey,
-                bbVersion: matchingFirstArrItem.bbVersion,
-                dateOfSave: matchingFirstArrItem.dateOfSave,
-                requirements: {
-                  crossCutting: formDetail.bbDetails[
-                    bbKey
-                  ].requirementSpecificationCompliance.crossCuttingRequirements.map(
-                    (crossCuttingItem) => ({
-                      requirement: crossCuttingItem.requirement,
-                      comment: crossCuttingItem.comment,
-                      fulfillment: crossCuttingItem.fulfillment,
-                      _id: crossCuttingItem._id,
-                    })
-                  ),
-                  functional:
-                    formDetail.bbDetails[bbKey]
-                      .requirementSpecificationCompliance
-                      .functionalRequirements,
-                },
-                interfaceCompliance: {
-                  testHarnessResult:
-                    formDetail.bbDetails[bbKey].interfaceCompliance
-                      ?.testHarnessResult || '',
-                  requirements:
-                    formDetail.bbDetails[bbKey].interfaceCompliance
-                      ?.requirements || [],
-                },
-              };
-            } else {
-              // If no matching bbKey, return the object from interfaceRequirementsData
+            const combinedItems = bbKeys.map((bbKey) => {
               const matchingFirstArrItem = interfaceRequirementsData?.find(
                 (item) => item.bbKey === bbKey
               );
-              combinedItem = matchingFirstArrItem || null;
-            }
 
-            return combinedItem;
-          });
+              let combinedItem;
 
-          return combinedItems.filter(Boolean); // Remove null values from the combined items
+              if (matchingFirstArrItem) {
+                combinedItem = {
+                  bbName: matchingFirstArrItem.bbName,
+                  bbKey: matchingFirstArrItem.bbKey,
+                  bbVersion: matchingFirstArrItem.bbVersion,
+                  dateOfSave: matchingFirstArrItem.dateOfSave,
+                  requirements: {
+                    crossCutting: formDetail.bbDetails[
+                      bbKey
+                    ].requirementSpecificationCompliance.crossCuttingRequirements.map(
+                      (crossCuttingItem) => ({
+                        requirement: crossCuttingItem.requirement,
+                        comment: crossCuttingItem.comment,
+                        fulfillment: crossCuttingItem.fulfillment,
+                        _id: crossCuttingItem._id,
+                      })
+                    ),
+                    functional:
+                      formDetail.bbDetails[bbKey]
+                        .requirementSpecificationCompliance
+                        .functionalRequirements,
+                  },
+                  interfaceCompliance: {
+                    testHarnessResult:
+                      formDetail.bbDetails[bbKey].interfaceCompliance
+                        ?.testHarnessResult || '',
+                    requirements:
+                      formDetail.bbDetails[bbKey].interfaceCompliance
+                        ?.requirements || [],
+                  },
+                };
+              } else {
+                // If no matching bbKey, return the object from interfaceRequirementsData
+                const matchingFirstArrItem = interfaceRequirementsData?.find(
+                  (item) => item.bbKey === bbKey
+                );
+                combinedItem = matchingFirstArrItem || null;
+              }
+
+              return combinedItem;
+            });
+
+            return combinedItems.filter(Boolean); // Remove null values from the combined items
+          } else {
+            return [];
+          }
         })
         .flat();
 
-      if (combinedArray) {
+      if (combinedArray.length) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
         localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
         localStorage.setItem(
@@ -256,10 +260,14 @@ const RequirementSpecificationSelectBBs = ({
       ) {
         isValidCrossCutting = item.requirements.crossCutting.every(
           (crossCuttingItem) => {
-            return (
-              crossCuttingItem.status !== 0 ||
-              crossCuttingItem.fulfillment != null
-            );
+            if (crossCuttingItem.status === 0) {
+              return (
+                crossCuttingItem.fulfillment != null &&
+                crossCuttingItem.fulfillment !== -1
+              );
+            }
+
+            return true;
           }
         );
       }
@@ -270,9 +278,14 @@ const RequirementSpecificationSelectBBs = ({
       ) {
         isValidFunctional = item.requirements.functional.every(
           (functionalItem) => {
-            return (
-              functionalItem.status !== 0 || functionalItem.fulfillment != null
-            );
+            if (functionalItem.status === 0) {
+              return (
+                functionalItem.fulfillment != null &&
+                functionalItem.fulfillment !== -1
+              );
+            }
+
+            return true;
           }
         );
       }
@@ -291,7 +304,6 @@ const RequirementSpecificationSelectBBs = ({
     () => ({
       validate: () => {
         const isValid = isFulfillmentValid(selectedItems);
-        console.log('isValid req', isValid);
 
         return isValid;
       },

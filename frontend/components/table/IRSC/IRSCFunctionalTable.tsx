@@ -20,7 +20,7 @@ const IRSCFunctionalTable = ({
   isTableValid,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
-  console.log('isTableValid', isTableValid);
+
   const { format } = useTranslations();
 
   useEffect(() => setUpdatedData(data), [data]);
@@ -217,7 +217,8 @@ const IRSCFunctionalTable = ({
                   className={`irsc-table-rows ${
                     !isTableValid &&
                     (row.values.fulfillment === undefined ||
-                      row.values.fulfillment === null)
+                      row.values.fulfillment === null ||
+                      row.values.fulfillment === -1)
                       ? 'irsc-invalid-row'
                       : ''
                   }`}

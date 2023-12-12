@@ -12,12 +12,14 @@ type IRSFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
   IRSCInterfaceFormRef: RefObject<IRSCFormRef>;
   IRSCRequirementsFormRef: RefObject<IRSCFormRef>;
+  onEdited: (hasError: boolean) => void;
 };
 
 const IRSForm = ({
   setUpdatedBBs,
   IRSCInterfaceFormRef,
   IRSCRequirementsFormRef,
+  onEdited,
 }: IRSFormProps) => {
   const [activeTab, setActiveTab] = useState<activeTabProps>('interface');
   const [updatedInterfaceData, setUpdatedInterfaceData] = useState<
@@ -34,7 +36,13 @@ const IRSForm = ({
 
   useEffect(() => {
     if (!allData?.length && updatedInterfaceData) {
-      setAllData(updatedInterfaceData);
+      const updatedData = updatedInterfaceData.map((data) => {
+        return {
+          ...data,
+          requirements: { crossCutting: [], functional: [], interface: [] },
+        };
+      });
+      setAllData(updatedData);
 
       return;
     }
@@ -44,28 +52,47 @@ const IRSForm = ({
         const matchingItem = updatedInterfaceData.find(
           (nextItem) => nextItem.bbKey === item.bbKey
         );
+        const matchingUpdatedRequirementSpecData =
+          updatedRequirementSpecData?.find(
+            (nextItem) => nextItem.bbKey === item.bbKey
+          );
 
         if (matchingItem) {
+          console.log('matchingItem', matchingItem);
+
           return {
             ...item,
             interfaceCompliance: {
               ...item.interfaceCompliance,
               testHarnessResult:
                 matchingItem.interfaceCompliance?.testHarnessResult || '',
-              requirements: matchingItem.requirements,
+              requirements: matchingItem.requirements.interface,
+            },
+            requirements: matchingUpdatedRequirementSpecData?.requirements || {
+              crossCutting: [],
+              functional: [],
+              interface: [],
             },
           };
         }
 
-        return item;
+        const anotherItem = updatedInterfaceData.find(
+          (nextItem) => nextItem.bbKey !== item.bbKey
+        );
+        if (anotherItem) {
+          return {
+            ...item,
+            interfaceCompliance: {
+              ...item.interfaceCompliance,
+              testHarnessResult: '',
+              requirements: [],
+            },
+          };
+        }
       });
-      const nonMatchingItems = updatedInterfaceData.filter(
-        (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
-      );
-      const newData = [...updatedData, ...nonMatchingItems];
-      setAllData(newData);
+      setAllData(updatedData as ComplianceRequirementsType[]);
     }
-  }, [updatedInterfaceData]);
+  }, [updatedInterfaceData, updatedRequirementSpecData]);
 
   useEffect(() => {
     if (!allData?.length && updatedRequirementSpecData) {
@@ -107,6 +134,59 @@ const IRSForm = ({
     setUpdatedBBs(allData);
   }, [allData]);
 
+  const isValidArray = (data: ComplianceRequirementsType[]): boolean => {
+    return data.every((item) => {
+      // Check crossCutting and functional arrays
+      const isCrossCuttingValid = item.requirements.crossCutting.every(
+        (crossCuttingItem) => {
+          if (crossCuttingItem.status === 0) {
+            return crossCuttingItem.fulfillment !== -1;
+          } else {
+            return true;
+          }
+        }
+      );
+
+      const isFunctionalValid = item.requirements.functional.every(
+        (functionalItem) => {
+          if (functionalItem.status === 0) {
+            return functionalItem.fulfillment !== -1;
+          } else {
+            return true;
+          }
+        }
+      );
+
+      // Check interfaceCompliance.requirements array
+      let isInterfaceValid;
+      if (item.interfaceCompliance) {
+        isInterfaceValid =
+          item.interfaceCompliance.requirements.length === 0 ||
+          item.interfaceCompliance.requirements.every((interfaceItem) => {
+            if (interfaceItem.status === 0) {
+              return (
+                interfaceItem.fulfillment !== -1 &&
+                item.interfaceCompliance.testHarnessResult !== undefined &&
+                item.interfaceCompliance.testHarnessResult !== ''
+              );
+            } else {
+              return true;
+            }
+          });
+      } else {
+        return true;
+      }
+
+      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
+    });
+  };
+
+  useEffect(() => {
+    if (allData) {
+      onEdited(!isValidArray(allData));
+    }
+  }, [allData]);
+
   return (
     <div className="irsc-form-container">
       <div className="irsc-header">
@@ -130,18 +210,16 @@ const IRSForm = ({
           {format('table.requirement_specification_compliance.label')}
         </div>
       </div>
-      {/* {activeTab === 'interface' && ( */}
       <InterfaceCompliance
         setUpdatedBBs={setUpdatedInterfaceData}
         IRSCFormRef={IRSCInterfaceFormRef}
+        display={activeTab === 'interface'}
       />
-      {/* )} */}
-      {/* {activeTab === 'specification' && ( */}
       <RequirementSpecificationComplianceForm
         setUpdatedBBs={setUpdatedRequirementSpecData}
         IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+        display={activeTab === 'specification'}
       />
-      {/* )} */}
     </div>
   );
 };

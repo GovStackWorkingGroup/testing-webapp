@@ -258,6 +258,7 @@ const Table = ({
 
                         if (
                           [
+                            'Draft',
                             'In Review',
                             'Rejected',
                             'Approved',

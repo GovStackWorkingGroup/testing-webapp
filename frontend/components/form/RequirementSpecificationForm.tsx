@@ -8,11 +8,13 @@ import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpe
 type RequirementSpecificationComplianceFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
   IRSCRequirementsFormRef: RefObject<IRSCFormRef>;
+  display: boolean;
 };
 
 const RequirementSpecificationComplianceForm = ({
   setUpdatedBBs,
   IRSCRequirementsFormRef,
+  display,
 }: RequirementSpecificationComplianceFormProps) => {
   const [interfaceRequirementsData, setInterfaceRequirementsData] =
     useState<ComplianceRequirementsType[]>();
@@ -38,7 +40,7 @@ const RequirementSpecificationComplianceForm = ({
   }, []);
 
   return (
-    <div>
+    <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
         <p className="text-18">{format('form.select_building_blocks.label')}</p>
         <RequirementSpecificationSelectBBs

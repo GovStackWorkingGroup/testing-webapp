@@ -98,12 +98,27 @@ const SelectBBs = ({
     if (draftData?.formDetails[0].bbDetails) {
       const combinedArray = draftData?.formDetails
         .map((formDetail) => {
-          const bbKeys = Object.keys(formDetail.bbDetails);
+          const bbKeys = Object.keys(formDetail.bbDetails).filter(
+            (key) =>
+              formDetail.bbDetails[key].interfaceCompliance.requirements
+                .length > 0
+          );
 
           const combinedItems = bbKeys.map((bbKey) => {
             const matchingFirstArrItem = interfaceRequirementsData?.find(
               (item) => item.bbKey === bbKey
             );
+            const interfaceRequirements = () => {
+              const interfaceRequirements =
+                formDetail.bbDetails[bbKey].interfaceCompliance.requirements;
+              if (interfaceRequirements.length) {
+                return interfaceRequirements;
+              }
+
+              if (!interfaceRequirements.length) {
+                return matchingFirstArrItem?.requirements.interface;
+              }
+            };
 
             let combinedItem;
 
@@ -114,20 +129,9 @@ const SelectBBs = ({
                 bbVersion: matchingFirstArrItem.bbVersion,
                 dateOfSave: matchingFirstArrItem.dateOfSave,
                 requirements: {
-                  crossCutting: formDetail.bbDetails[
-                    bbKey
-                  ].requirementSpecificationCompliance.crossCuttingRequirements.map(
-                    (crossCuttingItem) => ({
-                      requirement: crossCuttingItem.requirement,
-                      comment: crossCuttingItem.comment,
-                      fulfillment: crossCuttingItem.fulfillment,
-                      _id: crossCuttingItem._id,
-                    })
-                  ),
-                  functional:
-                    formDetail.bbDetails[bbKey]
-                      .requirementSpecificationCompliance
-                      .functionalRequirements,
+                  crossCutting: [],
+                  functional: [],
+                  interface: interfaceRequirements(),
                 },
                 interfaceCompliance: {
                   testHarnessResult:
@@ -155,11 +159,6 @@ const SelectBBs = ({
 
       if (combinedArray) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
-        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-        localStorage.setItem(
-          INTERFACE_COMPLIANCE_STORAGE_NAME,
-          JSON.stringify(combinedArray)
-        );
       }
 
       return;
@@ -177,7 +176,13 @@ const SelectBBs = ({
               )
           );
         const options = filteredInterfaceRequirementsData?.map((item) => ({
-          value: item,
+          value: {
+            ...item,
+            interfaceCompliance: {
+              testHarnessResult: '',
+              requirements: item.requirements.interface,
+            },
+          },
           label: item.bbName,
         }));
         setOptions(options);
@@ -224,8 +229,17 @@ const SelectBBs = ({
         selectedItems[foundIndex].interfaceCompliance || {};
 
       selectedItems[foundIndex].interfaceCompliance.testHarnessResult = value;
-      selectedItems[foundIndex].interfaceCompliance.requirements = [];
 
+      setSelectedItems(selectedItems);
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify(selectedItems)
+      );
+    }
+
+    if (foundIndex > 0) {
+      selectedItems[foundIndex].interfaceCompliance.testHarnessResult = value;
       setSelectedItems(selectedItems);
       localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
       localStorage.setItem(
@@ -239,8 +253,11 @@ const SelectBBs = ({
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
     const isTableValid = data.every((dataItem) =>
-      dataItem.requirements.crossCutting.every(
-        (item) => item.fulfillment !== undefined && item.fulfillment !== null
+      dataItem.requirements.interface.every(
+        (item) =>
+          item.fulfillment !== undefined ||
+          item.fulfillment !== null ||
+          item.fulfillment !== -1
       )
     );
     const isTestHarnessInputValid = data.every(
@@ -264,7 +281,6 @@ const SelectBBs = ({
       validate: () => {
         const isValid = isFulfillmentValid(selectedItems);
         setIsTableValid(isValid);
-        console.log('isValid inte', isValid);
 
         return isValid;
       },
@@ -289,7 +305,10 @@ const SelectBBs = ({
         <Input
           inputKey={`input-${item.bbKey}`}
           tipMessage={format('form.test_harness.tip_message.label')}
-          isInvalid={!isTestHarnessInputValid}
+          isInvalid={
+            !isTestHarnessInputValid &&
+            !item.interfaceCompliance.testHarnessResult
+          }
           required
           name={item.bbKey}
           inputTitle={format('form.test_harness.title.label')}

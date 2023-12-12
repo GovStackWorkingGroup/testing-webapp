@@ -249,8 +249,6 @@ export const getComplianceRequirements = async () => {
       return response.json();
     })
     .then<Success<ComplianceRequirementsType[]>>((actualData) => {
-      console.log('actualData', actualData);
-
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -357,7 +355,6 @@ export const updateDraftDetailsStepThree = async (
       requirements,
       interfaceCompliance,
     } = item;
-    console.log('item', item);
     const test = {
       bbSpecification: bbName,
       bbVersion,
@@ -381,8 +378,8 @@ export const updateDraftDetailsStepThree = async (
         ),
       },
       interfaceCompliance: {
-        testHarnessResult: interfaceCompliance.testHarnessResult,
-        requirements: interfaceCompliance.requirements,
+        testHarnessResult: interfaceCompliance?.testHarnessResult || '',
+        requirements: interfaceCompliance?.requirements || [],
       },
     };
 
