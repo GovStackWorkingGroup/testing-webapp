@@ -148,9 +148,10 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           id: form._id
         };
 
-        form.status = StatusEnum.IN_REVIEW;
-        form.uniqueId = undefined;
-        form.expirationDate = undefined;
+        await Compliance.updateOne({ _id: form._id }, {
+          $set: { status: StatusEnum.IN_REVIEW },
+          $unset: { uniqueId: "", expirationDate: "" }
+        });
 
         await form.save();
       }
