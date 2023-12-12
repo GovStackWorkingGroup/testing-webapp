@@ -39,7 +39,10 @@ export default class SubmitFormRequestHandler {
 
             // Create Jira ticket only if integration is enabled
             if (appConfig.enableJiraIntegration) {
-                jiraTicketResult = await this.createJiraTicket();
+                jiraTicketResult = await this.createJiraTicket(
+                    draftDataForRollback.softwareName,
+                    draftDataForRollback.bbKeys
+                );
                 if (jiraTicketResult instanceof Error) {
                     throw jiraTicketResult;
                 }
@@ -66,52 +69,108 @@ export default class SubmitFormRequestHandler {
         }
     }
 
-    async createJiraTicket(): Promise<string | Error> {
+    async createJiraTicket(softwareName: string, buildingBlocks): Promise<string | Error> {
         const jiraConfig = appConfig.jira;
-        const descriptionText = jiraConfig.descriptionTemplate.replace('{{submitter}}', 'Submitter Name');
+        const formFullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/details/`, softwareName);
+        const buildingBlocksArray = Array.isArray(buildingBlocks) ? buildingBlocks : buildingBlocks.split(',');
+
+        // Create bulleted list for building blocks
+        const buildingBlocksList = buildingBlocksArray.map(bb => ({
+            type: 'listItem',
+            content: [{
+                type: 'paragraph',
+                content: [{
+                    type: 'text',
+                    text: bb.trim(),
+                }]
+            }]
+        }));
+
         const descriptionADF = {
-            type: "doc",
-            version: 1,
-            content: [
-                {
-                    type: "paragraph",
-                    content: [
-                        {
-                            text: descriptionText,
-                            type: "text"
-                        }
-                    ]
-                }
-            ]
-        };
+        type: "doc",
+        version: 1,
+        content: [
+            {
+                type: "paragraph",
+                content: [
+                    {
+                        text: `${softwareName} has submitted a self-assessment for `,
+                        type: "text"
+                    }
+                ]
+            },
+            {
+                type: 'bulletList',
+                content: buildingBlocksList
+            },
+            {
+                type: "paragraph",
+                content: [
+                    {
+                        text: 'View the submission at ',
+                        type: 'text'
+                    },
+                    {
+                        type: 'text',
+                        text: formFullPath,
+                        marks: [
+                            {
+                                type: 'link',
+                                attrs: {
+                                    href: formFullPath
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
 
         const payload = {
             fields: {
                 project: {
                     key: jiraConfig.projectKey,
                 },
-                summary: jiraConfig.titleTemplate.replace('{{form_title}}', 'Your Form Title'),
+                summary: jiraConfig.titleTemplate.replace('{{software_name}}', softwareName),
                 description: descriptionADF,
                 issuetype: {
                     name: jiraConfig.issueType,
                 },
-                assignee: {
-                    id: jiraConfig.assigneeId,
-                }
+                // assignee: {
+                //     id: jiraConfig.assigneeId,
+                // }
             },
         };
         try {
             const response = await axios.post(jiraConfig.apiEndpoint, payload, {
                 headers: {
-                    'Authorization': `Basic ${Buffer.from(`kolinoks@gmail.com:${jiraConfig.apiKey}`).toString('base64')}`,
+                    'Authorization': `Basic ${Buffer.from(`${jiraConfig.email}:${jiraConfig.apiKey}`).toString('base64')}`,
                     'Content-Type': 'application/json',
                 },
             });
+            // Extract the issue key from the response
+    const issueKey = response.data.key; // Assuming 'key' is the correct field
 
-            return response.data.self;
+    // Construct the browse URL
+    const browseUrl = `https://${jiraConfig.domain}/browse/${issueKey}`;
+
+    return browseUrl;
         } catch (error: any) {
             console.error('Failed to create Jira ticket:', error.response ? error.response.data : error);
             return new JiraTicketCreationError('Failed to create Jira ticket');
         }
+    }
+
+    private getFrontendUrl(path: string, softwareName: string): string {
+        let host = this.req.get('host');
+        const softwareNameForURL = softwareName.replace(' ', '%20');
+
+        if (host?.startsWith('api.')) {
+            host = host.substring(4); // delete 'api.' from URL
+        }
+
+        let baseUrl = `${this.req.protocol}://${host}`;
+        return `${baseUrl}${path}${softwareNameForURL}`;
     }
 }
