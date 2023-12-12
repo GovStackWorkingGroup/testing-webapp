@@ -140,17 +140,23 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       }
 
       if (errors.length === 0) {
+        // fetch bb keys
+        let bbKeys: string[] = [];
+        form.compliance.forEach(complianceItem => bbKeys.push(...Array.from(complianceItem.bbDetails.keys())));
         // save oryginal data for rollback
         originalData = {
           status: form.status,
           uniqueId: form.uniqueId,
           expirationDate: form.expirationDate,
-          id: form._id
+          id: form._id,
+          softwareName: form.softwareName,
+          bbKeys: bbKeys
         };
 
-        form.status = StatusEnum.IN_REVIEW;
-        form.uniqueId = undefined;
-        form.expirationDate = undefined;
+        await Compliance.updateOne({ _id: form._id }, {
+          $set: { status: StatusEnum.IN_REVIEW },
+          $unset: { uniqueId: "", expirationDate: "" }
+        });
 
         await form.save();
       }

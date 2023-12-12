@@ -17,6 +17,7 @@ interface AppConfig {
   draftExpirationTime: number,
   jira: {
     apiEndpoint: string;
+    domain: string;
     apiKey: string;
     email: string;
     projectKey: string;
@@ -61,6 +62,7 @@ const appConfig: AppConfig = {
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
   jira: {
     apiEndpoint: process.env.JIRA_API_ENDPOINT!,
+    domain: process.env.JIRA_API_DOMAIN!,
     apiKey: process.env.JIRA_API_KEY!,
     projectKey: process.env.JIRA_PROJECT_KEY!,
     email: process.env.JIRA_USER_EMAIL!,

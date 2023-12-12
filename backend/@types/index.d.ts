@@ -27,7 +27,9 @@ declare module 'myTypes' {
     status: number,
     uniqueId: string | undefined,
     expirationDate: Date | undefined,
-    id: ObjectId
+    id: ObjectId,
+    softwareName: string,
+    bbKeys: string[]
   }
 
   export interface ComplianceDetail {
