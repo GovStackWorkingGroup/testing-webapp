@@ -27,6 +27,7 @@ export const draftDetailAggregationPipeline = (draftUuid: string): any[] => {
                 expirationDate: { $ifNull: ["$expirationDate", ""] },
                 description: { $ifNull: ["$description", ""] },
                 deploymentCompliance: { $ifNull: ["$deploymentCompliance", ""] },
+                version: "$compliance.version",
                 bbDetails: {
                     $cond: {
                         if: { $eq: ["$compliance", []] },
