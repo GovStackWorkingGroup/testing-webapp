@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -75,6 +75,10 @@ const SoftwareComplianceForm = ({
   const router = useRouter();
   const { draftUUID } = router.query;
 
+  useEffect(() => {
+    setIsDraftSaved(false);
+  }, [deploymentComplianceFormValues, updatedBBs]);
+
   const handleStepChange = (currentStep: number) => {
     setCurrentProgressBarStep(currentStep);
   };
@@ -112,20 +116,13 @@ const SoftwareComplianceForm = ({
 
   const handleSaveDraftButton = () => {
     if (currentProgressBarStep === 2) {
-      if (deploymentComplianceRef.current?.validate()) {
-        handleUpdateDraft(false);
-      }
+      handleUpdateDraft(false);
 
       return;
     }
 
     if (currentProgressBarStep === 3) {
-      if (
-        IRSCInterfaceFormRef.current?.validate() &&
-        IRSCRequirementsFormRef.current?.validate()
-      ) {
-        handleUpdateDraft(false);
-      }
+      handleUpdateDraft(false);
 
       return;
     }
@@ -204,6 +201,8 @@ const SoftwareComplianceForm = ({
             localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
             if (redirectToNextPage) {
               nextStepRef.current?.goNext();
+            } else {
+              setIsDraftSaved(true);
             }
           }
 
@@ -229,6 +228,8 @@ const SoftwareComplianceForm = ({
           localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
           if (redirectToNextPage) {
             nextStepRef.current?.goNext();
+          } else {
+            setIsDraftSaved(true);
           }
         }
 

@@ -297,7 +297,10 @@ export const updateDraftDetailsStepTwo = async (
 ) => {
   const formData = new FormData();
 
-  if (data.deploymentCompliance?.documentation) {
+  if (
+    data.deploymentCompliance?.documentation ||
+    data.deploymentCompliance?.documentation === ''
+  ) {
     if (data.deploymentCompliance?.documentation instanceof File) {
       formData.append(
         'deploymentCompliance[documentation]',
@@ -312,7 +315,10 @@ export const updateDraftDetailsStepTwo = async (
     }
   }
 
-  if (data.deploymentCompliance?.deploymentInstructions) {
+  if (
+    data.deploymentCompliance?.deploymentInstructions ||
+    data.deploymentCompliance?.deploymentInstructions === ''
+  ) {
     if (data.deploymentCompliance?.deploymentInstructions instanceof File) {
       formData.append(
         'deploymentCompliance[deploymentInstructions]',
@@ -321,7 +327,7 @@ export const updateDraftDetailsStepTwo = async (
     } else {
       formData.append(
         'deploymentCompliance[deploymentInstructions]',
-        data.deploymentCompliance?.deploymentInstructions
+        data.deploymentCompliance?.deploymentInstructions || ''
       );
     }
   }

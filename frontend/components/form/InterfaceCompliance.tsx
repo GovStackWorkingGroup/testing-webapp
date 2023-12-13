@@ -51,6 +51,7 @@ const InterfaceComplianceForm = ({
           <Link
             className="question-line-link"
             href={CONFLUENCE_INSTRUCTIONS_LINK}
+            target="_blank"
           >
             {format('form.question_line.here')}
           </Link>

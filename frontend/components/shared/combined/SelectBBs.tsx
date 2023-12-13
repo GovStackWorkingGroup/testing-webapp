@@ -26,12 +26,7 @@ const SelectBBs = ({
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
-  >(
-    JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
-    ) || []
-  );
+  >([]);
   const [updatedData, setUpdatedData] = useState<ComplianceRequirementsType>();
   const [options, setOptions] = useState<
     { value: ComplianceRequirementsType | undefined; label: string }[]
@@ -41,8 +36,12 @@ const SelectBBs = ({
     useState<boolean>(true);
   const [savedInLocalStorage, setSavedInLocalStorage] = useState<
     ComplianceRequirementsType[] | null
-  >(null);
-
+  >(
+    JSON.parse(
+      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
+        'null'
+    )
+  );
   const router = useRouter();
   const { format } = useTranslations();
 
@@ -52,16 +51,8 @@ const SelectBBs = ({
   });
 
   useEffect(() => {
-    const savedIRSCInStorage = JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
-    );
-    setSavedInLocalStorage(savedIRSCInStorage);
-  }, []);
-
-  useEffect(() => {
     handleAlreadySavedData();
-  }, [draftData, savedInLocalStorage]);
+  }, [draftData, savedInLocalStorage, interfaceRequirementsData]);
 
   useEffect(() => {
     handleSetOptions();
@@ -90,7 +81,29 @@ const SelectBBs = ({
 
   const handleAlreadySavedData = () => {
     if (savedInLocalStorage?.length) {
-      setSelectedItems(savedInLocalStorage);
+      const BBWithAddedInterface = savedInLocalStorage.map((itemBB) => {
+        if (itemBB.requirements.interface.length) {
+          return itemBB;
+        }
+
+        if (!itemBB.requirements.interface.length) {
+          return;
+        }
+      });
+      const filteredBBWithAddedInterface = BBWithAddedInterface?.filter(
+        (bb) => bb !== undefined
+      );
+      if (!filteredBBWithAddedInterface.length) {
+        return;
+      }
+
+      if (filteredBBWithAddedInterface.length > 0) {
+        setSelectedItems(
+          filteredBBWithAddedInterface as ComplianceRequirementsType[]
+        );
+
+        return;
+      }
 
       return;
     }
@@ -98,67 +111,63 @@ const SelectBBs = ({
     if (draftData?.formDetails[0].bbDetails) {
       const combinedArray = draftData?.formDetails
         .map((formDetail) => {
-          const bbKeys = Object.keys(formDetail.bbDetails).filter(
-            (key) =>
-              formDetail.bbDetails[key].interfaceCompliance.requirements
-                .length > 0
-          );
+          if (formDetail.bbDetails) {
+            const bbKeys = Object.keys(formDetail.bbDetails);
 
-          const combinedItems = bbKeys.map((bbKey) => {
-            const matchingFirstArrItem = interfaceRequirementsData?.find(
-              (item) => item.bbKey === bbKey
-            );
-            const interfaceRequirements = () => {
-              const interfaceRequirements =
-                formDetail.bbDetails[bbKey].interfaceCompliance.requirements;
-              if (interfaceRequirements.length) {
-                return interfaceRequirements;
-              }
-
-              if (!interfaceRequirements.length) {
-                return matchingFirstArrItem?.requirements.interface;
-              }
-            };
-
-            let combinedItem;
-
-            if (matchingFirstArrItem) {
-              combinedItem = {
-                bbName: matchingFirstArrItem.bbName,
-                bbKey: matchingFirstArrItem.bbKey,
-                bbVersion: matchingFirstArrItem.bbVersion,
-                dateOfSave: matchingFirstArrItem.dateOfSave,
-                requirements: {
-                  crossCutting: [],
-                  functional: [],
-                  interface: interfaceRequirements(),
-                },
-                interfaceCompliance: {
-                  testHarnessResult:
-                    formDetail.bbDetails[bbKey].interfaceCompliance
-                      ?.testHarnessResult || '',
-                  requirements:
-                    formDetail.bbDetails[bbKey].interfaceCompliance
-                      ?.requirements || [],
-                },
-              };
-            } else {
-              // If no matching bbKey, return the object from interfaceRequirementsData
+            const combinedItems = bbKeys.map((bbKey) => {
               const matchingFirstArrItem = interfaceRequirementsData?.find(
                 (item) => item.bbKey === bbKey
               );
-              combinedItem = matchingFirstArrItem || null;
-            }
 
-            return combinedItem;
-          });
+              let combinedItem;
 
-          return combinedItems.filter(Boolean); // Remove null values from the combined items
+              if (
+                matchingFirstArrItem &&
+                formDetail.bbDetails[bbKey].interfaceCompliance.requirements
+                  .length > 0
+              ) {
+                combinedItem = {
+                  bbName: matchingFirstArrItem.bbName,
+                  bbKey: matchingFirstArrItem.bbKey,
+                  bbVersion: matchingFirstArrItem.bbVersion,
+                  dateOfSave: matchingFirstArrItem.dateOfSave,
+                  requirements: {
+                    crossCutting: [],
+                    functional: [],
+                    interface:
+                      formDetail.bbDetails[bbKey].interfaceCompliance
+                        .requirements,
+                  },
+                  interfaceCompliance: {
+                    testHarnessResult:
+                      formDetail.bbDetails[bbKey].interfaceCompliance
+                        ?.testHarnessResult || '',
+                    requirements:
+                      formDetail.bbDetails[bbKey].interfaceCompliance
+                        ?.requirements || [],
+                  },
+                };
+              } else {
+                combinedItem = null;
+              }
+
+              return combinedItem;
+            });
+
+            return combinedItems.filter(Boolean); // Remove null values from the combined items
+          } else {
+            return [];
+          }
         })
         .flat();
 
-      if (combinedArray) {
+      if (combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(combinedArray)
+        );
       }
 
       return;
@@ -214,6 +223,13 @@ const SelectBBs = ({
       ...selectedItems.filter(({ bbName }) => bbName !== item.label),
     ]);
     setOptions([...options, item]);
+    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+    localStorage.setItem(
+      INTERFACE_COMPLIANCE_STORAGE_NAME,
+      JSON.stringify([
+        ...selectedItems.filter(({ bbName }) => bbName !== item.label),
+      ])
+    );
   };
 
   const handleTestHarnessLink = (
@@ -224,32 +240,43 @@ const SelectBBs = ({
     setIsTestHarnessInputValid(true);
 
     const foundIndex = selectedItems.findIndex((item) => item.bbKey === name);
+    const newSelectedItems = [...selectedItems];
     if (foundIndex !== -1) {
-      selectedItems[foundIndex].interfaceCompliance =
-        selectedItems[foundIndex].interfaceCompliance || {};
+      newSelectedItems[foundIndex].interfaceCompliance =
+        newSelectedItems[foundIndex].interfaceCompliance || {};
 
-      selectedItems[foundIndex].interfaceCompliance.testHarnessResult = value;
+      newSelectedItems[foundIndex].interfaceCompliance.testHarnessResult =
+        value;
 
-      setSelectedItems(selectedItems);
+      setUpdatedData({ ...newSelectedItems[foundIndex] });
       localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
       localStorage.setItem(
         INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(selectedItems)
+        JSON.stringify(newSelectedItems)
       );
+
+      return;
     }
 
     if (foundIndex > 0) {
-      selectedItems[foundIndex].interfaceCompliance.testHarnessResult = value;
-      setSelectedItems(selectedItems);
+      newSelectedItems[foundIndex].interfaceCompliance.testHarnessResult =
+        value;
+
+      setUpdatedData({ ...newSelectedItems[foundIndex] });
       localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
       localStorage.setItem(
         INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(selectedItems)
+        JSON.stringify(newSelectedItems)
       );
+
+      return;
     }
   };
 
-  const handleClearAllSelectedItems = () => setSelectedItems([]);
+  const handleClearAllSelectedItems = () => {
+    setSelectedItems([]);
+    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+  };
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
     const isTableValid = data.every((dataItem) =>

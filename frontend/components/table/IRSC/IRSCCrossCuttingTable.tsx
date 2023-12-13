@@ -7,7 +7,11 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
-import { ComplianceRequirementsType, IRSCTableType, RequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  IRSCTableType,
+  RequirementsType,
+} from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
 
 const IRSCCrossCuttingTableType = ({
@@ -167,13 +171,11 @@ const IRSCCrossCuttingTableType = ({
 
   // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
-    useTable(
-      {
-        // @ts-ignore
-        columns,
-        data: data.requirements.crossCutting,
-      }
-    );
+    useTable({
+      // @ts-ignore
+      columns,
+      data: data.requirements.crossCutting,
+    });
 
   return data.requirements.crossCutting?.length ? (
     <div className="irsc-table-container">

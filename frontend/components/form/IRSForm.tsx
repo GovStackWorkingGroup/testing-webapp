@@ -74,21 +74,16 @@ const IRSForm = ({
           };
         }
 
-        const anotherItem = updatedInterfaceData.find(
-          (nextItem) => nextItem.bbKey !== item.bbKey
-        );
-        if (anotherItem) {
-          return {
-            ...item,
-            interfaceCompliance: {
-              ...item.interfaceCompliance,
-              testHarnessResult: '',
-              requirements: [],
-            },
-          };
-        }
+        return item;
       });
-      setAllData(updatedData as ComplianceRequirementsType[]);
+
+      const nonMatchingItems = updatedInterfaceData.filter(
+        (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
+      );
+
+      const newData = [...updatedData, ...nonMatchingItems];
+
+      setAllData(newData as ComplianceRequirementsType[]);
     }
   }, [updatedInterfaceData, updatedRequirementSpecData]);
 
@@ -134,48 +129,52 @@ const IRSForm = ({
 
   const isValidArray = (data: ComplianceRequirementsType[]): boolean => {
     return data.every((item) => {
-      // Check crossCutting and functional arrays
-      const isCrossCuttingValid = item.requirements.crossCutting.every(
-        (crossCuttingItem) => {
-          if (crossCuttingItem.status === 0) {
-            return crossCuttingItem.fulfillment !== -1;
-          } else {
-            return true;
-          }
-        }
-      );
-
-      const isFunctionalValid = item.requirements.functional.every(
-        (functionalItem) => {
-          if (functionalItem.status === 0) {
-            return functionalItem.fulfillment !== -1;
-          } else {
-            return true;
-          }
-        }
-      );
-
-      // Check interfaceCompliance.requirements array
-      let isInterfaceValid;
-      if (item.interfaceCompliance) {
-        isInterfaceValid =
-          item.interfaceCompliance.requirements.length === 0 ||
-          item.interfaceCompliance.requirements.every((interfaceItem) => {
-            if (interfaceItem.status === 0) {
-              return (
-                interfaceItem.fulfillment !== -1 &&
-                item.interfaceCompliance.testHarnessResult !== undefined &&
-                item.interfaceCompliance.testHarnessResult !== ''
-              );
+      if (item.requirements) {
+        // Check crossCutting and functional arrays
+        const isCrossCuttingValid = item?.requirements.crossCutting.every(
+          (crossCuttingItem) => {
+            if (crossCuttingItem.status === 0) {
+              return crossCuttingItem.fulfillment !== -1;
             } else {
               return true;
             }
-          });
+          }
+        );
+
+        const isFunctionalValid = item?.requirements.functional.every(
+          (functionalItem) => {
+            if (functionalItem.status === 0) {
+              return functionalItem.fulfillment !== -1;
+            } else {
+              return true;
+            }
+          }
+        );
+
+        // Check interfaceCompliance.requirements array
+        let isInterfaceValid;
+        if (item.interfaceCompliance) {
+          isInterfaceValid =
+            item.interfaceCompliance.requirements.length === 0 ||
+            item.interfaceCompliance.requirements.every((interfaceItem) => {
+              if (interfaceItem.status === 0) {
+                return (
+                  interfaceItem.fulfillment !== -1 &&
+                  item.interfaceCompliance.testHarnessResult !== undefined &&
+                  item.interfaceCompliance.testHarnessResult !== ''
+                );
+              } else {
+                return true;
+              }
+            });
+        } else {
+          return true;
+        }
+
+        return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
       } else {
         return true;
       }
-
-      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
     });
   };
 
