@@ -192,6 +192,8 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
   formData.append('documentation', software.softwareDocumentation.value);
   formData.append('description', software.toolDescription.value);
   formData.append('email', software.email.value);
+  formData.append('version', software.softwareVersion.value);
+  formData.append('compliance[0][version]', software.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts`, {
     method: 'post',
@@ -268,6 +270,7 @@ export const updateDraftDetailsStepOne = async (
   formData.append('documentation', data.softwareDocumentation.value);
   formData.append('description', data.toolDescription.value);
   formData.append('email', data.email.value);
+  formData.append('compliance[0][version]', data.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts/${draftUUID}`, {
     method: 'PATCH',
@@ -344,7 +347,8 @@ export const updateDraftDetailsStepTwo = async (
 
 export const updateDraftDetailsStepThree = async (
   draftUUID: string,
-  data: ComplianceRequirementsType[]
+  data: ComplianceRequirementsType[],
+  softwareVersion: string
 ) => {
   const transformedData = data.map((item) => {
     const {
@@ -400,7 +404,7 @@ export const updateDraftDetailsStepThree = async (
 
   const payload = {
     compliance: {
-      version: '2.01',
+      version: softwareVersion,
       bbDetails: transformedDataObject,
     },
   };

@@ -123,6 +123,7 @@ export const en = {
   'form.tip_paste_link_container.label': 'Paste link to the container.',
   'form.tip_paste_link_documentation.label': 'Paste link to the documentation.',
   'form.tip_website.label': 'Paste link to your website.',
+  'form.software_version.label': 'Software Version',
   'form.question_line.not_sure_how_to_start': 'Not sure how to start? ',
   'form.question_line.click': 'Click ',
   'form.question_line.here': 'here',

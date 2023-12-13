@@ -20,6 +20,7 @@ export type FormValuesType = {
   toolDescription: { value: string; error: boolean };
   email: { value: string; error: { error: boolean; message: string } };
   confirmEmail: { value: string; error: { error: boolean; message: string } };
+  softwareVersion: { value: string; error: boolean };
 };
 
 export type SoftwareAttributedRef = {
@@ -106,6 +107,10 @@ const SoftwareAttributesForm = ({
           confirmEmail: {
             value: draftData.email,
             error: { error: false, message: '' },
+          },
+          softwareVersion: {
+            value: draftData.formDetails[0].version,
+            error: false,
           },
         };
         setFormValues(draftDetail);
@@ -286,6 +291,18 @@ const SoftwareAttributesForm = ({
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareName.value}
+            />
+          </div>
+          <div className="form-field-container">
+            <Input
+              name="softwareVersion"
+              inputTitle={format('form.software_version.label')}
+              errorMessage={format('form.required_field.message')}
+              inputKey="key-software-version"
+              isInvalid={formValues.softwareVersion.error}
+              required
+              onChange={(event) => handleInputChange(event)}
+              value={formValues.softwareVersion.value}
             />
           </div>
           <div className="form-field-container">

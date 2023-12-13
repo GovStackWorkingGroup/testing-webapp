@@ -63,6 +63,7 @@ const SoftwareComplianceForm = ({
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [progressJiraLink, setProgressJiraLink] = useState('');
+  const [softwareVersion, setSoftwareVersion] = useState('');
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
@@ -131,6 +132,7 @@ const SoftwareComplianceForm = ({
   };
 
   const handleSaveDraft = async (softwareData: FormValuesType) => {
+    setSoftwareVersion(softwareData.softwareVersion.value);
     if (draftUUID) {
       await updateDraftDetailsStepOne(draftUUID as string, softwareData).then(
         (response) => {
@@ -217,7 +219,8 @@ const SoftwareComplianceForm = ({
     if (currentProgressBarStep === 3) {
       await updateDraftDetailsStepThree(
         draftUUID as string,
-        updatedBBs as ComplianceRequirementsType[]
+        updatedBBs as ComplianceRequirementsType[],
+        softwareVersion
       ).then((response) => {
         if (response.status) {
           toast.success(format('form.form_saved_success.message'), {
