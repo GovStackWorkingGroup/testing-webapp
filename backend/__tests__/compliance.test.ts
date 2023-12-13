@@ -4,9 +4,11 @@ import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import app from '../server';
 import ComplianceReport from '../src/db/schemas/compliance/compliance';
+import complianceDataApp from './testData/complianceTestData.json';
 
 describe('Compliance API', () => {
   let mongod;
+  let createdCompliance;
 
   before(async () => {
     mongod = await MongoMemoryServer.create();
@@ -34,7 +36,7 @@ describe('Compliance API', () => {
       },
       compliance: [
         {
-          version: "2.0",
+          version: "23Q3",
           bbDetails: {
             "bb-digital registries": {
               bbSpecification: "SpecificationA",
@@ -64,6 +66,8 @@ describe('Compliance API', () => {
       ]
     };
     await ComplianceReport.create(complianceData);
+    createdCompliance = await ComplianceReport.create(complianceDataApp[0]);
+  
   });
 
   after(async () => {
@@ -104,6 +108,21 @@ describe('Compliance API', () => {
           expect(item).to.have.property('interfaceCompliance').that.is.oneOf([null, -1, 1, 2]);
         });
       }
-    });    
+    }); 
+    
+    it('should have the expected sorting', async () => {
+
+      const res = await request(app).get('/compliance/list');
+      const responseData = res.body;
+      const { data } = responseData;
+      expect(data).to.be.an('object');
+      for (const softwareName in data) {
+        const versions = data[softwareName].map(item => item.softwareVersion);
+        // Check if the versions array is sorted lexicographically as strings
+        for (let bbIndex = 0; bbIndex < versions.length - 1; bbIndex++) {
+          expect(versions[bbIndex] >= versions[bbIndex + 1], `Versions in ${softwareName} are not sorted correctly`).to.be.true;
+        }
+      }
+    });
   });
 });

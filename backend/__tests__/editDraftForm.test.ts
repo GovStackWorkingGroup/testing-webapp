@@ -52,14 +52,14 @@ describe('Compliance API', () => {
 
   describe('Compliance Report Draft Update with status not equal to draft', () => {
     const statuses = [
-      { status: StatusEnum.IN_REVIEW, name: "Original Software Name" },
-      { status: StatusEnum.APPROVED, name: "Original Software Name APPROVED" },
-      { status: StatusEnum.REJECTED, name: "Original Software Name REJECTED" },
+      { status: StatusEnum.IN_REVIEW, name: "Original Software Name", uniqueId: "34e7dfbf-5de0-4146-8946-387135333b22" },
+      { status: StatusEnum.APPROVED, name: "Original Software Name APPROVED", uniqueId: "34e7dfbf-5de0-4146-8946-387135333b23"},
+      { status: StatusEnum.REJECTED, name: "Original Software Name REJECTED", uniqueId: "34e7dfbf-5de0-4146-8946-387135333b24" },
     ];
   
-    statuses.forEach(({ status, name }) => {
+    statuses.forEach(({ status, name, uniqueId }) => {
       it(`should not allow updating softwareName when status is ${status}`, async () => {
-        let draftData = { ...complianceData[2], softwareName: name, status: status };
+        let draftData = { ...complianceData[2], softwareName: name, status, uniqueId };
         let draft = await ComplianceReport.create(draftData);
         const updateData = { softwareName: "Updated Software Name" };
         const res = await request(app).patch(`/compliance/drafts/${draft.uniqueId}`).send(updateData);
