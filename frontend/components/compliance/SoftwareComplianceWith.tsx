@@ -42,7 +42,7 @@ const SoftwareComplianceWith = ({
               return b.bbVersion.localeCompare(a.bbVersion);
             })
             .map((bbVersion) => ({
-              value: bbVersion.bbVersion,
+              value: bbVersion.bbVersion ?? '',
             })),
         },
         {
@@ -62,9 +62,13 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
-                { value: bbVersion.deploymentCompliance[0].level },
-                { value: bbVersion.interface.level },
-                { value: bbVersion.requirements.level },
+                {
+                  value: bbVersion.deploymentCompliance.length
+                    ? bbVersion.deploymentCompliance[0].level
+                    : -1,
+                },
+                { value: bbVersion.interface.level ?? '' },
+                { value: bbVersion.requirements.level ?? '' },
               ],
             })),
         },
