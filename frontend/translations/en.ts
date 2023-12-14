@@ -1,8 +1,7 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
-  'app.login.label': 'Login',
-  'app.login_with_github.label': 'Login with GitHub',
+  'app.login.label': 'Log In',
   'app.back_to_reports_list.label': '< Back to Report List',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
