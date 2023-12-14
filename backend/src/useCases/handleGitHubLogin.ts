@@ -27,7 +27,7 @@ export default class GitHubLoginHandler {
       });
 
       const accessToken = githubResponse.data.access_token;
-      res.redirect(this.getRedirectUrl(accessToken, req));
+      res.redirect(`http://localhost:3000?token=${accessToken}`);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error('Axios error during GitHub Callback:', error.message);
@@ -43,28 +43,5 @@ export default class GitHubLoginHandler {
         res.status(500).send('Authentication failed due to server error');
       }
     }
-  }
-
-  public redirectUserWithToken(accessToken: string, req: Request, res: Response): void {
-    const redirectUrl = this.getRedirectUrl(accessToken, req);
-    res.redirect(redirectUrl);
-  }
-
-  private getRedirectUrl(accessToken: string, req: Request): string {
-    let baseUrl: string;
-
-    if (appConfig.gitHub.devLoginMode) {
-      baseUrl = `http://${appConfig.frontendHost}`;
-    } else {
-      let host = req.get('host') || '';
-
-      if (host.startsWith('api.')) {
-        host = host.substring(4);
-      }
-
-      const protocol = req.protocol;
-      baseUrl = `${protocol}://${host}`;
-    }
-    return `${baseUrl}?token=${accessToken}`;
   }
 }
