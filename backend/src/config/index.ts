@@ -15,6 +15,7 @@ interface AppConfig {
   };
   enableJiraIntegration: boolean,
   draftExpirationTime: number,
+  frontendHost: string | undefined,
   jira: {
     apiEndpoint: string;
     domain: string;
@@ -35,7 +36,8 @@ interface AppConfig {
   gitHub: {
     clientId: string;
     clientSecret: string;
-    callbackUrl: string
+    callbackUrl: string;
+    devLoginMode: boolean,
   };
 }
 
@@ -44,6 +46,7 @@ const appConfig: AppConfig = {
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+  frontendHost: process.env.FE_HOST,
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
     syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
@@ -57,7 +60,8 @@ const appConfig: AppConfig = {
   gitHub: {
     clientId: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    callbackUrl: process.env.GITHUB_CALLBACK_URL!
+    callbackUrl: process.env.GITHUB_CALLBACK_URL!,
+    devLoginMode: process.env.GITHUB_DEV_LOGIN_MODE ? process.env.GITHUB_DEV_LOGIN_MODE === 'true' : false,
   },
   // Time is specified in milliseconds.
   jira: {
