@@ -1,9 +1,9 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import Definition from '../components/Definition';
 import ProductTable from '../components/table/ProductTable';
 import useTranslations from '../hooks/useTranslation';
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 
 const HomePage = () => {
   const router = useRouter();

@@ -3,10 +3,10 @@ import React from 'react';
 import '../../public/images/logo.png';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
+import { BiLogIn } from 'react-icons/bi';
 import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
-import { BiLogIn } from "react-icons/bi";
 
 const Header = () => {
   const router = useRouter();
