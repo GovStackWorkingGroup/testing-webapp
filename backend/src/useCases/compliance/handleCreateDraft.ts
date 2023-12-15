@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 import { ComplianceDbRepository, StatusEnum } from "myTypes";
+import { EmailTemplateSender, defaultEmailSender } from './../../services/email/emailTemplateSender';
+import { appConfig } from '../../config';
 
 type UploadedFiles = {
     logo?: Express.Multer.File[];
@@ -10,6 +12,7 @@ type UploadedFiles = {
 export default class CreateDraftRequestHandler {
     private repository: ComplianceDbRepository;
     private status: StatusEnum;
+    private emailSender: EmailTemplateSender
 
     constructor(
         private req: Request,
@@ -19,6 +22,7 @@ export default class CreateDraftRequestHandler {
     ) {
         this.repository = repository;
         this.status = status;
+        this.emailSender = defaultEmailSender()
     }
 
     private getFrontendUrl(path: string): string {
@@ -55,6 +59,8 @@ export default class CreateDraftRequestHandler {
                 response.uniqueId = draftUniqueId;
             }
 
+            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName)
+
             return this.res.status(201).send(response);
         } catch (error: any) {
             if (error instanceof mongoose.Error.ValidationError) {
@@ -66,6 +72,16 @@ export default class CreateDraftRequestHandler {
 
             console.error("Error creating draft:", error);
             return this.res.status(500).send({ success: false, error: error.message || "Error creating draft." });
+        }
+    }
+
+    async sendDraftSubmittionEmail(email: string, softwareName: string): Promise<void> {
+        if (appConfig.emailsEnabled) {
+            this.emailSender.sendEmail('draftSubmitted', {
+                'recipient': email,
+                'parameters': {'softwareName': softwareName}
+            }).then(() => console.log('Email sent using customized template'))
+                .catch(error => console.error('Error sending email:', error));
         }
     }
 }

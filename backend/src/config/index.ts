@@ -39,6 +39,15 @@ interface AppConfig {
     callbackUrl: string;
     devLoginMode: boolean,
   };
+  smtpConfig: {
+    host: string,
+    port: number,
+    secure: boolean,
+    auth: {
+        user: string,
+        pass: string
+    }
+  };
 }
 
 const appConfig: AppConfig = {
@@ -76,6 +85,16 @@ const appConfig: AppConfig = {
     titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
     descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
   },
+
+  smtpConfig: {
+    host: process.env.SMTP_HOST || '',
+    port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
+    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : false,
+    auth: {
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASSWORD || ''
+    }
+  }
 };
 
 const limiter = rateLimit({
