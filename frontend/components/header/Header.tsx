@@ -17,7 +17,7 @@ const Header = () => {
     const token = sessionStorage.getItem('accessToken');
     setIsLoggedIn(!!token);
   });
-  
+
   const handleBackToHomePage = () => {
     router.push('/');
   };
