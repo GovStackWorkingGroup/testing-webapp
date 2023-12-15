@@ -81,7 +81,6 @@ describe('GitBook API', () => {
             expect(bbRequirement).to.have.property('bbVersion', spaceInfo.version);
             expect(bbRequirement).to.have.property('dateOfSave');
             expect(bbRequirement).to.have.property('requirements').that.is.an('object');
-          
             // Further checking the structure of the requirements
             expect(bbRequirement.requirements).to.have.property('functional').that.is.an('array').with.lengthOf(3);
 
