@@ -11,6 +11,8 @@ import GetBBRequirementsRequestHandler from '../useCases/compliance/handleGetBBR
 import SubmitFormRequestHandler from '../useCases/compliance/handleSubmitForm';
 import GetBBsRequestHandler from '../useCases/compliance/handleGetBBs';
 import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftDetail';
+import AcceptComplianceFormRequestHandler from '../useCases/compliance/handleAcceptForm';
+import RejectComplianceFormRequestHandler from '../useCases/compliance/handleRejectForm';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -60,6 +62,22 @@ const complianceController = (
       .catch((err:any) => default500Error(res, err));
   };
 
+  const acceptForm = (req: Request, res: Response): void => {
+    const reviewId = req.params.id;
+
+    new AcceptComplianceFormRequestHandler(req, res, repository, reviewId)
+      .acceptForm()
+      .catch((err: any) => default500Error(res, err));
+  };
+
+  const rejectForm = (req: Request, res: Response): void => {
+    const reviewId = req.params.id;
+
+    new RejectComplianceFormRequestHandler(req, res, repository, reviewId)
+      .rejectForm()
+      .catch((err: any) => default500Error(res, err));
+  };
+
   const editDraftForm = async (req: Request, res: Response): Promise<void> => {
     const draftId = req.params.draftId;
 
@@ -94,6 +112,8 @@ const complianceController = (
     getDraftDetail,
     createOrSubmitForm,
     submitForm,
+    acceptForm,
+    rejectForm,
     editDraftForm,
     getAllBBRequirements,
     getBBRequirements,
