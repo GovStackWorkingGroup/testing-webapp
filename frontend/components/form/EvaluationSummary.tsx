@@ -55,7 +55,7 @@ const EvaluationSummary = () => {
       if (
         Object.prototype.hasOwnProperty.call(bbDetails, key) &&
         bbDetails[key].interfaceCompliance &&
-        Object.keys(bbDetails[key].interfaceCompliance).length > 0
+        Object.keys(bbDetails[key].interfaceCompliance.requirements).length > 0
       ) {
         keysWithNonEmptyInterfaceCompliance.push(key);
       }
@@ -75,8 +75,14 @@ const EvaluationSummary = () => {
       if (
         Object.prototype.hasOwnProperty.call(bbDetails, key) &&
         bbDetails[key].requirementSpecificationCompliance &&
-        Object.keys(bbDetails[key].requirementSpecificationCompliance).length >
-          0
+        (Object.keys(
+          bbDetails[key].requirementSpecificationCompliance
+            .crossCuttingRequirements
+        ).length > 0 ||
+          Object.keys(
+            bbDetails[key].requirementSpecificationCompliance
+              .functionalRequirements
+          ).length > 0)
       ) {
         keysWithNonEmptyInterfaceCompliance.push(key);
       }

@@ -6,6 +6,7 @@ export const softwareAttributesDefaultValues = {
   toolDescription: { value: '', error: false },
   email: { value: '', error: { error: false, message: '' } },
   confirmEmail: { value: '', error: { error: false, message: '' } },
+  softwareVersion: { value: '', error: false },
 };
 
 export const deploymentComplianceDefaultValues = {

@@ -3,7 +3,8 @@ import React from 'react';
 import '../../public/images/logo.png';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
-import { COMPLIANCE_TESTING_LOGIN, COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
+import { BiLogIn } from 'react-icons/bi';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
 
@@ -13,6 +14,11 @@ const Header = () => {
 
   const handleBackToHomePage = () => {
     router.push('/');
+  };
+
+  const handleLogin = () => {
+    const apiUrl = process.env.API_URL;
+    window.location.href = `${apiUrl}/auth/github`;
   };
 
   const currentPath = router.pathname;
@@ -39,19 +45,22 @@ const Header = () => {
             active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
           />
         </div>
-        <div className="header-login">
-          <HeaderMenuButton
-            buttonTitle={format('app.login.label')}
-            href={COMPLIANCE_TESTING_LOGIN}
-            active={currentPath?.includes(COMPLIANCE_TESTING_LOGIN)}
-          />
-        </div>
-        <div className="header-help">
-          {/* should be added in the scope of TECH-957 */}
-          {/* <div className="header-help-section">
+        <div className="action-buttons">
+          <div className="header-login">
+            <div>
+              <button onClick={handleLogin} className="header-menu-button">
+                <BiLogIn className="login-icon" />
+                {format('app.login.label')}
+              </button>
+            </div>
+          </div>
+          <div className="header-help">
+            {/* should be added in the scope of TECH-957 */}
+            {/* <div className="header-help-section">
             <RiQuestionLine />
             <p>{format('app.help.label')}</p>
           </div> */}
+          </div>
         </div>
       </div>
     </div>

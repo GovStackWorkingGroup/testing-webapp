@@ -26,11 +26,7 @@ const RequirementSpecificationSelectBBs = ({
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
-  >(
-    JSON.parse(
-      localStorage.getItem(REQUIREMENT_SPEC_STORAGE_NAME as string) || 'null'
-    ) || []
-  );
+  >([]);
   const [updatedCrossCuttingData, setUpdatedCrossCuttingData] =
     useState<ComplianceRequirementsType>();
   const [updatedFunctionalData, setUpdatedFunctionalData] =
@@ -43,7 +39,11 @@ const RequirementSpecificationSelectBBs = ({
   const [isFunctionalTableValid, setIsFunctionalTableValid] = useState(true);
   const [savedInLocalStorage, setSavedInLocalStorage] = useState<
     ComplianceRequirementsType[] | null
-  >(null);
+  >(
+    JSON.parse(
+      localStorage.getItem(REQUIREMENT_SPEC_STORAGE_NAME as string) || 'null'
+    )
+  );
 
   const router = useRouter();
   const { format } = useTranslations();
@@ -54,15 +54,8 @@ const RequirementSpecificationSelectBBs = ({
   });
 
   useEffect(() => {
-    const savedIRSCInStorage = JSON.parse(
-      localStorage.getItem(REQUIREMENT_SPEC_STORAGE_NAME as string) || 'null'
-    );
-    setSavedInLocalStorage(savedIRSCInStorage);
-  }, []);
-
-  useEffect(() => {
     handleAlreadySavedData();
-  }, [draftData, savedInLocalStorage]);
+  }, [draftData, savedInLocalStorage, interfaceRequirementsData]);
 
   useEffect(() => {
     handleSetOptions();
@@ -124,7 +117,29 @@ const RequirementSpecificationSelectBBs = ({
 
   const handleAlreadySavedData = () => {
     if (savedInLocalStorage?.length) {
-      setSelectedItems(savedInLocalStorage);
+      const BBWithAddedCrossCuttings = savedInLocalStorage.map((itemBB) => {
+        if (itemBB.requirements.crossCutting.length) {
+          return itemBB;
+        }
+
+        if (!itemBB.requirements.crossCutting.length) {
+          return;
+        }
+      });
+      const filteredBBWithAddedCrossCuttings = BBWithAddedCrossCuttings?.filter(
+        (bb) => bb !== undefined
+      );
+      if (!filteredBBWithAddedCrossCuttings.length) {
+        return;
+      }
+
+      if (filteredBBWithAddedCrossCuttings.length > 0) {
+        setSelectedItems(
+          filteredBBWithAddedCrossCuttings as ComplianceRequirementsType[]
+        );
+
+        return;
+      }
 
       return;
     }
@@ -142,7 +157,11 @@ const RequirementSpecificationSelectBBs = ({
 
               let combinedItem;
 
-              if (matchingFirstArrItem) {
+              if (
+                matchingFirstArrItem &&
+                formDetail.bbDetails[bbKey].requirementSpecificationCompliance
+                  .crossCuttingRequirements.length
+              ) {
                 combinedItem = {
                   bbName: matchingFirstArrItem.bbName,
                   bbKey: matchingFirstArrItem.bbKey,
@@ -174,11 +193,7 @@ const RequirementSpecificationSelectBBs = ({
                   },
                 };
               } else {
-                // If no matching bbKey, return the object from interfaceRequirementsData
-                const matchingFirstArrItem = interfaceRequirementsData?.find(
-                  (item) => item.bbKey === bbKey
-                );
-                combinedItem = matchingFirstArrItem || null;
+                combinedItem = null;
               }
 
               return combinedItem;
@@ -191,13 +206,15 @@ const RequirementSpecificationSelectBBs = ({
         })
         .flat();
 
-      if (combinedArray.length) {
-        setSelectedItems(combinedArray as ComplianceRequirementsType[]);
+      if (combinedArray.length > 0) {
+        setSelectedItems(combinedArray as ComplianceRequirementsType[] | []);
         localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
         localStorage.setItem(
           REQUIREMENT_SPEC_STORAGE_NAME,
           JSON.stringify(combinedArray)
         );
+
+        return;
       }
     }
   };
@@ -245,9 +262,19 @@ const RequirementSpecificationSelectBBs = ({
       ...selectedItems.filter(({ bbName }) => bbName !== item.label),
     ]);
     setOptions([...options, item]);
+    localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+    localStorage.setItem(
+      REQUIREMENT_SPEC_STORAGE_NAME,
+      JSON.stringify([
+        ...selectedItems.filter(({ bbName }) => bbName !== item.label),
+      ])
+    );
   };
 
-  const handleClearAllSelectedItems = () => setSelectedItems([]);
+  const handleClearAllSelectedItems = () => {
+    setSelectedItems([]);
+    localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+  };
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
     const isTableValid = data.every((item) => {
@@ -324,16 +351,20 @@ const RequirementSpecificationSelectBBs = ({
   const displayTable = selectedItems.map((item) => {
     return (
       <div key={item.bbKey}>
-        <p className="table-container-name">{item.bbName} BB</p>
-        <p className="table-container-title">
-          {format('form.cross_cutting_requirements.label')}
-        </p>
-        <IRSCCrossCuttingTableType
-          selectedData={item}
-          setUpdatedData={setUpdatedCrossCuttingData}
-          isTableValid={isCrossCuttingTableValid}
-        />
-        {item.requirements.functional.length ? (
+        {item.requirements?.functional.length ? (
+          <>
+            <p className="table-container-name">{item.bbName} BB</p>
+            <p className="table-container-title">
+              {format('form.cross_cutting_requirements.label')}
+            </p>
+            <IRSCCrossCuttingTableType
+              selectedData={item}
+              setUpdatedData={setUpdatedCrossCuttingData}
+              isTableValid={isCrossCuttingTableValid}
+            />
+          </>
+        ) : null}
+        {item.requirements?.functional.length ? (
           <>
             <p className="table-container-title">
               {format('form.functional_requirements.label')}

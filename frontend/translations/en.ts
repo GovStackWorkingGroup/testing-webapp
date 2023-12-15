@@ -1,8 +1,7 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
-  'app.login.label': 'Login',
-  'app.login_with_github.label': 'Login with GitHub',
+  'app.login.label': 'Log In',
   'app.back_to_reports_list.label': '< Back to Report List',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
@@ -123,6 +122,7 @@ export const en = {
   'form.tip_paste_link_container.label': 'Paste link to the container.',
   'form.tip_paste_link_documentation.label': 'Paste link to the documentation.',
   'form.tip_website.label': 'Paste link to your website.',
+  'form.software_version.label': 'Software Version',
   'form.question_line.not_sure_how_to_start': 'Not sure how to start? ',
   'form.question_line.click': 'Click ',
   'form.question_line.here': 'here',
