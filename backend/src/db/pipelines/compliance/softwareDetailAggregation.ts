@@ -3,6 +3,17 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     $match: { "softwareName": softwareName }
   },
   {
+    $project: {
+      objectId: "$_id", // Use the actual _id field from the document
+      softwareName: 1,
+      compliance: 1,
+      logo: 1,
+      website: 1,
+      documentation: 1,
+      pointOfContact: 1
+    }
+  },
+  {
     $unwind: "$compliance"
   },
   {
@@ -28,6 +39,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   {
     $group: {
       _id: {
+        objectId: "$objectId",
         softwareName: "$softwareName",
         version: "$compliance.version",
         bbName: "$compliance.bbDetailsArray.bbName"
@@ -40,7 +52,6 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           deploymentCompliance: "$compliance.bbDetailsArray.deploymentCompliance"
         }
       },
-      // Add these fields to be used with $first in the final $group stage
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
@@ -50,6 +61,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   {
     $group: {
       _id: {
+        objectId: "$_id.objectId",
         softwareName: "$_id.softwareName",
         version: "$_id.version"
       },
@@ -59,7 +71,6 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           bbVersions: "$bbVersions"
         }
       },
-      // Keep carrying these fields
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
@@ -68,9 +79,9 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   },
   {
     $project: {
+      objectId: "$_id.objectId",
       softwareVersion: "$_id.version",
       bbDetails: 1,
-      // Include these fields in the projection
       logo: 1,
       website: 1,
       documentation: 1,
@@ -78,18 +89,18 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $sort: { "softwareVersion": 1 } // Assuming you want it sorted by version
+    $sort: { "softwareVersion": 1 } // Sorting by version
   },
   {
     $group: {
-      _id: "$_id.softwareName",
+      _id: "$objectId",
+      softwareName: { $first: "$_id.softwareName" },
       compliance: {
         $push: {
           softwareVersion: "$softwareVersion",
           bbDetails: "$bbDetails"
         }
       },
-      // Use $first to get the fields from the grouped documents
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
@@ -98,8 +109,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   },
   {
     $project: {
-      _id: 0,
-      softwareName: "$_id",
+      _id: 1,
+      softwareName: 1,
       logo: 1,
       website: 1,
       documentation: 1,
