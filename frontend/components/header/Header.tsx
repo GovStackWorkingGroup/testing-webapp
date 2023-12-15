@@ -1,9 +1,9 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../public/images/logo.png';
 // should be added in the scope of TECH-957
 // import { RiQuestionLine } from 'react-icons/ri';
-import { BiLogIn } from 'react-icons/bi';
+import { BiLogIn, BiLogOut } from 'react-icons/bi';
 import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
@@ -11,7 +11,13 @@ import HeaderMenuButton from './HeaderMenuButton';
 const Header = () => {
   const router = useRouter();
   const { format } = useTranslations();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    setIsLoggedIn(!!token);
+  });
+  
   const handleBackToHomePage = () => {
     router.push('/');
   };
@@ -19,6 +25,12 @@ const Header = () => {
   const handleLogin = () => {
     const apiUrl = process.env.API_URL;
     window.location.href = `${apiUrl}/auth/github`;
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setIsLoggedIn(false);
+    router.push('/');
   };
 
   const currentPath = router.pathname;
@@ -47,12 +59,17 @@ const Header = () => {
         </div>
         <div className="action-buttons">
           <div className="header-login">
-            <div>
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="header-menu-button">
+                <BiLogOut className="login-icon" />
+                {format('app.logout.label')}
+              </button>
+            ) : (
               <button onClick={handleLogin} className="header-menu-button">
                 <BiLogIn className="login-icon" />
                 {format('app.login.label')}
               </button>
-            </div>
+            )}
           </div>
           <div className="header-help">
             {/* should be added in the scope of TECH-957 */}

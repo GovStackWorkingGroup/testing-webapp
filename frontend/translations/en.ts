@@ -2,6 +2,7 @@
 export const en = {
   'app.api-testing.label': 'API testing',
   'app.login.label': 'Log In',
+  'app.logout.label': 'Log Out',
   'app.back_to_reports_list.label': '< Back to Report List',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
