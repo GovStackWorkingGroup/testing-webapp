@@ -16,13 +16,15 @@ export type IRSCFormRef = {
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
   setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
-  IRSCFormRef: RefObject<IRSCFormRef>;
+  IRSCFormRef?: RefObject<IRSCFormRef>;
+  readOnlyView?: boolean;
 };
 
 const SelectBBs = ({
   interfaceRequirementsData,
   setUpdatedBBs,
   IRSCFormRef,
+  readOnlyView = false,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -321,6 +323,7 @@ const SelectBBs = ({
         key={`key-${item.bbKey}`}
         label={item.bbName}
         onRemove={() => handleOnRemovePill({ value: item, label: item.bbName })}
+        readOnly={readOnlyView}
       />
     );
   });
@@ -336,7 +339,7 @@ const SelectBBs = ({
             !isTestHarnessInputValid &&
             !item.interfaceCompliance.testHarnessResult
           }
-          required
+          required={!readOnlyView}
           name={item.bbKey}
           inputTitle={format('form.test_harness.title.label')}
           className="input-width-400"
@@ -347,6 +350,7 @@ const SelectBBs = ({
               ? item.interfaceCompliance.testHarnessResult
               : ''
           }
+          disabled={readOnlyView}
         />
         <p className="table-container-title">
           {format('form.table.title.label')}
@@ -355,6 +359,7 @@ const SelectBBs = ({
           selectedData={item}
           setUpdatedData={setUpdatedData}
           isTableValid={isTableValid}
+          readOnlyView={readOnlyView}
         />
       </div>
     );
@@ -362,23 +367,31 @@ const SelectBBs = ({
 
   return (
     <div className="main-block">
-      <SelectInput
-        placeholder="Select Building Block(s)"
-        className="input-select"
-        onChange={handleOnSelect}
-        // @ts-ignore
-        options={options}
-        handleSetOptions={handleSetOptions}
-      />
+      {!readOnlyView && (
+        <SelectInput
+          placeholder="Select Building Block(s)"
+          className="input-select"
+          onChange={handleOnSelect}
+          // @ts-ignore
+          options={options}
+          handleSetOptions={handleSetOptions}
+        />
+      )}
       {selectedItems.length > 0 && (
         <div>
           <div className="pills-container">
-            <div
-              className="pills-clear-all"
-              onClick={handleClearAllSelectedItems}
-            >
-              {format('form.clear_selection.label')}
-            </div>
+            {readOnlyView ? (
+              <div className="pills-explanation">
+                {format('details_view.bbs_used.label')}
+              </div>
+            ) : (
+              <div
+                className="pills-clear-all"
+                onClick={handleClearAllSelectedItems}
+              >
+                {format('form.clear_selection.label')}
+              </div>
+            )}
             {displayPills}
           </div>
           {displayTable}

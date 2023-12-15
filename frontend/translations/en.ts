@@ -51,6 +51,12 @@ export const en = {
   'drag_drop.or_drop.label': 'or drag and drop it here',
   'drag_drop.select_file.label': 'Select a file to upload',
 
+  'details_view.bbs_used.label': 'BBs used for Evaluation',
+  'details_view.container_description.label':
+    'Container that show that the product can be run in a container system (usually Docker and/or Kubernetes)',
+  'details_view.documentation_description.label':
+    'Documentation on how to install and deploy software',
+
   'evaluation_schema.all.label': 'All',
   'evaluation_schema.compliance.label': 'Compliance',
   'evaluation_schema.deployability_via_container.label':

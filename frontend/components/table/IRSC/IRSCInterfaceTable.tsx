@@ -18,6 +18,7 @@ const IRSCInterfaceTable = ({
   selectedData,
   setUpdatedData,
   isTableValid,
+  readOnlyView = false,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
@@ -117,6 +118,7 @@ const IRSCInterfaceTable = ({
                 }}
                 onClick={() => setActive(true)}
                 className="form-textarea"
+                disabled={readOnlyView}
               />
               {counter}
             </div>
@@ -132,34 +134,50 @@ const IRSCInterfaceTable = ({
               {row.values.fulfillment === 0 ? (
                 <FaCircleXmark
                   fill="#CF0B0B"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleXmark
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 0)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleXmark
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id, 'fulfillment', 0)
+                    }
+                  />
+                )
               )}
               {row.values.fulfillment === 1 ? (
                 <FaCircleCheck
                   fill="#048112"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleCheck
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 1)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleCheck
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id, 'fulfillment', 1)
+                    }
+                  />
+                )
               )}
             </div>
           );

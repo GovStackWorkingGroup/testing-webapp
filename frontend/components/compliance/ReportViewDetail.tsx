@@ -1,13 +1,30 @@
 import classNames from 'classnames';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useTranslations from '../../hooks/useTranslation';
+import SelectBBs from '../shared/combined/SelectBBs';
+import { getComplianceRequirements } from '../../service/serviceAPI';
+import { ComplianceRequirementsType } from '../../service/types';
+import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
 const ReportViewDetail = () => {
   const [activeTab, setActiveTab] = useState<activeTabProps>('deployment');
+  const [requirementsData, setRequirementsData] =
+    useState<ComplianceRequirementsType[]>();
 
   const { format } = useTranslations();
+
+  useEffect(() => {
+    fetchRequirementsData();
+  }, []);
+
+  const fetchRequirementsData = async () => {
+    const data = await getComplianceRequirements();
+    if (data.status) {
+      setRequirementsData(data.data);
+    }
+  };
 
   return (
     <div className="report-detail-container">
@@ -39,12 +56,29 @@ const ReportViewDetail = () => {
       </div>
       {activeTab === 'deployment' && (
         <div>
-          <div>documentation on how to install and deploy software</div>
           <div>
-            container that show that the product can be run in a container
-            system (usually Docker and/or Kubernetes)
+            <p>{format('details_view.documentation_description.label')}</p>
+            <div>tu będzie link</div>
+          </div>
+          <div>
+            <p>{format('details_view.container_description.label')}</p>
+            <div>tu będzie link</div>
           </div>
         </div>
+      )}
+      {activeTab === 'interface' && (
+        <SelectBBs
+          interfaceRequirementsData={requirementsData}
+          setUpdatedBBs={() => {}}
+          readOnlyView={true}
+        />
+      )}
+      {activeTab === 'specification' && (
+        <RequirementSpecificationSelectBBs
+          interfaceRequirementsData={requirementsData}
+          setUpdatedBBs={() => {}}
+          readOnlyView={true}
+        />
       )}
     </div>
   );

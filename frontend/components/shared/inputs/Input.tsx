@@ -12,6 +12,7 @@ type InputProps = {
   value?: string;
   className?: string;
   defaultValue?: string;
+  disabled?: boolean;
 };
 
 const Input = ({
@@ -26,6 +27,7 @@ const Input = ({
   value,
   className,
   defaultValue,
+  disabled,
   ...props
 }: InputProps) => {
   return (
@@ -46,6 +48,7 @@ const Input = ({
         onChange={onChange}
         value={value}
         defaultValue={defaultValue}
+        disabled={disabled}
       ></input>
       {isInvalid ? (
         <p className="custom-input-error-message">{errorMessage}</p>

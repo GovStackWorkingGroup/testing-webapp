@@ -81,21 +81,20 @@ export type Compliance = {
   bbVersions: ComplianceItem[];
 };
 
-export type SoftwareDetailsType = [
-  {
-    logo: string;
-    website: string;
-    documentation: string;
-    pointOfContact: string;
-    compliance: [
-      {
-        softwareVersion: string;
-        bbDetails: Compliance[];
-      }
-    ];
-    softwareName: string;
-  }
-];
+export type SoftwareDetailsType = {
+  id: string;
+  logo: string;
+  website: string;
+  documentation: string;
+  pointOfContact: string;
+  compliance: [
+    {
+      softwareVersion: string;
+      bbDetails: Compliance[];
+    }
+  ];
+  softwareName: string;
+}[];
 
 export type BBDetailsType = {
   [key: string]: {
@@ -264,4 +263,5 @@ export type IRSCTableType = {
   selectedData: ComplianceRequirementsType;
   setUpdatedData: (data: ComplianceRequirementsType) => void;
   isTableValid: boolean;
+  readOnlyView?: boolean;
 };

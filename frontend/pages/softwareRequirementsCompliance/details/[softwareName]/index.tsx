@@ -10,21 +10,7 @@ import SoftwareAttributes from '../../../../components/compliance/SoftwareAttrib
 import useTranslations from '../../../../hooks/useTranslation';
 
 const SoftwareComplianceDetailsPage = () => {
-  const [softwareDetail, setSoftwareDetail] = useState<SoftwareDetailsType>([
-    {
-      logo: '',
-      website: '',
-      documentation: '',
-      pointOfContact: '',
-      compliance: [
-        {
-          softwareVersion: '',
-          bbDetails: [],
-        },
-      ],
-      softwareName: '',
-    },
-  ]);
+  const [softwareDetail, setSoftwareDetail] = useState<SoftwareDetailsType | []>([]);
   const { format } = useTranslations();
   const router = useRouter();
   const { softwareName } = router.query;
@@ -52,7 +38,7 @@ const SoftwareComplianceDetailsPage = () => {
           showContactDetails={true}
         />
       </SoftwareDetails>
-      {softwareDetail[0].compliance.length
+      {softwareDetail.length && softwareDetail[0].compliance.length
         ? softwareDetail[0].compliance.map((item, indexKey) => (
           <SoftwareDetails
             title={format('app.compliance_with.label')}
