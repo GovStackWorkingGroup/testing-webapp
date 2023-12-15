@@ -92,3 +92,37 @@
 .software-attribute > div > a {
   color: @blue-medium;
 }
+
+// Report view detail
+.report-detail-container {
+  width: 80vw;
+  border-radius: 8px;
+  border: 1px solid @stroke;
+  background-color: @white;
+  min-height: 200px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 16px 20px 16px 10px;
+}
+
+.report-detail-tab-selector {
+  width: 100%;
+  display: flex;
+  padding-bottom: 24px;
+}
+
+.report-detail-single-tab {
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid @border-grey;
+  color: @text-secondary;
+  font-size: 18px;
+
+  &:hover {
+    color: @accents-and-btn;
+    cursor: pointer;
+  }
+}

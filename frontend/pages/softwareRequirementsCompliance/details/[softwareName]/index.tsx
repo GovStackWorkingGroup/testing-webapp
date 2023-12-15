@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../service/constants';
-import BackToPageButton from '../../../components/shared/buttons/BackToPageButton';
-import { getSoftwareDetails } from '../../../service/serviceAPI';
-import SoftwareDetails from '../../../components/compliance/SoftwareDetails';
-import SoftwareComplianceWith from '../../../components/compliance/SoftwareComplianceWith';
-import { SoftwareDetailsType } from '../../../service/types';
-import SoftwareAttributes from '../../../components/compliance/SoftwareAttributes';
-import useTranslations from '../../../hooks/useTranslation';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../../service/constants';
+import BackToPageButton from '../../../../components/shared/buttons/BackToPageButton';
+import { getSoftwareDetails } from '../../../../service/serviceAPI';
+import SoftwareDetails from '../../../../components/compliance/SoftwareDetails';
+import SoftwareComplianceWith from '../../../../components/compliance/SoftwareComplianceWith';
+import { SoftwareDetailsType } from '../../../../service/types';
+import SoftwareAttributes from '../../../../components/compliance/SoftwareAttributes';
+import useTranslations from '../../../../hooks/useTranslation';
 
 const SoftwareComplianceDetailsPage = () => {
   const [softwareDetail, setSoftwareDetail] = useState<SoftwareDetailsType>([
@@ -59,6 +59,7 @@ const SoftwareComplianceDetailsPage = () => {
             complianceSection={true}
             softwareVersion={item.softwareVersion}
             key={`software-compliance-with-${indexKey}`}
+            viewReportDetails={true}
           >
             <SoftwareComplianceWith softwareComplianceData={item.bbDetails} />
           </SoftwareDetails>
