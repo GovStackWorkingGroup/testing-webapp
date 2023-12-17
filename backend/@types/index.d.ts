@@ -179,6 +179,7 @@ declare module 'myTypes' {
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;
     submitForm: (uniqueId: string) => Promise<{ success: boolean; errors: string[], originalData: draftDataForRollback | undefined}>;
+    updateFormStatus: (formId: string, status: StatusEnum) => Promise<{success: boolean, errors: string[]}>;
     rollbackFormStatus: (orignalData: draftDataForRollback) => Promise<{success: boolean, errors: string[]}>;
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
