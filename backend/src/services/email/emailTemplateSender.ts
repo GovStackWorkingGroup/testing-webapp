@@ -43,17 +43,36 @@ export class EmailTemplateSender {
     }
     private draftTemplate(data: EmailTemplateData): Template {
         return {
-            subject: `Header`,
-            body: `Dear ${data.parameters['name'] || 'User'},
-            Your Draft Was Created: ${data.parameters['username']}.`
+            subject: `GovStack Compliance Draft for ${data.parameters['softwareName'] || '[Software]'}`,
+            body: 
+```Hello,
+
+Thank you for starting a new compliance draft for ${data.parameters['softwareName'] || '[Software]'}. You can edit and finalize your draft by following this unique link: 
+
+   ${data.parameters['draftLink'] || '[Error]'}.
+
+This link will remain active for editing until you submit your form or until the draft expiration date of ${data.parameters['expireDate'] || '[Undefined]'}.
+
+Regards,
+
+GovStack Team```
         };
     }
 
     private submitTemplate(data: EmailTemplateData): Template {
         return {
-            subject: `Header`,
-            body: `Dear ${data.parameters['name'] || 'User'},
-            Your Draft Was Created: ${data.parameters['username']}.`
+            subject: `Confirmation of Compliance Form Submission for ${data.parameters['softwareName'] || '[Software]'}`,
+            body: 
+```
+Hello,
+
+Your compliance form for ${data.parameters['softwareName'] || '[Software]'} has been successfully submitted. We will review it and notify you of the results. You can track the progress on Jira: ${data.parameters['jiraLink'] || '[Error]'}.
+
+Thank you for submitting the ${data.parameters['softwareName'] || '[Software]'} form!
+
+Regards,
+GovStack Team
+```
         };
     }
 
