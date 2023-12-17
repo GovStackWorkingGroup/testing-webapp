@@ -45,7 +45,7 @@ export class EmailTemplateSender {
         return {
             subject: `GovStack Compliance Draft for ${data.parameters['softwareName'] || '[Software]'}`,
             body: 
-```Hello,
+`Hello,
 
 Thank you for starting a new compliance draft for ${data.parameters['softwareName'] || '[Software]'}. You can edit and finalize your draft by following this unique link: 
 
@@ -55,7 +55,7 @@ This link will remain active for editing until you submit your form or until the
 
 Regards,
 
-GovStack Team```
+GovStack Team`
         };
     }
 
@@ -63,8 +63,7 @@ GovStack Team```
         return {
             subject: `Confirmation of Compliance Form Submission for ${data.parameters['softwareName'] || '[Software]'}`,
             body: 
-```
-Hello,
+`Hello,
 
 Your compliance form for ${data.parameters['softwareName'] || '[Software]'} has been successfully submitted. We will review it and notify you of the results. You can track the progress on Jira: ${data.parameters['jiraLink'] || '[Error]'}.
 
@@ -72,7 +71,7 @@ Thank you for submitting the ${data.parameters['softwareName'] || '[Software]'} 
 
 Regards,
 GovStack Team
-```
+`
         };
     }
 

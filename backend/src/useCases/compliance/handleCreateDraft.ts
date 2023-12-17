@@ -57,9 +57,8 @@ export default class CreateDraftRequestHandler {
                 response.details = "Draft created successfully";
                 response.link = fullPath;
                 response.uniqueId = draftUniqueId;
+                this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName, fullPath)
             }
-
-            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName)
 
             return this.res.status(201).send(response);
         } catch (error: any) {
@@ -75,11 +74,11 @@ export default class CreateDraftRequestHandler {
         }
     }
 
-    async sendDraftSubmittionEmail(email: string, softwareName: string): Promise<void> {
+    async sendDraftSubmittionEmail(email: string, softwareName: string, draftLink: string): Promise<void> {
         if (appConfig.emailsEnabled) {
             this.emailSender.sendEmail('draftSubmitted', {
                 'recipient': email,
-                'parameters': {'softwareName': softwareName}
+                'parameters': {'softwareName': softwareName, 'draftLink': draftLink}
             }).then(() => console.log('Email sent using customized template'))
                 .catch(error => console.error('Error sending email:', error));
         }

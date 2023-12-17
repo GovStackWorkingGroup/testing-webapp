@@ -14,6 +14,7 @@ interface AppConfig {
     removeExpiredDraftsSchedule: string;
   };
   enableJiraIntegration: boolean,
+  emailsEnabled: boolean
   draftExpirationTime: number,
   frontendHost: string | undefined,
   jira: {
@@ -85,7 +86,7 @@ const appConfig: AppConfig = {
     titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
     descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
   },
-
+  emailsEnabled: process.env.SEND_FORM_CONFIRMATION_EMAILS ? process.env.SEND_FORM_CONFIRMATION_EMAILS === 'true' : false,
   smtpConfig: {
     host: process.env.SMTP_HOST || '',
     port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,

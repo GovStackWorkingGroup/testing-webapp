@@ -53,7 +53,7 @@ export default class SubmitFormRequestHandler {
                 console.log('Jira integration is disabled.');
             }
 
-            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName)
+            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName, jiraTicketResult)
 
             return this.res.status(200).send({
                 success: true,
@@ -179,11 +179,12 @@ export default class SubmitFormRequestHandler {
         return `${baseUrl}${path}${softwareNameForURL}`;
     }
 
-    async sendDraftSubmittionEmail(email: string, softwareName: string): Promise<void> {
+    async sendDraftSubmittionEmail(email: string, softwareName: string, jiraLink: string): Promise<void> {
         if (appConfig.emailsEnabled) {
             this.emailSender.sendEmail('draftSubmitted', {
                 'recipient': email,
-                'parameters': {'softwareName': softwareName}
+                'parameters': {'softwareName': softwareName, 'jiraLink': jiraLink, 
+                'expireDate': new Date(Date.now() + appConfig.draftExpirationTime).toISOString().split('T')[0]}
             }).then(() => console.log('Email sent using customized template'))
                 .catch(error => console.error('Error sending email:', error));
         }
