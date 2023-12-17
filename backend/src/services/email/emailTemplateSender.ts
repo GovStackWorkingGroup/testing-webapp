@@ -21,7 +21,7 @@ export class EmailTemplateSender {
         this.templates = new Map<string, (data: EmailTemplateData) => Template>();
         
         // Initialize templates
-        this.templates.set('draft', this.draftTemplate);
+        this.templates.set('draftSubmitted', this.draftTemplate);
         this.templates.set('submit', this.submitTemplate);
         // Add more templates as needed
     }
@@ -65,7 +65,7 @@ GovStack Team`
             body: 
 `Hello,
 
-Your compliance form for ${data.parameters['softwareName'] || '[Software]'} has been successfully submitted. We will review it and notify you of the results. You can track the progress on Jira: ${data.parameters['jiraLink'] || '[Error]'}.
+Your compliance form for ${data.parameters['softwareName'] || '[Software]'} has been successfully submitted. We will review it and notify you of the results. You can track the progress on Jira: ${data.parameters['jiraLink'] || '[Link]'}.
 
 Thank you for submitting the ${data.parameters['softwareName'] || '[Software]'} form!
 

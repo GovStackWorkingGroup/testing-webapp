@@ -183,10 +183,9 @@ export default class SubmitFormRequestHandler {
         if (appConfig.emailsEnabled) {
             this.emailSender.sendEmail('draftSubmitted', {
                 'recipient': email,
-                'parameters': {'softwareName': softwareName, 'jiraLink': jiraLink, 
-                'expireDate': new Date(Date.now() + appConfig.draftExpirationTime).toISOString().split('T')[0]}
+                'parameters': {'softwareName': softwareName, 'jiraLink': jiraLink}
             }).then(() => console.log('Email sent using customized template'))
-                .catch(error => console.error('Error sending email:', error));
+            .catch(error => console.error('Error sending email:', error));
         }
     }
 }

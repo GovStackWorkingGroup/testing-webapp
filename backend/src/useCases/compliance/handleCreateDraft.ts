@@ -78,7 +78,8 @@ export default class CreateDraftRequestHandler {
         if (appConfig.emailsEnabled) {
             this.emailSender.sendEmail('draftSubmitted', {
                 'recipient': email,
-                'parameters': {'softwareName': softwareName, 'draftLink': draftLink}
+                'parameters': {'softwareName': softwareName, 'draftLink': draftLink,
+                'expireDate': new Date(Date.now() + appConfig.draftExpirationTime).toISOString().split('T')[0]}
             }).then(() => console.log('Email sent using customized template'))
                 .catch(error => console.error('Error sending email:', error));
         }
