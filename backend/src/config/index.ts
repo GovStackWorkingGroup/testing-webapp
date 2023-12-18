@@ -65,7 +65,7 @@ const appConfig: AppConfig = {
     callbackUrl: process.env.GITHUB_CALLBACK_URL!,
     devLoginMode: process.env.GITHUB_DEV_LOGIN_MODE ? process.env.GITHUB_DEV_LOGIN_MODE === 'true' : false,
     jwtSecret: process.env.GITHUB_JWT_SECRET!,
-    tokenExpirationTime: 1 * 2 * 60 * 60, // 2 hours in seconds
+    tokenExpirationTime: 8 * 60 * 60, // 8 hours in seconds
   },
   // Time is specified in milliseconds.
   jira: {
