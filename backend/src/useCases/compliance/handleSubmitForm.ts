@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { ComplianceDbRepository } from "myTypes";
 import { appConfig } from '../../config';
 import axios from 'axios';
+import { EmailTemplateSender, defaultEmailSender } from './../../services/email/emailTemplateSender';
+
 
 class JiraTicketCreationError extends Error {
     constructor(message: string) {
@@ -13,13 +15,14 @@ class JiraTicketCreationError extends Error {
 
 export default class SubmitFormRequestHandler {
     private repository: ComplianceDbRepository;
-
+    private emailSender: EmailTemplateSender;
     constructor(
         private req: Request,
         private res: Response,
         repository: ComplianceDbRepository
     ) {
         this.repository = repository;
+        this.emailSender = defaultEmailSender()
     }
 
     async submitForm(): Promise<Response> {
@@ -49,6 +52,8 @@ export default class SubmitFormRequestHandler {
             } else {
                 console.log('Jira integration is disabled.');
             }
+
+            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName, jiraTicketResult)
 
             return this.res.status(200).send({
                 success: true,
@@ -172,5 +177,15 @@ export default class SubmitFormRequestHandler {
 
         let baseUrl = `${this.req.protocol}://${host}`;
         return `${baseUrl}${path}${softwareNameForURL}`;
+    }
+
+    async sendDraftSubmittionEmail(email: string, softwareName: string, jiraLink: string): Promise<void> {
+        if (appConfig.emailsEnabled) {
+            this.emailSender.sendEmail('draftSubmitted', {
+                'recipient': email,
+                'parameters': {'softwareName': softwareName, 'jiraLink': jiraLink}
+            }).then(() => console.log('Email sent using customized template'))
+            .catch(error => console.error('Error sending email:', error));
+        }
     }
 }
