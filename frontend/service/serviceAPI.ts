@@ -304,8 +304,7 @@ export const updateDraftDetailsStepTwo = async (
     if (data.deploymentCompliance?.documentation instanceof File) {
       formData.append(
         'deploymentCompliance[documentation]',
-        data.deploymentCompliance.documentation,
-        'deploymentCompliance[documentation]'
+        data.deploymentCompliance.documentation
       );
     } else {
       formData.append(
