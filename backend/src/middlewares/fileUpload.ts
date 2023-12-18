@@ -17,7 +17,10 @@ export const createFileUploadMiddleware = () => {
     const storage = multer.diskStorage({
         destination: (_req, _file, done) => done(null, 'uploads/'),
         filename: (_req, file, done) => {
-            const ext = path.extname(file.originalname) || getFileExtension(file.mimetype);
+            let ext = path.extname(file.originalname);
+            if (!ext) {
+                ext = getFileExtension(file.mimetype);
+            }
             done(null, `${file.fieldname}-${Date.now()}${ext}`);
         },
     });
