@@ -16,7 +16,7 @@ import {
   SubmitDraftResponseType,
 } from './types';
 
-export const baseUrl = 'http://localhost:5000';
+export const baseUrl = 'process.env.API_URL';
 
 type Success<T> = { status: true; data: T };
 type Failure = { status: false; error: Error };
