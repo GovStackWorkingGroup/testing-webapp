@@ -190,19 +190,20 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       errors.push('Failed to update form status');
       return { success: false, errors };
     }
+    if (updatedData) {
+      const formDataUpdateResult = await this.updateFormData(formId, updatedData);
 
-    const formDataUpdateResult = await this.updateFormData(formId, updatedData);
+      // Check if there were errors in updating data
+      if (formDataUpdateResult.errors.length > 0) {
+        // Rollback status update
+        await Compliance.updateOne({ _id: form._id }, {
+          $set: { status: StatusEnum.IN_REVIEW }
+        });
 
-    // Check if there were errors in updating data
-    if (formDataUpdateResult.errors.length > 0) {
-      // Rollback status update
-      await Compliance.updateOne({ _id: form._id }, {
-        $set: { status: StatusEnum.IN_REVIEW }
-      });
-
-      console.error('Error updating data, status rolled back to IN_REVIEW');
-      errors.push(...formDataUpdateResult.errors);
-      return { success: false, errors };
+        console.error('Error updating data, status rolled back to IN_REVIEW');
+        errors.push(...formDataUpdateResult.errors);
+        return { success: false, errors };
+      }
     }
 
     return { success: true, errors };
