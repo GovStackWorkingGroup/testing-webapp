@@ -8,6 +8,7 @@ type SoftwareDetailsProps = {
   children: React.ReactNode;
   complianceSection?: boolean;
   softwareVersion?: string;
+  softwareId?: string;
   customStyles?: string;
   editButton?: boolean;
   redirectToStep?: number;
@@ -19,6 +20,7 @@ const SoftwareDetails = ({
   children,
   complianceSection = false,
   softwareVersion,
+  softwareId,
   customStyles,
   editButton = false,
   redirectToStep,
@@ -55,7 +57,9 @@ const SoftwareDetails = ({
             <Link
               className="software-attributes-title-edit-link"
               href={{
-                pathname: `/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails`,
+                pathname: `/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails/${
+                  softwareId ?? ''
+                }`,
               }}
             >
               {format('app.view_report_details.label')}

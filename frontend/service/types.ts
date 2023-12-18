@@ -82,7 +82,7 @@ export type Compliance = {
 };
 
 export type SoftwareDetailsType = {
-  id: string;
+  _id: string;
   logo: string;
   website: string;
   documentation: string;
@@ -99,17 +99,12 @@ export type SoftwareDetailsType = {
 export type BBDetailsType = {
   [key: string]: {
     requirementSpecificationCompliance: {
-      crossCuttingRequirements: {
-        requirement: string;
-        comment: string;
-        fulfillment: number | null;
-        _id: string;
-      }[];
-      functionalRequirements: [];
+      crossCuttingRequirements: RequirementsType[];
+      functionalRequirements: RequirementsType[];
     };
     interfaceCompliance: {
       testHarnessResult: string;
-      requirements: [];
+      requirements: RequirementsType[];
     };
     deploymentCompliance: number;
   };
@@ -183,9 +178,9 @@ export type ComplianceRequirementsType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: RequirementsType[];
-    functional: RequirementsType[];
-    interface: RequirementsType[];
+    crossCutting: RequirementsType[] | never[];
+    functional: RequirementsType[] | never[];
+    interface: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -197,8 +192,18 @@ export type RequirementsType = {
   requirement: string;
   comment: string;
   fulfillment: number;
-  _id: string;
+  _id?: string;
   status: number;
+};
+
+export type SoftwareDetailsDataType = {
+  formDetails: {
+    bbDetails: BBDetailsType;
+    deploymentCompliance: {
+      deploymentCompliance: string;
+      deploymentInstructions: string;
+    };
+  }[];
 };
 
 // All types used in Table.tsx and the data connected to it

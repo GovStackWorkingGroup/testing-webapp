@@ -44,7 +44,7 @@ const InterfaceComplianceForm = ({
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="question-line">
-        <AiOutlineQuestionCircle size={24} color="#325BE3" />
+        <AiOutlineQuestionCircle className="form-question-mark-icon" />
         <p className="question-line-text">
           {format('form.question_line.not_sure_how_to_start')}
           {format('form.question_line.click')}

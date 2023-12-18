@@ -1,9 +1,17 @@
 import classNames from 'classnames';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useTranslations from '../../hooks/useTranslation';
 import SelectBBs from '../shared/combined/SelectBBs';
-import { getComplianceRequirements } from '../../service/serviceAPI';
-import { ComplianceRequirementsType } from '../../service/types';
+import {
+  getComplianceRequirements,
+  getSoftwareDetailsReport,
+} from '../../service/serviceAPI';
+import {
+  ComplianceRequirementsType,
+  SoftwareDetailsDataType,
+} from '../../service/types';
 import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
@@ -12,12 +20,20 @@ const ReportViewDetail = () => {
   const [activeTab, setActiveTab] = useState<activeTabProps>('deployment');
   const [requirementsData, setRequirementsData] =
     useState<ComplianceRequirementsType[]>();
+  const [softwareDetailsData, setSoftwareDetailsData] =
+    useState<SoftwareDetailsDataType>();
 
   const { format } = useTranslations();
+  const router = useRouter();
+  const { softwareId } = router.query;
 
   useEffect(() => {
     fetchRequirementsData();
   }, []);
+
+  useEffect(() => {
+    fetchSoftwareDetailsData();
+  }, [softwareId]);
 
   const fetchRequirementsData = async () => {
     const data = await getComplianceRequirements();
@@ -25,6 +41,21 @@ const ReportViewDetail = () => {
       setRequirementsData(data.data);
     }
   };
+
+  const fetchSoftwareDetailsData = async () => {
+    if (softwareId) {
+      const data = await getSoftwareDetailsReport(softwareId as string);
+      if (data.status) {
+        setSoftwareDetailsData(data.data);
+      }
+    }
+  };
+
+  console.log(
+    'test',
+    softwareDetailsData?.formDetails[0].deploymentCompliance
+      ?.deploymentCompliance
+  );
 
   return (
     <div className="report-detail-container">
@@ -57,11 +88,23 @@ const ReportViewDetail = () => {
       {activeTab === 'deployment' && (
         <div>
           <div>
-            <p>{format('details_view.documentation_description.label')}</p>
-            <div>tu będzie link</div>
+            <p className="table-container-name">
+              {format('details_view.documentation_description.label')}
+            </p>
+            <Link
+              href={
+                softwareDetailsData?.formDetails[0].deploymentCompliance
+                  ?.deploymentCompliance ?? ''
+              }
+            >
+              {softwareDetailsData?.formDetails[0].deploymentCompliance
+                ?.deploymentCompliance ?? ''}
+            </Link>
           </div>
           <div>
-            <p>{format('details_view.container_description.label')}</p>
+            <p className="table-container-name">
+              {format('details_view.container_description.label')}
+            </p>
             <div>tu będzie link</div>
           </div>
         </div>
@@ -69,15 +112,15 @@ const ReportViewDetail = () => {
       {activeTab === 'interface' && (
         <SelectBBs
           interfaceRequirementsData={requirementsData}
-          setUpdatedBBs={() => {}}
           readOnlyView={true}
+          readOnlyData={softwareDetailsData}
         />
       )}
       {activeTab === 'specification' && (
         <RequirementSpecificationSelectBBs
           interfaceRequirementsData={requirementsData}
-          setUpdatedBBs={() => {}}
           readOnlyView={true}
+          readOnlyData={softwareDetailsData}
         />
       )}
     </div>

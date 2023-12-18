@@ -4,12 +4,14 @@ import {
   SoftwaresTableSortByType,
 } from '../components/table/types';
 import {
+  BBDetailsType,
   BuildingBlockTestSummary,
   ComplianceList,
   ComplianceRequirementsType,
   PATCHSoftwareAttributesType,
   POSTSoftwareAttributesType,
   ProductsListType,
+  SoftwareDetailsDataType,
   SoftwareDetailsType,
   SoftwareDraftDetailsType,
   SoftwareDraftToUpdateType,
@@ -177,6 +179,8 @@ export const getSoftwareDetails = async (softwareName: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsType>>((actualData) => {
+      console.log('actualData', actualData);
+
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -454,6 +458,30 @@ export const submitDraft = async (uniqueId: string) => {
       return response.json();
     })
     .then<Success<SubmitDraftResponseType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getSoftwareDetailsReport = async (id: string) => {
+  return await fetch(`${baseUrl}/compliance/forms/${id}`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDetailsDataType>>((actualData) => {
+      console.log('data', actualData);
+
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

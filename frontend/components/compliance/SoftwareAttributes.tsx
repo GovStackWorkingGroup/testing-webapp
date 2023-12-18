@@ -26,7 +26,7 @@ const SoftwareAttributes = ({
     title: dividedLogoUrl ? dividedLogoUrl[dividedLogoUrl.length - 1] : '',
   };
 
-  const handleCheckUrlExistence = async (url: string) => {
+  const handleCheckUrlExistence = async (url: string | undefined) => {
     if (url) {
       const exists = await checkIfImageUrlExists(url);
       setSoftwareLogoExist(exists);

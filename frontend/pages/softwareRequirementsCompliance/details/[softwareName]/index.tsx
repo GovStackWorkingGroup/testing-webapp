@@ -44,6 +44,7 @@ const SoftwareComplianceDetailsPage = () => {
             title={format('app.compliance_with.label')}
             complianceSection={true}
             softwareVersion={item.softwareVersion}
+            softwareId={softwareDetail[0]._id}
             key={`software-compliance-with-${indexKey}`}
             viewReportDetails={true}
           >

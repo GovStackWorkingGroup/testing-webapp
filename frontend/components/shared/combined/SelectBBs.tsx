@@ -2,7 +2,10 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
-import { ComplianceRequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  SoftwareDetailsDataType,
+} from '../../../service/types';
 import Input from '../inputs/Input';
 import IRSCInterfaceTable from '../../table/IRSC/IRSCInterfaceTable';
 import useTranslations from '../../../hooks/useTranslation';
@@ -15,9 +18,10 @@ export type IRSCFormRef = {
 
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
-  setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
+  setUpdatedBBs?: (data: ComplianceRequirementsType[]) => void;
   IRSCFormRef?: RefObject<IRSCFormRef>;
   readOnlyView?: boolean;
+  readOnlyData?: SoftwareDetailsDataType;
 };
 
 const SelectBBs = ({
@@ -25,6 +29,7 @@ const SelectBBs = ({
   setUpdatedBBs,
   IRSCFormRef,
   readOnlyView = false,
+  readOnlyData,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -54,26 +59,27 @@ const SelectBBs = ({
 
   useEffect(() => {
     handleAlreadySavedData();
-  }, [draftData, savedInLocalStorage, interfaceRequirementsData]);
+  }, [draftData, savedInLocalStorage, interfaceRequirementsData, readOnlyData]);
 
   useEffect(() => {
     handleSetOptions();
   }, [interfaceRequirementsData]);
 
   useEffect(() => {
-    const updatedSelectedItemsData = selectedItems?.map((item) =>
-      item?.bbKey === updatedData?.bbKey ? updatedData : item
-    );
-    setSelectedItems(updatedSelectedItemsData);
+    if (!readOnlyView && setUpdatedBBs) {
+      const updatedSelectedItemsData = selectedItems?.map((item) =>
+        item?.bbKey === updatedData?.bbKey ? updatedData : item
+      );
+      setSelectedItems(updatedSelectedItemsData);
 
-    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-    localStorage.setItem(
-      INTERFACE_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify(updatedSelectedItemsData)
-    );
-
-    setUpdatedBBs(updatedSelectedItemsData);
-  }, [updatedData]);
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify(updatedSelectedItemsData)
+      );
+      setUpdatedBBs(updatedSelectedItemsData);
+    }
+  }, [updatedData, readOnlyView]);
 
   useEffect(() => {
     options?.sort((prevItem: { label: string }, nextItem: { label: string }) =>
@@ -110,8 +116,12 @@ const SelectBBs = ({
       return;
     }
 
-    if (draftData?.formDetails[0].bbDetails) {
-      const combinedArray = draftData?.formDetails
+    if (
+      (draftData?.formDetails[0].bbDetails || readOnlyData) &&
+      !savedInLocalStorage?.length
+    ) {
+      const data = draftData ?? readOnlyData;
+      const combinedArray = data?.formDetails
         .map((formDetail) => {
           if (formDetail.bbDetails) {
             const bbKeys = Object.keys(formDetail.bbDetails);
@@ -143,10 +153,10 @@ const SelectBBs = ({
                   interfaceCompliance: {
                     testHarnessResult:
                       formDetail.bbDetails[bbKey].interfaceCompliance
-                        ?.testHarnessResult || '',
+                        ?.testHarnessResult ?? '',
                     requirements:
                       formDetail.bbDetails[bbKey].interfaceCompliance
-                        ?.requirements || [],
+                        ?.requirements ?? [],
                   },
                 };
               } else {
@@ -163,16 +173,18 @@ const SelectBBs = ({
         })
         .flat();
 
-      if (combinedArray.length > 0) {
+      if (combinedArray && combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
+
         localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+
         localStorage.setItem(
           INTERFACE_COMPLIANCE_STORAGE_NAME,
           JSON.stringify(combinedArray)
         );
-      }
 
-      return;
+        return;
+      }
     }
   };
 

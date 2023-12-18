@@ -2,7 +2,10 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
-import { ComplianceRequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  SoftwareDetailsDataType,
+} from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
 import useGetDraftData from '../../../hooks/useGetDraftDetail';
 import { REQUIREMENT_SPEC_STORAGE_NAME } from '../../../service/constants';
@@ -15,9 +18,10 @@ export type IRSCRequirementsFormRef = {
 
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
-  setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
+  setUpdatedBBs?: (data: ComplianceRequirementsType[]) => void;
   IRSCRequirementsFormRef?: RefObject<IRSCRequirementsFormRef>;
   readOnlyView?: boolean;
+  readOnlyData?: SoftwareDetailsDataType;
 };
 
 const RequirementSpecificationSelectBBs = ({
@@ -25,6 +29,7 @@ const RequirementSpecificationSelectBBs = ({
   setUpdatedBBs,
   IRSCRequirementsFormRef,
   readOnlyView = false,
+  readOnlyData,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -83,7 +88,7 @@ const RequirementSpecificationSelectBBs = ({
   }, [updatedCrossCuttingData]);
 
   useEffect(() => {
-    if (updatedFunctionalData) {
+    if (updatedFunctionalData && !readOnlyView) {
       const updatedSecondArrFromObjectTwo = selectedItems.map((item) => {
         if (item.bbKey === updatedFunctionalData.bbKey) {
           return {
@@ -100,15 +105,17 @@ const RequirementSpecificationSelectBBs = ({
 
       setSelectedItems(updatedSecondArrFromObjectTwo);
     }
-  }, [updatedFunctionalData]);
+  }, [updatedFunctionalData, readOnlyView]);
 
   useEffect(() => {
-    localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
-    localStorage.setItem(
-      REQUIREMENT_SPEC_STORAGE_NAME,
-      JSON.stringify(selectedItems)
-    );
-    setUpdatedBBs(selectedItems);
+    if (setUpdatedBBs) {
+      localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+      localStorage.setItem(
+        REQUIREMENT_SPEC_STORAGE_NAME,
+        JSON.stringify(selectedItems)
+      );
+      setUpdatedBBs(selectedItems);
+    }
   }, [selectedItems]);
 
   useEffect(() => {
@@ -146,8 +153,9 @@ const RequirementSpecificationSelectBBs = ({
       return;
     }
 
-    if (draftData) {
-      const combinedArray = draftData?.formDetails
+    if ((draftData || readOnlyData) && !savedInLocalStorage?.length) {
+      const data = draftData ?? readOnlyData;
+      const combinedArray = data?.formDetails
         .map((formDetail) => {
           if (formDetail.bbDetails) {
             const bbKeys = Object.keys(formDetail.bbDetails);
@@ -170,16 +178,10 @@ const RequirementSpecificationSelectBBs = ({
                   bbVersion: matchingFirstArrItem.bbVersion,
                   dateOfSave: matchingFirstArrItem.dateOfSave,
                   requirements: {
-                    crossCutting: formDetail.bbDetails[
-                      bbKey
-                    ].requirementSpecificationCompliance.crossCuttingRequirements.map(
-                      (crossCuttingItem) => ({
-                        requirement: crossCuttingItem.requirement,
-                        comment: crossCuttingItem.comment,
-                        fulfillment: crossCuttingItem.fulfillment,
-                        _id: crossCuttingItem._id,
-                      })
-                    ),
+                    crossCutting:
+                      formDetail.bbDetails[bbKey]
+                        .requirementSpecificationCompliance
+                        .crossCuttingRequirements,
                     functional:
                       formDetail.bbDetails[bbKey]
                         .requirementSpecificationCompliance
@@ -208,7 +210,7 @@ const RequirementSpecificationSelectBBs = ({
         })
         .flat();
 
-      if (combinedArray.length > 0) {
+      if (combinedArray && combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[] | []);
         localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
         localStorage.setItem(
@@ -387,7 +389,7 @@ const RequirementSpecificationSelectBBs = ({
 
   return (
     <div className="main-block">
-      {readOnlyView && (
+      {!readOnlyView && (
         <SelectInput
           placeholder="Select Building Block(s)"
           className="input-select"
