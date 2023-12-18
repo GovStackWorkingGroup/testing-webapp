@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { ComplianceDbRepository } from "myTypes";
-import { StatusEnum } from '../../db/schemas/compliance/complianceUtils';
 
-export default class AcceptComplianceFormRequestHandler {
+export default class UpdateFormRequestHandler {
     private repository: ComplianceDbRepository;
     private formId: string;
     private updatedData;
@@ -19,25 +18,24 @@ export default class AcceptComplianceFormRequestHandler {
         this.updatedData = updatedData;
     }
 
-    async acceptForm(): Promise<Response> {
+    async updateForm(): Promise<Response> {
         try {
-
             if (!this.formId) {
                 return this.res.status(400).send({ success: false, error: "Form ID is required" });
             }
 
-            const { success, errors } = await this.repository.updateFormStatus(this.formId, StatusEnum.APPROVED,  this.updatedData);
+            const { success, errors } = await this.repository.updateFormData(this.formId, this.updatedData);
             if (!success) {
                 return this.res.status(400).send({ success: false, errors });
             }
 
             return this.res.status(200).send({
                 success: true,
-                message: "Compliance form accepted."
+                message: "Compliance form updated successfully."
             });
         } catch (error: any) {
-            console.error("Error accepting compliance form:", error);
-            return this.res.status(500).send({ success: false, error: error.message || "Error accepting compliance form." });
+            console.error("Error updating compliance form:", error);
+            return this.res.status(500).send({ success: false, error: error.message || "Error updating compliance form." });
         }
     }
 }
