@@ -12,11 +12,11 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           input: { $objectToArray: "$compliance.bbDetails" },
           as: "detail",
           in: {
-            "bbName": "$$detail.k",
-            "bbVersion": "$$detail.v.bbVersion",
-            "requirements": "$$detail.v.requirementSpecificationCompliance",
-            "interface": "$$detail.v.interfaceCompliance",
-            "deploymentCompliance": "$deploymentCompliance.requirements" 
+            "bbName": "$detail.k",
+            "bbVersion": "$detail.v.bbVersion",
+            "requirements": "$detail.v.requirementSpecificationCompliance",
+            "interface": "$detail.v.interfaceCompliance",
+            "deploymentCompliance": "$detail.v.deploymentCompliance" 
           }
         }
       }
@@ -37,7 +37,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           bbVersion: "$compliance.bbDetailsArray.bbVersion",
           requirements: "$compliance.bbDetailsArray.requirements",
           interface: "$compliance.bbDetailsArray.interface",
-          deploymentCompliance: "$deploymentCompliance.requirements"
+          deploymentCompliance: "$compliance.bbDetailsArray.deploymentCompliance"
         }
       },
       // Add these fields to be used with $first in the final $group stage

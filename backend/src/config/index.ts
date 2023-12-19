@@ -38,7 +38,9 @@ interface AppConfig {
     clientId: string;
     clientSecret: string;
     callbackUrl: string;
-    devLoginMode: boolean,
+    devLoginMode: boolean;
+    jwtSecret: string;
+    tokenExpirationTime: number;
   };
   smtpConfig: {
     host: string,
@@ -72,6 +74,8 @@ const appConfig: AppConfig = {
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     callbackUrl: process.env.GITHUB_CALLBACK_URL!,
     devLoginMode: process.env.GITHUB_DEV_LOGIN_MODE ? process.env.GITHUB_DEV_LOGIN_MODE === 'true' : false,
+    jwtSecret: process.env.GITHUB_JWT_SECRET!,
+    tokenExpirationTime: 8 * 60 * 60, // 8 hours in seconds
   },
   // Time is specified in milliseconds.
   jira: {
