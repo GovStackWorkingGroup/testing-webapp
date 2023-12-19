@@ -1,6 +1,11 @@
-import { ComplianceListFilters } from "myTypes";
+import { ComplianceListFilters, StatusEnum } from "myTypes";
 
-export const createAggregationPipeline = (limit: number, offset: number, filters: ComplianceListFilters): any[] => {
+export const createAggregationPipeline = (
+    limit: number,
+    offset: number,
+    filters: ComplianceListFilters,
+    isAuthenticated: Boolean
+): any[] => {
     let softwareConditions = filters.software.map(filter => {
         return {
             "softwareName": filter.name,
@@ -15,8 +20,17 @@ export const createAggregationPipeline = (limit: number, offset: number, filters
         };
     });
 
+    let statusConditions = {
+        status: {
+            $in: isAuthenticated 
+                ? [StatusEnum.IN_REVIEW, StatusEnum.APPROVED, StatusEnum.REJECTED]
+                : [StatusEnum.IN_REVIEW, StatusEnum.APPROVED]
+        }
+    };
+
     const aggregationPipeline: unknown[] = [
         ...(softwareConditions.length > 0 ? [{ $match: { $or: softwareConditions } }] : []),
+        { $match: statusConditions },
         { $unwind: "$compliance" },
         { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
         { $unwind: "$bbDetailsArray" },

@@ -173,7 +173,7 @@ declare module 'myTypes' {
 
   export interface ComplianceDbRepository {
     findAll: () => Promise<FindResult>;
-    aggregateComplianceReports: (limit: number, offset: number, filters: ComplianceListFilters) => Promise<ComplianceAggregationListResult>;
+    aggregateComplianceReports: (limit: number, offset: number, filters: ComplianceListFilters, isAuthenticated: Boolean) => Promise<ComplianceAggregationListResult>;
     getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;

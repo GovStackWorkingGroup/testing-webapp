@@ -5,9 +5,9 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     return repository.findAll();
   };
 
-  const aggregateComplianceReports = async (limit, offset, filters) => {
+  const aggregateComplianceReports = async (limit, offset, filters, isAuthenticated) => {
     try {
-      return await repository.aggregateComplianceReports(limit, offset, filters);
+      return await repository.aggregateComplianceReports(limit, offset, filters, isAuthenticated);
     } catch (error) {
       console.error('There was an error while aggregating the compliance reports:', error);
       throw error;

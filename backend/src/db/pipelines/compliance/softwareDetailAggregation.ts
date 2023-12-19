@@ -12,11 +12,11 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           input: { $objectToArray: "$compliance.bbDetails" },
           as: "detail",
           in: {
-            "bbName": "$detail.k",
-            "bbVersion": "$detail.v.bbVersion",
-            "requirements": "$detail.v.requirementSpecificationCompliance",
-            "interface": "$detail.v.interfaceCompliance",
-            "deploymentCompliance": "$detail.v.deploymentCompliance" 
+            "bbName": "$$detail.k",
+            "bbVersion": "$$detail.v.bbVersion",
+            "requirements": "$$detail.v.requirementSpecificationCompliance",
+            "interface": "$$detail.v.interfaceCompliance",
+            "deploymentCompliance": "$$detail.v.deploymentCompliance" 
           }
         }
       }

@@ -22,9 +22,9 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async aggregateComplianceReports(limit: number, offset: number, filters: ComplianceListFilters): Promise<ComplianceAggregationListResult> {
+  async aggregateComplianceReports(limit: number, offset: number, filters: ComplianceListFilters, isAuthenticated: Boolean): Promise<ComplianceAggregationListResult> {
     try {
-      const results = await Compliance.aggregate(createAggregationPipeline(limit, offset, filters)).exec();
+      const results = await Compliance.aggregate(createAggregationPipeline(limit, offset, filters, isAuthenticated)).exec();
       const reshapedResults = {
         count: results[0].totalSoftwareNames,
         data: results[0].records.reduce((accumulatedResult, currentItem) => {
