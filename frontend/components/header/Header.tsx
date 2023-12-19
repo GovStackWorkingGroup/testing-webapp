@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import '../../public/images/logo.png';
-// should be added in the scope of TECH-957
-// import { RiQuestionLine } from 'react-icons/ri';
+import { RiQuestionLine } from 'react-icons/ri';
 import { BiLogIn, BiLogOut } from 'react-icons/bi';
 import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
+import { ApiError } from 'next/dist/server/api-utils';
 
 const Header = () => {
   const router = useRouter();
@@ -31,6 +31,12 @@ const Header = () => {
     sessionStorage.clear();
     setIsLoggedIn(false);
     router.push('/');
+  };
+
+
+  const handleHelpClick = () => {
+    const slackChannelUrl = process.env.SLACK_CHANNEL_URL;
+    window.open(slackChannelUrl, "_blank");
   };
 
   const currentPath = router.pathname;
@@ -61,22 +67,21 @@ const Header = () => {
           <div className="header-login">
             {isLoggedIn ? (
               <button onClick={handleLogout} className="header-menu-button">
-                <BiLogOut className="login-icon" />
+                <BiLogOut className="header-icon" />
                 {format('app.logout.label')}
               </button>
             ) : (
               <button onClick={handleLogin} className="header-menu-button">
-                <BiLogIn className="login-icon" />
+                <BiLogIn className="header-icon" />
                 {format('app.login.label')}
               </button>
             )}
           </div>
           <div className="header-help">
-            {/* should be added in the scope of TECH-957 */}
-            {/* <div className="header-help-section">
-            <RiQuestionLine />
-            <p>{format('app.help.label')}</p>
-          </div> */}
+            <button onClick={handleHelpClick} className="header-menu-button">
+              <RiQuestionLine className="header-icon" />
+              {format('app.help.label')}
+            </button>
           </div>
         </div>
       </div>

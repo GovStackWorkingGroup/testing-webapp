@@ -25,6 +25,7 @@ const nextConfig = {
   },
   env: {
     API_URL: process.env.API_URL,
+    SLACK_CHANNEL_URL: process.env.SLACK_CHANNEL_URL,
   },
 
   webpack(config, { dev, isServer }) {
