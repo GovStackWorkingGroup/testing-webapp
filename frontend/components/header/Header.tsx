@@ -6,7 +6,6 @@ import { BiLogIn, BiLogOut } from 'react-icons/bi';
 import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
-import { ApiError } from 'next/dist/server/api-utils';
 
 const Header = () => {
   const router = useRouter();
@@ -33,10 +32,9 @@ const Header = () => {
     router.push('/');
   };
 
-
   const handleHelpClick = () => {
     const slackChannelUrl = process.env.SLACK_CHANNEL_URL;
-    window.open(slackChannelUrl, "_blank");
+    window.open(slackChannelUrl, '_blank');
   };
 
   const currentPath = router.pathname;
