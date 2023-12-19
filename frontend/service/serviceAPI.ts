@@ -4,10 +4,10 @@ import {
   SoftwaresTableSortByType,
 } from '../components/table/types';
 import {
-  BBDetailsType,
   BuildingBlockTestSummary,
   ComplianceList,
   ComplianceRequirementsType,
+  FormUpdatedObject,
   PATCHSoftwareAttributesType,
   POSTSoftwareAttributesType,
   ProductsListType,
@@ -16,6 +16,7 @@ import {
   SoftwareDraftDetailsType,
   SoftwareDraftToUpdateType,
   SubmitDraftResponseType,
+  SubmittingFormResponseType,
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -480,9 +481,36 @@ export const getSoftwareDetailsReport = async (id: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsDataType>>((actualData) => {
+      console.log('actualData', actualData);
       console.log('data', actualData);
 
       return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const acceptForm = async (id: string, data: FormUpdatedObject) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  return await fetch(`${baseUrl}/compliance/forms/${id}/accept`, {
+    method: 'post',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SubmittingFormResponseType>>((response) => {
+      return { data: response, status: true };
     })
     .catch<Failure>((error) => {
       return { error, status: false };

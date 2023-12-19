@@ -73,7 +73,7 @@ export type ComplianceItem = {
   requirements: ComplianceDetails;
   interface: ComplianceDetails;
   bbVersion: string;
-  deploymentCompliance: { requirement: string; level: number }[];
+  deploymentCompliance: number;
 };
 
 export type Compliance = {
@@ -200,7 +200,7 @@ export type SoftwareDetailsDataType = {
   formDetails: {
     bbDetails: BBDetailsType;
     deploymentCompliance: {
-      deploymentCompliance: string;
+      documentation: string;
       deploymentInstructions: string;
     };
   }[];
@@ -261,6 +261,22 @@ export type SubmitDraftResponseType = {
   success: boolean;
   details: string;
   link: string;
+};
+
+type FormBBDetails = {
+  interface: { level: number; note: string };
+  deployment: { level: number; note: string };
+  requirement: { level: number; note: string };
+};
+
+export type FormUpdatedObject = {
+  bbDetails: Record<string, FormBBDetails>;
+};
+
+export type SubmittingFormResponseType = {
+  success: boolean;
+  errors?: [string];
+  message?: string;
 };
 
 // Types used in IRSC/IRSC...Table.tsx and the data connected to it

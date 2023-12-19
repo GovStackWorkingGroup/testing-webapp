@@ -2,9 +2,11 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { RiFileTextLine } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import SelectBBs from '../shared/combined/SelectBBs';
 import {
+  baseUrl,
   getComplianceRequirements,
   getSoftwareDetailsReport,
 } from '../../service/serviceAPI';
@@ -22,6 +24,8 @@ const ReportViewDetail = () => {
     useState<ComplianceRequirementsType[]>();
   const [softwareDetailsData, setSoftwareDetailsData] =
     useState<SoftwareDetailsDataType>();
+  const [documentationLink, setDocumentationLink] = useState('');
+  const [instructionLink, setInstructionLink] = useState('');
 
   const { format } = useTranslations();
   const router = useRouter();
@@ -34,6 +38,35 @@ const ReportViewDetail = () => {
   useEffect(() => {
     fetchSoftwareDetailsData();
   }, [softwareId]);
+
+  useEffect(() => {
+    const documentationData =
+      softwareDetailsData?.formDetails[0].deploymentCompliance;
+    if (documentationData) {
+      const documentation =
+        softwareDetailsData?.formDetails[0].deploymentCompliance.documentation;
+      const instruction =
+        softwareDetailsData?.formDetails[0].deploymentCompliance
+          .deploymentInstructions;
+
+      if (documentation.startsWith('uploads/')) {
+        const parts = documentation.split('.');
+        console.log('documentation', documentation);
+        console.log('parts.at(-1)', parts.at(-1));
+
+        setDocumentationLink(`${baseUrl}/${documentation}.${parts.at(-1)}`);
+      } else {
+        setDocumentationLink(documentation);
+      }
+
+      if (instruction.startsWith('uploads/')) {
+        const parts = instruction.split('.');
+        setInstructionLink(`${baseUrl}/${instruction}.${parts.at(-1)}`);
+      } else {
+        setInstructionLink(instruction);
+      }
+    }
+  }, [softwareDetailsData]);
 
   const fetchRequirementsData = async () => {
     const data = await getComplianceRequirements();
@@ -50,12 +83,6 @@ const ReportViewDetail = () => {
       }
     }
   };
-
-  console.log(
-    'test',
-    softwareDetailsData?.formDetails[0].deploymentCompliance
-      ?.deploymentCompliance
-  );
 
   return (
     <div className="report-detail-container">
@@ -86,26 +113,26 @@ const ReportViewDetail = () => {
         </div>
       </div>
       {activeTab === 'deployment' && (
-        <div>
+        <div className="report-detail-deployment-container">
           <div>
-            <p className="table-container-name">
-              {format('details_view.documentation_description.label')}
-            </p>
             <Link
-              href={
-                softwareDetailsData?.formDetails[0].deploymentCompliance
-                  ?.deploymentCompliance ?? ''
-              }
+              target="_blank"
+              href={documentationLink}
+              rel="noopener noreferrer"
             >
-              {softwareDetailsData?.formDetails[0].deploymentCompliance
-                ?.deploymentCompliance ?? ''}
+              <RiFileTextLine className="report-view-doc-icon" />
             </Link>
+            <p>{format('details_view.documentation_description.label')}</p>
           </div>
           <div>
-            <p className="table-container-name">
-              {format('details_view.container_description.label')}
-            </p>
-            <div>tu będzie link</div>
+            <Link
+              target="_blank"
+              href={instructionLink}
+              rel="noopener noreferrer"
+            >
+              <RiFileTextLine className="report-view-doc-icon" />
+            </Link>
+            <p>{format('details_view.container_description.label')}</p>
           </div>
         </div>
       )}
