@@ -31,7 +31,6 @@ export type ComplianceDetailFormValuesType = {
 const ComplianceDetailTable = ({
   data,
   setUpdatedData,
-  isTableValid,
 }: ComplianceDetailTable) => {
   const [transformedData, setTransformedData] =
     useState<TransformedDataType[]>();
@@ -77,18 +76,17 @@ const ComplianceDetailTable = ({
   const handleOnSelect = (value: SingleValue<OptionsType>) => {
     const index = value?.value;
     let level: number;
-    console.log('index', index);
 
     switch (value?.label) {
-      case 'Level 1':
-        level = 1;
-        break;
-      case 'Level 2':
-        level = 2;
-        break;
-      case 'N/A':
-        level = -1;
-        break;
+    case 'Level 1':
+      level = 1;
+      break;
+    case 'Level 2':
+      level = 2;
+      break;
+    case 'N/A':
+      level = -1;
+      break;
     }
 
     if (updatedFormValues && index) {
@@ -245,7 +243,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>
@@ -276,7 +274,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>
@@ -325,7 +323,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>
@@ -369,7 +367,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>
@@ -405,7 +403,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>
@@ -441,7 +439,6 @@ const ComplianceDetailTable = ({
                                           label: format('table.N/A.label'),
                                         },
                                       ]}
-                                      id={`requirement-${item.bbName}`}
                                       onChange={handleOnSelect}
                                       placeholder={format('app.select.label')}
                                     />
@@ -460,7 +457,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="inside-table">
                 <tbody>
-                  <tr>
+                  <tr className="border-top">
                     <td className="td-row-details td-full-width">
                       <table className="inside-table border-top">
                         <tbody>

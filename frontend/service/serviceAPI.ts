@@ -481,8 +481,7 @@ export const getSoftwareDetailsReport = async (id: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsDataType>>((actualData) => {
-      console.log('actualData', actualData);
-      console.log('data', actualData);
+      console.log('actualData 2', actualData);
 
       return { data: actualData, status: true };
     })
@@ -491,10 +490,14 @@ export const getSoftwareDetailsReport = async (id: string) => {
     });
 };
 
-export const acceptForm = async (id: string, data: FormUpdatedObject) => {
+export const handleReviewSoftwareForm = async (
+  id: string,
+  data: FormUpdatedObject,
+  type: 'update' | 'accept' | 'reject'
+) => {
   const accessToken = sessionStorage.getItem('accessToken');
 
-  return await fetch(`${baseUrl}/compliance/forms/${id}/accept`, {
+  return await fetch(`${baseUrl}/compliance/forms/${id}/${type}`, {
     method: 'post',
     body: JSON.stringify(data),
     headers: {

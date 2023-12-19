@@ -5,9 +5,9 @@ import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../../service/constants';
 import BackToPageButton from '../../../../components/shared/buttons/BackToPageButton';
 import {
-  acceptForm,
   getSoftwareDetails,
   getSoftwareDetailsReport,
+  handleReviewSoftwareForm,
 } from '../../../../service/serviceAPI';
 import SoftwareDetails from '../../../../components/compliance/SoftwareDetails';
 import SoftwareComplianceWith from '../../../../components/compliance/SoftwareComplianceWith';
@@ -33,17 +33,18 @@ const SoftwareComplianceDetailsPage = () => {
   const [updatedData, setUpdatedData] = useState<
     ComplianceDetailFormValuesType[] | undefined
   >();
+  const [isFormSaved, setIsFormSaved] = useState(false);
 
   const { format } = useTranslations();
   const router = useRouter();
   const { softwareName } = router.query;
-
+console.log('softwareDetai', softwareDetail, softwareDetailsDataToApprove)
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken');
     if (token) {
       setIsLoggedIn(true);
     }
-  });
+  },[]);
 
   useEffect(() => {
     fetchData(softwareName as string);
@@ -69,7 +70,7 @@ const SoftwareComplianceDetailsPage = () => {
     }
   };
 
-  const handleAcceptForm = async () => {
+  const handleFormAction = async (type: 'update' | 'accept' | 'reject') => {
     if (updatedData) {
       const payload: FormUpdatedObject = {
         bbDetails: {},
@@ -80,24 +81,68 @@ const SoftwareComplianceDetailsPage = () => {
         payload.bbDetails[bbName] = { ...rest };
       });
 
-      await acceptForm(softwareDetail[0]._id, payload).then((response) => {
-        if (response.status) {
-          toast.success(format('form.form_accepted_success.message'), {
-            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
-          });
-          router.push(COMPLIANCE_TESTING_RESULT_PAGE);
+      await handleReviewSoftwareForm(softwareDetail[0]._id, payload, type).then(
+        (response) => {
+          if (response.status) {
+            if (type === 'accept') {
+              toast.success(format('form.form_accepted_success.message'), {
+                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+              });
+              router.push(COMPLIANCE_TESTING_RESULT_PAGE);
 
-          return;
+              return;
+            }
+
+            if (type === 'update') {
+              toast.success(format('form.form_update_success.message'), {
+                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+              });
+              setIsFormSaved(true);
+
+              return;
+            }
+
+            if (type === 'reject') {
+              toast.success(format('form.form_reject_success.message'), {
+                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+              });
+              router.push(COMPLIANCE_TESTING_RESULT_PAGE);
+
+              return;
+            }
+
+            return;
+          }
+
+          if (!response.status) {
+            if (type === 'accept') {
+              toast.error(format('form.form_accepted_error.message'), {
+                icon: <RiErrorWarningFill className="error-toast-icon" />,
+              });
+
+              return;
+            }
+
+            if (type === 'update') {
+              toast.error(format('form.form_update_error.message'), {
+                icon: <RiErrorWarningFill className="error-toast-icon" />,
+              });
+
+              return;
+            }
+
+            if (type === 'reject') {
+              toast.error(format('form.form_reject_error.message'), {
+                icon: <RiErrorWarningFill className="error-toast-icon" />,
+              });
+
+              return;
+            }
+
+            return;
+          }
         }
-
-        if (!response.status) {
-          toast.error(format('form.form_accepted_error.message'), {
-            icon: <RiErrorWarningFill className="error-toast-icon" />,
-          });
-
-          return;
-        }
-      });
+      );
     }
   };
 
@@ -116,27 +161,30 @@ const SoftwareComplianceDetailsPage = () => {
         </SoftwareDetails>
         {softwareDetail.length && softwareDetail[0].compliance.length
           ? softwareDetail[0].compliance.map((item, indexKey) => (
-              <SoftwareDetails
-                title={format('app.compliance_with.label')}
-                complianceSection={true}
-                softwareVersion={item.softwareVersion}
-                softwareId={softwareDetail[0]._id}
-                key={`software-compliance-with-${indexKey}`}
-                viewReportDetails={true}
-              >
-                {isLoggedIn ? (
-                  <ComplianceDetailTable
-                    data={softwareDetailsDataToApprove}
-                    isTableValid={true}
-                    setUpdatedData={(data) => setUpdatedData(data)}
-                  />
-                ) : (
-                  <SoftwareComplianceWith
-                    softwareComplianceData={item.bbDetails}
-                  />
-                )}
-              </SoftwareDetails>
-            ))
+            <SoftwareDetails
+              title={format('app.compliance_with.label')}
+              complianceSection={true}
+              softwareVersion={item.softwareVersion}
+              softwareId={softwareDetail[0]._id}
+              key={`software-compliance-with-${indexKey}`}
+              viewReportDetails={true}
+            >
+              {isLoggedIn ? (
+                <ComplianceDetailTable
+                  data={softwareDetailsDataToApprove}
+                  isTableValid={true}
+                  setUpdatedData={(data) => {
+                    setUpdatedData(data);
+                    setIsFormSaved(false);
+                  }}
+                />
+              ) : (
+                <SoftwareComplianceWith
+                  softwareComplianceData={item.bbDetails}
+                />
+              )}
+            </SoftwareDetails>
+          ))
           : null}
       </div>
       <div className="bottom-bar-container">
@@ -145,19 +193,20 @@ const SoftwareComplianceDetailsPage = () => {
             type="button"
             text={format('app.save.label')}
             styles="secondary-button"
-            onClick={() => handleSaveForm()}
+            onClick={() => handleFormAction('update')}
+            showCheckIcon={isFormSaved}
           />
           <Button
             type="button"
             text={format('form.reject.label')}
             styles="primary-red-button"
-            onClick={() => {}}
+            onClick={() => handleFormAction('reject')}
           />
           <Button
             type="button"
             text={format('form.accept.label')}
             styles="primary-button"
-            onClick={() => handleAcceptForm()}
+            onClick={() => handleFormAction('accept')}
           />
         </div>
       </div>

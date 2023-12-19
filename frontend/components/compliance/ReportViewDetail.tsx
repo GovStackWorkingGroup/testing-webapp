@@ -15,6 +15,8 @@ import {
   SoftwareDetailsDataType,
 } from '../../service/types';
 import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
+import BackToPageButton from '../shared/buttons/BackToPageButton';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
@@ -51,8 +53,6 @@ const ReportViewDetail = () => {
 
       if (documentation.startsWith('uploads/')) {
         const parts = documentation.split('.');
-        console.log('documentation', documentation);
-        console.log('parts.at(-1)', parts.at(-1));
 
         setDocumentationLink(`${baseUrl}/${documentation}.${parts.at(-1)}`);
       } else {
@@ -85,72 +85,80 @@ const ReportViewDetail = () => {
   };
 
   return (
-    <div className="report-detail-container">
-      <div className="report-detail-tab-selector">
-        <div
-          className={classNames('report-detail-single-tab', {
-            active: activeTab === 'deployment',
-          })}
-          onClick={() => setActiveTab('deployment')}
-        >
-          {format('table.deployment_compliance.label')}
-        </div>
-        <div
-          className={classNames('report-detail-single-tab', {
-            active: activeTab === 'interface',
-          })}
-          onClick={() => setActiveTab('interface')}
-        >
-          {format('table.interface_compliance.label')}
-        </div>
-        <div
-          className={classNames('report-detail-single-tab', {
-            active: activeTab === 'specification',
-          })}
-          onClick={() => setActiveTab('specification')}
-        >
-          {format('table.requirement_specification_compliance.label')}
-        </div>
+    <>
+      <div className="back-to-btn-container">
+        <BackToPageButton
+          text={format('app.back_to_reports_list.label')}
+          href={COMPLIANCE_TESTING_RESULT_PAGE}
+        />
       </div>
-      {activeTab === 'deployment' && (
-        <div className="report-detail-deployment-container">
-          <div>
-            <Link
-              target="_blank"
-              href={documentationLink}
-              rel="noopener noreferrer"
-            >
-              <RiFileTextLine className="report-view-doc-icon" />
-            </Link>
-            <p>{format('details_view.documentation_description.label')}</p>
+      <div className="report-detail-container">
+        <div className="report-detail-tab-selector">
+          <div
+            className={classNames('report-detail-single-tab', {
+              active: activeTab === 'deployment',
+            })}
+            onClick={() => setActiveTab('deployment')}
+          >
+            {format('table.deployment_compliance.label')}
           </div>
-          <div>
-            <Link
-              target="_blank"
-              href={instructionLink}
-              rel="noopener noreferrer"
-            >
-              <RiFileTextLine className="report-view-doc-icon" />
-            </Link>
-            <p>{format('details_view.container_description.label')}</p>
+          <div
+            className={classNames('report-detail-single-tab', {
+              active: activeTab === 'interface',
+            })}
+            onClick={() => setActiveTab('interface')}
+          >
+            {format('table.interface_compliance.label')}
+          </div>
+          <div
+            className={classNames('report-detail-single-tab', {
+              active: activeTab === 'specification',
+            })}
+            onClick={() => setActiveTab('specification')}
+          >
+            {format('table.requirement_specification_compliance.label')}
           </div>
         </div>
-      )}
-      {activeTab === 'interface' && (
-        <SelectBBs
-          interfaceRequirementsData={requirementsData}
-          readOnlyView={true}
-          readOnlyData={softwareDetailsData}
-        />
-      )}
-      {activeTab === 'specification' && (
-        <RequirementSpecificationSelectBBs
-          interfaceRequirementsData={requirementsData}
-          readOnlyView={true}
-          readOnlyData={softwareDetailsData}
-        />
-      )}
-    </div>
+        {activeTab === 'deployment' && (
+          <div className="report-detail-deployment-container">
+            <div>
+              <Link
+                target="_blank"
+                href={documentationLink}
+                rel="noopener noreferrer"
+              >
+                <RiFileTextLine className="report-view-doc-icon" />
+              </Link>
+              <p>{format('details_view.documentation_description.label')}</p>
+            </div>
+            <div>
+              <Link
+                target="_blank"
+                href={instructionLink}
+                rel="noopener noreferrer"
+              >
+                <RiFileTextLine className="report-view-doc-icon" />
+              </Link>
+              <p>{format('details_view.container_description.label')}</p>
+            </div>
+          </div>
+        )}
+        {activeTab === 'interface' && (
+          <SelectBBs
+            interfaceRequirementsData={requirementsData}
+            readOnlyView={true}
+            readOnlyData={softwareDetailsData}
+          />
+        )}
+        {activeTab === 'specification' && (
+          <RequirementSpecificationSelectBBs
+            interfaceRequirementsData={requirementsData}
+            readOnlyView={true}
+            readOnlyData={softwareDetailsData}
+          />
+        )}
+      </div>
+    </>
   );
 };
 
