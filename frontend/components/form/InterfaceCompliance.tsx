@@ -25,7 +25,6 @@ const InterfaceComplianceForm = ({
   >();
 
   const { format } = useTranslations();
-
   useEffect(() => {
     setUpdatedBBs(updatedData);
   }, [updatedData]);

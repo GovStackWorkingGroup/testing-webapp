@@ -180,8 +180,6 @@ export const getSoftwareDetails = async (softwareName: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsType>>((actualData) => {
-      console.log('actualData', actualData);
-
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {
@@ -481,8 +479,6 @@ export const getSoftwareDetailsReport = async (id: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsDataType>>((actualData) => {
-      console.log('actualData 2', actualData);
-
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

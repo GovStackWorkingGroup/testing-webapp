@@ -52,16 +52,13 @@ const ReportViewDetail = () => {
           .deploymentInstructions;
 
       if (documentation.startsWith('uploads/')) {
-        const parts = documentation.split('.');
-
-        setDocumentationLink(`${baseUrl}/${documentation}.${parts.at(-1)}`);
+        setDocumentationLink(`${baseUrl}/${documentation}`);
       } else {
         setDocumentationLink(documentation);
       }
 
       if (instruction.startsWith('uploads/')) {
-        const parts = instruction.split('.');
-        setInstructionLink(`${baseUrl}/${instruction}.${parts.at(-1)}`);
+        setInstructionLink(`${baseUrl}/${instruction}`);
       } else {
         setInstructionLink(instruction);
       }

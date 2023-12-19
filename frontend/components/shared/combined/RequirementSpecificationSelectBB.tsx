@@ -109,11 +109,14 @@ const RequirementSpecificationSelectBBs = ({
 
   useEffect(() => {
     if (setUpdatedBBs) {
-      localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
-      localStorage.setItem(
-        REQUIREMENT_SPEC_STORAGE_NAME,
-        JSON.stringify(selectedItems)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+        localStorage.setItem(
+          REQUIREMENT_SPEC_STORAGE_NAME,
+          JSON.stringify(selectedItems)
+        );
+      }
+
       setUpdatedBBs(selectedItems);
     }
   }, [selectedItems]);
@@ -125,7 +128,7 @@ const RequirementSpecificationSelectBBs = ({
   }, [options]);
 
   const handleAlreadySavedData = () => {
-    if (savedInLocalStorage?.length) {
+    if (savedInLocalStorage?.length && !readOnlyView) {
       const BBWithAddedCrossCuttings = savedInLocalStorage.map((itemBB) => {
         if (itemBB.requirements.crossCutting.length) {
           return itemBB;
@@ -212,11 +215,13 @@ const RequirementSpecificationSelectBBs = ({
 
       if (combinedArray && combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[] | []);
-        localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
-        localStorage.setItem(
-          REQUIREMENT_SPEC_STORAGE_NAME,
-          JSON.stringify(combinedArray)
-        );
+        if (!readOnlyView) {
+          localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+          localStorage.setItem(
+            REQUIREMENT_SPEC_STORAGE_NAME,
+            JSON.stringify(combinedArray)
+          );
+        }
 
         return;
       }
@@ -266,13 +271,15 @@ const RequirementSpecificationSelectBBs = ({
       ...selectedItems.filter(({ bbName }) => bbName !== item.label),
     ]);
     setOptions([...options, item]);
-    localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
-    localStorage.setItem(
-      REQUIREMENT_SPEC_STORAGE_NAME,
-      JSON.stringify([
-        ...selectedItems.filter(({ bbName }) => bbName !== item.label),
-      ])
-    );
+    if (!readOnlyView) {
+      localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
+      localStorage.setItem(
+        REQUIREMENT_SPEC_STORAGE_NAME,
+        JSON.stringify([
+          ...selectedItems.filter(({ bbName }) => bbName !== item.label),
+        ])
+      );
+    }
   };
 
   const handleClearAllSelectedItems = () => {

@@ -38,7 +38,7 @@ const SoftwareComplianceDetailsPage = () => {
   const { format } = useTranslations();
   const router = useRouter();
   const { softwareName } = router.query;
-console.log('softwareDetai', softwareDetail, softwareDetailsDataToApprove)
+
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken');
     if (token) {
@@ -169,7 +169,7 @@ console.log('softwareDetai', softwareDetail, softwareDetailsDataToApprove)
               key={`software-compliance-with-${indexKey}`}
               viewReportDetails={true}
             >
-              {isLoggedIn ? (
+              {isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1 ? (
                 <ComplianceDetailTable
                   data={softwareDetailsDataToApprove}
                   isTableValid={true}
@@ -187,29 +187,31 @@ console.log('softwareDetai', softwareDetail, softwareDetailsDataToApprove)
           ))
           : null}
       </div>
-      <div className="bottom-bar-container">
-        <div className="bottom-bar">
-          <Button
-            type="button"
-            text={format('app.save.label')}
-            styles="secondary-button"
-            onClick={() => handleFormAction('update')}
-            showCheckIcon={isFormSaved}
-          />
-          <Button
-            type="button"
-            text={format('form.reject.label')}
-            styles="primary-red-button"
-            onClick={() => handleFormAction('reject')}
-          />
-          <Button
-            type="button"
-            text={format('form.accept.label')}
-            styles="primary-button"
-            onClick={() => handleFormAction('accept')}
-          />
+      {(isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1) &&
+        <div className="bottom-bar-container">
+          <div className="bottom-bar">
+            <Button
+              type="button"
+              text={format('app.save.label')}
+              styles="secondary-button"
+              onClick={() => handleFormAction('update')}
+              showCheckIcon={isFormSaved}
+            />
+            <Button
+              type="button"
+              text={format('form.reject.label')}
+              styles="primary-red-button"
+              onClick={() => handleFormAction('reject')}
+            />
+            <Button
+              type="button"
+              text={format('form.accept.label')}
+              styles="primary-button"
+              onClick={() => handleFormAction('accept')}
+            />
+          </div>
         </div>
-      </div>
+      }
     </div>
   );
 };

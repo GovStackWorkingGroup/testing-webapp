@@ -28,7 +28,7 @@ const SoftwareAttributes = ({
 
   const handleCheckUrlExistence = async (url: string | undefined) => {
     if (url) {
-      const exists = await checkIfImageUrlExists(url);
+      const exists = await checkIfImageUrlExists(`${baseUrl}/${url}`);
       setSoftwareLogoExist(exists);
     }
   };

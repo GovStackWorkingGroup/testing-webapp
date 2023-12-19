@@ -72,11 +72,14 @@ const SelectBBs = ({
       );
       setSelectedItems(updatedSelectedItemsData);
 
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(updatedSelectedItemsData)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(updatedSelectedItemsData)
+        );
+      }
+
       setUpdatedBBs(updatedSelectedItemsData);
     }
   }, [updatedData, readOnlyView]);
@@ -88,7 +91,7 @@ const SelectBBs = ({
   }, [options]);
 
   const handleAlreadySavedData = () => {
-    if (savedInLocalStorage?.length) {
+    if (savedInLocalStorage?.length && !readOnlyView) {
       const BBWithAddedInterface = savedInLocalStorage.map((itemBB) => {
         if (itemBB.requirements.interface.length) {
           return itemBB;
@@ -176,12 +179,13 @@ const SelectBBs = ({
       if (combinedArray && combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
 
-        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-
-        localStorage.setItem(
-          INTERFACE_COMPLIANCE_STORAGE_NAME,
-          JSON.stringify(combinedArray)
-        );
+        if (!readOnlyView) {
+          localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+          localStorage.setItem(
+            INTERFACE_COMPLIANCE_STORAGE_NAME,
+            JSON.stringify(combinedArray)
+          );
+        }
 
         return;
       }
@@ -237,13 +241,15 @@ const SelectBBs = ({
       ...selectedItems.filter(({ bbName }) => bbName !== item.label),
     ]);
     setOptions([...options, item]);
-    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-    localStorage.setItem(
-      INTERFACE_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify([
-        ...selectedItems.filter(({ bbName }) => bbName !== item.label),
-      ])
-    );
+    if (!readOnlyView) {
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify([
+          ...selectedItems.filter(({ bbName }) => bbName !== item.label),
+        ])
+      );
+    }
   };
 
   const handleTestHarnessLink = (
@@ -263,11 +269,13 @@ const SelectBBs = ({
         value;
 
       setUpdatedData({ ...newSelectedItems[foundIndex] });
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(newSelectedItems)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(newSelectedItems)
+        );
+      }
 
       return;
     }
@@ -277,11 +285,13 @@ const SelectBBs = ({
         value;
 
       setUpdatedData({ ...newSelectedItems[foundIndex] });
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(newSelectedItems)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(newSelectedItems)
+        );
+      }
 
       return;
     }
