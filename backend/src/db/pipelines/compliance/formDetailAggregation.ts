@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { validate as isUuid } from 'uuid';
 
 export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
   formId?: string,
@@ -37,12 +36,15 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
                   requirementSpecificationCompliance: {
                     crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
                     functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
-                  },
-                  deploymentCompliance: "$$bbDetail.v.deploymentCompliance"
+                  }
                 }
               ]
             }
           }
+        },
+        deploymentCompliance: {
+          documentation: "$deploymentCompliance.documentation",
+          deploymentInstructions: "$deploymentCompliance.deploymentInstructions"
         }
       }
     },
@@ -52,7 +54,8 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
         formDetails: {
           $push: {
             version: "$version",
-            bbDetails: "$bbDetails"
+            bbDetails: "$bbDetails",
+            deploymentCompliance: "$deploymentCompliance"
           }
         }
       }

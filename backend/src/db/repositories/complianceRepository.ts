@@ -165,6 +165,26 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     return { success: errors.length === 0, errors, originalData };
   },
 
+  async updateFormStatus(formId: string, newStatus: StatusEnum): Promise<{ success: boolean; errors: string[] }> {
+    const errors: string[] = [];
+
+    const form = await Compliance.findById(formId);
+
+    if (!form) {
+      errors.push('Form not found');
+    } else {
+      if (form.status !== StatusEnum.IN_REVIEW) {
+        errors.push('Form is not in IN_REVIEW status and cannot be updated');
+      } else {
+        await Compliance.updateOne({ _id: form._id }, {
+          $set: { status: newStatus }
+        });
+      }
+    }
+
+    return { success: errors.length === 0, errors };
+  },
+
   async rollbackFormStatus(originalData: draftDataForRollback): Promise<{ success: boolean, errors: string[] }> {
     const errors: string[] = [];
     const _id = originalData.id;

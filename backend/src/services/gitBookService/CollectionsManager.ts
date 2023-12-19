@@ -72,25 +72,22 @@ class GitBookCollectionManager {
 
     // Checks if the title is in semantic versioning format (Major.Minor.Patch).
     isVersion(title: string) {
-        return /^(\d+\.)?(\d+\.)?(\*|\d+)$/.test(title);
+        return /^\d{2}Q[1-4]$/.test(title);
     };
 
     versionToArray(versionTitle: string) {
-        return versionTitle.split('.').map(Number);
+        const matches = versionTitle.match(/^(\d{2})Q([1-4])$/);
+        return matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10)] : [0, 0];
     };
 
     compareVersions(version1: string, version2: string) {
-        const version_parts1 = this.versionToArray(version1);
-        const version_parts2 = this.versionToArray(version2);
-
-        for (let versionIndex = 0; versionIndex < Math.max(version_parts1.length, version_parts2.length); versionIndex++) {
-            const versionComponent1 = version_parts1[versionIndex] || 0;
-            const versionComponent2 = version_parts2[versionIndex] || 0;
-
-            if (versionComponent1 > versionComponent2) return 1;
-            if (versionComponent1 < versionComponent2) return -1;
-        }
-
+        const [year1, quarter1] = this.versionToArray(version1);
+        const [year2, quarter2] = this.versionToArray(version2);
+    
+        if (year1 > year2) return 1;
+        if (year1 < year2) return -1;
+        if (quarter1 > quarter2) return 1;
+        if (quarter1 < quarter2) return -1;
         return 0;
     };
 
