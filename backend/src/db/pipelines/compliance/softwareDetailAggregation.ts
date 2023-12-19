@@ -10,7 +10,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       logo: 1,
       website: 1,
       documentation: 1,
-      pointOfContact: 1
+      pointOfContact: 1,
+      status: 1
     }
   },
   {
@@ -23,11 +24,11 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           input: { $objectToArray: "$compliance.bbDetails" },
           as: "detail",
           in: {
-            "bbName": "$detail.k",
-            "bbVersion": "$detail.v.bbVersion",
-            "requirements": "$detail.v.requirementSpecificationCompliance",
-            "interface": "$detail.v.interfaceCompliance",
-            "deploymentCompliance": "$detail.v.deploymentCompliance" 
+            "bbName": "$$detail.k",
+            "bbVersion": "$$detail.v.bbVersion",
+            "requirements": "$$detail.v.requirementSpecificationCompliance",
+            "interface": "$$detail.v.interfaceCompliance",
+            "deploymentCompliance": "$$detail.v.deploymentCompliance" 
           }
         }
       }
@@ -55,7 +56,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
-      pointOfContact: { $first: "$pointOfContact" }
+      pointOfContact: { $first: "$pointOfContact" },
+      status: { $first: "$status" }
     }
   },
   {
@@ -74,7 +76,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
-      pointOfContact: { $first: "$pointOfContact" }
+      pointOfContact: { $first: "$pointOfContact" },
+      status: { $first: "$status" }
     }
   },
   {
@@ -85,7 +88,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       logo: 1,
       website: 1,
       documentation: 1,
-      pointOfContact: 1
+      pointOfContact: 1,
+      status: 1
     }
   },
   {
@@ -104,7 +108,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
-      pointOfContact: { $first: "$pointOfContact" }
+      pointOfContact: { $first: "$pointOfContact" },
+      status: { $first: "$status" }
     }
   },
   {
@@ -116,7 +121,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       documentation: 1,
       pointOfContact: 1,
       compliance: 1,
-      deploymentCompliance: 1
+      deploymentCompliance: 1,
+      status: 1
     }
   }
 ];
