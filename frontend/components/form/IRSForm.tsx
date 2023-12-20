@@ -47,24 +47,38 @@ const IRSForm = ({
       return;
     }
 
-    if (allData?.length && updatedInterfaceData) {
+    if (!allData?.length && updatedRequirementSpecData) {
+      setAllData(updatedRequirementSpecData);
+
+      return;
+    }
+
+    if (
+      allData?.length &&
+      (updatedInterfaceData || updatedRequirementSpecData)
+    ) {
       const updatedData = allData.map((item) => {
-        const matchingItem = updatedInterfaceData.find(
-          (nextItem) => nextItem.bbKey === item.bbKey
-        );
         const matchingUpdatedRequirementSpecData =
           updatedRequirementSpecData?.find(
             (nextItem) => nextItem.bbKey === item.bbKey
           );
+        const matchingUpdatedInterfaceData = updatedInterfaceData?.find(
+          (nextItem) => nextItem.bbKey === item.bbKey
+        );
 
-        if (matchingItem) {
+        if (
+          matchingUpdatedInterfaceData ||
+          matchingUpdatedRequirementSpecData
+        ) {
           return {
             ...item,
             interfaceCompliance: {
               ...item.interfaceCompliance,
               testHarnessResult:
-                matchingItem.interfaceCompliance?.testHarnessResult || '',
-              requirements: matchingItem.requirements.interface,
+                matchingUpdatedInterfaceData?.interfaceCompliance
+                  ?.testHarnessResult || '',
+              requirements:
+                matchingUpdatedInterfaceData?.requirements.interface,
             },
             requirements: matchingUpdatedRequirementSpecData?.requirements || {
               crossCutting: [],
@@ -73,60 +87,29 @@ const IRSForm = ({
             },
           };
         }
-
-        const anotherItem = updatedInterfaceData.find(
-          (nextItem) => nextItem.bbKey !== item.bbKey
-        );
-        if (anotherItem) {
-          return {
-            ...item,
-            interfaceCompliance: {
-              ...item.interfaceCompliance,
-              testHarnessResult: '',
-              requirements: [],
-            },
-          };
-        }
-      });
-      setAllData(updatedData as ComplianceRequirementsType[]);
-    }
-  }, [updatedInterfaceData, updatedRequirementSpecData]);
-
-  useEffect(() => {
-    if (!allData?.length && updatedRequirementSpecData) {
-      setAllData(updatedRequirementSpecData);
-
-      return;
-    }
-
-    if (allData?.length && updatedRequirementSpecData) {
-      const updatedData = allData.map((item) => {
-        const matchingItem = updatedRequirementSpecData.find(
-          (newItem) => newItem.bbKey === item.bbKey
-        );
-        if (matchingItem) {
-          return {
-            ...item,
-            requirements: {
-              ...item.requirements,
-              crossCutting: matchingItem.requirements.crossCutting,
-              functional: matchingItem.requirements.functional,
-            },
-          };
-        }
-
-        return item;
       });
 
-      const nonMatchingItems = updatedRequirementSpecData.filter(
+      const nonMatchingInterfaceItems = updatedInterfaceData?.filter(
+        (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
+      );
+      const nonMatchingRequirementItems = updatedRequirementSpecData?.filter(
         (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
       );
 
-      const newData = [...updatedData, ...nonMatchingItems];
+      let newData = [...updatedData];
+      if (nonMatchingInterfaceItems) {
+        newData = [...updatedData, ...nonMatchingInterfaceItems];
+      }
 
-      setAllData(newData);
+      if (nonMatchingRequirementItems) {
+        newData = [...updatedData, ...nonMatchingRequirementItems];
+      }
+
+      setAllData(
+        newData.filter((item) => Boolean(item)) as ComplianceRequirementsType[]
+      );
     }
-  }, [updatedRequirementSpecData]);
+  }, [updatedInterfaceData, updatedRequirementSpecData]);
 
   useEffect(() => {
     setUpdatedBBs(allData);
@@ -134,48 +117,52 @@ const IRSForm = ({
 
   const isValidArray = (data: ComplianceRequirementsType[]): boolean => {
     return data.every((item) => {
-      // Check crossCutting and functional arrays
-      const isCrossCuttingValid = item.requirements.crossCutting.every(
-        (crossCuttingItem) => {
-          if (crossCuttingItem.status === 0) {
-            return crossCuttingItem.fulfillment !== -1;
-          } else {
-            return true;
-          }
-        }
-      );
-
-      const isFunctionalValid = item.requirements.functional.every(
-        (functionalItem) => {
-          if (functionalItem.status === 0) {
-            return functionalItem.fulfillment !== -1;
-          } else {
-            return true;
-          }
-        }
-      );
-
-      // Check interfaceCompliance.requirements array
-      let isInterfaceValid;
-      if (item.interfaceCompliance) {
-        isInterfaceValid =
-          item.interfaceCompliance.requirements.length === 0 ||
-          item.interfaceCompliance.requirements.every((interfaceItem) => {
-            if (interfaceItem.status === 0) {
-              return (
-                interfaceItem.fulfillment !== -1 &&
-                item.interfaceCompliance.testHarnessResult !== undefined &&
-                item.interfaceCompliance.testHarnessResult !== ''
-              );
+      if (item.requirements) {
+        // Check crossCutting and functional arrays
+        const isCrossCuttingValid = item?.requirements.crossCutting.every(
+          (crossCuttingItem) => {
+            if (crossCuttingItem.status === 0) {
+              return crossCuttingItem.fulfillment !== -1;
             } else {
               return true;
             }
-          });
+          }
+        );
+
+        const isFunctionalValid = item?.requirements.functional.every(
+          (functionalItem) => {
+            if (functionalItem.status === 0) {
+              return functionalItem.fulfillment !== -1;
+            } else {
+              return true;
+            }
+          }
+        );
+
+        // Check interfaceCompliance.requirements array
+        let isInterfaceValid;
+        if (item.interfaceCompliance && item.interfaceCompliance.requirements) {
+          isInterfaceValid =
+            item.interfaceCompliance.requirements.length === 0 ||
+            item.interfaceCompliance.requirements.every((interfaceItem) => {
+              if (interfaceItem.status === 0) {
+                return (
+                  interfaceItem.fulfillment !== -1 &&
+                  item.interfaceCompliance.testHarnessResult !== undefined &&
+                  item.interfaceCompliance.testHarnessResult !== ''
+                );
+              } else {
+                return true;
+              }
+            });
+        } else {
+          return true;
+        }
+
+        return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
       } else {
         return true;
       }
-
-      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
     });
   };
 

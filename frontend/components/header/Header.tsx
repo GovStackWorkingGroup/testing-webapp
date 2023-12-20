@@ -1,18 +1,40 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../public/images/logo.png';
-// should be added in the scope of TECH-957
-// import { RiQuestionLine } from 'react-icons/ri';
-import { COMPLIANCE_TESTING_LOGIN, COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
+import { RiQuestionLine } from 'react-icons/ri';
+import { BiLogIn, BiLogOut } from 'react-icons/bi';
+import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
 
 const Header = () => {
   const router = useRouter();
   const { format } = useTranslations();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    setIsLoggedIn(!!token);
+  });
 
   const handleBackToHomePage = () => {
     router.push('/');
+  };
+
+  const handleLogin = () => {
+    const apiUrl = process.env.API_URL;
+    window.location.href = `${apiUrl}/auth/github`;
+  };
+
+  const handleLogout = () => {
+    sessionStorage.clear();
+    setIsLoggedIn(false);
+    router.push('/');
+  };
+
+  const handleHelpClick = () => {
+    const slackChannelUrl = process.env.SLACK_CHANNEL_URL;
+    window.open(slackChannelUrl, '_blank');
   };
 
   const currentPath = router.pathname;
@@ -39,19 +61,26 @@ const Header = () => {
             active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
           />
         </div>
-        <div className="header-login">
-          <HeaderMenuButton
-            buttonTitle={format('app.login.label')}
-            href={COMPLIANCE_TESTING_LOGIN}
-            active={currentPath?.includes(COMPLIANCE_TESTING_LOGIN)}
-          />
-        </div>
-        <div className="header-help">
-          {/* should be added in the scope of TECH-957 */}
-          {/* <div className="header-help-section">
-            <RiQuestionLine />
-            <p>{format('app.help.label')}</p>
-          </div> */}
+        <div className="action-buttons">
+          <div className="header-login">
+            {isLoggedIn ? (
+              <button onClick={handleLogout} className="header-menu-button">
+                <BiLogOut className="header-icon" />
+                {format('app.logout.label')}
+              </button>
+            ) : (
+              <button onClick={handleLogin} className="header-menu-button">
+                <BiLogIn className="header-icon" />
+                {format('app.login.label')}
+              </button>
+            )}
+          </div>
+          <div className="header-help">
+            <button onClick={handleHelpClick} className="header-menu-button">
+              <RiQuestionLine className="header-icon" />
+              {format('app.help.label')}
+            </button>
+          </div>
         </div>
       </div>
     </div>

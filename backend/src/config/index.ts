@@ -14,7 +14,9 @@ interface AppConfig {
     removeExpiredDraftsSchedule: string;
   };
   enableJiraIntegration: boolean,
+  emailsEnabled: boolean
   draftExpirationTime: number,
+  frontendHost: string | undefined,
   jira: {
     apiEndpoint: string;
     domain: string;
@@ -35,7 +37,19 @@ interface AppConfig {
   gitHub: {
     clientId: string;
     clientSecret: string;
-    callbackUrl: string
+    callbackUrl: string;
+    devLoginMode: boolean;
+    jwtSecret: string;
+    tokenExpirationTime: number;
+  };
+  smtpConfig: {
+    host: string,
+    port: number,
+    secure: boolean,
+    auth: {
+        user: string,
+        pass: string
+    }
   };
 }
 
@@ -44,6 +58,7 @@ const appConfig: AppConfig = {
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
   draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+  frontendHost: process.env.FE_HOST,
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
     syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
@@ -57,7 +72,10 @@ const appConfig: AppConfig = {
   gitHub: {
     clientId: process.env.GITHUB_CLIENT_ID!,
     clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    callbackUrl: process.env.GITHUB_CALLBACK_URL!
+    callbackUrl: process.env.GITHUB_CALLBACK_URL!,
+    devLoginMode: process.env.GITHUB_DEV_LOGIN_MODE ? process.env.GITHUB_DEV_LOGIN_MODE === 'true' : false,
+    jwtSecret: process.env.GITHUB_JWT_SECRET!,
+    tokenExpirationTime: 8 * 60 * 60, // 8 hours in seconds
   },
   // Time is specified in milliseconds.
   jira: {
@@ -72,6 +90,16 @@ const appConfig: AppConfig = {
     titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
     descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
   },
+  emailsEnabled: process.env.SEND_FORM_CONFIRMATION_EMAILS ? process.env.SEND_FORM_CONFIRMATION_EMAILS === 'true' : false,
+  smtpConfig: {
+    host: process.env.SMTP_HOST || '',
+    port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,
+    secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : false,
+    auth: {
+        user: process.env.SMTP_USER || '',
+        pass: process.env.SMTP_PASSWORD || ''
+    }
+  }
 };
 
 const limiter = rateLimit({

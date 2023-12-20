@@ -70,3 +70,5 @@ This enables the Jira integration feature. Set it to false to disable the automa
 The use of feature flags allows specific functionalities to be enabled or disabled, facilitating testing and feature-specific development:
 
 - Jira Ticket Creation: Controlled by ENABLE_JIRA_INTEGRATION. When set to true, the application will create Jira tickets upon form submission. Set to false to prevent the generation of test data in your Jira project.
+
+- Email Notification: Controlled by SEND_FORM_CONFIRMATION_EMAILS. When set to true, the application will send emails for draft submition and draft notifications. Set to false will turn this feature off.

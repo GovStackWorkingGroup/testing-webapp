@@ -81,33 +81,57 @@ class GitBookPageContentManager {
         const requirements: Requirement[] = [];
 
         nodes.forEach(node => {
-
-            // Check if the node is a list
-            if (node.type == 'list-unordered' || node.type == 'list-ordered') {
+            if (node.type == 'heading-2') {
+                const headingText = node.nodes.map(textNode => {
+                    return textNode.leaves.map(leaf => leaf.text).join('');
+                }).join('');
+                this.processTextForRequirement(headingText, requirements);
+            }
+            else if (node.type == 'list-unordered' || node.type == 'list-ordered') {
                 node.nodes.forEach(item => {
-                    // Traverse the nested nodes to get the text content
-                    let itemText = '';
-                    if (item.nodes && item.nodes.length > 0) {
-                        item.nodes.forEach(innerNode => {
-                            if (innerNode.nodes && innerNode.nodes.length > 0) {
-                                innerNode.nodes.forEach(textNode => {
-                                    if (textNode.object === 'text') {
-                                        itemText += textNode.leaves.map(leaf => leaf.text).join('');
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    let status = this.extractStatus(itemText);
-                    if (status !== undefined) {
-                        itemText = itemText.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                        requirements.push({ status, requirement: itemText });
-                    }
+                    let itemText = this.extractTextFromNode(item);
+                    this.processTextForRequirement(itemText, requirements);
                 });
             }
         });
 
         return { requirements };
+    }
+
+    extractTextFromNode(node) {
+        let textContent = '';
+        let foundStatus = false;
+        if (node.nodes && node.nodes.length > 0) {
+            node.nodes.forEach(innerNode => {
+                if (innerNode.nodes && innerNode.nodes.length > 0) {
+                    innerNode.nodes.forEach(textNode => {
+                        if (textNode.object === 'text' && !foundStatus) {
+                            textNode.leaves.forEach(leaf => {
+                                const statusMatch = leaf.text.match(/(\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\))/);
+                                if (statusMatch) {
+                                    const statusIndex = leaf.text.indexOf(statusMatch[0]);
+                                    textContent += leaf.text.slice(0, statusIndex + statusMatch[0].length);
+                                    foundStatus = true; // Stop processing further text after finding the status
+                                } else if (!foundStatus) {
+                                    textContent += leaf.text;
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        return textContent;
+    }
+
+    processTextForRequirement(text, requirements) {
+        // Remove leading numeric sequences like "number.number.number"
+        text = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
+        let status = this.extractStatus(text);
+        if (status !== undefined) {
+            text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+            requirements.push({ status, requirement: text });
+        }
     }
 
     private extractStatus(textContent) {
@@ -126,12 +150,12 @@ class GitBookPageContentManager {
         if (!documentObject.pages || !Array.isArray(documentObject.pages)) {
             throw new Error("Invalid or missing 'pages' property in documentObject");
         }
-    
+
         // Filter the pages based on the regex applied to their titles
         const filteredPageIds: string[] = documentObject.pages
             .filter(page => titleRegex.test(page.title))
             .map(page => page.id); // Extract the page IDs
-    
+
         return filteredPageIds;
     }
 }

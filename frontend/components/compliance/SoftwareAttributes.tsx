@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import useTranslations from '../../hooks/useTranslation';
 import { baseUrl, checkIfImageUrlExists } from '../../service/serviceAPI';
+import { SoftwareDetailsType } from '../../service/types';
 
 export type SoftwareAttributesType = [
   {
@@ -14,7 +15,7 @@ export type SoftwareAttributesType = [
 ];
 
 type SoftwareAttributesProps = {
-  softwareDetails: SoftwareAttributesType;
+  softwareDetails: SoftwareAttributesType | SoftwareDetailsType;
   showContactDetails?: boolean;
 };
 
@@ -25,19 +26,19 @@ const SoftwareAttributes = ({
   const [softwareLogoExist, setSoftwareLogoExist] = useState(false);
   const { format } = useTranslations();
 
-  const softwareDetailsParams = softwareDetails[0];
+  const softwareDetailsParams = softwareDetails[0] ?? [];
   const dividedLogoUrl =
     softwareDetailsParams.logo && softwareDetailsParams.logo.split('/');
 
   const softwareLogo = {
     header: format('table.logo.label'),
-    value: softwareDetailsParams.logo,
-    title: dividedLogoUrl[dividedLogoUrl.length - 1],
+    value: softwareDetailsParams.logo || '',
+    title: dividedLogoUrl ? dividedLogoUrl[dividedLogoUrl.length - 1] : '',
   };
 
-  const handleCheckUrlExistence = async (url: string) => {
+  const handleCheckUrlExistence = async (url: string | undefined) => {
     if (url) {
-      const exists = await checkIfImageUrlExists(url);
+      const exists = await checkIfImageUrlExists(`${baseUrl}/${url}`);
       setSoftwareLogoExist(exists);
     }
   };

@@ -42,7 +42,7 @@ const SoftwareComplianceWith = ({
               return b.bbVersion.localeCompare(a.bbVersion);
             })
             .map((bbVersion) => ({
-              value: bbVersion.bbVersion,
+              value: bbVersion.bbVersion ?? '',
             })),
         },
         {
@@ -62,9 +62,9 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
-                { value: bbVersion.deploymentCompliance },
-                { value: bbVersion.interface.level },
-                { value: bbVersion.requirements.level },
+                { value: bbVersion.deploymentCompliance.level ?? '' },
+                { value: bbVersion.interface.level ?? '' },
+                { value: bbVersion.requirements.level ?? '' },
               ],
             })),
         },
@@ -76,9 +76,9 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
-                { value: '' },
-                { value: bbVersion.interface.note ?? '' },
-                { value: bbVersion.requirements.note ?? '' },
+                { value: bbVersion.deploymentCompliance.notes ?? '' },
+                { value: bbVersion.interface.notes ?? '' },
+                { value: bbVersion.requirements.notes ?? '' },
               ],
             })),
         },
@@ -94,13 +94,15 @@ const SoftwareComplianceWith = ({
 
   return (
     <>
-      <Table
-        data={softwareComplianceParams}
-        headers={headers}
-        handleOpenEvaluationSchemaModal={(value) =>
-          setDisplayEvaluationSchemaModal(value)
-        }
-      />
+      <div className="software-compliance-with-table-container">
+        <Table
+          data={softwareComplianceParams}
+          headers={headers}
+          handleOpenEvaluationSchemaModal={(value) =>
+            setDisplayEvaluationSchemaModal(value)
+          }
+        />
+      </div>
       {displayEvaluationSchemaModal && (
         <InfoModal
           onClose={() => setDisplayEvaluationSchemaModal(false)}

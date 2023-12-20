@@ -49,7 +49,7 @@ export type SingleComplianceItem = {
   _id: string;
   bb: string;
   bbVersion: string;
-  deploymentCompliance: number;
+  deploymentCompliance: { level: number; notes: string };
   interfaceCompliance: number;
   requirementSpecificationCompliance: number;
   softwareName: string;
@@ -66,14 +66,14 @@ export type ComplianceList = {
 // Software compliance details
 export type ComplianceDetails = {
   level: number;
-  note?: string;
+  notes?: string;
 };
 
 export type ComplianceItem = {
   requirements: ComplianceDetails;
   interface: ComplianceDetails;
   bbVersion: string;
-  deploymentCompliance: { requirement: string; level: number }[];
+  deploymentCompliance: { level: number; notes: string };
 };
 
 export type Compliance = {
@@ -81,36 +81,31 @@ export type Compliance = {
   bbVersions: ComplianceItem[];
 };
 
-export type SoftwareDetailsType = [
-  {
-    logo: string;
-    website: string;
-    documentation: string;
-    pointOfContact: string;
-    compliance: [
-      {
-        softwareVersion: string;
-        bbDetails: Compliance[];
-      }
-    ];
-    softwareName: string;
-  }
-];
+export type SoftwareDetailsType = {
+  _id: string;
+  logo: string;
+  website: string;
+  documentation: string;
+  pointOfContact: string;
+  compliance: [
+    {
+      softwareVersion: string;
+      bbDetails: Compliance[];
+    }
+  ];
+  softwareName: string;
+  status: number;
+}[];
 
 export type BBDetailsType = {
   [key: string]: {
     requirementSpecificationCompliance: {
-      crossCuttingRequirements: {
-        requirement: string;
-        comment: string;
-        fulfillment: number | null;
-        _id: string;
-      }[];
-      functionalRequirements: [];
+      crossCuttingRequirements: RequirementsType[];
+      functionalRequirements: RequirementsType[];
     };
     interfaceCompliance: {
       testHarnessResult: string;
-      requirements: [];
+      requirements: RequirementsType[];
     };
     deploymentCompliance: number;
   };
@@ -123,6 +118,7 @@ export type SoftwareDraftDetailsType = {
   email: string;
   expirationDate: string;
   formDetails: {
+    version: string;
     bbDetails: BBDetailsType;
   }[];
   logo: string;
@@ -130,6 +126,7 @@ export type SoftwareDraftDetailsType = {
   status: number;
   uniqueId: string;
   website: string;
+  version: string;
 };
 
 export type Requirement = {
@@ -182,9 +179,9 @@ export type ComplianceRequirementsType = {
   bbVersion: string;
   dateOfSave: string;
   requirements: {
-    crossCutting: RequirementsType[];
-    functional: RequirementsType[];
-    interface: RequirementsType[];
+    crossCutting: RequirementsType[] | never[];
+    functional: RequirementsType[] | never[];
+    interface: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -196,8 +193,18 @@ export type RequirementsType = {
   requirement: string;
   comment: string;
   fulfillment: number;
-  _id: string;
+  _id?: string;
   status: number;
+};
+
+export type SoftwareDetailsDataType = {
+  formDetails: {
+    bbDetails: BBDetailsType;
+    deploymentCompliance: {
+      documentation: string;
+      deploymentInstructions: string;
+    };
+  }[];
 };
 
 // All types used in Table.tsx and the data connected to it
@@ -257,9 +264,26 @@ export type SubmitDraftResponseType = {
   link: string;
 };
 
+type FormBBDetails = {
+  interface: { level: number; note: string };
+  deployment: { level: number; note: string };
+  requirement: { level: number; note: string };
+};
+
+export type FormUpdatedObject = {
+  bbDetails: Record<string, FormBBDetails>;
+};
+
+export type SubmittingFormResponseType = {
+  success: boolean;
+  errors?: [string];
+  message?: string;
+};
+
 // Types used in IRSC/IRSC...Table.tsx and the data connected to it
 export type IRSCTableType = {
   selectedData: ComplianceRequirementsType;
   setUpdatedData: (data: ComplianceRequirementsType) => void;
   isTableValid: boolean;
+  readOnlyView?: boolean;
 };

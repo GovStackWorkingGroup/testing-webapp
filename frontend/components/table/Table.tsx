@@ -440,6 +440,7 @@ const Table = ({
                                             }
                                           )}
                                           key={`divided-row-${cell}-${indexKey}`}
+                                          style={{ display: 'contents' }}
                                         >
                                           <table className="inside-table border-top">
                                             <tbody>
@@ -512,7 +513,7 @@ const Table = ({
                                                       <tr
                                                         key={`details-divided-cell-values-${item.value}-${indexKey}`}
                                                       >
-                                                        <td>{item.value}</td>
+                                                        <td><div className='cell-td'>{item.value}</div></td>
                                                       </tr>
                                                     );
                                                   }

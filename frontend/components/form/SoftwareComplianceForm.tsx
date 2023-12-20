@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -6,6 +6,7 @@ import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
   INTERFACE_COMPLIANCE_STORAGE_NAME,
+  REQUIREMENT_SPEC_STORAGE_NAME,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
   softwareComplianceFormSteps,
 } from '../../service/constants';
@@ -63,6 +64,7 @@ const SoftwareComplianceForm = ({
   const [isDraftSaved, setIsDraftSaved] = useState(false);
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [progressJiraLink, setProgressJiraLink] = useState('');
+  const [softwareVersion, setSoftwareVersion] = useState('');
 
   const softwareAttributedRef = useRef<SoftwareAttributedRef>(null);
   const deploymentComplianceRef = useRef<DeploymentComplianceRef>(null);
@@ -73,6 +75,10 @@ const SoftwareComplianceForm = ({
   const { format } = useTranslations();
   const router = useRouter();
   const { draftUUID } = router.query;
+
+  useEffect(() => {
+    setIsDraftSaved(false);
+  }, [deploymentComplianceFormValues, updatedBBs]);
 
   const handleStepChange = (currentStep: number) => {
     setCurrentProgressBarStep(currentStep);
@@ -111,26 +117,20 @@ const SoftwareComplianceForm = ({
 
   const handleSaveDraftButton = () => {
     if (currentProgressBarStep === 2) {
-      if (deploymentComplianceRef.current?.validate()) {
-        handleUpdateDraft(false);
-      }
+      handleUpdateDraft(false);
 
       return;
     }
 
     if (currentProgressBarStep === 3) {
-      if (
-        IRSCInterfaceFormRef.current?.validate() &&
-        IRSCRequirementsFormRef.current?.validate()
-      ) {
-        handleUpdateDraft(false);
-      }
+      handleUpdateDraft(false);
 
       return;
     }
   };
 
   const handleSaveDraft = async (softwareData: FormValuesType) => {
+    setSoftwareVersion(softwareData.softwareVersion.value);
     if (draftUUID) {
       await updateDraftDetailsStepOne(draftUUID as string, softwareData).then(
         (response) => {
@@ -202,6 +202,8 @@ const SoftwareComplianceForm = ({
             localStorage.removeItem(DEPLOYMENT_COMPLIANCE_STORAGE_NAME);
             if (redirectToNextPage) {
               nextStepRef.current?.goNext();
+            } else {
+              setIsDraftSaved(true);
             }
           }
 
@@ -217,15 +219,19 @@ const SoftwareComplianceForm = ({
     if (currentProgressBarStep === 3) {
       await updateDraftDetailsStepThree(
         draftUUID as string,
-        updatedBBs as ComplianceRequirementsType[]
+        updatedBBs as ComplianceRequirementsType[],
+        softwareVersion
       ).then((response) => {
         if (response.status) {
           toast.success(format('form.form_saved_success.message'), {
             icon: <RiCheckboxCircleFill className="success-toast-icon" />,
           });
           localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+          localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
           if (redirectToNextPage) {
             nextStepRef.current?.goNext();
+          } else {
+            setIsDraftSaved(true);
           }
         }
 

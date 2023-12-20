@@ -7,13 +7,18 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
-import { ComplianceRequirementsType, IRSCTableType, RequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  IRSCTableType,
+  RequirementsType,
+} from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
 
 const IRSCCrossCuttingTableType = ({
   selectedData,
   setUpdatedData,
   isTableValid,
+  readOnlyView = false,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
@@ -105,7 +110,7 @@ const IRSCCrossCuttingTableType = ({
                 }}
                 onBlur={(event) => {
                   handleUpdateField(
-                    row.original._id,
+                    row.original._id as string,
                     'comment',
                     event.target.value
                   );
@@ -113,6 +118,7 @@ const IRSCCrossCuttingTableType = ({
                 }}
                 onClick={() => setActive(true)}
                 className="form-textarea"
+                disabled={readOnlyView}
               />
               {counter}
             </div>
@@ -128,34 +134,50 @@ const IRSCCrossCuttingTableType = ({
               {row.values.fulfillment === 0 ? (
                 <FaCircleXmark
                   fill="#CF0B0B"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleXmark
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 0)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleXmark
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id as string, 'fulfillment', 0)
+                    }
+                  />
+                )
               )}
               {row.values.fulfillment === 1 ? (
                 <FaCircleCheck
                   fill="#048112"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleCheck
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 1)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleCheck
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id as string, 'fulfillment', 1)
+                    }
+                  />
+                )
               )}
             </div>
           );
@@ -167,13 +189,11 @@ const IRSCCrossCuttingTableType = ({
 
   // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
-    useTable(
-      {
-        // @ts-ignore
-        columns,
-        data: data.requirements.crossCutting,
-      }
-    );
+    useTable({
+      // @ts-ignore
+      columns,
+      data: data.requirements.crossCutting,
+    });
 
   return data.requirements.crossCutting?.length ? (
     <div className="irsc-table-container">

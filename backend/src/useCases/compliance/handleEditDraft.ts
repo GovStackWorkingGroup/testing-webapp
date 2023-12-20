@@ -39,24 +39,21 @@ export default class EditDraftRequestHandler {
                 ...this.req.body
             };
 
-            updateData.logo = this.updateFilePath(files?.logo, updateData.logo);
-
-            if (updateData.deploymentCompliance) {
-                updateData.deploymentCompliance.documentation = this.updateFilePath(
-                    files['deploymentCompliance[documentation]'],
-                    updateData.deploymentCompliance.documentation
-                );
-                updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(
-                    files['deploymentCompliance[deploymentInstructions]'],
-                    updateData.deploymentCompliance.deploymentInstructions
-                );
+            if (!updateData.deploymentCompliance) {
+                updateData.deploymentCompliance = {};
             }
-
-            const updateResult = await this.repository.editDraftForm(draftId, updateData);
-
-            // if (!updateResult) {
-            //     return this.res.status(404).send({ success: false, error: "Form not found" });
-            // }
+    
+            // Extract and update documentation file path
+            if (files && files['deploymentCompliance[documentation]']) {
+                updateData.deploymentCompliance.documentation = this.updateFilePath(files['deploymentCompliance[documentation]'], updateData.deploymentCompliance.documentation);
+            }
+    
+            // Check if deploymentInstructions file is present and update path
+            if (files && files['deploymentCompliance[deploymentInstructions]']) {
+                updateData.deploymentCompliance.deploymentInstructions = this.updateFilePath(files['deploymentCompliance[deploymentInstructions]'], updateData.deploymentCompliance.deploymentInstructions);
+            }
+    
+            await this.repository.editDraftForm(draftId, updateData);
 
             const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form?draftUUID=${draftId}&formStep=1`);
             const response = {

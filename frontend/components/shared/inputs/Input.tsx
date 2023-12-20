@@ -12,6 +12,8 @@ type InputProps = {
   value?: string;
   className?: string;
   defaultValue?: string;
+  disabled?: boolean;
+  maxLength?: number;
 };
 
 const Input = ({
@@ -26,6 +28,8 @@ const Input = ({
   value,
   className,
   defaultValue,
+  disabled,
+  maxLength = 200,
   ...props
 }: InputProps) => {
   return (
@@ -42,10 +46,11 @@ const Input = ({
         {...props}
         name={name}
         className={classNames('custom-input', { error: isInvalid })}
-        maxLength={50}
+        maxLength={maxLength}
         onChange={onChange}
         value={value}
         defaultValue={defaultValue}
+        disabled={disabled}
       ></input>
       {isInvalid ? (
         <p className="custom-input-error-message">{errorMessage}</p>

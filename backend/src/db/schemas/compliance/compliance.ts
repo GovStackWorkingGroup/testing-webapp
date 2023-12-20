@@ -49,6 +49,10 @@ const interfaceComplianceSchema = new mongoose.Schema({
   requirements: {
     type: [RequirementSchema],
     default: [], // Set the default value as an empty array
+  },
+  notes: {
+    type: String,
+    default: ''
   }
 })
 
@@ -65,6 +69,10 @@ const requirementSpecificationComplianceSchema = new mongoose.Schema({
   functionalRequirements: {
     type: [RequirementSchema],
     default: [],
+  },
+  notes: {
+    type: String,
+    default: ''
   }
 })
 
@@ -96,9 +104,15 @@ const ComplianceDetailSchema = new mongoose.Schema({
     default: Date.now
   },
   deploymentCompliance: {
-    type: Number,
-    enum: Object.values(SpecificationComplianceLevel),
-    default: SpecificationComplianceLevel.LEVEL_1,
+    level: {
+      type: Number,
+      enum: Object.values(SpecificationComplianceLevel),
+      default: SpecificationComplianceLevel.LEVEL_1,
+    },
+    notes: {
+      type: String,
+      default: ''
+    }
   },
   interfaceCompliance: {
     default: {},
@@ -125,7 +139,7 @@ const ComplianceVersionSchema = new mongoose.Schema({
   bbDetails: {
     type: Map,
     of: ComplianceDetailSchema,
-    required: true
+    default: {}
   }
 }); // Allow partial updates
 
@@ -191,8 +205,6 @@ const ComplianceReportSchema = new mongoose.Schema({
   },
   uniqueId: {
     type: String,
-    unique: true,
-    sparse: true,
     validate: {
       validator: function (v) {
         return uuidValidate(v) && uuidVersion(v) === 4;

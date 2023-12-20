@@ -18,6 +18,7 @@ const IRSCInterfaceTable = ({
   selectedData,
   setUpdatedData,
   isTableValid,
+  readOnlyView = false,
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
@@ -109,7 +110,7 @@ const IRSCInterfaceTable = ({
                 }}
                 onBlur={(event) => {
                   handleUpdateField(
-                    row.original._id,
+                    row.original._id as string,
                     'comment',
                     event.target.value
                   );
@@ -117,6 +118,7 @@ const IRSCInterfaceTable = ({
                 }}
                 onClick={() => setActive(true)}
                 className="form-textarea"
+                disabled={readOnlyView}
               />
               {counter}
             </div>
@@ -132,34 +134,50 @@ const IRSCInterfaceTable = ({
               {row.values.fulfillment === 0 ? (
                 <FaCircleXmark
                   fill="#CF0B0B"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleXmark
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 0)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleXmark
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id as string, 'fulfillment', 0)
+                    }
+                  />
+                )
               )}
               {row.values.fulfillment === 1 ? (
                 <FaCircleCheck
                   fill="#048112"
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', null)
-                  }
+                  className={classNames('irsc-table-icon', {
+                    'irsc-table-icon-disabled': readOnlyView,
+                  })}
+                  onClick={() => {
+                    if (readOnlyView) {
+                      return;
+                    } else {
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                    }
+                  }}
                 />
               ) : (
-                <FaRegCircleCheck
-                  className="irsc-table-icon"
-                  onClick={() =>
-                    handleUpdateField(row.original._id, 'fulfillment', 1)
-                  }
-                />
+                !readOnlyView && (
+                  <FaRegCircleCheck
+                    className="irsc-table-icon"
+                    onClick={() =>
+                      handleUpdateField(row.original._id as string, 'fulfillment', 1)
+                    }
+                  />
+                )
               )}
             </div>
           );
@@ -171,13 +189,11 @@ const IRSCInterfaceTable = ({
 
   // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
-    useTable(
-      {
-        // @ts-ignore
-        columns,
-        data: data.requirements.interface,
-      }
-    );
+    useTable({
+      // @ts-ignore
+      columns,
+      data: data.requirements.interface,
+    });
 
   return data.requirements.interface?.length ? (
     <div className="irsc-table-container">
@@ -203,36 +219,95 @@ const IRSCInterfaceTable = ({
           })}
         </thead>
         <tbody {...getTableBodyProps()}>
-          <tr>
-            <td className="irsc-table-header-required" colSpan={3}>
-              {format('form.required_label')}
-            </td>
-          </tr>
+          {rows.some((item) => item.original.status === 0) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('form.required_label')}
+              </td>
+            </tr>
+          )}
+
           {rows.map((row: any, indexKey: number) => {
             prepareRow(row);
-
-            return (
-              <tr
-                {...row.getRowProps()}
-                key={`row-${indexKey}`}
-                className={`irsc-table-rows ${
-                  !isTableValid &&
-                  (row.values.fulfillment === undefined ||
-                    row.values.fulfillment === null ||
-                    row.values.fulfillment === -1)
-                    ? 'irsc-invalid-row'
-                    : ''
-                }`}
-              >
-                {row.cells.map((cell: any, indexKey: number) => {
-                  return (
-                    <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
+            if (row.original.status === 0) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className={`irsc-table-rows ${
+                    !isTableValid &&
+                    (row.values.fulfillment === undefined ||
+                      row.values.fulfillment === null ||
+                      row.values.fulfillment === -1)
+                      ? 'irsc-invalid-row'
+                      : ''
+                  }`}
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
+          })}
+          {rows.some((item) => item.original.status === 1) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('table.recommended_not_required.label')}
+              </td>
+            </tr>
+          )}
+          {rows.map((row: any, indexKey: number) => {
+            prepareRow(row);
+            if (row.original.status === 1) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className="irsc-table-rows"
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
+          })}
+          {}
+          {rows.some((item) => item.original.status === 2) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('table.optional_not_required.label')}
+              </td>
+            </tr>
+          )}
+          {rows.map((row: any, indexKey: number) => {
+            prepareRow(row);
+            if (row.original.status === 2) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className="irsc-table-rows"
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
           })}
         </tbody>
       </table>

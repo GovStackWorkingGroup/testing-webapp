@@ -1,4 +1,4 @@
-import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport, draftDataForRollback } from "myTypes";
+import { AllBBRequirements, BBRequirement, ComplianceDbRepository, ComplianceReport, StatusEnum, draftDataForRollback } from "myTypes";
 
 const complianceRepository = (repository: ComplianceDbRepository) => {
   const findAll = async () => {
@@ -59,6 +59,24 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const updateFormStatus = async (formId: string, status: StatusEnum, updatedData) => {
+    try {
+      return await repository.updateFormStatus(formId, status, updatedData);
+    } catch (error) {
+      console.error('There was an error while updating the review status of the form');
+      throw error;
+    }
+  };
+
+  const updateFormData = async (formId: string, updatedData) => {
+    try {
+      return await repository.updateFormData(formId, updatedData);
+    } catch (error) {
+      console.error('There was an error while updating the review status of the form');
+      throw error;
+    }
+  };
+
   const rollbackFormStatus = async (originalData: draftDataForRollback) => {
     try {
       return await repository.rollbackFormStatus(originalData);
@@ -112,6 +130,8 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     getDraftDetail,
     createOrSubmitForm,
     submitForm,
+    updateFormStatus,
+    updateFormData,
     rollbackFormStatus,
     getBBs,
     editDraftForm,

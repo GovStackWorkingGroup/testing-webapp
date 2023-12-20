@@ -164,6 +164,50 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     return { success: errors.length === 0, errors, originalData };
   },
 
+  async updateFormStatus(formId: string, newStatus: StatusEnum, updatedData): Promise<{ success: boolean; errors: string[] }> {
+    const errors: string[] = [];
+
+    const form = await Compliance.findById(formId);
+
+    if (!form) {
+      errors.push('Form not found');
+      return { success: false, errors };
+    }
+
+    if (form.status !== StatusEnum.IN_REVIEW) {
+      errors.push('Form is not in IN_REVIEW status and cannot be updated');
+      return { success: false, errors };
+    }
+
+    const statusUpdateResult = await Compliance.updateOne({ _id: form._id }, {
+      $set: { status: newStatus }
+    });
+
+    // Check if status update was successful
+    if (!statusUpdateResult || !statusUpdateResult.matchedCount) {
+      console.error('Failed to update form status');
+      errors.push('Failed to update form status');
+      return { success: false, errors };
+    }
+    if (updatedData) {
+      const formDataUpdateResult = await this.updateFormData(formId, updatedData);
+
+      // Check if there were errors in updating data
+      if (formDataUpdateResult.errors.length > 0) {
+        // Rollback status update
+        await Compliance.updateOne({ _id: form._id }, {
+          $set: { status: StatusEnum.IN_REVIEW }
+        });
+
+        console.error('Error updating data, status rolled back to IN_REVIEW');
+        errors.push(...formDataUpdateResult.errors);
+        return { success: false, errors };
+      }
+    }
+
+    return { success: true, errors };
+  },
+
   async rollbackFormStatus(originalData: draftDataForRollback): Promise<{ success: boolean, errors: string[] }> {
     const errors: string[] = [];
     const _id = originalData.id;
@@ -177,6 +221,57 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       await form.save();
     }
     return { success: errors.length === 0, errors }
+  },
+
+  async updateFormData(formId: string, updatedData): Promise<{ success: boolean, errors: string[] }> {
+    const errors: string[] = [];
+
+    try {
+      const form = await Compliance.findOne({ _id: formId });
+
+      if (!form) {
+        errors.push(`Form with ID ${formId} does not exist.`);
+      } else {
+        if (form.status !== StatusEnum.IN_REVIEW) {
+          errors.push("You can only edit a form that is in the IN_REVIEW status.");
+        }
+        if (!updatedData || !updatedData.bbDetails) {
+          errors.push("No valid update data provided.");
+        } else {
+          // Merging new data with existing data
+          const updateObject = { $set: {} };
+
+          for (const bbName in updatedData.bbDetails) {
+            if (Object.prototype.hasOwnProperty.call(updatedData.bbDetails, bbName)) {
+              const bbDetailsUpdate = updatedData.bbDetails[bbName];
+
+              ['deploymentCompliance', 'interfaceCompliance', 'requirementSpecificationCompliance'].forEach(field => {
+                if (bbDetailsUpdate[field]) {
+                  Object.entries(bbDetailsUpdate[field]).forEach(([key, value]) => {
+                    updateObject.$set[`compliance.0.bbDetails.${bbName}.${field}.${key}`] = value;
+                  });
+                }
+              });
+            }
+          }
+
+          if (Object.keys(updateObject.$set).length > 0) {
+            await Compliance.updateOne({ _id: formId }, updateObject);
+          } else {
+            errors.push("No valid fields to update.");
+          }
+        }
+      }
+
+      if (errors.length > 0) {
+        return { success: false, errors };
+      }
+
+      return { success: true, errors };
+    } catch (error: any) {
+      console.error(`Error updating the form with ID ${formId}:`, error);
+      return { success: false, errors: [error.message || 'Unknown error occurred'] };
+    }
   },
 
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
