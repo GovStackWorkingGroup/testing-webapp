@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
+import { RiQuestionLine } from 'react-icons/ri';
 import { RequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { SoftwareDetailsDataType } from '../../service/types';
@@ -9,7 +10,7 @@ import CustomSelect, { OptionsType } from '../shared/inputs/Select';
 type ComplianceDetailTable = {
   data: SoftwareDetailsDataType | undefined;
   setUpdatedData: (data: ComplianceDetailFormValuesType[] | undefined) => void;
-  isTableValid: boolean;
+  handleOpenEvaluationSchemaModal: (value: boolean) => void;
 };
 
 type TransformedDataType = {
@@ -31,6 +32,7 @@ export type ComplianceDetailFormValuesType = {
 const ComplianceDetailTable = ({
   data,
   setUpdatedData,
+  handleOpenEvaluationSchemaModal
 }: ComplianceDetailTable) => {
   const [transformedData, setTransformedData] =
     useState<TransformedDataType[]>();
@@ -198,6 +200,22 @@ const ComplianceDetailTable = ({
         <thead>
           <tr>
             {headers.map((header, indexKey) => {
+              if (header === 'table.compliance_level.label') {
+                return (
+                  <th
+                    key={`header-${header}-${indexKey}`}
+                  >
+                    <div className="th-header-with-icon">
+                      <p>{format(header)}</p>
+                      <RiQuestionLine
+                        className="th-icon-question-mark cursor-pointer"
+                        onClick={() => handleOpenEvaluationSchemaModal(true)}
+                      />
+                    </div>
+                  </th>
+                );
+              }
+
               return <th key={`header-th-${indexKey}`}>{format(header)}</th>;
             })}
           </tr>

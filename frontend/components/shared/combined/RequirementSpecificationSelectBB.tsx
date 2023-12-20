@@ -156,7 +156,7 @@ const RequirementSpecificationSelectBBs = ({
       return;
     }
 
-    if ((draftData || readOnlyData) && !savedInLocalStorage?.length) {
+    if (draftData || readOnlyData) {
       const data = draftData ?? readOnlyData;
       const combinedArray = data?.formDetails
         .map((formDetail) => {
