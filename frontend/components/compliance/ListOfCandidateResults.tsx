@@ -31,6 +31,10 @@ const ListOfCandidateResults = () => {
     'table.interface_compliance.label',
   ];
 
+  useEffect(() => {
+    fetchData(0, 5);
+  }, []);
+
   const fetchData = async (offset: number, limit: number) => {
     setIsLoadingData(true);
     const fetchedData = await getComplianceList(offset, limit);
@@ -75,6 +79,8 @@ const ListOfCandidateResults = () => {
                         cell.push({ value: format('table.rejected.label') });
                         break;
                       }
+                    } else if (property === 'deploymentCompliance') {
+                      cell.push({ value: item[property].level });
                     } else {
                       cell.push({ value: item[property] });
                     }
@@ -101,10 +107,6 @@ const ListOfCandidateResults = () => {
       setResultData(transformedData);
     }
   };
-
-  useEffect(() => {
-    fetchData(0, 5);
-  }, []);
 
   const handleLoadMoreData = () => {
     fetchData(currentDataLength, 5);

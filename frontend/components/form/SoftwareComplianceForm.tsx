@@ -6,6 +6,7 @@ import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   DEPLOYMENT_COMPLIANCE_STORAGE_NAME,
   INTERFACE_COMPLIANCE_STORAGE_NAME,
+  REQUIREMENT_SPEC_STORAGE_NAME,
   SOFTWARE_ATTRIBUTES_STORAGE_NAME,
   softwareComplianceFormSteps,
 } from '../../service/constants';
@@ -226,6 +227,7 @@ const SoftwareComplianceForm = ({
             icon: <RiCheckboxCircleFill className="success-toast-icon" />,
           });
           localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+          localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
           if (redirectToNextPage) {
             nextStepRef.current?.goNext();
           } else {

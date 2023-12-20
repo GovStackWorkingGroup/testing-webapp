@@ -291,6 +291,7 @@ const SoftwareAttributesForm = ({
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareName.value}
+              maxLength={50}
             />
           </div>
           <div className="form-field-container">
@@ -303,6 +304,7 @@ const SoftwareAttributesForm = ({
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareVersion.value}
+              maxLength={50}
             />
           </div>
           <div className="form-field-container">
@@ -385,6 +387,7 @@ const SoftwareAttributesForm = ({
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.email.value}
+              maxLength={50}
             />
           </div>
           <div className="form-field-container">

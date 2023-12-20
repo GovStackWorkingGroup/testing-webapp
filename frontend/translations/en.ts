@@ -1,19 +1,18 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
   'app.api-testing.label': 'API testing',
-  'app.login.label': 'Log In',
-  'app.logout.label': 'Log Out',
   'app.back_to_reports_list.label': '< Back to Report List',
+  'app.compatibility.label': 'Compatibility',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
   'app.definition.description': `This web application is used to show how candidate products align with
-    the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
-    for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
-    Building Blocks a series of APIs have been defined and tests have been developed which any compliant
-    product must be able to pass. These tests are run against candidate platforms and this application 
-    provides detailed information on which tests are passing and which are failing. Users may select any
-    building block that they are interested and view candidate products as well as their current level
-    of compliance with the API.`,
+  the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
+  for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
+  Building Blocks a series of APIs have been defined and tests have been developed which any compliant
+  product must be able to pass. These tests are run against candidate platforms and this application 
+  provides detailed information on which tests are passing and which are failing. Users may select any
+  building block that they are interested and view candidate products as well as their current level
+  of compliance with the API.`,
   'app.definition.note':
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
   'app.definition.title': 'GovStack Building Block Compliance Platform',
@@ -32,14 +31,18 @@ export const en = {
   'app.help.label': 'Help',
   'app.interface_requirement_specification.label':
     'Interface & Requirement Specification Compliance',
+  'app.login.label': 'Log In',
+  'app.logout.label': 'Log Out',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
-  'app.compatibility.label': 'Compatibility',
+  'app.save.label': 'Save',
   'app.scroll-loader.message': 'Loading more data...',
   'app.scenario.label': 'Scenario:',
+  'app.select.label': 'Select Level',
   'app.software_attributes.label': 'Software Attributes',
   'app.software_requirements_compliance.label':
     'Software Requirements Compliance',
+  'app.view_report_details.label': 'view report details',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
@@ -49,6 +52,12 @@ export const en = {
   'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted.',
   'drag_drop.or_drop.label': 'or drag and drop it here',
   'drag_drop.select_file.label': 'Select a file to upload',
+
+  'details_view.bbs_used.label': 'BBs used for Evaluation',
+  'details_view.container_description.label':
+    'Container that show that the product can be run in a container system (usually Docker and/or Kubernetes)',
+  'details_view.documentation_description.label':
+    'Documentation on how to install and deploy software',
 
   'evaluation_schema.all.label': 'All',
   'evaluation_schema.compliance.label': 'Compliance',
@@ -74,6 +83,7 @@ export const en = {
   'evaluation_schema.requirement_specification.label':
     'Requirement Specification',
 
+  'form.accept.label': 'Accept Form',
   'form.container.label': 'Container',
   'form.copied_to_clipboard.message': 'Link copied to clipboard!',
   'form.cross_cutting_requirements.label': 'Cross-Cutting Requirements',
@@ -102,17 +112,25 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
-  'form.form_submit_error.message': 'Draft submitting failed',
+  'form.form_accepted_success.message': 'Form accepted successfully',
+  'form.form_accepted_error.message': 'Form accepting failed',
+  'form.form_reject_success.message': 'Form rejected successfully',
+  'form.form_reject_error.message': 'Form rejecting failed',
   'form.form_saved_success.message': 'Draft saved successfully',
   'form.form_saved_error.message': 'Draft saving failed',
+  'form.form_submit_error.message': 'Draft submitting failed',
   'form.form_submit_success.message': 'Form has been successfully submitted!',
   'form.form_submit_success_inform.message':
     'We will inform you about the progress of the process via email provided in the form. You can also use this unique link to follow the progress:',
+  'form.form_update_success.message': 'Form saved successfully',
+  'form.form_update_error.message': 'Form saving failed',
   'form.point_of_contact.label': 'Point of contact',
   'form.clear_selection.label': 'Clear selection',
+  'form.reject.label': 'Reject Form',
+  'form.required_label': 'Required',
   'form.select_building_blocks.label':
     'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
-  'form.required_label': 'Required',
+  'form.software_version.label': 'Software Version',
   'form.test_harness.title.label': 'Test Harness Result',
   'form.table.title.label': 'Architectural Cross-Cutting Requirements',
   'form.test_harness.tip_message.label':
@@ -123,7 +141,6 @@ export const en = {
   'form.tip_paste_link_container.label': 'Paste link to the container.',
   'form.tip_paste_link_documentation.label': 'Paste link to the documentation.',
   'form.tip_website.label': 'Paste link to your website.',
-  'form.software_version.label': 'Software Version',
   'form.question_line.not_sure_how_to_start': 'Not sure how to start? ',
   'form.question_line.click': 'Click ',
   'form.question_line.here': 'here',

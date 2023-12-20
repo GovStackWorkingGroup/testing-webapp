@@ -7,13 +7,16 @@ import {
   BuildingBlockTestSummary,
   ComplianceList,
   ComplianceRequirementsType,
+  FormUpdatedObject,
   PATCHSoftwareAttributesType,
   POSTSoftwareAttributesType,
   ProductsListType,
+  SoftwareDetailsDataType,
   SoftwareDetailsType,
   SoftwareDraftDetailsType,
   SoftwareDraftToUpdateType,
   SubmitDraftResponseType,
+  SubmittingFormResponseType,
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -459,6 +462,58 @@ export const submitDraft = async (uniqueId: string) => {
     })
     .then<Success<SubmitDraftResponseType>>((actualData) => {
       return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getSoftwareDetailsReport = async (id: string) => {
+  return await fetch(`${baseUrl}/compliance/forms/${id}`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SoftwareDetailsDataType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const handleReviewSoftwareForm = async (
+  id: string,
+  data: FormUpdatedObject,
+  type: 'update' | 'accept' | 'reject'
+) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  return await fetch(`${baseUrl}/compliance/forms/${id}/${type}`, {
+    method: 'post',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SubmittingFormResponseType>>((response) => {
+      return { data: response, status: true };
     })
     .catch<Failure>((error) => {
       return { error, status: false };

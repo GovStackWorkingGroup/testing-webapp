@@ -24,15 +24,19 @@ exports[`Unit tests for SoftwareDetails component: should render the component a
   <div
     class="software-attributes-section "
   >
-    <p>
-      Test software
-       
-      <span
-        class="bold"
-      >
-        Software Version 2.0
-      </span>
-    </p>
+    <div
+      class="software-attributes-title-with-link"
+    >
+      <p>
+        Test software
+         
+        <span
+          class="bold"
+        >
+          Software Version 2.0
+        </span>
+      </p>
+    </div>
     <div>
       Test
     </div>

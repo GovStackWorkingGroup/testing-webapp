@@ -59,9 +59,18 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const updateFormStatus = async (formId: string, status: StatusEnum) => {
+  const updateFormStatus = async (formId: string, status: StatusEnum, updatedData) => {
     try {
-      return await repository.updateFormStatus(formId,status);
+      return await repository.updateFormStatus(formId, status, updatedData);
+    } catch (error) {
+      console.error('There was an error while updating the review status of the form');
+      throw error;
+    }
+  };
+
+  const updateFormData = async (formId: string, updatedData) => {
+    try {
+      return await repository.updateFormData(formId, updatedData);
     } catch (error) {
       console.error('There was an error while updating the review status of the form');
       throw error;
@@ -122,6 +131,7 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     createOrSubmitForm,
     submitForm,
     updateFormStatus,
+    updateFormData,
     rollbackFormStatus,
     getBBs,
     editDraftForm,

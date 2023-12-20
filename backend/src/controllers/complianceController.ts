@@ -13,6 +13,7 @@ import GetBBsRequestHandler from '../useCases/compliance/handleGetBBs';
 import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftDetail';
 import AcceptComplianceFormRequestHandler from '../useCases/compliance/handleAcceptForm';
 import RejectComplianceFormRequestHandler from '../useCases/compliance/handleRejectForm';
+import UpdateFormRequestHandler from '../useCases/compliance/handleUpdateForm';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -60,22 +61,33 @@ const complianceController = (
   const submitForm = async (req: Request, res: Response): Promise<void> => {
     new SubmitFormRequestHandler(req, res, repository)
       .submitForm()
-      .catch((err:any) => default500Error(res, err));
+      .catch((err: any) => default500Error(res, err));
   };
 
   const acceptForm = (req: Request, res: Response): void => {
     const reviewId = req.params.id;
+    const updatedData = req.body;
 
-    new AcceptComplianceFormRequestHandler(req, res, repository, reviewId)
+    new AcceptComplianceFormRequestHandler(req, res, repository, reviewId, updatedData)
       .acceptForm()
       .catch((err: any) => default500Error(res, err));
   };
 
   const rejectForm = (req: Request, res: Response): void => {
     const reviewId = req.params.id;
+    const updatedData = req.body;
 
-    new RejectComplianceFormRequestHandler(req, res, repository, reviewId)
+    new RejectComplianceFormRequestHandler(req, res, repository, reviewId, updatedData)
       .rejectForm()
+      .catch((err: any) => default500Error(res, err));
+  };
+
+  const updateForm = (req: Request, res: Response): void => {
+    const formId = req.params.id;
+    const updatedData = req.body;
+
+    new UpdateFormRequestHandler(req, res, repository, formId, updatedData)
+      .updateForm()
       .catch((err: any) => default500Error(res, err));
   };
 
@@ -86,7 +98,7 @@ const complianceController = (
       .editDraftForm(draftId)
       .catch((err: any) => default500Error(res, err));
   };
-  
+
   const getAllBBRequirements = (req: Request, res: Response): void => {
     new GetAllBBRequirementsRequestHandler(req, res, repository)
       .getAllBBRequirements()
@@ -115,6 +127,7 @@ const complianceController = (
     submitForm,
     acceptForm,
     rejectForm,
+    updateForm,
     editDraftForm,
     getAllBBRequirements,
     getBBRequirements,

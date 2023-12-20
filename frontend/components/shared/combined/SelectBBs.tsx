@@ -2,7 +2,10 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
-import { ComplianceRequirementsType } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  SoftwareDetailsDataType,
+} from '../../../service/types';
 import Input from '../inputs/Input';
 import IRSCInterfaceTable from '../../table/IRSC/IRSCInterfaceTable';
 import useTranslations from '../../../hooks/useTranslation';
@@ -15,14 +18,18 @@ export type IRSCFormRef = {
 
 type SelectorWithPillsProps = {
   interfaceRequirementsData: ComplianceRequirementsType[] | undefined;
-  setUpdatedBBs: (data: ComplianceRequirementsType[]) => void;
-  IRSCFormRef: RefObject<IRSCFormRef>;
+  setUpdatedBBs?: (data: ComplianceRequirementsType[]) => void;
+  IRSCFormRef?: RefObject<IRSCFormRef>;
+  readOnlyView?: boolean;
+  readOnlyData?: SoftwareDetailsDataType;
 };
 
 const SelectBBs = ({
   interfaceRequirementsData,
   setUpdatedBBs,
   IRSCFormRef,
+  readOnlyView = false,
+  readOnlyData,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -52,26 +59,28 @@ const SelectBBs = ({
 
   useEffect(() => {
     handleAlreadySavedData();
-  }, [draftData, savedInLocalStorage, interfaceRequirementsData]);
+  }, [draftData, savedInLocalStorage, interfaceRequirementsData, readOnlyData]);
 
   useEffect(() => {
     handleSetOptions();
   }, [interfaceRequirementsData]);
 
   useEffect(() => {
-    const updatedSelectedItemsData = selectedItems?.map((item) =>
-      item?.bbKey === updatedData?.bbKey ? updatedData : item
-    );
-    setSelectedItems(updatedSelectedItemsData);
+    if (!readOnlyView && setUpdatedBBs) {
+      const updatedSelectedItemsData = selectedItems?.map((item) =>
+        item?.bbKey === updatedData?.bbKey ? updatedData : item
+      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(updatedSelectedItemsData)
+        );
+      }
 
-    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-    localStorage.setItem(
-      INTERFACE_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify(updatedSelectedItemsData)
-    );
-
-    setUpdatedBBs(updatedSelectedItemsData);
-  }, [updatedData]);
+      setUpdatedBBs(updatedSelectedItemsData);
+    }
+  }, [updatedData, readOnlyView, selectedItems]);
 
   useEffect(() => {
     options?.sort((prevItem: { label: string }, nextItem: { label: string }) =>
@@ -80,7 +89,7 @@ const SelectBBs = ({
   }, [options]);
 
   const handleAlreadySavedData = () => {
-    if (savedInLocalStorage?.length) {
+    if (savedInLocalStorage?.length && !readOnlyView) {
       const BBWithAddedInterface = savedInLocalStorage.map((itemBB) => {
         if (itemBB.requirements.interface.length) {
           return itemBB;
@@ -108,8 +117,9 @@ const SelectBBs = ({
       return;
     }
 
-    if (draftData?.formDetails[0].bbDetails) {
-      const combinedArray = draftData?.formDetails
+    if (draftData?.formDetails[0].bbDetails || readOnlyData) {
+      const data = draftData ?? readOnlyData;
+      const combinedArray = data?.formDetails
         .map((formDetail) => {
           if (formDetail.bbDetails) {
             const bbKeys = Object.keys(formDetail.bbDetails);
@@ -141,10 +151,10 @@ const SelectBBs = ({
                   interfaceCompliance: {
                     testHarnessResult:
                       formDetail.bbDetails[bbKey].interfaceCompliance
-                        ?.testHarnessResult || '',
+                        ?.testHarnessResult ?? '',
                     requirements:
                       formDetail.bbDetails[bbKey].interfaceCompliance
-                        ?.requirements || [],
+                        ?.requirements ?? [],
                   },
                 };
               } else {
@@ -161,16 +171,19 @@ const SelectBBs = ({
         })
         .flat();
 
-      if (combinedArray.length > 0) {
+      if (combinedArray && combinedArray.length > 0) {
         setSelectedItems(combinedArray as ComplianceRequirementsType[]);
-        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-        localStorage.setItem(
-          INTERFACE_COMPLIANCE_STORAGE_NAME,
-          JSON.stringify(combinedArray)
-        );
-      }
 
-      return;
+        if (!readOnlyView) {
+          localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+          localStorage.setItem(
+            INTERFACE_COMPLIANCE_STORAGE_NAME,
+            JSON.stringify(combinedArray)
+          );
+        }
+
+        return;
+      }
     }
   };
 
@@ -223,13 +236,15 @@ const SelectBBs = ({
       ...selectedItems.filter(({ bbName }) => bbName !== item.label),
     ]);
     setOptions([...options, item]);
-    localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-    localStorage.setItem(
-      INTERFACE_COMPLIANCE_STORAGE_NAME,
-      JSON.stringify([
-        ...selectedItems.filter(({ bbName }) => bbName !== item.label),
-      ])
-    );
+    if (!readOnlyView) {
+      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+      localStorage.setItem(
+        INTERFACE_COMPLIANCE_STORAGE_NAME,
+        JSON.stringify([
+          ...selectedItems.filter(({ bbName }) => bbName !== item.label),
+        ])
+      );
+    }
   };
 
   const handleTestHarnessLink = (
@@ -249,11 +264,13 @@ const SelectBBs = ({
         value;
 
       setUpdatedData({ ...newSelectedItems[foundIndex] });
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(newSelectedItems)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(newSelectedItems)
+        );
+      }
 
       return;
     }
@@ -263,11 +280,13 @@ const SelectBBs = ({
         value;
 
       setUpdatedData({ ...newSelectedItems[foundIndex] });
-      localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
-      localStorage.setItem(
-        INTERFACE_COMPLIANCE_STORAGE_NAME,
-        JSON.stringify(newSelectedItems)
-      );
+      if (!readOnlyView) {
+        localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
+        localStorage.setItem(
+          INTERFACE_COMPLIANCE_STORAGE_NAME,
+          JSON.stringify(newSelectedItems)
+        );
+      }
 
       return;
     }
@@ -275,6 +294,14 @@ const SelectBBs = ({
 
   const handleClearAllSelectedItems = () => {
     setSelectedItems([]);
+    if (interfaceRequirementsData) {
+      const options = interfaceRequirementsData.map((item) => ({
+        value: item,
+        label: item.bbName,
+      }));
+      setOptions(options);
+    }
+
     localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
   };
 
@@ -321,6 +348,7 @@ const SelectBBs = ({
         key={`key-${item.bbKey}`}
         label={item.bbName}
         onRemove={() => handleOnRemovePill({ value: item, label: item.bbName })}
+        readOnly={readOnlyView}
       />
     );
   });
@@ -334,9 +362,10 @@ const SelectBBs = ({
           tipMessage={format('form.test_harness.tip_message.label')}
           isInvalid={
             !isTestHarnessInputValid &&
-            !item.interfaceCompliance.testHarnessResult
+            (!item.interfaceCompliance ||
+              !item.interfaceCompliance.testHarnessResult)
           }
-          required
+          required={!readOnlyView}
           name={item.bbKey}
           inputTitle={format('form.test_harness.title.label')}
           className="input-width-400"
@@ -347,6 +376,7 @@ const SelectBBs = ({
               ? item.interfaceCompliance.testHarnessResult
               : ''
           }
+          disabled={readOnlyView}
         />
         <p className="table-container-title">
           {format('form.table.title.label')}
@@ -355,6 +385,7 @@ const SelectBBs = ({
           selectedData={item}
           setUpdatedData={setUpdatedData}
           isTableValid={isTableValid}
+          readOnlyView={readOnlyView}
         />
       </div>
     );
@@ -362,23 +393,31 @@ const SelectBBs = ({
 
   return (
     <div className="main-block">
-      <SelectInput
-        placeholder="Select Building Block(s)"
-        className="input-select"
-        onChange={handleOnSelect}
-        // @ts-ignore
-        options={options}
-        handleSetOptions={handleSetOptions}
-      />
+      {!readOnlyView && (
+        <SelectInput
+          placeholder="Select Building Block(s)"
+          className="input-select"
+          onChange={handleOnSelect}
+          // @ts-ignore
+          options={options}
+          handleSetOptions={handleSetOptions}
+        />
+      )}
       {selectedItems.length > 0 && (
         <div>
           <div className="pills-container">
-            <div
-              className="pills-clear-all"
-              onClick={handleClearAllSelectedItems}
-            >
-              {format('form.clear_selection.label')}
-            </div>
+            {readOnlyView ? (
+              <div className="pills-explanation">
+                {format('details_view.bbs_used.label')}
+              </div>
+            ) : (
+              <div
+                className="pills-clear-all"
+                onClick={handleClearAllSelectedItems}
+              >
+                {format('form.clear_selection.label')}
+              </div>
+            )}
             {displayPills}
           </div>
           {displayTable}
