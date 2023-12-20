@@ -41,6 +41,9 @@ interface AppConfig {
     devLoginMode: boolean;
     jwtSecret: string;
     tokenExpirationTime: number;
+    personalAccessToken: string;
+    organization: string;
+    reviewersTeam: string;
   };
   smtpConfig: {
     host: string,
@@ -76,6 +79,9 @@ const appConfig: AppConfig = {
     callbackUrl: process.env.GITHUB_CALLBACK_URL!,
     devLoginMode: process.env.GITHUB_DEV_LOGIN_MODE ? process.env.GITHUB_DEV_LOGIN_MODE === 'true' : false,
     jwtSecret: process.env.GITHUB_JWT_SECRET!,
+    personalAccessToken: process.env.GITHUB_PERSONAL_ACCESS_TOKEN!,
+    organization: process.env.GITHUB_ORGANIZATION!,
+    reviewersTeam: process.env.GITHUB_REVIEWRS_TEAM!,
     tokenExpirationTime: 8 * 60 * 60, // 8 hours in seconds
   },
   // Time is specified in milliseconds.

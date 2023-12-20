@@ -32,6 +32,17 @@ export default class GitHubLoginHandler {
         headers: { Authorization: `token ${accessToken}` }
       });
       const userData = githubUserResponse.data;
+
+      // Check if the user is a member of the "Reviewers" team
+      const isMember = await this.checkTeamMembership(
+        userData.login, appConfig.gitHub.organization, appConfig.gitHub.reviewersTeam
+      );
+
+      if (!isMember) {
+        res.status(403).json({ message: `User is not a member of the "${appConfig.gitHub.reviewersTeam}" team` });
+        return;
+      }
+
       const sessionToken = jwt.sign(
         { userId: userData.id, username: userData.login },
         appConfig.gitHub.jwtSecret,
@@ -53,6 +64,34 @@ export default class GitHubLoginHandler {
         console.error('Non-Axios error during GitHub Callback:', error);
         res.status(500).send('Authentication failed due to server error');
       }
+    }
+  }
+
+  private async checkTeamMembership(username: string, orgName: string, teamName: string): Promise<boolean> {
+    try {
+      const response = await axios.get(`https://api.github.com/orgs/${orgName}/teams/${encodeURIComponent(teamName)}`, {
+        headers: {
+          Authorization: `Bearer ${appConfig.gitHub.personalAccessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      // Check if the team exists and if the user is a member of it
+      if (response.status === 200 && response.data && response.data.slug === appConfig.gitHub.reviewersTeam) {
+        const teamId = response.data.id;
+        const membershipResponse = await axios.get(`https://api.github.com/teams/${teamId}/memberships/${username}`, {
+          headers: {
+            Authorization: `Bearer ${appConfig.gitHub.personalAccessToken}`,
+            Accept: 'application/vnd.github.v3+json',
+          },
+        });
+
+        return membershipResponse.status === 200;
+      }
+
+      return false;
+    } catch (error) {
+      return false;
     }
   }
 
