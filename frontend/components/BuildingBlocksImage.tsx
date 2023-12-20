@@ -26,6 +26,7 @@ import {
   FaDatabase,
   FaBook,
 } from 'react-icons/fa6';
+import { RiCloudFill } from 'react-icons/ri';
 import { VscFiles } from 'react-icons/vsc';
 
 type Props = {
@@ -104,6 +105,9 @@ const BBImage = ({ imagePath, customStyle }: Props) => {
     break;
   case 'content_management':
     icon = <VscFiles />;
+    break;
+  case 'bb-cloud-infrastructure-hosting':
+    icon = <RiCloudFill />;
     break;
   }
 
