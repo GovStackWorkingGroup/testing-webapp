@@ -110,7 +110,7 @@ const IRSCFunctionalTable = ({
                 }}
                 onBlur={(event) => {
                   handleUpdateField(
-                    row.original._id,
+                    row.original._id as string,
                     'comment',
                     event.target.value
                   );
@@ -141,7 +141,7 @@ const IRSCFunctionalTable = ({
                     if (readOnlyView) {
                       return;
                     } else {
-                      handleUpdateField(row.original._id, 'fulfillment', null);
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
                     }
                   }}
                 />
@@ -150,7 +150,7 @@ const IRSCFunctionalTable = ({
                   <FaRegCircleXmark
                     className="irsc-table-icon"
                     onClick={() =>
-                      handleUpdateField(row.original._id, 'fulfillment', 0)
+                      handleUpdateField(row.original._id as string, 'fulfillment', 0)
                     }
                   />
                 )
@@ -165,7 +165,7 @@ const IRSCFunctionalTable = ({
                     if (readOnlyView) {
                       return;
                     } else {
-                      handleUpdateField(row.original._id, 'fulfillment', null);
+                      handleUpdateField(row.original._id as string, 'fulfillment', null);
                     }
                   }}
                 />
@@ -174,7 +174,7 @@ const IRSCFunctionalTable = ({
                   <FaRegCircleCheck
                     className="irsc-table-icon"
                     onClick={() =>
-                      handleUpdateField(row.original._id, 'fulfillment', 1)
+                      handleUpdateField(row.original._id as string, 'fulfillment', 1)
                     }
                   />
                 )
