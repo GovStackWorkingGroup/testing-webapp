@@ -142,9 +142,9 @@ export default class SubmitFormRequestHandler {
                 issuetype: {
                     name: jiraConfig.issueType,
                 },
-                // assignee: {
-                //     id: jiraConfig.assigneeId,
-                // }
+                assignee: {
+                    id: jiraConfig.assigneeId,
+                }
             },
         };
         try {

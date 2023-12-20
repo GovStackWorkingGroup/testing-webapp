@@ -16,7 +16,7 @@
       },
       "compliance": [
         {
-          "version": "2.0",
+          "version": "23Q3",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -224,7 +224,7 @@
           }
         },
         {
-          "version": "2.1",
+          "version": "23Q4",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -292,7 +292,7 @@
       },
       "compliance": [
         {
-          "version": "2.0",
+          "version": "23Q3",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -455,7 +455,7 @@
       },
       "compliance": [
         {
-          "version": "2.0",
+          "version": "23Q3",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -600,7 +600,7 @@
           }
         },
         {
-          "version": "2.1",
+          "version": "23Q4",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -668,7 +668,7 @@
       },
       "compliance": [
         {
-          "version": "2.0",
+          "version": "23Q3",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -770,7 +770,7 @@
           }
         },
         {
-          "version": "2.1",
+          "version": "23Q4",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
@@ -826,7 +826,7 @@
       },
       "compliance": [
         {
-          "version": "2.0",
+          "version": "23Q3",
           "bbDetails": {
             "bb-digital-registries": {
               "bbSpecification": "SpecificationA",
