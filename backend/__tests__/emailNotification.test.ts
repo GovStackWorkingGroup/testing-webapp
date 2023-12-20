@@ -11,7 +11,7 @@ describe('EmailTemplateSender', () => {
     beforeEach(() => {
         // Create a stub instance of NodeMailerClient
         mockMailClient = sinon.createStubInstance(NodeMailerClient);
-        emailSender = new EmailTemplateSender(mockMailClient as any);
+        emailSender = new EmailTemplateSender(mockMailClient as any, 'test@example.com');
     });
 
     afterEach(() => {

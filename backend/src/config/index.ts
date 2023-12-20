@@ -49,8 +49,9 @@ interface AppConfig {
     auth: {
         user: string,
         pass: string
-    }
+    },
   };
+  emailSender: string
 }
 
 const appConfig: AppConfig = {
@@ -91,6 +92,7 @@ const appConfig: AppConfig = {
     descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
   },
   emailsEnabled: process.env.SEND_FORM_CONFIRMATION_EMAILS ? process.env.SEND_FORM_CONFIRMATION_EMAILS === 'true' : false,
+  emailSender: process.env.EMAIL_SENDER || 'placeholder.email.sender@example.com',
   smtpConfig: {
     host: process.env.SMTP_HOST || '',
     port: process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587,

@@ -15,10 +15,12 @@ type Template = {
 export class EmailTemplateSender {
     private mailClient: NodeMailerClient;
     private templates: Map<string, (data: EmailTemplateData) => Template>;
+    private sender: string
 
-    constructor(mailClient: NodeMailerClient) {
+    constructor(mailClient: NodeMailerClient, sender: string) {
         this.mailClient = mailClient;
         this.templates = new Map<string, (data: EmailTemplateData) => Template>();
+        this.sender = sender;
         
         // Initialize templates
         this.templates.set('draftSubmitted', this.draftTemplate);
@@ -34,7 +36,7 @@ export class EmailTemplateSender {
         if (template) {
             const mailContent = this.processTemplate(template, data);
             await this.mailClient.sendMail({
-                from: 'no-reply@example.com',
+                from: this.sender,
                 to: data.recipient,
                 subject: mailContent.subject,
                 text: mailContent.body
@@ -121,6 +123,6 @@ GovStack Team
  */
 
 export function defaultEmailSender(): EmailTemplateSender {
-    return new EmailTemplateSender(new NodeMailerClient(appConfig.smtpConfig))
+    return new EmailTemplateSender(new NodeMailerClient(appConfig.smtpConfig), appConfig.emailSender)
 }
 
