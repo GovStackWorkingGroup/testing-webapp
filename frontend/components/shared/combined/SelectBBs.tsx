@@ -70,8 +70,6 @@ const SelectBBs = ({
       const updatedSelectedItemsData = selectedItems?.map((item) =>
         item?.bbKey === updatedData?.bbKey ? updatedData : item
       );
-      setSelectedItems(updatedSelectedItemsData);
-
       if (!readOnlyView) {
         localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
         localStorage.setItem(
@@ -82,7 +80,7 @@ const SelectBBs = ({
 
       setUpdatedBBs(updatedSelectedItemsData);
     }
-  }, [updatedData, readOnlyView]);
+  }, [updatedData, readOnlyView, selectedItems]);
 
   useEffect(() => {
     options?.sort((prevItem: { label: string }, nextItem: { label: string }) =>
@@ -296,6 +294,14 @@ const SelectBBs = ({
 
   const handleClearAllSelectedItems = () => {
     setSelectedItems([]);
+    if (interfaceRequirementsData) {
+      const options = interfaceRequirementsData.map((item) => ({
+        value: item,
+        label: item.bbName,
+      }));
+      setOptions(options);
+    }
+
     localStorage.removeItem(INTERFACE_COMPLIANCE_STORAGE_NAME);
   };
 
@@ -356,7 +362,8 @@ const SelectBBs = ({
           tipMessage={format('form.test_harness.tip_message.label')}
           isInvalid={
             !isTestHarnessInputValid &&
-            !item.interfaceCompliance.testHarnessResult
+            (!item.interfaceCompliance ||
+              !item.interfaceCompliance.testHarnessResult)
           }
           required={!readOnlyView}
           name={item.bbKey}
