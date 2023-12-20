@@ -76,9 +76,9 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
-                { value: '' },
-                { value: bbVersion.interface.note ?? '' },
-                { value: bbVersion.requirements.note ?? '' },
+                { value: bbVersion.deploymentCompliance.notes ?? '' },
+                { value: bbVersion.interface.notes ?? '' },
+                { value: bbVersion.requirements.notes ?? '' },
               ],
             })),
         },

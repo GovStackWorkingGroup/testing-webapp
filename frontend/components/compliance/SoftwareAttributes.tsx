@@ -4,8 +4,18 @@ import useTranslations from '../../hooks/useTranslation';
 import { baseUrl, checkIfImageUrlExists } from '../../service/serviceAPI';
 import { SoftwareDetailsType } from '../../service/types';
 
+export type SoftwareAttributesType = [
+  {
+    logo: string;
+    website: string;
+    documentation: string;
+    pointOfContact?: string;
+    softwareName: string;
+  }
+];
+
 type SoftwareAttributesProps = {
-  softwareDetails: SoftwareDetailsType;
+  softwareDetails: SoftwareAttributesType | SoftwareDetailsType;
   showContactDetails?: boolean;
 };
 

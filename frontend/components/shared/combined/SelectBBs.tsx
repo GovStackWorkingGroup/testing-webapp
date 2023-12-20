@@ -119,10 +119,7 @@ const SelectBBs = ({
       return;
     }
 
-    if (
-      (draftData?.formDetails[0].bbDetails || readOnlyData) &&
-      !savedInLocalStorage?.length
-    ) {
+    if (draftData?.formDetails[0].bbDetails || readOnlyData) {
       const data = draftData ?? readOnlyData;
       const combinedArray = data?.formDetails
         .map((formDetail) => {

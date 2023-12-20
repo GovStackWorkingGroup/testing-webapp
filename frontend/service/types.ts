@@ -66,7 +66,7 @@ export type ComplianceList = {
 // Software compliance details
 export type ComplianceDetails = {
   level: number;
-  note?: string;
+  notes?: string;
 };
 
 export type ComplianceItem = {

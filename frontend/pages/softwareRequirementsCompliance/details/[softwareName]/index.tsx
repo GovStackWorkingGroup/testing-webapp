@@ -22,6 +22,8 @@ import ComplianceDetailTable, {
   ComplianceDetailFormValuesType,
 } from '../../../../components/table/ComplianceDetailTable';
 import Button from '../../../../components/shared/buttons/Button';
+import InfoModal from '../../../../components/shared/modals/InfoModal';
+import EvaluationSchemaTable from '../../../../components/compliance/EvaluationSchemaTable';
 
 const SoftwareComplianceDetailsPage = () => {
   const [softwareDetail, setSoftwareDetail] = useState<
@@ -34,6 +36,8 @@ const SoftwareComplianceDetailsPage = () => {
     ComplianceDetailFormValuesType[] | undefined
   >();
   const [isFormSaved, setIsFormSaved] = useState(false);
+  const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
+    useState(false);
 
   const { format } = useTranslations();
   const router = useRouter();
@@ -172,7 +176,9 @@ const SoftwareComplianceDetailsPage = () => {
               {isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1 ? (
                 <ComplianceDetailTable
                   data={softwareDetailsDataToApprove}
-                  isTableValid={true}
+                  handleOpenEvaluationSchemaModal={(value) =>
+                    setDisplayEvaluationSchemaModal(value)
+                  }
                   setUpdatedData={(data) => {
                     setUpdatedData(data);
                     setIsFormSaved(false);
@@ -212,6 +218,14 @@ const SoftwareComplianceDetailsPage = () => {
           </div>
         </div>
       }
+      {displayEvaluationSchemaModal && (
+        <InfoModal
+          onClose={() => setDisplayEvaluationSchemaModal(false)}
+          modalTitle={format('app.evaluation_schema.label')}
+        >
+          <EvaluationSchemaTable />
+        </InfoModal>
+      )}
     </div>
   );
 };
