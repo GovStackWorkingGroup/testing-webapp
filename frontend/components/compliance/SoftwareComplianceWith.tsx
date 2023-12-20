@@ -94,13 +94,15 @@ const SoftwareComplianceWith = ({
 
   return (
     <>
-      <Table
-        data={softwareComplianceParams}
-        headers={headers}
-        handleOpenEvaluationSchemaModal={(value) =>
-          setDisplayEvaluationSchemaModal(value)
-        }
-      />
+      <div className="software-compliance-with-table-container">
+        <Table
+          data={softwareComplianceParams}
+          headers={headers}
+          handleOpenEvaluationSchemaModal={(value) =>
+            setDisplayEvaluationSchemaModal(value)
+          }
+        />
+      </div>
       {displayEvaluationSchemaModal && (
         <InfoModal
           onClose={() => setDisplayEvaluationSchemaModal(false)}
