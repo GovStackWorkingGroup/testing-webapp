@@ -62,11 +62,7 @@ const SoftwareComplianceWith = ({
             })
             .map((bbVersion) => ({
               values: [
-                {
-                  value: bbVersion.deploymentCompliance.length
-                    ? bbVersion.deploymentCompliance[0].level
-                    : -1,
-                },
+                { value: bbVersion.deploymentCompliance.level ?? '' },
                 { value: bbVersion.interface.level ?? '' },
                 { value: bbVersion.requirements.level ?? '' },
               ],
