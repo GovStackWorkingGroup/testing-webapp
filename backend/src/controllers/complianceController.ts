@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import GetAllComplianceReportsRequestHandler from '../useCases/compliance/handleGetAllComplianceReports';
+import GetAllComplianceReportsRequestHandler, { AuthenticatedRequest } from '../useCases/compliance/handleGetAllComplianceReports';
 import GetSoftwareComplianceDetailRequestHandler from '../useCases/compliance/handleGetSoftwareComplianceDetail';
 import GetFormDetailRequestHandler from '../useCases/compliance/handleGetFormDetail';
 import CreateDraftRequestHandler from '../useCases/compliance/handleCreateDraft';
@@ -21,8 +21,9 @@ const complianceController = (
 ) => {
   const repository = complianceDbRepositoryConstructor(complianceDbRepositoryImpl);
 
-  const getAllComplianceReports = (req: Request, res: Response): void => {
-    new GetAllComplianceReportsRequestHandler(req, res, repository)
+  const getAllComplianceReports = (req: AuthenticatedRequest, res: Response): void => {
+    const isAuthenticated = Boolean(req.user); 
+    new GetAllComplianceReportsRequestHandler(req, res, repository, isAuthenticated)
       .getAllComplianceReports()
       .catch((err: any) => default500Error(res, err));
   };

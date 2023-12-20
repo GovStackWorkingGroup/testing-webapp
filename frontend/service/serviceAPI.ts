@@ -141,12 +141,16 @@ export const getBuildingBlockTestResults = async (
 };
 
 export const getComplianceList = async (offset: number, limit: number) => {
+
+  const accessToken = sessionStorage.getItem('accessToken');
+
   return await fetch(
     `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}`,
     {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',
+        ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
       },
     }
   )

@@ -20,7 +20,6 @@ const verifyGithubToken = async (req: RequestAuth, res: Response, next: NextFunc
         res.status(403).json({ message: 'Token is invalid' });
         return;
       }
-
       req.user = user;
       next();
     });
