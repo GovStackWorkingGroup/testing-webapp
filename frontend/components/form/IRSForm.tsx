@@ -47,24 +47,38 @@ const IRSForm = ({
       return;
     }
 
-    if (allData?.length && updatedInterfaceData) {
+    if (!allData?.length && updatedRequirementSpecData) {
+      setAllData(updatedRequirementSpecData);
+
+      return;
+    }
+
+    if (
+      allData?.length &&
+      (updatedInterfaceData || updatedRequirementSpecData)
+    ) {
       const updatedData = allData.map((item) => {
-        const matchingItem = updatedInterfaceData.find(
-          (nextItem) => nextItem.bbKey === item.bbKey
-        );
         const matchingUpdatedRequirementSpecData =
           updatedRequirementSpecData?.find(
             (nextItem) => nextItem.bbKey === item.bbKey
           );
+        const matchingUpdatedInterfaceData = updatedInterfaceData?.find(
+          (nextItem) => nextItem.bbKey === item.bbKey
+        );
 
-        if (matchingItem) {
+        if (
+          matchingUpdatedInterfaceData ||
+          matchingUpdatedRequirementSpecData
+        ) {
           return {
             ...item,
             interfaceCompliance: {
               ...item.interfaceCompliance,
               testHarnessResult:
-                matchingItem.interfaceCompliance?.testHarnessResult || '',
-              requirements: matchingItem.requirements.interface,
+                matchingUpdatedInterfaceData?.interfaceCompliance
+                  ?.testHarnessResult || '',
+              requirements:
+                matchingUpdatedInterfaceData?.requirements.interface,
             },
             requirements: matchingUpdatedRequirementSpecData?.requirements || {
               crossCutting: [],
@@ -73,55 +87,29 @@ const IRSForm = ({
             },
           };
         }
-
-        return item;
       });
 
-      const nonMatchingItems = updatedInterfaceData.filter(
+      const nonMatchingInterfaceItems = updatedInterfaceData?.filter(
+        (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
+      );
+      const nonMatchingRequirementItems = updatedRequirementSpecData?.filter(
         (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
       );
 
-      const newData = [...updatedData, ...nonMatchingItems];
+      let newData = [...updatedData];
+      if (nonMatchingInterfaceItems) {
+        newData = [...updatedData, ...nonMatchingInterfaceItems];
+      }
 
-      setAllData(newData as ComplianceRequirementsType[]);
+      if (nonMatchingRequirementItems) {
+        newData = [...updatedData, ...nonMatchingRequirementItems];
+      }
+
+      setAllData(
+        newData.filter((item) => Boolean(item)) as ComplianceRequirementsType[]
+      );
     }
   }, [updatedInterfaceData, updatedRequirementSpecData]);
-
-  useEffect(() => {
-    if (!allData?.length && updatedRequirementSpecData) {
-      setAllData(updatedRequirementSpecData);
-
-      return;
-    }
-
-    if (allData?.length && updatedRequirementSpecData) {
-      const updatedData = allData.map((item) => {
-        const matchingItem = updatedRequirementSpecData.find(
-          (newItem) => newItem.bbKey === item.bbKey
-        );
-        if (matchingItem) {
-          return {
-            ...item,
-            requirements: {
-              ...item.requirements,
-              crossCutting: matchingItem.requirements.crossCutting,
-              functional: matchingItem.requirements.functional,
-            },
-          };
-        }
-
-        return item;
-      });
-
-      const nonMatchingItems = updatedRequirementSpecData.filter(
-        (newItem) => !allData.find((item) => item.bbKey === newItem.bbKey)
-      );
-
-      const newData = [...updatedData, ...nonMatchingItems];
-
-      setAllData(newData);
-    }
-  }, [updatedRequirementSpecData]);
 
   useEffect(() => {
     setUpdatedBBs(allData);
@@ -153,7 +141,7 @@ const IRSForm = ({
 
         // Check interfaceCompliance.requirements array
         let isInterfaceValid;
-        if (item.interfaceCompliance) {
+        if (item.interfaceCompliance && item.interfaceCompliance.requirements) {
           isInterfaceValid =
             item.interfaceCompliance.requirements.length === 0 ||
             item.interfaceCompliance.requirements.every((interfaceItem) => {

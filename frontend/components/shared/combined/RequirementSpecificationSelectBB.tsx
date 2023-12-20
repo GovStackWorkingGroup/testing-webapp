@@ -284,6 +284,14 @@ const RequirementSpecificationSelectBBs = ({
 
   const handleClearAllSelectedItems = () => {
     setSelectedItems([]);
+    if (interfaceRequirementsData) {
+      const options = interfaceRequirementsData.map((item) => ({
+        value: item,
+        label: item.bbName,
+      }));
+      setOptions(options);
+    }
+
     localStorage.removeItem(REQUIREMENT_SPEC_STORAGE_NAME);
   };
 
@@ -363,7 +371,7 @@ const RequirementSpecificationSelectBBs = ({
   const displayTable = selectedItems.map((item) => {
     return (
       <div key={item.bbKey}>
-        {item.requirements?.functional.length ? (
+        {item.requirements?.crossCutting.length ? (
           <>
             <p className="table-container-name">{item.bbName} BB</p>
             <p className="table-container-title">
