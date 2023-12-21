@@ -270,8 +270,14 @@ type FormBBDetails = {
   requirement: { level: number; note: string };
 };
 
+type BBDetails = {
+  interfaceCompliance: ComplianceDetails;
+  deploymentCompliance: ComplianceDetails;
+  requirementSpecificationCompliance: ComplianceDetails;
+};
+
 export type FormUpdatedObject = {
-  bbDetails: Record<string, FormBBDetails>;
+  bbDetails: Record<string, BBDetails>;
 };
 
 export type SubmittingFormResponseType = {

@@ -168,7 +168,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     const errors: string[] = [];
 
     const form = await Compliance.findById(formId);
-
     if (!form) {
       errors.push('Form not found');
       return { success: false, errors };
@@ -190,7 +189,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       return { success: false, errors };
     }
     if (updatedData) {
-      const formDataUpdateResult = await this.updateFormData(formId, updatedData);
+      const formDataUpdateResult = await this.updateFormData(formId, updatedData, true);
 
       // Check if there were errors in updating data
       if (formDataUpdateResult.errors.length > 0) {
@@ -198,7 +197,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         await Compliance.updateOne({ _id: form._id }, {
           $set: { status: StatusEnum.IN_REVIEW }
         });
-
         console.error('Error updating data, status rolled back to IN_REVIEW');
         errors.push(...formDataUpdateResult.errors);
         return { success: false, errors };
@@ -223,7 +221,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     return { success: errors.length === 0, errors }
   },
 
-  async updateFormData(formId: string, updatedData): Promise<{ success: boolean, errors: string[] }> {
+  async updateFormData(formId: string, updatedData, skipStatusCheck = false): Promise<{ success: boolean, errors: string[] }> {
     const errors: string[] = [];
 
     try {
@@ -232,7 +230,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       if (!form) {
         errors.push(`Form with ID ${formId} does not exist.`);
       } else {
-        if (form.status !== StatusEnum.IN_REVIEW) {
+        if (!skipStatusCheck && form.status !== StatusEnum.IN_REVIEW) {
           errors.push("You can only edit a form that is in the IN_REVIEW status.");
         }
         if (!updatedData || !updatedData.bbDetails) {
