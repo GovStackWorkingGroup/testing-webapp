@@ -2,12 +2,13 @@
 @import '../../styles/Extends.less';
 
 table.main-table {
-  border: 1px solid @border-grey;
-  border-radius: 8px;
+  // border: 1px solid @border-grey;
+  // border-radius: 8px;
   border-spacing: 0;
   width: 100%;
-  height: calc(max-content - 10px);
+  // height: calc(max-content - 10px);
   overflow-y: auto;
+  border-collapse: collapse;
 
   thead:extend(.table-header-text) {
     height: @table-row;
@@ -39,24 +40,31 @@ table.main-table {
       height: @table-row;
 
       td {
-        min-height: @table-row;
+        // min-height: @table-row;
         max-width: 400px;
         padding: 0 10px 0 10px;
-        border-top: 1px solid @border-grey;
-        border-right: 1px solid @border-grey;
+        // border-top: 1px solid @border-grey;
+        // border-right: 1px solid @border-grey;
+        // border: 1px solid red;
       }
 
       td.td-row-details {
         padding: 0;
         max-width: 450px;
-        border-top: none;
-        height: 100%;
+        // border-top: none;
+
+        // border-right: none;
+        // border-left: none;
+        // border-bottom: none;
+        // border-bottom: 1px solid red;
+
+        // height: 100%;
       }
 
-      td.td-full-width {
-        display: contents;
-        width: 100%;
-      }
+      // td.td-full-width {
+      //   display: contents;
+      //   width: 100%;
+      // }
 
       td.no-vertical-border {
         border-right: none;
@@ -69,6 +77,26 @@ table.main-table {
       td:last-child {
         border-right: none;
       }
+    }
+
+    tr.border {
+      border: 1px solid @border-grey;
+
+      td {
+        border: 1px solid @border-grey;
+      }
+
+      td.border-none {
+        border: none;
+      }
+
+      td.border-bottom {
+        border-bottom: 1px solid green;
+      }
+    }
+
+    tr.border:first-child td.border-none {
+      border-bottom: 1px solid green;
     }
 
     tr.table-expand-tr {
@@ -93,9 +121,9 @@ table.main-table {
 
 table.inside-table {
   border-spacing: 0;
-  border-collapse: collapse;
+  // border-collapse: collapse;
   width: 100%;
-  height: inherit;
+  // height: inherit;
 
   tr {
     td {
@@ -224,6 +252,7 @@ table.inside-table {
   min-width: 145px;
   align-items: center;
   gap: 10px;
+  height: 50px;
 }
 
 .td-no-data-message {
@@ -259,7 +288,7 @@ table.inside-table {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 50px;
 }
 
 .notes-textarea {

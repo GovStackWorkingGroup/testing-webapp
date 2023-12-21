@@ -31,7 +31,7 @@ const SoftwareComplianceDetailsPage = () => {
   >([]);
   const [softwareDetailsDataToApprove, setSoftwareDetailsDataToApprove] =
     useState<SoftwareDetailsDataType>();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [updatedData, setUpdatedData] = useState<
     ComplianceDetailFormValuesType[] | undefined
   >();
