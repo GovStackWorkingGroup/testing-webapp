@@ -39,7 +39,9 @@ export default class GitHubLoginHandler {
       );
 
       if (!isMember) {
-        res.status(403).json({ message: `User is not a member of the "${appConfig.gitHub.reviewersTeam}" team` });
+        // Instead of sending a 403 error, redirect the user
+        const redirectUrl = this.getRedirectUrl('', req); // Passing an empty token or a specific token if needed
+        res.redirect(redirectUrl);
         return;
       }
 
