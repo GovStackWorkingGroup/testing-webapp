@@ -498,11 +498,11 @@ export const handleReviewSoftwareForm = async (
   const accessToken = sessionStorage.getItem('accessToken');
 
   return await fetch(`${baseUrl}/compliance/forms/${id}/${type}`, {
-    method: 'patch',
+    method: 'PATCH',
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
-      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      // ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   })
     .then((response) => {

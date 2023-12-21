@@ -31,7 +31,7 @@ const SoftwareComplianceDetailsPage = () => {
   >([]);
   const [softwareDetailsDataToApprove, setSoftwareDetailsDataToApprove] =
     useState<SoftwareDetailsDataType>();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [updatedData, setUpdatedData] = useState<
     ComplianceDetailFormValuesType[] | undefined
   >();
@@ -48,7 +48,7 @@ const SoftwareComplianceDetailsPage = () => {
     if (token) {
       setIsLoggedIn(true);
     }
-  },[]);
+  }, []);
 
   useEffect(() => {
     fetchData(softwareName as string);
@@ -81,8 +81,27 @@ const SoftwareComplianceDetailsPage = () => {
       };
 
       updatedData.forEach((item) => {
-        const { bbName, ...rest } = item;
-        payload.bbDetails[bbName] = { ...rest };
+        const {
+          bbName,
+          interface: interfaceData,
+          deployment,
+          requirement
+        } = item;
+
+        payload.bbDetails[bbName] = {
+          interfaceCompliance: {
+            level: interfaceData.level,
+            notes: interfaceData.note || '',
+          },
+          deploymentCompliance: {
+            level: deployment.level,
+            notes: deployment.note || '',
+          },
+          requirementSpecificationCompliance: {
+            level: requirement.level,
+            notes: requirement.note || '',
+          },
+        };
       });
 
       await handleReviewSoftwareForm(softwareDetail[0]._id, payload, type).then(

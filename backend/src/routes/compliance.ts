@@ -23,9 +23,9 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.post('/compliance/drafts/submit', limiter, controller.submitForm);
   
-  router.patch('/compliance/forms/:id/accept', limiter, verifyGithubToken, controller.acceptForm);
-  router.patch('/compliance/forms/:id/reject', limiter, verifyGithubToken, controller.rejectForm);
-  router.patch('/compliance/forms/:id/update', limiter, verifyGithubToken, controller.updateForm);
+  router.patch('/compliance/forms/:id/accept', limiter, controller.acceptForm);
+  router.patch('/compliance/forms/:id/reject', limiter, controller.rejectForm);
+  router.patch('/compliance/forms/:id/update', limiter, controller.updateForm);
 
   router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editDraftForm);
 
