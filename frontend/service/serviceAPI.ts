@@ -498,7 +498,7 @@ export const handleReviewSoftwareForm = async (
   const accessToken = sessionStorage.getItem('accessToken');
 
   return await fetch(`${baseUrl}/compliance/forms/${id}/${type}`, {
-    method: 'post',
+    method: 'patch',
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
