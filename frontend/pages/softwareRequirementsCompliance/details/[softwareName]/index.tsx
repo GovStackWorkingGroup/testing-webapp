@@ -91,15 +91,15 @@ const SoftwareComplianceDetailsPage = () => {
         payload.bbDetails[bbName] = {
           interfaceCompliance: {
             level: interfaceData.level,
-            notes: interfaceData.note || "",
+            notes: interfaceData.note || '',
           },
           deploymentCompliance: {
             level: deployment.level,
-            notes: deployment.note || "",
+            notes: deployment.note || '',
           },
           requirementSpecificationCompliance: {
             level: requirement.level,
-            notes: requirement.note || "",
+            notes: requirement.note || '',
           },
         };
       });
