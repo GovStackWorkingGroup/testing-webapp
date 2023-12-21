@@ -502,7 +502,7 @@ export const handleReviewSoftwareForm = async (
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
-      // ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     },
   })
     .then((response) => {
