@@ -130,7 +130,9 @@ const Table = ({
                 handleOpenEvaluationSchemaModal
               ) {
                 return (
-                  <th key={`header-${header}-${indexKey}`}>
+                  <th
+                    key={`header-${header}-${indexKey}`}
+                    className={classNames({ 'no-vertical-border': !hasVerticalBorders })}>
                     <div className="th-header-with-icon">
                       <p>{format(header)}</p>
                       <RiQuestionLine
