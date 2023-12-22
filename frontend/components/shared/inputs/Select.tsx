@@ -20,6 +20,7 @@ const CustomSelect = ({
       {...otherProps}
       placeholder={placeholder}
       onChange={(newValue: SingleValue<OptionsType>) => onChange(newValue)}
+      classNamePrefix="react-select"
       classNames={{
         valueContainer: () => 'search-value-container',
         placeholder: () => 'search-placeholder',
