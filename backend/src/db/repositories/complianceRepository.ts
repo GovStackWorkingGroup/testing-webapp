@@ -191,8 +191,6 @@ const mongoComplianceRepository: ComplianceDbRepository = {
         complianceItem.bbDetails.forEach((value, _) => {
           value.status = newStatus;
         });
-
-        // Optionally, you can save the updated document if required
       }
     }
     // Check if status update was successful
