@@ -181,7 +181,20 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     const statusUpdateResult = await Compliance.updateOne({ _id: form._id }, {
       $set: { status: newStatus }
     });
+    const complianceDoc = await Compliance.findOne({ _id: form._id });
 
+    if (complianceDoc && complianceDoc.compliance && complianceDoc.compliance.length > 0) {
+      const complianceItem = complianceDoc.compliance[0];
+
+      if (complianceItem.bbDetails) {
+        // Iterate through the Map and update the status
+        complianceItem.bbDetails.forEach((value, _) => {
+          value.status = newStatus;
+        });
+
+        // Optionally, you can save the updated document if required
+      }
+    }
     // Check if status update was successful
     if (!statusUpdateResult || !statusUpdateResult.matchedCount) {
       console.error('Failed to update form status');
@@ -203,6 +216,7 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       }
     }
 
+    await complianceDoc?.save();
     return { success: true, errors };
   },
 
