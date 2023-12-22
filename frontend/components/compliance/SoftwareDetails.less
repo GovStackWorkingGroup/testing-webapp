@@ -131,13 +131,30 @@
 .report-detail-deployment-container {
   display: flex;
   height: 200px;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.report-detail-deployment-container > div {
+.report-detail-deployment-container > a {
   width: 50%;
   display: flex;
-  flex-direction: column;
+  border: 1px solid @accents-and-btn;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
   align-items: center;
+  gap: 15px;
+  width: calc(100% - 20px);
+  text-decoration: none;
+}
+
+.report-detail-deployment-container > a > p {
+  color: @text-main;
+  max-width: 80%;
+}
+
+.report-detail-deployment-container > a:hover {
+  background-color: @blue-15;
 }
 
 .report-view-doc-icon {
