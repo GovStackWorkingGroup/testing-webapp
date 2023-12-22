@@ -86,7 +86,7 @@ const ReportViewDetail = () => {
       <div className="back-to-btn-container">
         <BackToPageButton
           text={format('app.back_to_reports_list.label')}
-          href={COMPLIANCE_TESTING_RESULT_PAGE}
+          goBack={true}
         />
       </div>
       <div className="report-detail-container">
