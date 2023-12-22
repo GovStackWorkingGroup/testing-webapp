@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import Definition from '../components/Definition';
 import ProductTable from '../components/table/ProductTable';
 import useTranslations from '../hooks/useTranslation';
+import { toast } from 'react-toastify';
 
 const HomePage = () => {
   const router = useRouter();
@@ -24,6 +25,22 @@ const HomePage = () => {
       }, undefined, { shallow: true });
     }
   };
+
+  const handleLoginRejected = () => {
+    if (router.query.loginRejected === 'true') {
+      toast.error(format('app.error_login.message'));
+      const newQuery = { ...router.query };
+      delete newQuery.loginRejected;
+      router.replace({
+        pathname: router.pathname,
+        query: newQuery,
+      }, undefined, { shallow: true });
+    }
+  };
+
+  useEffect(() => {
+    handleLoginRejected();
+  }, [router.query]);
 
   useEffect(updateQueryParams, [router]);
 

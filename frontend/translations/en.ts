@@ -26,6 +26,7 @@ export const en = {
   'app.email_confirm.label': 'Confirm email',
   'app.error_fetching_data.message':
     'Error fetching data. Please try again later.',
+  'app.error_login.message': 'You cannot log in because you are not a part of the reviewers group',
   'app.evaluation_schema.label': 'Evaluation Schema',
   'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
