@@ -32,7 +32,7 @@ const ListOfCandidateResults = () => {
   ];
 
   useEffect(() => {
-    fetchData(0, 5);
+    fetchData(0, 10);
   }, []);
 
   const fetchData = async (offset: number, limit: number) => {
@@ -109,7 +109,7 @@ const ListOfCandidateResults = () => {
   };
 
   const handleLoadMoreData = () => {
-    fetchData(currentDataLength, 5);
+    fetchData(currentDataLength, 10);
   };
 
   return (
