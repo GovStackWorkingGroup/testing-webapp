@@ -130,12 +130,7 @@ const Table = ({
                 handleOpenEvaluationSchemaModal
               ) {
                 return (
-                  <th
-                    key={`header-${header}-${indexKey}`}
-                    className={`${
-                      hasVerticalBorders ? '' : 'no-vertical-border'
-                    }`}
-                  >
+                  <th key={`header-${header}-${indexKey}`}>
                     <div className="th-header-with-icon">
                       <p>{format(header)}</p>
                       <RiQuestionLine
@@ -211,7 +206,7 @@ const Table = ({
                 <>
                   {row.subHeader && (
                     <tr
-                      key={`subheader-${row.subHeader}-${rowIndexKey}`}
+                      key={`subheader-x-${row.subHeader}-${rowIndexKey}`}
                       className="tr-subheader"
                     >
                       <td colSpan={8}>
@@ -240,16 +235,13 @@ const Table = ({
                       </td>
                     </tr>
                   )}
-                  <tr key={`row-${row}-${rowIndexKey}`}>
+                  <tr key={`row-${row}-${rowIndexKey}`} className="border">
                     {row.cell.map((cell, indexKey) => {
                       if ('value' in cell) {
                         if (cell.value === 'checked') {
                           return (
                             <td
                               key={`details-cell-check-${cell.value}-${indexKey}`}
-                              className={`${
-                                hasVerticalBorders ? '' : 'no-vertical-border'
-                              }`}
                             >
                               <RiCheckFill className="check-icon" />
                             </td>
@@ -271,9 +263,9 @@ const Table = ({
                           return (
                             <td
                               key={`details-cell-status-${cell.value}-${indexKey}`}
-                              className={`${
-                                hasVerticalBorders ? '' : 'no-vertical-border'
-                              }`}
+                              className={classNames({
+                                'no-vertical-border': !hasVerticalBorders,
+                              })}
                             >
                               {cell.value === 'In Review' && (
                                 <p className="td-text-color-container status-in-review">
@@ -317,9 +309,9 @@ const Table = ({
                           return (
                             <td
                               key={`details-cell-${cell.value}-${indexKey}`}
-                              className={`${
-                                hasVerticalBorders ? '' : 'no-vertical-border'
-                              }`}
+                              className={classNames({
+                                'no-vertical-border': !hasVerticalBorders,
+                              })}
                             >
                               <div className="td-bb-image-name-container">
                                 <BBImage imagePath={cell.value} />
@@ -331,14 +323,17 @@ const Table = ({
 
                         return (
                           <td
-                            key={`details-cell-${cell.value}-${indexKey}`}
-                            className={`${
-                              hasVerticalBorders ? '' : 'no-vertical-border'
-                            } ${
-                              evaluationSummaryTable
-                                ? 'evaluation-summary-table-td'
-                                : ''
-                            }`}
+                            key={`details-cell-y-${cell.value}-${indexKey}`}
+                            className={classNames(
+                              'border',
+                              {
+                                'no-vertical-border': !hasVerticalBorders,
+                              },
+                              {
+                                'evaluation-summary-table-td':
+                                  evaluationSummaryTable,
+                              }
+                            )}
                           >
                             {/* @ts-ignore */}
                             {formatDateIfDate(cell.value)}
@@ -357,7 +352,7 @@ const Table = ({
                             key={`divided-row-${cell}-${indexKey}`}
                           >
                             <table
-                              className={classNames('inside-table border-top', {
+                              className={classNames('main-table', {
                                 'table-full-height':
                                   !doesValuesExistInsideValues &&
                                   !isEvaluationSchema,
@@ -365,12 +360,16 @@ const Table = ({
                             >
                               <tbody
                                 className={classNames({
-                                  'has-divided-inside-table':
+                                  'has-divided-main-table':
                                     doesValuesExistInsideValues,
                                 })}
                               >
                                 {cell.values.map(
-                                  (item: CellValue | CellValues, indexKey) => {
+                                  (
+                                    item: CellValue | CellValues,
+                                    indexKey,
+                                    all
+                                  ) => {
                                     if (
                                       !isEvaluationSchema &&
                                       indexKey > 0 &&
@@ -394,7 +393,7 @@ const Table = ({
                                           <tr
                                             key={`details-divided-cell-${item.value}-${indexKey}`}
                                           >
-                                            <td>
+                                            <td className="border-none">
                                               {(item.value as number) ===
                                                 -1 && (
                                                 <p className="td-text-color-container status-na">
@@ -424,7 +423,17 @@ const Table = ({
                                         <tr
                                           key={`details-divided-cell-values-${item.value}-${indexKey}`}
                                         >
-                                          <td>{item.value}</td>
+                                          <td
+                                            className={classNames(
+                                              'border-none',
+                                              {
+                                                'border-bottom':
+                                                  indexKey < all.length - 1,
+                                              }
+                                            )}
+                                          >
+                                            {item.value}
+                                          </td>
                                         </tr>
                                       );
                                     }
@@ -433,19 +442,28 @@ const Table = ({
                                       return (
                                         <td
                                           className={classNames(
-                                            'td-row-details without-borders',
+                                            'td-row-details border-none',
+
                                             {
                                               'evaluation-summary-table-td-divided':
                                                 evaluationSummaryTable,
+                                            },
+                                            {
+                                              'has-divided-main-table-border':
+                                                doesValuesExistInsideValues &&
+                                                indexKey === 1,
                                             }
                                           )}
                                           key={`divided-row-${cell}-${indexKey}`}
-                                          style={{ display: 'contents' }}
                                         >
-                                          <table className="inside-table border-top">
+                                          <table className="main-table">
                                             <tbody>
                                               {item.values.map(
-                                                (item: CellValue, indexKey) => {
+                                                (
+                                                  item: CellValue,
+                                                  indexKey,
+                                                  all
+                                                ) => {
                                                   if ('value' in item) {
                                                     if (
                                                       [-1, 1, 2].includes(
@@ -454,9 +472,19 @@ const Table = ({
                                                     ) {
                                                       return (
                                                         <tr
-                                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                          key={`details-divided-cell-x-${item.value}-${indexKey}`}
                                                         >
-                                                          <td>
+                                                          <td
+                                                            className={classNames(
+                                                              'border-none',
+                                                              {
+                                                                'border-bottom':
+                                                                  indexKey <
+                                                                  all.length -
+                                                                    1,
+                                                              }
+                                                            )}
+                                                          >
                                                             {(item.value as number) ===
                                                               -1 && (
                                                               <p className="td-text-color-container status-na">
@@ -487,22 +515,37 @@ const Table = ({
                                                     }
 
                                                     if (
-                                                      typeof item.value === 'string' &&
-                                                      item.value.startsWith('bb-')
+                                                      typeof item.value ===
+                                                        'string' &&
+                                                      item.value.startsWith(
+                                                        'bb-'
+                                                      )
                                                     ) {
                                                       return (
                                                         <tr
-                                                          key={`details-divided-cell-${item.value}-${indexKey}`}
+                                                          key={`details-divided-cell-y-${item.value}-${indexKey}`}
                                                         >
                                                           <td
-                                                            key={`details-cell-${item.value}-${indexKey}`}
-                                                            className={`${
-                                                            hasVerticalBorders ? '' : 'no-vertical-border'
-                                                          }`}
+                                                            key={`details-cell-x-${item.value}-${indexKey}`}
+                                                            className={classNames(
+                                                              'border-none',
+                                                              {
+                                                                'no-vertical-border':
+                                                                  !hasVerticalBorders,
+                                                              }
+                                                            )}
                                                           >
                                                             <div className="td-bb-image-name-container">
-                                                              <BBImage imagePath={item.value} />
-                                                              <p>{format(item.value)}</p>
+                                                              <BBImage
+                                                                imagePath={
+                                                                  item.value
+                                                                }
+                                                              />
+                                                              <p>
+                                                                {format(
+                                                                  item.value
+                                                                )}
+                                                              </p>
                                                             </div>
                                                           </td>
                                                         </tr>
@@ -511,9 +554,22 @@ const Table = ({
 
                                                     return (
                                                       <tr
-                                                        key={`details-divided-cell-values-${item.value}-${indexKey}`}
+                                                        key={`details-divided-cell-values-x-${item.value}-${indexKey}`}
                                                       >
-                                                        <td><div className='cell-td'>{item.value}</div></td>
+                                                        <td
+                                                          className={classNames(
+                                                            'border-none',
+                                                            {
+                                                              'border-bottom':
+                                                                indexKey <
+                                                                all.length - 1,
+                                                            }
+                                                          )}
+                                                        >
+                                                          <div className="cell-td">
+                                                            {item.value}
+                                                          </div>
+                                                        </td>
                                                       </tr>
                                                     );
                                                   }
@@ -536,7 +592,7 @@ const Table = ({
                   {!isEvaluationSchema &&
                     'values' in row.cell[1] &&
                     row.cell[1].values.length > 1 && (
-                    <tr className="table-expand-tr">
+                    <tr className="table-expand-tr border" key='table-expand-tr'>
                       <td colSpan={1}></td>
                       <td
                         colSpan={5}

@@ -32,31 +32,35 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
     <tbody
       id="scrollableDiv"
     >
-      <tr>
+      <tr
+        class="border"
+      >
         <td
-          class=" "
+          class="border"
         >
           Deployment Compliance
         </td>
         <td
-          class=" "
+          class="border"
         >
           Deployability via container
         </td>
         <td
-          class=" "
+          class="border"
         >
           Deployable
         </td>
         <td
-          class=" "
+          class="border"
         >
           N/A
         </td>
       </tr>
-      <tr>
+      <tr
+        class="border"
+      >
         <td
-          class=" "
+          class="border"
         >
           Requirement Specification
         </td>
@@ -64,23 +68,29 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications
                 </td>
               </tr>
@@ -91,23 +101,29 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   All
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   ≥ 1
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   ≥ 1
                 </td>
               </tr>
@@ -118,23 +134,29 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   All
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   All
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   All
                 </td>
               </tr>
@@ -142,9 +164,11 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           </table>
         </td>
       </tr>
-      <tr>
+      <tr
+        class="border"
+      >
         <td
-          class=" "
+          class="border"
         >
           Interface Compliance
         </td>
@@ -152,18 +176,22 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   Fulfillment of Service API requirements
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
                 </td>
               </tr>
@@ -174,18 +202,22 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   ≥ 1
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   Optional
                 </td>
               </tr>
@@ -196,18 +228,22 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
           class="td-row-details"
         >
           <table
-            class="inside-table border-top"
+            class="main-table"
           >
             <tbody
               class=""
             >
               <tr>
-                <td>
+                <td
+                  class="border-none border-bottom"
+                >
                   All
                 </td>
               </tr>
               <tr>
-                <td>
+                <td
+                  class="border-none"
+                >
                   All
                 </td>
               </tr>

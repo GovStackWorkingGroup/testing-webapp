@@ -81,15 +81,15 @@ const ComplianceDetailTable = ({
     let level: number;
 
     switch (value?.label) {
-      case 'Level 1':
-        level = 1;
-        break;
-      case 'Level 2':
-        level = 2;
-        break;
-      case 'N/A':
-        level = -1;
-        break;
+    case 'Level 1':
+      level = 1;
+      break;
+    case 'Level 2':
+      level = 2;
+      break;
+    case 'N/A':
+      level = -1;
+      break;
     }
 
     if (updatedFormValues && index) {
@@ -260,7 +260,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
-                  <tr className="">
+                  <tr>
                     <td className="td-row-details td-full-width border-none">
                       <table className="main-table ">
                         <tbody>
@@ -269,9 +269,12 @@ const ComplianceDetailTable = ({
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
                                 >
-                                  <td className="border-none">
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="td-bb-image-name-container">
                                       <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
@@ -291,7 +294,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
-                  <tr className="">
+                  <tr>
                     <td className="td-row-details td-full-width border-none">
                       <table className="main-table">
                         <tbody>
@@ -300,9 +303,12 @@ const ComplianceDetailTable = ({
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
                                 >
-                                  <td className="border-none">
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <CustomSelect
                                       options={[
                                         {
@@ -388,7 +394,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
-                  <tr className="">
+                  <tr>
                     <td className="td-row-details td-full-width border-none">
                       <table className="main-table ">
                         <tbody>
@@ -404,7 +410,11 @@ const ComplianceDetailTable = ({
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
                                   className=""
                                 >
-                                  <td className="border-none">
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="td-bb-image-name-container">
                                       <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
@@ -424,7 +434,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
-                  <tr className="">
+                  <tr>
                     <td className="td-row-details td-full-width border-none">
                       <table className="main-table ">
                         <tbody>
@@ -441,8 +451,9 @@ const ComplianceDetailTable = ({
                                   className=""
                                 >
                                   <td
-                                    className="border-none"
-                                    style={{ borderBottom: '1px solid red' }}
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
                                   >
                                     <CustomSelect
                                       options={[
@@ -481,7 +492,7 @@ const ComplianceDetailTable = ({
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
-                  <tr className="">
+                  <tr>
                     <td className="td-row-details td-full-width border-none">
                       <table className="main-table">
                         <tbody>
@@ -497,7 +508,11 @@ const ComplianceDetailTable = ({
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
                                   className=""
                                 >
-                                  <td className="border-none">
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="notes-container">
                                       <textarea
                                         id={`requirement-${item.bbName}`}
