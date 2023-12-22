@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { RiQuestionLine } from 'react-icons/ri';
+import classNames from 'classnames';
 import { RequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { SoftwareDetailsDataType } from '../../service/types';
@@ -32,7 +33,7 @@ export type ComplianceDetailFormValuesType = {
 const ComplianceDetailTable = ({
   data,
   setUpdatedData,
-  handleOpenEvaluationSchemaModal
+  handleOpenEvaluationSchemaModal,
 }: ComplianceDetailTable) => {
   const [transformedData, setTransformedData] =
     useState<TransformedDataType[]>();
@@ -198,13 +199,11 @@ const ComplianceDetailTable = ({
     <div>
       <table className="main-table">
         <thead>
-          <tr>
+          <tr className="border">
             {headers.map((header, indexKey) => {
               if (header === 'table.compliance_level.label') {
                 return (
-                  <th
-                    key={`header-${header}-${indexKey}`}
-                  >
+                  <th key={`header-${header}-${indexKey}`}>
                     <div className="th-header-with-icon">
                       <p>{format(header)}</p>
                       <RiQuestionLine
@@ -221,7 +220,7 @@ const ComplianceDetailTable = ({
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr className="border">
             <td>{format('table.deployment.label')}</td>
             <td>{'-'}</td>
             <td>
@@ -256,23 +255,26 @@ const ComplianceDetailTable = ({
               </div>
             </td>
           </tr>
-          <tr>
+          <tr className="border">
             <td>{format('table.interface.label')}</td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="td-bb-image-name-container">
                                       <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
@@ -290,20 +292,23 @@ const ComplianceDetailTable = ({
               </table>
             </td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <CustomSelect
                                       options={[
                                         {
@@ -339,20 +344,24 @@ const ComplianceDetailTable = ({
               </table>
             </td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr className="">
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
+                                  className=""
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="notes-container">
                                       <textarea
                                         id={`interface-${item.bbName}`}
@@ -378,16 +387,16 @@ const ComplianceDetailTable = ({
               </table>
             </td>
           </tr>
-          <tr>
+          <tr className="border">
             <td>
               {format('evaluation_schema.requirement_specification.label')}
             </td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
@@ -399,9 +408,13 @@ const ComplianceDetailTable = ({
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
+                                  className=""
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="td-bb-image-name-container">
                                       <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
@@ -419,11 +432,11 @@ const ComplianceDetailTable = ({
               </table>
             </td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
@@ -435,9 +448,13 @@ const ComplianceDetailTable = ({
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
+                                  className=""
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <CustomSelect
                                       options={[
                                         {
@@ -473,11 +490,11 @@ const ComplianceDetailTable = ({
               </table>
             </td>
             <td className="td-row-details">
-              <table className="inside-table">
+              <table className="main-table">
                 <tbody>
-                  <tr className="border-top">
-                    <td className="td-row-details td-full-width">
-                      <table className="inside-table border-top">
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table">
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
@@ -489,9 +506,13 @@ const ComplianceDetailTable = ({
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className="border-top"
+                                  className=""
                                 >
-                                  <td>
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
                                     <div className="notes-container">
                                       <textarea
                                         id={`requirement-${item.bbName}`}
