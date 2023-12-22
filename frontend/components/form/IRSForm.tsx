@@ -98,11 +98,11 @@ const IRSForm = ({
 
       let newData = [...updatedData];
       if (nonMatchingInterfaceItems) {
-        newData = [...updatedData, ...nonMatchingInterfaceItems];
+        newData = [...newData, ...nonMatchingInterfaceItems];
       }
 
       if (nonMatchingRequirementItems) {
-        newData = [...updatedData, ...nonMatchingRequirementItems];
+        newData = [...newData, ...nonMatchingRequirementItems];
       }
 
       setAllData(
@@ -167,6 +167,7 @@ const IRSForm = ({
   };
 
   useEffect(() => {
+    console.log('allData', allData);
     if (allData) {
       onEdited(!isValidArray(allData));
     }
