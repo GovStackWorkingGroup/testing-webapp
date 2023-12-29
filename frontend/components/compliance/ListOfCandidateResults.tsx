@@ -8,6 +8,7 @@ import InfoModal from '../shared/modals/InfoModal';
 import Button from '../shared/buttons/Button';
 import { COMPLIANCE_TESTING_FORM } from '../../service/constants';
 import InfiniteScrollCustomLoader from '../InfiniteScrollLoader';
+import ListOfCandidateFilter from './ListOfCandidateResultFilter';
 import EvaluationSchemaTable from './EvaluationSchemaTable';
 
 const ListOfCandidateResults = () => {
@@ -17,6 +18,8 @@ const ListOfCandidateResults = () => {
   const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
     useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [softwareFilters, setSoftwareFilters] = useState({});
+  const [bbFilters, setBbFilters] = useState({});
 
   const { format } = useTranslations();
 
@@ -32,12 +35,16 @@ const ListOfCandidateResults = () => {
   ];
 
   useEffect(() => {
-    fetchData(0, 10);
-  }, []);
+    console.log("fetching", softwareFilters, bbFilters)
+    fetchData(0, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
+  }, [softwareFilters, bbFilters]);
 
-  const fetchData = async (offset: number, limit: number) => {
+  const fetchData = async (offset: number, limit: number, filters ) => {
     setIsLoadingData(true);
-    const fetchedData = await getComplianceList(offset, limit);
+    const fetchedData = await getComplianceList(offset, limit, filters);
     if (fetchedData.status) {
       setAllDataLength(fetchedData.data.count);
       const transformedData: DataType = {
@@ -114,7 +121,16 @@ const ListOfCandidateResults = () => {
 
   return (
     <>
+      <p className="filters-and-button-container definition-title" style={{ alignItems: 'left', padding: '10px' }}>
+        {format('app.reports.title')}
+      </p>
       <div className="filters-and-button-container">
+        <span style={{ display: 'flex', alignItems: 'center' }}> {/* Changed 'left' to 'center' for vertical alignment */}
+          <ListOfCandidateFilter
+            filterType='bb' onChange={(s) => setBbFilters(s)} placeholder={format('building_block.label')}/>
+          <ListOfCandidateFilter
+            filterType='software' onChange={(s) => setSoftwareFilters(s)} placeholder={format('software.label')}/>
+        </span>
         <Button
           text={format('app.check_compliance.label')}
           styles="primary-button"

@@ -17,6 +17,7 @@ import {
   SoftwareDraftToUpdateType,
   SubmitDraftResponseType,
   SubmittingFormResponseType,
+  FilterOptionsType
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -140,10 +141,11 @@ export const getBuildingBlockTestResults = async (
     });
 };
 
-export const getComplianceList = async (offset: number, limit: number) => {
+export const getComplianceList = async (offset: number, limit: number, filters) => {
 
   const accessToken = sessionStorage.getItem('accessToken');
 
+  
   return await fetch(
     `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}`,
     {
@@ -483,6 +485,28 @@ export const getSoftwareDetailsReport = async (id: string) => {
       return response.json();
     })
     .then<Success<SoftwareDetailsDataType>>((actualData) => {
+      return { data: actualData, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
+export const getFilters = async (filterType: string) => {
+  return await fetch(`${baseUrl}/compliance/filters/${filterType}`, {
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<FilterOptionsType>>((actualData) => {
       return { data: actualData, status: true };
     })
     .catch<Failure>((error) => {

@@ -211,6 +211,34 @@
   border: 2px solid @white;
 }
 
+.checkbox-square {
+accent-color: #325BE3;
+border-radius: 2px;
+background-color: @accents-and-btn;
+
+/* Inside auto layout */
+flex: none;
+order: 0;
+flex-grow: 0;
+background: @blue-15 !important;
+}
+
+.dropdown-filter {
+  /* filter */
+
+/* Auto layout */
+background: #FFFFFF;
+border: 1px solid #DFDFEA;
+border-radius: 4px;
+
+display: flex;
+flex-direction: row;
+padding: 0px;
+gap: 8px;
+height: 40px;
+margin-right: 20px;
+}
+
 .input-select {
   min-width: 300px;
   width: min-content;
@@ -219,4 +247,27 @@
 .input-width-400 {
   min-width: 400px;
   width: min-content;
+}
+
+.dropdown-circle {
+
+font-family: 'Arial';
+font-style: normal;
+font-weight: 400;
+font-size: 12px;
+line-height: 14px;
+
+/* accents and buttons */
+color: @accents-and-btn;
+
+
+  // display: inline-flex;
+  // align-items: center;
+  justify-content: center;
+  background-color:@blue-10;
+  border-radius: 50%; /* Makes the shape circular */
+  width: 15px; /* Width of the circle */
+  height: 15px; /* Height of the circle */
+  text-align: center;
+  // font-size: 12px; /* Adjust font size as needed */
 }

@@ -36,6 +36,7 @@ export default class GetAllComplianceReportsRequestHandler {
 
       } else {
         const aggregatedReports = await this.repository.aggregateComplianceReports(limit, offset, validationErrors.filters, this.isAuthenticated);
+        console.log(aggregatedReports);
         this.res.json(aggregatedReports);
       }
 

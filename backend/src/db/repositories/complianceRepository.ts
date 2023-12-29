@@ -1,10 +1,12 @@
-import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback, ComplianceListFilters } from 'myTypes';
+import { AllBBRequirements, BBRequirement, ComplianceAggregationListResult, ComplianceDbRepository, ComplianceReport, FormDetailsResults, StatusEnum, draftDataForRollback, ComplianceListFilter, ComplianceListFilters } from 'myTypes';
 import { v4 as uuidv4 } from 'uuid';
 import Compliance from '../schemas/compliance/compliance';
 import mongoose from 'mongoose';
 import { appConfig } from '../../config/index';
 import { createAggregationPipeline } from '../pipelines/compliance/complianceListAggregation';
 import { formDetailAggregationPipeline } from '../pipelines/compliance/formDetailAggregation';
+import { softwaresListPipeline } from '../pipelines/compliance/softwaresList';
+import { bbsListPipeline } from '../pipelines/compliance/bbsList';
 import { softwareDetailAggregationPipeline } from '../pipelines/compliance/softwareDetailAggregation';
 import BBRequirements from '../schemas/bbRequirements';
 import { aggregationPipeline } from '../pipelines/compliance/AllbbRequirements';
@@ -50,6 +52,26 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
+  async getAllSoftwares(): Promise<ComplianceListFilter[]> {
+    try {
+      const results = await Compliance.aggregate(softwaresListPipeline()).exec();
+      return results[0];
+    } catch (error) {
+      console.error("Failed to fetch softwares with versions.");
+      throw new Error('Error fetching software list');
+    }
+  },
+
+  async getAllBBs(): Promise<ComplianceListFilter[]> {
+    try {
+      const results = await Compliance.aggregate(bbsListPipeline()).exec();
+      return results[0];
+    } catch (error) {
+      console.error("Failed to fetch BBs with versions:", error);
+      throw new Error('Error fetching BBs');
+    }
+  },
+  
   async getFormDetail(formId: string): Promise<FormDetailsResults> {
     try {
       const results = await Compliance.aggregate(formDetailAggregationPipeline({ formId })).exec();

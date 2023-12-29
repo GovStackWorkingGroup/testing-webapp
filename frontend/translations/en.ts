@@ -17,6 +17,7 @@ export const en = {
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
   'app.definition.title': 'GovStack Building Block Compliance Platform',
   'app.definition_self_assessment.title': 'Self-Assessment of Compliance',
+  'app.reports.title': 'Reports',
   'app.definition_self_assessment_part_1.description':
     'The Software Requirements Compliance form allows software providers to self-assess their products against the functional requirements that have been developed by GovStack. These assessments help GovStack users validate that a particular software platform is able to meet the functional requirements for one or more Building Blocks, as well as whether it adheres to the cross-functional requirements specified for all GovStack implementations.',
   'app.definition_self_assessment_part_2.description':
@@ -155,6 +156,10 @@ export const en = {
   'software_logo.label': 'Software Logo',
   'software_name.label': 'Software Name',
   'software_website.label': 'Software Website',
+
+  'software.label': 'Software',
+  'select.label': 'Select',
+  'filter_by.label': 'Filter by',
 
   'progress_bar.next.label': 'Next',
   'progress_bar.previous_step.label': 'Previous Step',
