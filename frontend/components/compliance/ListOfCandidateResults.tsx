@@ -144,7 +144,7 @@ const ListOfCandidateResults = () => {
         {format('app.reports.title')}
       </p>
       <div className="filters-and-button-container">
-        <span style={{ display: 'flex', alignItems: 'center' }}> {/* Changed 'left' to 'center' for vertical alignment */}
+        <span style={{ display: 'flex', alignItems: 'center' }}>
           <ListOfCandidateFilter
             filterType='bb' onChange={(s) => setBbFilters(s)} placeholder={format('building_block.label')}/>
           <ListOfCandidateFilter

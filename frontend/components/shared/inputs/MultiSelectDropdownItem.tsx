@@ -14,7 +14,7 @@ type DropDownItem = {
 const DropdownItem = ({ item, isSelected, onSelectItem }: DropDownItem) => {
   return (
     <div onClick={onSelectItem} style={{ backgroundColor: isSelected ? 'blue' : 'white' }}>
-      {item.name} {/* Assuming each item has a 'name' property */}
+      {item.name}
     </div>
   );
 };

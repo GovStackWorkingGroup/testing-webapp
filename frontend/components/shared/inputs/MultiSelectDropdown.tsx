@@ -33,7 +33,7 @@ interface BlueCircle {
   number: string | number;
 }
 
-interface InputOption1Props {
+interface DropdownInputOptionProps {
   getStyles: any;
   Icon?: React.ComponentType;
   isDisabled: boolean;
@@ -86,7 +86,7 @@ const InnerOptionContainer: React.FC<InnerOptionContainerProps> = ({
   </div>;
 };
 
-const InputOption1: React.FC<InputOption1Props> = ({
+const DropdownInputOption: React.FC<DropdownInputOptionProps> = ({
   getStyles,
   Icon,
   isDisabled,
@@ -97,10 +97,7 @@ const InputOption1: React.FC<InputOption1Props> = ({
   versions,
   ...rest
 }) => {
-  // const [isActive, setIsActive] = useState(false);
-  // const onMouseDown = () => setIsActive(true);
-  // const onMouseUp = () => setIsActive(false);
-  // const onMouseLeave = () => setIsActive(false);
+
   const [selectedVersions, setSelectedVersions] = useState<string[]>([]);
 
   // prop assignment
@@ -223,8 +220,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     });
   };
 
-  const style1 = {    control: (baseStyles: any) => ({
-    // none of react-select's styles are passed to <Control />
+  const selectorstyle = {    control: (baseStyles: any) => ({
     ...baseStyles,
     width: 200,
     border: 10,
@@ -262,13 +258,13 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           isMulti
           hideSelectedOptions={false}
           /* @ts-ignore */
-          components={{ Option: InputOption1, Placeholder }}
+          components={{ Option: DropdownInputOption, Placeholder }}
           /* @ts-ignore */
           versions={versions as unknown}
           onSelect={toggleSelection}
           options={items}
           placeholder={placeholder}
-          styles={style1}
+          styles={selectorstyle}
           onChange={selectItems}
           isClearable={false}
         />

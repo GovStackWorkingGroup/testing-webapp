@@ -169,8 +169,6 @@ export const getComplianceList = async (offset: number, limit: number, filters: 
       filterObject.version = filters.bb[key];
     }
 
-    console.log(key, filterObject);
-
     return filterObject;
   });
 
