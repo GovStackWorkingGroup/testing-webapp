@@ -1,17 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Select, { components } from 'react-select';
+import Select, { components, MultiValue } from 'react-select';
 import { useIntl } from 'react-intl';
-import { getFilters } from '../../../service/serviceAPI';
-import { FilterOptionsType } from '../../../service/types';
-import Checkbox from './Checkbox';
 import useTranslations from '../../../hooks/useTranslation';
-
-interface MultiSelectDropdownProps {
-  onChange: (arg0: any) => void;
-  placeholder: string;
-  availableItems: OptionType[];
-  availableVersions: { [key: string]: OptionType[] }
-}
+import Checkbox from './Checkbox';
 
 interface OptionType {
   value: string;
@@ -19,7 +10,43 @@ interface OptionType {
   isFixed?: boolean;
 }
 
-const InnerOptionContainer = ({
+interface VersionType {
+  [key: string]: OptionType[];
+}
+
+interface MultiSelectDropdownProps {
+  onChange: (selectedItems: string[]) => void;
+  placeholder: string;
+  availableItems: OptionType[];
+  availableVersions: VersionType;
+}
+
+interface InnerOptionContainerProps {
+  getStyles: any;
+  isSelected: boolean;
+  label: string;
+  value: string;
+  onChange: () => void;
+}
+
+interface BlueCircle {
+  number: string | number;
+}
+
+interface InputOption1Props {
+  getStyles: any;
+  Icon?: React.ComponentType;
+  isDisabled: boolean;
+  isFocused: boolean;
+  isSelected: boolean;
+  children: React.ReactNode;
+  innerProps: any;
+  versions: VersionType;
+  selectProps: any;
+  getValue: () => OptionType[];
+}
+
+const InnerOptionContainer: React.FC<InnerOptionContainerProps> = ({
   getStyles,
   isSelected,
   label,
@@ -42,6 +69,7 @@ const InnerOptionContainer = ({
     onMouseLeave={handleMouseLeave}
     onMouseDown={onChange}
   >
+    {/* @ts-ignore */}
     <components.Option
       key={value}
       isSelected={isSelected}
@@ -58,7 +86,7 @@ const InnerOptionContainer = ({
   </div>;
 };
 
-const InputOption1 = ({
+const InputOption1: React.FC<InputOption1Props> = ({
   getStyles,
   Icon,
   isDisabled,
@@ -85,7 +113,7 @@ const InputOption1 = ({
     [formatMessage]
   );
 
-  const toggleVersion = (version) => {
+  const toggleVersion = (version: any) => {
     setSelectedVersions(prev => {
       if (prev.includes(version)) {
         return prev.filter(v => v !== version);
@@ -99,10 +127,11 @@ const InputOption1 = ({
     if (rest.getValue()?.length !== 0) {
       rest.selectProps.onSelect(children, selectedVersions);
     }
-  }, [selectedVersions, rest.getValue()]);
+  }, [selectedVersions]);
 
   return (
     <div>
+      {/* @ts-ignore */}
       <components.Option
         {...rest}
         isDisabled={isDisabled}
@@ -114,8 +143,8 @@ const InputOption1 = ({
         <div style={{ display: 'flex', flexDirection: 'column' }}> {/* Flex container */}
           <div style={{ display: 'flex', alignItems: 'center' }}> {/* Flex item: Checkbox + Label */}
             <Checkbox
-              key={children}
-              label={format(children)}
+              key={children as string}
+              label={format(children as string)}
               checked={isSelected}
               className="checkbox-square"
             />
@@ -124,7 +153,7 @@ const InputOption1 = ({
       </components.Option>
       {isSelected && (
         <div style={{ marginLeft: '20px' }}>
-          {rest.selectProps.versions[children].map(version => {
+          {rest.selectProps.versions[children as string].map((version: OptionType) => {
             return <InnerOptionContainer
               {...rest}
               key={version.value}
@@ -151,7 +180,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
 
   const onChangeCallback = React.useCallback((items: any) => {
     onChange(items);
-  }, [onChange]);
+  }, [versionSelection,onChange]);
 
   useEffect(() => {
     setItems(availableItems);
@@ -159,39 +188,42 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   }, [availableItems, availableVersions]);
 
   useEffect(() => {
-    if (selection) {
-      onChangeCallback(versionSelection);
-    }
-  }, [versionSelection, onChangeCallback]);
+    const newObj = {};
+    selection.map((x: string) => {
+      (newObj as any)[x] = (versionSelection as never)[x] ?  (versionSelection as never)[x] : [] ;
+
+    });
+    onChangeCallback(newObj);
+  }, [selection, versionSelection]);
+
   const { format } = useTranslations();
 
-  const toggleSelection = (item, versions) => {
-    if (selection.includes(item)) {
-      setVersionSelection(
-        prev => {
-          const newVersionSelection =  Object.keys(prev).reduce((newObj, key) => {
-            if ((selection.includes(key))) {
-              newObj[key] = prev[key];
-            }
+  const toggleSelection = (item: never, versions: never) => {
+    setVersionSelection(
+      prev => {
+        const newVersionSelection =  Object.keys(prev).reduce((newObj, key) => {
+          if ((selection.includes(key as never))) {
+            (newObj as never)[key] = (prev as never)[key];
+          }
 
-            return newObj;
-          }, {});
+          return newObj;
+        }, {});
 
-          newVersionSelection[item] = versions;
+        newVersionSelection[item] = versions;
 
-          return newVersionSelection;
-        }
-      );
-    }
+        return newVersionSelection;
+      }
+    );
+
   };
 
-  const selectItems = (items) => {
-    setSelection(prev => {
-      return items.map((x) => x.value);
+  const selectItems = (items: MultiValue<OptionType>) => {
+    setSelection(() => {
+      return items.map((x) => x.value as never);
     });
   };
 
-  const style1 = {    control: (baseStyles, state) => ({
+  const style1 = {    control: (baseStyles: any) => ({
     // none of react-select's styles are passed to <Control />
     ...baseStyles,
     width: 200,
@@ -199,7 +231,7 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     fontSize: 12
   }) };
 
-  const BlueCircle = ({ number }) => {
+  const BlueCircle: React.FC<BlueCircle> = ({ number }) => {
     return (
       <div className="dropdown-circle">
         {number}
@@ -207,11 +239,11 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
     );
   };
 
-  const Placeholder = (props) => {
+  const Placeholder = (props: any) => {
     return (
       <>
         <components.Placeholder {...props}>
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent:' space-between'}}>
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent:' space-between' }}>
             {format('select.label')} {props.selectProps.placeholder} <BlueCircle number={selection.length} />
           </span>
         </components.Placeholder>
@@ -229,8 +261,10 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
           controlShouldRenderValue={false}
           isMulti
           hideSelectedOptions={false}
+          /* @ts-ignore */
           components={{ Option: InputOption1, Placeholder }}
-          versions={versions}
+          /* @ts-ignore */
+          versions={versions as unknown}
           onSelect={toggleSelection}
           options={items}
           placeholder={placeholder}

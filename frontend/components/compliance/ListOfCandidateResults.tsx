@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useTranslations from '../../hooks/useTranslation';
 import { getComplianceList } from '../../service/serviceAPI';
-import { CellValue, DataType, SingleComplianceItem } from '../../service/types';
+import { CellValue, DataType, SingleComplianceItem, ListFilters } from '../../service/types';
 import Table from '../table/Table';
 import InfoModal from '../shared/modals/InfoModal';
 import Button from '../shared/buttons/Button';
@@ -20,6 +20,7 @@ const ListOfCandidateResults = () => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [softwareFilters, setSoftwareFilters] = useState({});
   const [bbFilters, setBbFilters] = useState({});
+  const resetDataFlag = useRef(false);
 
   const { format } = useTranslations();
 
@@ -35,14 +36,29 @@ const ListOfCandidateResults = () => {
   ];
 
   useEffect(() => {
-    console.log("fetching", softwareFilters, bbFilters)
-    fetchData(0, 10, {
+    !isLoadingData && fetchData(0, 10, {
       software: softwareFilters,
       bb: bbFilters
     });
+  }, []);
+
+  useEffect(() => {
+    setResultData({ rows: [] });
+    setCurrentDataLength(0);
+    setAllDataLength(0);
+    resetDataFlag.current = true;
   }, [softwareFilters, bbFilters]);
 
-  const fetchData = async (offset: number, limit: number, filters ) => {
+  useEffect(() => {
+    resetDataFlag.current && !isLoadingData && fetchData(0, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
+    resetDataFlag.current = false;
+  }, [resetDataFlag.current]);
+
+  const fetchData = async (offset: number, limit: number, filters: ListFilters) => {
+
     setIsLoadingData(true);
     const fetchedData = await getComplianceList(offset, limit, filters);
     if (fetchedData.status) {
@@ -116,7 +132,10 @@ const ListOfCandidateResults = () => {
   };
 
   const handleLoadMoreData = () => {
-    fetchData(currentDataLength, 10);
+    fetchData(currentDataLength, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
   };
 
   return (

@@ -289,6 +289,11 @@ export type SubmittingFormResponseType = {
 export type FilterOptionsType = {
   [key: string]: string[];
 };
+
+export type ListFilters = {
+  software: {[key: string]: string[]};
+  bb: {[key: string]: string[]};
+}
 // Types used in IRSC/IRSC...Table.tsx and the data connected to it
 export type IRSCTableType = {
   selectedData: ComplianceRequirementsType;

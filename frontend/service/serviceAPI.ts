@@ -17,7 +17,8 @@ import {
   SoftwareDraftToUpdateType,
   SubmitDraftResponseType,
   SubmittingFormResponseType,
-  FilterOptionsType
+  FilterOptionsType,
+  ListFilters
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -141,13 +142,54 @@ export const getBuildingBlockTestResults = async (
     });
 };
 
-export const getComplianceList = async (offset: number, limit: number, filters) => {
+interface TransformedFilter {
+  name: string;
+  version?: string[];
+}
+
+interface ListFilter {
+  software?: TransformedFilter[];
+  bb?: TransformedFilter[];
+}
+
+export const getComplianceList = async (offset: number, limit: number, filters: ListFilters) => {
+  const softwares = Object.keys(filters.software).map(key => {
+    const filterObject: TransformedFilter = { name: key };
+    if (filters.software[key].length > 0) {
+      filterObject.version = filters.software[key];
+    }
+
+    return filterObject;
+  });
+
+  const bbs = Object.keys(filters.bb).map(key => {
+
+    const filterObject: TransformedFilter = { name: key };
+    if (filters.bb[key].length > 0) {
+      filterObject.version = filters.bb[key];
+    }
+
+    console.log(key, filterObject);
+
+    return filterObject;
+  });
+
+  const queryFilters: ListFilter = {};
+
+  if (softwares) {
+    queryFilters.software = softwares;
+  }
+
+  if (bbs) {
+    queryFilters.bb = bbs;
+  }
+
+  const stringFilter: string = JSON.stringify(queryFilters);
 
   const accessToken = sessionStorage.getItem('accessToken');
 
-  
   return await fetch(
-    `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}`,
+    `${baseUrl}/compliance/list?offset=${offset}&limit=${limit}&filters=${stringFilter}`,
     {
       method: 'get',
       headers: {
