@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { RiFileTextLine } from 'react-icons/ri';
+import { RiFileDownloadLine, RiLink } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
 import SelectBBs from '../shared/combined/SelectBBs';
 import {
@@ -16,7 +16,6 @@ import {
 } from '../../service/types';
 import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
 import BackToPageButton from '../shared/buttons/BackToPageButton';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
@@ -28,6 +27,8 @@ const ReportViewDetail = () => {
     useState<SoftwareDetailsDataType>();
   const [documentationLink, setDocumentationLink] = useState('');
   const [instructionLink, setInstructionLink] = useState('');
+  const [isDocumentationLink, setIsDocumentationLink] = useState(false);
+  const [isInstructionLink, setIsInstructionLink] = useState(false);
 
   const { format } = useTranslations();
   const router = useRouter();
@@ -53,14 +54,18 @@ const ReportViewDetail = () => {
 
       if (documentation.startsWith('uploads/')) {
         setDocumentationLink(`${baseUrl}/${documentation}`);
+        setIsDocumentationLink(false);
       } else {
         setDocumentationLink(documentation);
+        setIsDocumentationLink(true);
       }
 
       if (instruction.startsWith('uploads/')) {
         setInstructionLink(`${baseUrl}/${instruction}`);
+        setIsInstructionLink(false);
       } else {
         setInstructionLink(instruction);
+        setIsInstructionLink(true);
       }
     }
   }, [softwareDetailsData]);
@@ -118,26 +123,30 @@ const ReportViewDetail = () => {
         </div>
         {activeTab === 'deployment' && (
           <div className="report-detail-deployment-container">
-            <div>
-              <Link
-                target="_blank"
-                href={documentationLink}
-                rel="noopener noreferrer"
-              >
-                <RiFileTextLine className="report-view-doc-icon" />
-              </Link>
+            <Link
+              target="_blank"
+              href={documentationLink}
+              rel="noopener noreferrer"
+            >
+              {isDocumentationLink ? (
+                <RiLink className="report-view-doc-icon" />
+              ) : (
+                <RiFileDownloadLine className="report-view-doc-icon" />
+              )}
               <p>{format('details_view.documentation_description.label')}</p>
-            </div>
-            <div>
-              <Link
-                target="_blank"
-                href={instructionLink}
-                rel="noopener noreferrer"
-              >
-                <RiFileTextLine className="report-view-doc-icon" />
-              </Link>
+            </Link>
+            <Link
+              target="_blank"
+              href={instructionLink}
+              rel="noopener noreferrer"
+            >
+              {isInstructionLink ? (
+                <RiLink className="report-view-doc-icon" />
+              ) : (
+                <RiFileDownloadLine className="report-view-doc-icon" />
+              )}
               <p>{format('details_view.container_description.label')}</p>
-            </div>
+            </Link>
           </div>
         )}
         {activeTab === 'interface' && (

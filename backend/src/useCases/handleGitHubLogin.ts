@@ -39,8 +39,7 @@ export default class GitHubLoginHandler {
       );
 
       if (!isMember) {
-        // Instead of sending a 403 error, redirect the user
-        const redirectUrl = this.getRedirectUrl('', req); // Passing an empty token or a specific token if needed
+        const redirectUrl = this.getBaseRedirectUrl(req) + '/?loginRejected=true';
         res.redirect(redirectUrl);
         return;
       }
@@ -117,5 +116,20 @@ export default class GitHubLoginHandler {
       baseUrl = `${protocol}://${host}`;
     }
     return `${baseUrl}?token=${accessToken}`;
+  }
+
+  private getBaseRedirectUrl(req: Request): string {
+    let baseUrl: string;
+    if (appConfig.gitHub.devLoginMode) {
+      baseUrl = `http://${appConfig.frontendHost}`;
+    } else {
+      let host = req.get('host') || '';
+      if (host.startsWith('api.')) {
+        host = host.substring(4);
+      }
+      const protocol = req.protocol;
+      baseUrl = `${protocol}://${host}`;
+    }
+    return baseUrl;
   }
 }
