@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Select, { components, MultiValue } from 'react-select';
 import { useIntl } from 'react-intl';
+import _ from 'lodash';
 import useTranslations from '../../../hooks/useTranslation';
 import Checkbox from './Checkbox';
 
@@ -174,10 +175,11 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
   const [versions, setVersions] = useState<{ [key: string]: OptionType[] }>({});
   const [selection, setSelection] = useState([]);
   const [versionSelection, setVersionSelection] = useState({});
+  const [finalFilter, setFinalFilter] = useState({});
 
   const onChangeCallback = React.useCallback((items: any) => {
     onChange(items);
-  }, [versionSelection,onChange]);
+  }, [onChange]);
 
   useEffect(() => {
     setItems(availableItems);
@@ -190,8 +192,14 @@ const MultiSelectDropdown: React.FC<MultiSelectDropdownProps> = ({
       (newObj as any)[x] = (versionSelection as never)[x] ?  (versionSelection as never)[x] : [] ;
 
     });
-    onChangeCallback(newObj);
+    if (!_.isEqual(newObj, finalFilter)) {
+      setFinalFilter(newObj);
+    }
   }, [selection, versionSelection]);
+
+  useEffect(() => {
+    onChangeCallback(finalFilter);
+  }, [finalFilter]);
 
   const { format } = useTranslations();
 
