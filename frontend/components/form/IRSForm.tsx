@@ -35,7 +35,7 @@ const IRSForm = ({
   const { format } = useTranslations();
 
   useEffect(() => {
-    if (!allData?.length && updatedInterfaceData) {
+    if (!allData?.length && updatedInterfaceData && updatedInterfaceData.length > 0) {
       const updatedData = updatedInterfaceData.map((data) => {
         return {
           ...data,
@@ -47,7 +47,7 @@ const IRSForm = ({
       return;
     }
 
-    if (!allData?.length && updatedRequirementSpecData) {
+    if (!allData?.length && updatedRequirementSpecData && updatedRequirementSpecData.length > 0) {
       setAllData(updatedRequirementSpecData);
 
       return;
