@@ -52,8 +52,7 @@ export default class SubmitFormRequestHandler {
             } else {
                 console.log('Jira integration is disabled.');
             }
-
-            this.sendDraftSubmittionEmail(this.req.body.email, this.req.body.softwareName, jiraTicketResult)
+            this.sendDraftSubmittionEmail(originalData?.pointOfContact as string, originalData?.softwareName as string, jiraTicketResult)
 
             return this.res.status(200).send({
                 success: true,
