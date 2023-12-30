@@ -1,13 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useTranslations from '../../hooks/useTranslation';
 import { getComplianceList } from '../../service/serviceAPI';
-import { CellValue, DataType, SingleComplianceItem } from '../../service/types';
+import { CellValue, DataType, SingleComplianceItem, ListFilters } from '../../service/types';
 import Table from '../table/Table';
 import InfoModal from '../shared/modals/InfoModal';
 import Button from '../shared/buttons/Button';
 import { COMPLIANCE_TESTING_FORM } from '../../service/constants';
 import InfiniteScrollCustomLoader from '../InfiniteScrollLoader';
+import ListOfCandidateFilter from './ListOfCandidateResultFilter';
 import EvaluationSchemaTable from './EvaluationSchemaTable';
 
 const ListOfCandidateResults = () => {
@@ -17,6 +18,9 @@ const ListOfCandidateResults = () => {
   const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
     useState(false);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [softwareFilters, setSoftwareFilters] = useState({});
+  const [bbFilters, setBbFilters] = useState({});
+  const resetDataFlag = useRef(false);
 
   const { format } = useTranslations();
 
@@ -32,12 +36,31 @@ const ListOfCandidateResults = () => {
   ];
 
   useEffect(() => {
-    fetchData(0, 10);
+    !isLoadingData && fetchData(0, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
   }, []);
 
-  const fetchData = async (offset: number, limit: number) => {
+  useEffect(() => {
+    setResultData({ rows: [] });
+    setCurrentDataLength(0);
+    setAllDataLength(0);
+    resetDataFlag.current = true;
+  }, [softwareFilters, bbFilters]);
+
+  useEffect(() => {
+    resetDataFlag.current && !isLoadingData && fetchData(0, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
+    resetDataFlag.current = false;
+  }, [resetDataFlag.current]);
+
+  const fetchData = async (offset: number, limit: number, filters: ListFilters) => {
+
     setIsLoadingData(true);
-    const fetchedData = await getComplianceList(offset, limit);
+    const fetchedData = await getComplianceList(offset, limit, filters);
     if (fetchedData.status) {
       setAllDataLength(fetchedData.data.count);
       const transformedData: DataType = {
@@ -109,12 +132,24 @@ const ListOfCandidateResults = () => {
   };
 
   const handleLoadMoreData = () => {
-    fetchData(currentDataLength, 10);
+    fetchData(currentDataLength, 10, {
+      software: softwareFilters,
+      bb: bbFilters
+    });
   };
 
   return (
     <>
+      <p className="filters-and-button-container definition-title" style={{ alignItems: 'left', padding: '10px' }}>
+        {format('app.reports.title')}
+      </p>
       <div className="filters-and-button-container">
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+          <ListOfCandidateFilter
+            filterType='bb' onChange={(s) => setBbFilters(s)} placeholder={format('building_block.label')}/>
+          <ListOfCandidateFilter
+            filterType='software' onChange={(s) => setSoftwareFilters(s)} placeholder={format('software.label')}/>
+        </span>
         <Button
           text={format('app.check_compliance.label')}
           styles="primary-button"

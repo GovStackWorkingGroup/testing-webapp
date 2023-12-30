@@ -14,6 +14,7 @@ import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftD
 import AcceptComplianceFormRequestHandler from '../useCases/compliance/handleAcceptForm';
 import RejectComplianceFormRequestHandler from '../useCases/compliance/handleRejectForm';
 import UpdateFormRequestHandler from '../useCases/compliance/handleUpdateForm';
+import GetAvailableFiltersRequestHandler from '../useCases/compliance/handleGetAvailableFiltersRequestHandler';
 
 const complianceController = (
   complianceDbRepositoryConstructor: (impl: ComplianceDbRepository) => ComplianceDbRepository,
@@ -27,6 +28,12 @@ const complianceController = (
       .getAllComplianceReports()
       .catch((err: any) => default500Error(res, err));
   };
+
+  const getAvailableFilters = (req: Request, res: Response): void => { 
+    new GetAvailableFiltersRequestHandler(req, res, repository)
+      .getAvailableFilters()
+      .catch((err: any) => default500Error(res, err));
+  }
 
   const getSoftwareComplianceDetail = (req: Request, res: Response): void => {
     const softwareName = req.params.softwareName;
@@ -121,6 +128,7 @@ const complianceController = (
   return {
     getAllComplianceReports,
     getSoftwareComplianceDetail,
+    getAvailableFilters,
     getFormDetail,
     getDraftDetail,
     createOrSubmitForm,

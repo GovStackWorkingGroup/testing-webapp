@@ -5,6 +5,24 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     return repository.findAll();
   };
 
+  const getAllBBs = async () => {
+    try {
+      return await repository.getAllBBs();
+    } catch (error) {
+      console.error('There was an error while aggregating building blocks:', error);
+      throw error;
+    }
+  };
+
+  const getAllSoftwares = async () => {
+    try {
+      return await repository.getAllSoftwares();
+    } catch (error) {
+      console.error('There was an error while aggregating softwares.');
+      throw error;
+    }
+  };
+
   const aggregateComplianceReports = async (limit, offset, filters, isAuthenticated) => {
     try {
       return await repository.aggregateComplianceReports(limit, offset, filters, isAuthenticated);
@@ -54,7 +72,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     try {
       return await repository.submitForm(uniqueId);
     } catch (error) {
-      console.error('There was an error while submitting the form');
+      console.error('There was an error while submitting the form', error);
       throw error;
     }
   };
@@ -63,7 +81,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     try {
       return await repository.updateFormStatus(formId, status, updatedData);
     } catch (error) {
-      console.error('There was an error while updating the review status of the form');
+      console.error('There was an error while updating the review status of the form', error);
       throw error;
     }
   };
@@ -72,7 +90,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     try {
       return await repository.updateFormData(formId, updatedData);
     } catch (error) {
-      console.error('There was an error while updating the review status of the form');
+      console.error('There was an error while updating the review status of the form', error);
       throw error;
     }
   };
@@ -81,7 +99,7 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     try {
       return await repository.rollbackFormStatus(originalData);
     } catch (error) {
-      console.error('There was an error while submitting the form');
+      console.error('There was an error while submitting the form', error);
       throw error;
     }
   };
@@ -124,6 +142,8 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
 
   return {
     findAll,
+    getAllBBs,
+    getAllSoftwares,
     aggregateComplianceReports,
     getSoftwareComplianceDetail,
     getFormDetail,

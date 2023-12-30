@@ -9,7 +9,7 @@ export const createAggregationPipeline = (
     let softwareConditions = filters.software.map(filter => {
         return {
             "softwareName": filter.name,
-            ...(filter.version && { "softwareVersion": { $in: filter.version } })
+            ...(filter.version && { "compliance.version": { $in: filter.version } })
         };
     });
 
