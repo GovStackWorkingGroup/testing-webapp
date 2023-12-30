@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for Definition component: should render the component and match snapshot 1`] = `
+<div>
+  <div
+    class="definition-section"
+  >
+    <p
+      class="definition-title"
+      data-testid="definition-title"
+    >
+      Test title
+    </p>
+    <div
+      data-testid="definition-description"
+    >
+      <div
+        class="definition-description"
+      >
+        Test description
+      </div>
+    </div>
+  </div>
+</div>
+`;

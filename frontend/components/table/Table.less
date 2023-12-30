@@ -1,0 +1,267 @@
+@import '../../styles/Variables.less';
+@import '../../styles/Extends.less';
+
+table.main-table {
+  border-spacing: 0;
+  width: 100%;
+  overflow-y: auto;
+  border-collapse: collapse;
+
+  thead:extend(.table-header-text) {
+    height: @table-row;
+    text-align: left;
+    background-color: @blue-lightest;
+    border: 1px solid @border-grey;
+    border-radius: 20px;
+
+    tr {
+      height: @table-row;
+    }
+
+    th {
+      padding: 0 40px 0 10px;
+      border-right: 1px solid @border-grey;
+    }
+
+    th.no-vertical-border {
+      border-right: none;
+      border-left: none;
+    }
+
+    th:last-child {
+      border-right: none;
+    }
+  }
+
+  tbody {
+    width: 100%;
+
+    tr.border {
+      border: 1px solid @border-grey;
+
+      td {
+        border: 1px solid @border-grey;
+      }
+
+      td.border-none {
+        border: none;
+      }
+
+      td.border-bottom {
+        border-bottom: 1px solid @border-grey;
+      }
+    }
+
+    tr.table-expand-tr {
+      height: 24px;
+
+      td {
+        border: none;
+      }
+
+      td.table-expand-div {
+        background-color: @blue-10;
+        color: @accents-and-btn;
+        display: table-cell;
+        align-items: center;
+        cursor: pointer;
+      }
+    }
+
+    tr {
+      min-height: @table-row;
+      height: @table-row;
+
+      td {
+        max-width: 400px;
+        padding: 0 10px 0 10px;
+      }
+
+      td.td-row-details {
+        padding: 0;
+        max-width: 450px;
+        height: inherit;
+      }
+
+      td.no-vertical-border {
+        border-right: none;
+        border-left: none;
+      }
+
+      td.evaluation-summary-table-td {
+        min-width: 225px;
+      }
+
+      td:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+
+.table-scroll-x {
+  table-layout: fixed;
+  display: block;
+  max-width: min-content;
+  margin: 0 auto;
+  overflow-x: auto;
+  white-space: nowrap;
+  overflow-y: none;
+}
+
+.check-icon {
+  color: @accents-and-btn;
+}
+
+.th-header-with-icon {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.th-header-with-icon > p {
+  width: max-content;
+}
+
+.th-icon-question-mark {
+  color: @accents-and-btn;
+  font-size: 20px;
+}
+
+.th-icon-question-mark.cursor-pointer {
+  cursor: pointer;
+}
+
+.tr-subheader {
+  background-color: @blue-10;
+  border: 1px solid @border-grey;
+}
+
+.tr-subheader-container {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  align-items: center;
+  cursor: pointer;
+}
+
+.tr-subheader-container > p {
+  color: @accents-and-btn;
+}
+
+.td-subheader {
+  display: flex;
+  gap: 10px;
+}
+
+.td-text-color-container {
+  height: 22px;
+  width: max-content;
+  border-radius: 4px;
+  line-height: 22px;
+  padding: 4px 8px;
+}
+
+.td-text-color-container.status-in-review {
+  background-color: @background-medium-blue;
+  color: @blue-medium;
+}
+
+.td-text-color-container.status-rejected {
+  background-color: @fail-background-second;
+  color: @fail;
+}
+
+.td-text-color-container.status-approved {
+  background-color: @success-background-second;
+  color: @success;
+}
+
+.td-text-color-container.status-na {
+  background-color: @grey-background;
+  color: @text-secondary;
+}
+
+.td-text-color-container.status-level-one {
+  background-color: @purple-background;
+  color: @purple-one;
+}
+
+.td-text-color-container.status-level-two {
+  background-color: @green-background;
+  color: @green-one;
+}
+
+.td-bb-image-name-container {
+  display: flex;
+  min-width: 145px;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+}
+
+.td-no-data-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  color: @text-secondary;
+}
+
+.table-full-height {
+  height: 100%;
+
+  tbody {
+    tr:last-child {
+      td {
+        border: none !important;
+      }
+    }
+  }
+}
+
+.table-full-height {
+  tr {
+    height: 96px !important;
+  }
+}
+
+.notes-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+}
+
+.notes-textarea {
+  width: 100%;
+  padding: 2px;
+  border: none;
+  resize: none;
+  font-family: Arial, Helvetica, sans-serif;
+  border-radius: 4px;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  color: @text-main;
+  max-height: 40px;
+}
+
+.notes-textarea:focus {
+  outline: none;
+}
+
+.cell-td {
+  max-height: 48px;
+  overflow: hidden auto;
+  width: calc(100% + 10px);
+}
+
+.has-divided-main-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.has-divided-main-table-border {
+  border-top: 1px solid @border-grey !important;
+}

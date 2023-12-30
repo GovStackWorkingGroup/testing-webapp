@@ -1,0 +1,67 @@
+@import '../../styles/Variables.less';
+
+.header {
+  position: sticky;
+  top: 0;
+  background-color: @white;
+  width: 100%;
+  height: @header-height;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #c4c4c4;
+  z-index: 1;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  padding-left: 3%;
+  padding-right: 10%;
+  height: inherit;
+}
+
+.header-logo > img {
+  width: 90px;
+  height: 80%;
+}
+
+.header-right-section {
+  width: 100%;
+  height: inherit;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.header-link-button-section {
+  display: flex;
+}
+
+.header-link-button-section > a {
+  margin: 0;
+  text-decoration: none;
+}
+
+.header-login {
+  display: flex;
+  align-items: center;
+}
+
+.header-icon {
+  font-size: @icon-font-size-big;
+  margin-right: 8px;
+  color: inherit;
+}
+
+.action-buttons {
+  display: flex;
+  margin-left: auto;
+}
+
+// should be added in the scope of TECH-957
+// .header-help-section {
+//   display: flex;
+//   align-items: center;
+//   height: 100%;
+//   gap: 4px;
+// }

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for HeaderMenuButton component: should render the HeaderMenuButton component and match snapshot 1`] = `
+<div>
+  <a
+    class="header-menu-button "
+    data-testid="header-menu-button"
+    href="/test_url"
+  >
+    Test button
+  </a>
+</div>
+`;

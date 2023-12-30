@@ -1,0 +1,169 @@
+@import '../../styles/Variables.less';
+
+.compliance-detail-page-container {
+  padding: 16px 25px;
+  background-color: @white;
+}
+
+.software-attributes-section {
+  padding: 40px 10%;
+}
+
+.software-attributes-section > p {
+  padding-bottom: 16px;
+}
+
+.software-attributes-title-with-link {
+  padding-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.software-attributes-title-edit-link {
+  color: @accents-and-btn;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.software-attributes-container {
+  width: 100%;
+  border: 1px solid @stroke;
+  border-radius: 8px;
+}
+
+.software-attribute {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid @stroke;
+}
+
+.software-attributes-container > .software-attribute:last-child {
+  border-bottom: none;
+}
+
+.software-attribute > div {
+  display: flex;
+  align-items: center;
+  min-height: @table-row;
+  font-size: 13px;
+  font-weight: 700;
+  color: @text-secondary;
+  padding-left: 16px;
+  border-radius: 8px 0 0 8px;
+}
+
+.software-attribute > div:first-child {
+  width: 30%;
+  background-color: @blue-lightest;
+  border-right: 1px solid @stroke;
+}
+
+.software-attribute > div:last-child {
+  gap: 10px;
+}
+
+.software-attribute > div:first-child {
+  width: 20%;
+  background-color: @blue-lightest;
+  border-right: 1px solid @stroke;
+}
+
+.software-attribute > div:last-child {
+  gap: 10px;
+  padding-left: 16px;
+}
+
+.software-attribute-logo > div {
+  min-height: 90px;
+}
+
+.software-attribute-logo > div:last-child {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.img-logo {
+  min-width: 70px;
+  min-height: 70px;
+  max-width: 70px;
+  max-height: 70px;
+}
+
+.software-attribute > div > a {
+  color: @blue-medium;
+}
+
+// Report view detail
+.report-detail-container {
+  width: 80vw;
+  border-radius: 8px;
+  border: 1px solid @stroke;
+  background-color: @white;
+  min-height: 200px;
+  margin: auto;
+  margin-top: 20px;
+  padding: 16px 20px 16px 10px;
+}
+
+.report-detail-tab-selector {
+  width: 100%;
+  display: flex;
+  padding-bottom: 24px;
+}
+
+.report-detail-single-tab {
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid @border-grey;
+  color: @text-secondary;
+  font-size: 18px;
+
+  &:hover {
+    color: @accents-and-btn;
+    cursor: pointer;
+  }
+}
+
+.report-detail-deployment-container {
+  display: flex;
+  height: 200px;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.report-detail-deployment-container > a {
+  width: 50%;
+  display: flex;
+  border: 1px solid @accents-and-btn;
+  border-radius: 4px;
+  padding: 10px;
+  cursor: pointer;
+  align-items: center;
+  gap: 15px;
+  width: calc(100% - 20px);
+  text-decoration: none;
+}
+
+.report-detail-deployment-container > a > p {
+  color: @text-main;
+  max-width: 80%;
+}
+
+.report-detail-deployment-container > a:hover {
+  background-color: @blue-15;
+}
+
+.report-view-doc-icon {
+  cursor: pointer;
+  font-size: 44px;
+  color: @accents-and-btn;
+}
+
+.software-compliance-with-table-container {
+  max-width: 100%;
+  overflow-x: auto;
+}

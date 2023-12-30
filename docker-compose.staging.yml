@@ -43,3 +43,8 @@ services:
         API_KEY_BB: ${API_KEY_BB:-O7VKGLW47I6e}
         VIRTUAL_HOST: api.staging.testing.govstack.global
         LETSENCRYPT_HOST: api.staging.testing.govstack.global
+
+  mongo:
+    ports:
+      - 27017:27017
+

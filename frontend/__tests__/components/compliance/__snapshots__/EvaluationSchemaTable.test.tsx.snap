@@ -1,0 +1,257 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for EvaluationSchemaTable component: should render the component and match snapshot 1`] = `
+<div>
+  <table
+    class="main-table"
+  >
+    <thead>
+      <tr>
+        <th
+          class=""
+        >
+          Compliance
+        </th>
+        <th
+          class=""
+        >
+          Requirement
+        </th>
+        <th
+          class=""
+        >
+          Level 1
+        </th>
+        <th
+          class=""
+        >
+          Level 2
+        </th>
+      </tr>
+    </thead>
+    <tbody
+      id="scrollableDiv"
+    >
+      <tr
+        class="border"
+      >
+        <td
+          class="border"
+        >
+          Deployment Compliance
+        </td>
+        <td
+          class="border"
+        >
+          Deployability via container
+        </td>
+        <td
+          class="border"
+        >
+          Deployable
+        </td>
+        <td
+          class="border"
+        >
+          N/A
+        </td>
+      </tr>
+      <tr
+        class="border"
+      >
+        <td
+          class="border"
+        >
+          Requirement Specification
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  ≥ 1
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  ≥ 1
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  All
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+      <tr
+        class="border"
+      >
+        <td
+          class="border"
+        >
+          Interface Compliance
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  Fulfillment of Service API requirements
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  ≥ 1
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  Optional
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+        <td
+          class="td-row-details"
+        >
+          <table
+            class="main-table"
+          >
+            <tbody
+              class=""
+            >
+              <tr>
+                <td
+                  class="border-none border-bottom"
+                >
+                  All
+                </td>
+              </tr>
+              <tr>
+                <td
+                  class="border-none"
+                >
+                  All
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

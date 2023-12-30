@@ -1,0 +1,152 @@
+@import '../../../styles/Variables.less';
+
+.irsc-table-container {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 8px;
+  border: 1px solid @stroke;
+}
+
+table.irsc-table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  height: 1px;
+
+  thead {
+    font-size: 13px;
+    font-weight: 700;
+    color: @text-secondary;
+    background-color: @light-blue;
+
+    tr {
+      th {
+        padding: 16px;
+        text-align: left;
+      }
+
+      th:nth-child(1) {
+        border-right: 1px solid @stroke;
+        border-bottom: 1px solid @stroke;
+        width: 25%;
+      }
+      th:nth-child(2) {
+        border-right: 1px solid @stroke;
+        border-bottom: 1px solid @stroke;
+        width: 65%;
+      }
+      th:nth-child(3) {
+        border-bottom: 1px solid @stroke;
+        width: 10%;
+      }
+    }
+  }
+  tbody {
+    tr {
+      td {
+        height: 100%;
+      }
+    }
+  }
+}
+
+.irsc-table-header-required {
+  background-color: @blue-10;
+  padding: 8px 16px;
+  font-size: 12px;
+}
+
+.irsc-table-rows {
+  border: 1px solid @stroke;
+
+  td {
+    padding: 16px;
+    color: @text-main;
+    height: 32px;
+    vertical-align: top;
+    line-height: 32px;
+
+    textarea {
+      width: 96.5%;
+      padding: 16px;
+      border: none;
+      height: 55%;
+      resize: none;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+  }
+
+  td:nth-child(1) {
+    background-color: @light-blue;
+    border-right: 1px solid @stroke;
+  }
+  td:nth-child(2) {
+    padding: 0;
+    border-right: 1px solid @stroke;
+  }
+}
+
+.irsc-invalid-row {
+  td:nth-child(1) {
+    border-left: 2px solid @fail;
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
+  }
+  td:nth-child(2) {
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
+  }
+  td:last-child {
+    border-bottom: 2px solid @fail;
+    border-top: 2px solid @fail;
+    border-right: 2px solid @fail;
+  }
+}
+
+.irsc-table-comment-counter {
+  display: none;
+  position: absolute;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  color: @text-secondary;
+  text-align: right;
+  bottom: 16px;
+  right: 16px;
+
+  input:focus {
+    outline: 1px solid @text-secondary;
+  }
+}
+
+.counter-active {
+  display: block;
+}
+
+.irsc-table-icons {
+  display: flex;
+  gap: 8px;
+  height: 100%;
+  align-items: center;
+}
+
+.irsc-table-textarea {
+  position: relative;
+  width: 98%;
+  height: 100%;
+}
+
+.irsc-table-textarea textarea:focus {
+  outline: none;
+}
+
+.irsc-table-icon {
+  font-size: @icon-font-size-middle;
+  cursor: pointer;
+}
+
+.irsc-table-icon-disabled {
+  font-size: @icon-font-size-middle;
+  cursor: not-allowed;
+}

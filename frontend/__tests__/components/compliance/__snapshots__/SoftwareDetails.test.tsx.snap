@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for SoftwareDetails component: should render the component and match snapshot 1`] = `
+<div>
+  <div
+    class="software-attributes-section "
+  >
+    <div
+      class="software-attributes-title-with-link"
+    >
+      <p>
+        Test software
+      </p>
+    </div>
+    <div>
+      Test
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Unit tests for SoftwareDetails component: should render the component and match snapshot when complianceSection is true 1`] = `
+<div>
+  <div
+    class="software-attributes-section "
+  >
+    <div
+      class="software-attributes-title-with-link"
+    >
+      <p>
+        Test software
+         
+        <span
+          class="bold"
+        >
+          Software Version 2.0
+        </span>
+      </p>
+    </div>
+    <div>
+      Test
+    </div>
+  </div>
+</div>
+`;

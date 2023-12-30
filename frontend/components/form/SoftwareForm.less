@@ -1,0 +1,239 @@
+@import '../../styles/Variables.less';
+
+.form-step-title {
+  font-size: 28px;
+  font-weight: 700;
+  padding-bottom: 16px;
+}
+
+.form-step-instruction {
+  padding-bottom: 25px;
+  text-align: justify;
+  color: @text-secondary;
+}
+
+.form-main-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 52px;
+}
+
+.form-side-container {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-field-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-field-container.textarea {
+  padding-bottom: 15px;
+}
+
+.required-field::after {
+  color: @fail;
+  content: '*';
+}
+
+.form-drag-drop-title {
+  padding-bottom: 4px;
+}
+
+.form-textarea {
+  border-radius: 4px;
+  border: 1px solid @stroke;
+  height: 215px;
+  padding: 0;
+  width: 100%;
+  max-width: calc(100% - 32px);
+  outline: none;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+  resize: none;
+  padding: 8px 16px;
+}
+
+.form-textarea:focus {
+  border: 1px solid @accents-and-btn;
+}
+
+.form-textarea:disabled {
+  cursor: not-allowed;
+}
+
+.form-textarea-error {
+  border: 1px solid @fail;
+}
+
+.form-tip-message {
+  height: 12px;
+  font-size: 12px;
+}
+
+.back-to-btn-container {
+  padding-left: 25px;
+  padding-top: 16px;
+}
+
+.form-success-container {
+  padding-top: 40px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.form-success {
+  display: flex;
+  padding: 40px;
+  min-width: 500px;
+  min-height: 180px;
+  max-width: 700px;
+  max-height: 400px;
+  width: max-content;
+  height: max-content;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 40px;
+  border-radius: 8px;
+  background: var(--white, #fff);
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.25);
+}
+
+.form-success > div:first-child {
+  display: flex;
+  align-items: center;
+  color: @success;
+  font-size: 18px;
+  gap: 10px;
+}
+
+.form-success > div:nth-child(2) {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  gap: 10px;
+}
+
+.form-success-copy-link-section {
+  display: flex;
+  gap: 10px;
+  color: @accents-and-btn;
+  font-size: 16px;
+  align-items: center;
+}
+
+.form-success-copy-link-section > a {
+  cursor: pointer;
+  color: @accents-and-btn;
+  text-decoration: none;
+}
+
+.form-success-copy-link-icon {
+  font-size: @icon-font-size-small;
+  cursor: pointer;
+}
+
+.copied-message-popup {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  border-radius: 4px;
+  border: 1px solid @success-20;
+  background: @success-5;
+  color: @success;
+  padding: 5px;
+}
+
+.copied-message-popup-icon {
+  font-size: @icon-font-size-small;
+}
+
+.software-detail-evaluation-summary {
+  padding: 40px 0;
+}
+
+// IRS Form
+.irsc-form-container {
+  min-height: 450px;
+}
+
+.irsc-header {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: @text-main;
+}
+
+.irsc-tab-selector {
+  width: 100%;
+  display: flex;
+  padding-bottom: 24px;
+}
+
+.irsc-single-tab {
+  width: 100%;
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid @border-grey;
+  color: @text-secondary;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &:hover {
+    color: @accents-and-btn;
+    cursor: pointer;
+  }
+}
+
+.active {
+  border-bottom: 1px solid @accents-and-btn;
+  color: @accents-and-btn;
+}
+
+.question-line {
+  display: flex;
+  width: fit-content;
+  padding: 16px;
+  border-radius: 4px;
+  background: @light-blue;
+  justify-content: center;
+  align-items: center;
+}
+
+.question-line-text {
+  margin-left: 16px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.question-line-link {
+  color: @accents-and-btn;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  text-decoration-line: underline;
+}
+
+.interface-bb-selector {
+  margin: 16px 0;
+}
+
+.form-question-mark-icon {
+  color: @accents-and-btn;
+  font-size: @icon-font-size-middle;
+}

@@ -2,13 +2,13 @@ version: '3'
 services:
   web:
     volumes:
-      - .:/testing-webapp
-      - ./testing-webapp/node_modules
+      - .:/testing-webapp/frontend
+      - ./testing-webapp/frontend/node_modules
     ports:
       - 3003:3003
 
   backend:
     volumes:
-      - ./server:/app
+      - ./backend:/app
       - ./app/node_modules
 

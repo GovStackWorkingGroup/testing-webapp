@@ -1,0 +1,127 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Unit tests for TestResultTableHeader component: should render the TestResultTableHeader component and match snapshot 1`] = `
+<div>
+  <div
+    class="test-table-header"
+  >
+    <div
+      data-testid="header-status-label"
+    >
+      <p>
+        Status
+      </p>
+      <div
+        class="sort-icon"
+      >
+        <svg
+          class="sort-icon-up"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
+        </svg>
+        <svg
+          class="sort-icon-down"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      data-testid="header-category-label"
+    >
+      <p>
+        Category
+      </p>
+      <div
+        class="sort-icon"
+      >
+        <svg
+          class="sort-icon-up"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
+        </svg>
+        <svg
+          class="sort-icon-down"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      data-testid="header-name-label"
+    >
+      <p>
+        Name
+      </p>
+      <div
+        class="sort-icon"
+      >
+        <svg
+          class="sort-icon-up"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 8L18 14H6L12 8Z"
+          />
+        </svg>
+        <svg
+          class="sort-icon-down"
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M12 16L6 10H18L12 16Z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+`;
