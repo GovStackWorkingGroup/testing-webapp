@@ -172,7 +172,8 @@ const mongoComplianceRepository: ComplianceDbRepository = {
           expirationDate: form.expirationDate,
           id: form._id,
           softwareName: form.softwareName,
-          bbKeys: bbKeys
+          bbKeys: bbKeys,
+          pointOfContact: form.pointOfContact
         };
 
         form.status = StatusEnum.IN_REVIEW;

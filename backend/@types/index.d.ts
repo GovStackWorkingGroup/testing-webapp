@@ -29,7 +29,8 @@ declare module 'myTypes' {
     expirationDate: Date | undefined,
     id: ObjectId,
     softwareName: string,
-    bbKeys: string[]
+    bbKeys: string[],
+    pointOfContact: string
   }
 
   export interface ComplianceDetail {
