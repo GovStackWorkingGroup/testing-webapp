@@ -180,7 +180,7 @@ export default class SubmitFormRequestHandler {
 
     async sendDraftSubmittionEmail(email: string, softwareName: string, jiraLink: string): Promise<void> {
         if (appConfig.emailsEnabled) {
-            this.emailSender.sendEmail('draftSubmitted', {
+            this.emailSender.sendEmail('submit', {
                 'recipient': email,
                 'parameters': {'softwareName': softwareName, 'jiraLink': jiraLink}
             }).then(() => console.log('Email sent using customized template'))

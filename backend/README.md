@@ -19,7 +19,7 @@ The following variables are used:
 
 ### Connection with MongoDB
 * `MONGO_USERNAME`
-* `MONGO_PASSOWORD`
+* `MONGO_PASSWORD`
 * `MONGO_HOST`
 * `MONGO_PORT`
 * `MONGO_DATABASE`
