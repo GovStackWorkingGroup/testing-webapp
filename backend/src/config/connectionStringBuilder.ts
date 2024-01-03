@@ -26,7 +26,7 @@ export class MongoConnection {
   getConnection(): Connection {
     const conn: Partial<Connection> = {
       username: process.env.MONGO_USERNAME,
-      passwd: process.env.MONGO_PASSOWORD,
+      passwd: process.env.MONGO_PASSWORD,
       host: process.env.MONGO_HOST,
       port: process.env.MONGO_PORT,
       databaseName: process.env.MONGO_DATABASE,
