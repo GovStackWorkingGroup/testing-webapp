@@ -1,6 +1,9 @@
 import { RefObject, useEffect, useState } from 'react';
 import classNames from 'classnames';
-import { ComplianceRequirementsType } from '../../service/types';
+import {
+  ComplianceRequirementsType,
+  RequirementsType,
+} from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { IRSCFormRef } from '../shared/combined/SelectBBs';
 import InterfaceCompliance from './InterfaceCompliance';
@@ -33,9 +36,12 @@ const IRSForm = ({
   >();
 
   const { format } = useTranslations();
-
   useEffect(() => {
-    if (!allData?.length && updatedInterfaceData && updatedInterfaceData.length > 0) {
+    if (
+      !allData?.length &&
+      updatedInterfaceData &&
+      updatedInterfaceData.length > 0
+    ) {
       const updatedData = updatedInterfaceData.map((data) => {
         return {
           ...data,
@@ -47,7 +53,11 @@ const IRSForm = ({
       return;
     }
 
-    if (!allData?.length && updatedRequirementSpecData && updatedRequirementSpecData.length > 0) {
+    if (
+      !allData?.length &&
+      updatedRequirementSpecData &&
+      updatedRequirementSpecData.length > 0
+    ) {
       setAllData(updatedRequirementSpecData);
 
       return;
@@ -116,58 +126,53 @@ const IRSForm = ({
   }, [allData]);
 
   const isValidArray = (data: ComplianceRequirementsType[]): boolean => {
-    return data.every((item) => {
-      if (item.requirements) {
-        // Check crossCutting and functional arrays
-        const isCrossCuttingValid = item?.requirements.crossCutting.every(
-          (crossCuttingItem) => {
-            if (crossCuttingItem.status === 0) {
-              return crossCuttingItem.fulfillment !== -1;
+    const validateResultArray = data.map((item) => {
+      let isCrossCuttingValid;
+      let isFunctionalValid;
+      let isInterfaceValid;
+
+      const validateData = (data: RequirementsType[]): boolean => {
+        if (data) {
+          return data.every((item) => {
+            if (item.status === 0) {
+              return item.fulfillment !== -1 && item.fulfillment !== null;
             } else {
               return true;
             }
-          }
-        );
-
-        const isFunctionalValid = item?.requirements.functional.every(
-          (functionalItem) => {
-            if (functionalItem.status === 0) {
-              return functionalItem.fulfillment !== -1;
-            } else {
-              return true;
-            }
-          }
-        );
-
-        // Check interfaceCompliance.requirements array
-        let isInterfaceValid;
-        if (item.interfaceCompliance && item.interfaceCompliance.requirements) {
-          isInterfaceValid =
-            item.interfaceCompliance.requirements.length === 0 ||
-            item.interfaceCompliance.requirements.every((interfaceItem) => {
-              if (interfaceItem.status === 0) {
-                return (
-                  interfaceItem.fulfillment !== -1 &&
-                  item.interfaceCompliance.testHarnessResult !== undefined &&
-                  item.interfaceCompliance.testHarnessResult !== ''
-                );
-              } else {
-                return true;
-              }
-            });
+          });
         } else {
           return true;
         }
+      };
 
-        return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
-      } else {
-        return true;
+      if (
+        item.requirements &&
+        item.requirements.crossCutting &&
+        item.interfaceCompliance
+      ) {
+        isCrossCuttingValid = validateData(item.requirements.crossCutting);
+        isFunctionalValid = validateData(item.requirements.functional);
+
+        if (
+          item.interfaceCompliance.requirements &&
+          item.interfaceCompliance.requirements.length
+        ) {
+          isInterfaceValid =
+            validateData(item.interfaceCompliance.requirements) &&
+            item.interfaceCompliance.testHarnessResult !== undefined &&
+            item.interfaceCompliance.testHarnessResult !== '';
+        } else {
+          isInterfaceValid = true;
+        }
       }
+
+      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
     });
+
+    return validateResultArray.every((item) => item);
   };
 
   useEffect(() => {
-    console.log('allData', allData);
     if (allData) {
       onEdited(!isValidArray(allData));
     }

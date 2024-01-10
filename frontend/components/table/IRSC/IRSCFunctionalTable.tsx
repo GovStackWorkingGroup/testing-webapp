@@ -280,7 +280,6 @@ const IRSCFunctionalTable = ({
               );
             }
           })}
-          {}
           {rows.some((item) => item.original.status === 2) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
