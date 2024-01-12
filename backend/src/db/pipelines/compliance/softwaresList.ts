@@ -21,6 +21,20 @@ export const softwaresListPipeline = (): any[] => {
     },
     {
       $project: {
+         _id: 0,
+         allSoftwares: {
+           $filter: {
+             input: '$allSoftwares',
+             as: 'software',
+             cond: {
+                $ne: ["$$software.k", null]
+             }
+           }
+         }
+       }
+    },
+    {
+      $project: {
         _id: 0,
         allSoftwares: {
           $map: {
