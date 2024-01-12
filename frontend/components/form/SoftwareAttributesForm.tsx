@@ -287,7 +287,7 @@ const SoftwareAttributesForm = ({
               inputTitle={format('software_name.label')}
               errorMessage={format('form.required_field.message')}
               inputKey="key-software-name"
-              isInvalid={formValues.softwareName.error}
+              isInvalid={formValues.softwareName?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareName.value}
@@ -300,7 +300,7 @@ const SoftwareAttributesForm = ({
               inputTitle={format('form.software_version.label')}
               errorMessage={format('form.required_field.message')}
               inputKey="key-software-version"
-              isInvalid={formValues.softwareVersion.error}
+              isInvalid={formValues.softwareVersion?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareVersion.value}
@@ -313,7 +313,7 @@ const SoftwareAttributesForm = ({
             </p>
             <DragDrop
               selectedFile={(selectedFile) => handleSelectedFile(selectedFile)}
-              isInvalid={formValues.softwareLogo.error}
+              isInvalid={formValues.softwareLogo?.error}
               defaultFile={formValues.softwareLogo.value}
               uploadFileType="image"
             />
@@ -325,7 +325,7 @@ const SoftwareAttributesForm = ({
               tipMessage={format('form.tip_website.label')}
               errorMessage={format('form.required_field.message')}
               inputKey="key-software-website"
-              isInvalid={formValues.softwareWebsite.error}
+              isInvalid={formValues.softwareWebsite?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareWebsite.value}
@@ -338,7 +338,7 @@ const SoftwareAttributesForm = ({
               tipMessage={format('form.tip_documentation.label')}
               errorMessage={format('form.required_field.message')}
               inputKey="key-software-documentation"
-              isInvalid={formValues.softwareDocumentation.error}
+              isInvalid={formValues.softwareDocumentation?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareDocumentation.value}
@@ -382,8 +382,8 @@ const SoftwareAttributesForm = ({
               name="email"
               inputTitle={format('app.email.label')}
               inputKey="key-software-email"
-              isInvalid={formValues.email.error.error}
-              errorMessage={formValues.email.error.message}
+              isInvalid={formValues.email?.error?.error}
+              errorMessage={formValues.email?.error?.message}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.email.value}
@@ -394,9 +394,9 @@ const SoftwareAttributesForm = ({
             <Input
               name="confirmEmail"
               inputTitle={format('app.email_confirm.label')}
-              errorMessage={formValues.confirmEmail.error.message}
+              errorMessage={formValues.confirmEmail?.error?.message}
               inputKey="key-software-email-confirm"
-              isInvalid={formValues.confirmEmail.error.error}
+              isInvalid={formValues.confirmEmail?.error?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.confirmEmail.value}
