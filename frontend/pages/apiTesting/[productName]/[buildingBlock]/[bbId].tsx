@@ -4,15 +4,15 @@ import { useCallback, useEffect, useState } from 'react';
 import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
 import { RiCloseLine } from 'react-icons/ri';
 import { useIntl } from 'react-intl';
-import TestStepsView from '../../../components/TestStepsView';
-import TestSummary from '../../../components/TestSummary';
-import TestResultTable from '../../../components/table/TestResultTable';
-import { ResultTableSortByType } from '../../../components/table/types';
-import { getBuildingBlockTestResults } from '../../../service/serviceAPI';
+import TestStepsView from '../../../../components/TestStepsView';
+import TestSummary from '../../../../components/TestSummary';
+import TestResultTable from '../../../../components/table/TestResultTable';
+import { ResultTableSortByType } from '../../../../components/table/types';
+import { getBuildingBlockTestResults } from '../../../../service/serviceAPI';
 import {
   BuildingBlockEndpointTest,
   BuildingBlockTestSummary,
-} from '../../../service/types';
+} from '../../../../service/types';
 
 const TestResultPage = () => {
   const [bbTestSummary, setBBTestSummary] = useState<BuildingBlockTestSummary>();

@@ -24,18 +24,18 @@ exports[`Unit test for MainLayout component: render the MainLayout component 1`]
           class="header-link-button-section"
         >
           <a
-            class="header-menu-button header-menu-button-active"
+            class="header-menu-button "
             data-testid="header-menu-button"
-            href="/"
+            href="/requirements"
           >
-            API testing
+            Software Requirements Compliance
           </a>
           <a
             class="header-menu-button "
             data-testid="header-menu-button"
-            href="/softwareRequirementsCompliance"
+            href="/apiTesting"
           >
-            Software Requirements Compliance
+            API testing
           </a>
         </div>
         <div

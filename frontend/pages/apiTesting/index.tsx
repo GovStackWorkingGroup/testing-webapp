@@ -2,11 +2,11 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
-import Definition from '../components/Definition';
-import ProductTable from '../components/table/ProductTable';
-import useTranslations from '../hooks/useTranslation';
+import Definition from '../../components/Definition';
+import ProductTable from '../../components/table/ProductTable';
+import useTranslations from '../../hooks/useTranslation';
 
-const HomePage = () => {
+const ApiTestingPage = () => {
   const router = useRouter();
   const { format } = useTranslations();
 
@@ -64,4 +64,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default ApiTestingPage;

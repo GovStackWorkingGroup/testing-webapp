@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import '../../public/images/logo.png';
 import { RiQuestionLine } from 'react-icons/ri';
 import { BiLogIn, BiLogOut } from 'react-icons/bi';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../service/constants';
+import { COMPLIANCE_TESTING_RESULT_PAGE, API_TESTING_RESULT_PAGE } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
 
@@ -51,14 +51,14 @@ const Header = () => {
       <div className="header-right-section">
         <div className="header-link-button-section">
           <HeaderMenuButton
-            buttonTitle={format('app.api-testing.label')}
-            href={'/'}
-            active={currentPath === '/'}
-          />
-          <HeaderMenuButton
             buttonTitle={format('app.software_requirements_compliance.label')}
             href={COMPLIANCE_TESTING_RESULT_PAGE}
             active={currentPath?.includes(COMPLIANCE_TESTING_RESULT_PAGE)}
+          />
+          <HeaderMenuButton
+            buttonTitle={format('app.api-testing.label')}
+            href={API_TESTING_RESULT_PAGE}
+            active={currentPath?.includes(API_TESTING_RESULT_PAGE)}
           />
         </div>
         <div className="action-buttons">
