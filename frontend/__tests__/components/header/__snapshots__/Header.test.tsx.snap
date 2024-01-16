@@ -23,16 +23,16 @@ exports[`Unit tests for Header component: should render the Header component and
         <a
           class="header-menu-button "
           data-testid="header-menu-button"
-          href="/"
+          href="/requirements"
         >
-          API testing
+          Software Requirements Compliance
         </a>
         <a
           class="header-menu-button "
           data-testid="header-menu-button"
-          href="/softwareRequirementsCompliance"
+          href="/apiTesting"
         >
-          Software Requirements Compliance
+          API testing
         </a>
       </div>
       <div
