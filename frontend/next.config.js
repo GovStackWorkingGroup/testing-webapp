@@ -27,6 +27,15 @@ const nextConfig = {
     API_URL: process.env.API_URL,
     SLACK_CHANNEL_URL: process.env.SLACK_CHANNEL_URL,
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/requirements',
+        permanent: true,
+      },
+    ];
+  },
 
   webpack(config, { dev, isServer }) {
     // If not in development mode, avoid minification

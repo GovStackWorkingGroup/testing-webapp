@@ -1,8 +1,9 @@
 // Urls
 export const COMPLIANCE_TESTING_DETAILS_PAGE =
   'softwareRequirementsCompliance/details/';
-export const COMPLIANCE_TESTING_FORM = '/softwareRequirementsCompliance/form';
-export const COMPLIANCE_TESTING_RESULT_PAGE = '/softwareRequirementsCompliance';
+export const COMPLIANCE_TESTING_FORM = '/requirements/form';
+export const COMPLIANCE_TESTING_RESULT_PAGE = '/requirements';
+export const API_TESTING_RESULT_PAGE = '/apiTesting';
 export const CONFLUENCE_INSTRUCTIONS_LINK =
   'https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance';
 

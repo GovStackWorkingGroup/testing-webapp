@@ -1,4 +1,4 @@
-import TestResultPage from '../../../../pages/[productName]/[buildingBlock]/[bbId]';
+import TestResultPage from '../../../../pages/apiTesting/[productName]/[buildingBlock]/[bbId]';
 import { render } from '../../../test-utils/test-utils';
 
 describe('Unit tests for TestResultPage component:', () => {
