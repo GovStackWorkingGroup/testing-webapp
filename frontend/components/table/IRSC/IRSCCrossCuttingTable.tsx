@@ -219,36 +219,93 @@ const IRSCCrossCuttingTableType = ({
           })}
         </thead>
         <tbody {...getTableBodyProps()}>
-          <tr>
-            <td className="irsc-table-header-required" colSpan={3}>
-              {format('form.required_label')}
-            </td>
-          </tr>
+          {rows.some((item) => item.original.status === 0) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('form.required_label')}
+              </td>
+            </tr>
+          )}
           {rows.map((row: any, indexKey: number) => {
             prepareRow(row);
-
-            return (
-              <tr
-                {...row.getRowProps()}
-                key={`row-${indexKey}`}
-                className={`irsc-table-rows ${
-                  !isTableValid &&
-                  (row.values.fulfillment === undefined ||
-                    row.values.fulfillment === null ||
-                    row.values.fulfillment === -1)
-                    ? 'irsc-invalid-row'
-                    : ''
-                }`}
-              >
-                {row.cells.map((cell: any, indexKey: number) => {
-                  return (
-                    <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                      {cell.render('Cell')}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
+            if (row.original.status === 0) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className={`irsc-table-rows ${
+                    !isTableValid &&
+                    (row.values.fulfillment === undefined ||
+                      row.values.fulfillment === null ||
+                      row.values.fulfillment === -1)
+                      ? 'irsc-invalid-row'
+                      : ''
+                  }`}
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
+          })}
+          {rows.some((item) => item.original.status === 1) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('table.recommended_not_required.label')}
+              </td>
+            </tr>
+          )}
+          {rows.map((row: any, indexKey: number) => {
+            prepareRow(row);
+            if (row.original.status === 1) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className="irsc-table-rows"
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
+          })}
+          {rows.some((item) => item.original.status === 2) && (
+            <tr>
+              <td className="irsc-table-header-required" colSpan={3}>
+                {format('table.optional_not_required.label')}
+              </td>
+            </tr>
+          )}
+          {rows.map((row: any, indexKey: number) => {
+            prepareRow(row);
+            if (row.original.status === 2) {
+              return (
+                <tr
+                  {...row.getRowProps()}
+                  key={`row-${indexKey}`}
+                  className="irsc-table-rows"
+                >
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            }
           })}
         </tbody>
       </table>
