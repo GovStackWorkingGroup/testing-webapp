@@ -1,6 +1,6 @@
 // Urls
 export const COMPLIANCE_TESTING_DETAILS_PAGE =
-  'softwareRequirementsCompliance/details/';
+  'requirements/details/';
 export const COMPLIANCE_TESTING_FORM = '/requirements/form';
 export const COMPLIANCE_TESTING_RESULT_PAGE = '/requirements';
 export const API_TESTING_RESULT_PAGE = '/apiTesting';

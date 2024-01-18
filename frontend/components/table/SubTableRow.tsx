@@ -19,7 +19,7 @@ const SubTableRow = ({ buildingBlock, productName }: Props) => {
 
   return (
     <Link
-      href={{ pathname: `/${productName}/${(buildingBlock.buildingBlock)}/${buildingBlock.id}` }}
+      href={{ pathname: `/apiTesting/${productName}/${(buildingBlock.buildingBlock)}/${buildingBlock.id}` }}
       className='sub-table-link'>
       <div className='sub-table-row'>
         <div></div>
