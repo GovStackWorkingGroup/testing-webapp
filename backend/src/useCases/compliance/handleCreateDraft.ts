@@ -53,7 +53,7 @@ export default class CreateDraftRequestHandler {
 
             const response: any = { success: true, details: "Form submitted successfully" };
             if (draftUniqueId) {
-                const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form?draftUUID=${draftUniqueId}&formStep=1`);
+                const fullPath = this.getFrontendUrl(`/requirements/form?draftUUID=${draftUniqueId}&formStep=1`);
                 response.details = "Draft created successfully";
                 response.link = fullPath;
                 response.uniqueId = draftUniqueId;
