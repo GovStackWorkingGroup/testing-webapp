@@ -75,7 +75,7 @@ export default class SubmitFormRequestHandler {
 
     async createJiraTicket(softwareName: string, buildingBlocks): Promise<string | Error> {
         const jiraConfig = appConfig.jira;
-        const formFullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/details/`, softwareName);
+        const formFullPath = this.getFrontendUrl(`/requirements/details/`, softwareName);
         const buildingBlocksArray = Array.isArray(buildingBlocks) ? buildingBlocks : buildingBlocks.split(',');
 
         // Create bulleted list for building blocks

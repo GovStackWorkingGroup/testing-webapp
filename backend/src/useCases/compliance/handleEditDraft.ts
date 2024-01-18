@@ -55,7 +55,7 @@ export default class EditDraftRequestHandler {
     
             await this.repository.editDraftForm(draftId, updateData);
 
-            const fullPath = this.getFrontendUrl(`/softwareRequirementsCompliance/form?draftUUID=${draftId}&formStep=1`);
+            const fullPath = this.getFrontendUrl(`/requirements/form?draftUUID=${draftId}&formStep=1`);
             const response = {
                 success: true,
                 details: "Form updated successfully",

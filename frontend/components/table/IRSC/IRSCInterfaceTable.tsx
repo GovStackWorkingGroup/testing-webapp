@@ -36,7 +36,7 @@ const IRSCInterfaceTable = ({
         item._id === cellId
           ? {
             ...item,
-            fulfillment: value as number,
+            fulfillment: value as number | null,
           }
           : item
       );
@@ -141,7 +141,11 @@ const IRSCInterfaceTable = ({
                     if (readOnlyView) {
                       return;
                     } else {
-                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                      handleUpdateField(
+                        row.original._id as string,
+                        'fulfillment',
+                        null
+                      );
                     }
                   }}
                 />
@@ -150,7 +154,11 @@ const IRSCInterfaceTable = ({
                   <FaRegCircleXmark
                     className="irsc-table-icon"
                     onClick={() =>
-                      handleUpdateField(row.original._id as string, 'fulfillment', 0)
+                      handleUpdateField(
+                        row.original._id as string,
+                        'fulfillment',
+                        0
+                      )
                     }
                   />
                 )
@@ -165,7 +173,11 @@ const IRSCInterfaceTable = ({
                     if (readOnlyView) {
                       return;
                     } else {
-                      handleUpdateField(row.original._id as string, 'fulfillment', null);
+                      handleUpdateField(
+                        row.original._id as string,
+                        'fulfillment',
+                        null
+                      );
                     }
                   }}
                 />
@@ -174,7 +186,11 @@ const IRSCInterfaceTable = ({
                   <FaRegCircleCheck
                     className="irsc-table-icon"
                     onClick={() =>
-                      handleUpdateField(row.original._id as string, 'fulfillment', 1)
+                      handleUpdateField(
+                        row.original._id as string,
+                        'fulfillment',
+                        1
+                      )
                     }
                   />
                 )
@@ -192,7 +208,7 @@ const IRSCInterfaceTable = ({
     useTable({
       // @ts-ignore
       columns,
-      data: data.requirements.interface,
+      data: data.requirements.interface ?? [],
     });
 
   return data.requirements.interface?.length ? (

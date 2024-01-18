@@ -41,14 +41,9 @@ const SelectBBs = ({
   const [isTableValid, setIsTableValid] = useState(true);
   const [isTestHarnessInputValid, setIsTestHarnessInputValid] =
     useState<boolean>(true);
-  const [savedInLocalStorage, setSavedInLocalStorage] = useState<
-    ComplianceRequirementsType[] | null
-  >(
-    JSON.parse(
-      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
-        'null'
-    )
-  );
+  const [updatedAllItems, setUpdatedAllItems] =
+    useState<ComplianceRequirementsType[]>();
+
   const router = useRouter();
   const { format } = useTranslations();
 
@@ -59,7 +54,7 @@ const SelectBBs = ({
 
   useEffect(() => {
     handleAlreadySavedData();
-  }, [draftData, savedInLocalStorage, interfaceRequirementsData, readOnlyData]);
+  }, [draftData, interfaceRequirementsData, readOnlyData]);
 
   useEffect(() => {
     handleSetOptions();
@@ -78,6 +73,7 @@ const SelectBBs = ({
         );
       }
 
+      setUpdatedAllItems(updatedSelectedItemsData);
       setUpdatedBBs(updatedSelectedItemsData);
     }
   }, [updatedData, readOnlyView, selectedItems]);
@@ -89,6 +85,10 @@ const SelectBBs = ({
   }, [options]);
 
   const handleAlreadySavedData = () => {
+    const savedInLocalStorage: ComplianceRequirementsType[] | null = JSON.parse(
+      localStorage.getItem(INTERFACE_COMPLIANCE_STORAGE_NAME as string) ||
+        'null'
+    );
     if (savedInLocalStorage?.length && !readOnlyView) {
       const BBWithAddedInterface = savedInLocalStorage.map((itemBB) => {
         if (itemBB.requirements.interface.length) {
@@ -307,13 +307,15 @@ const SelectBBs = ({
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
     const isTableValid = data.every((dataItem) =>
-      dataItem.requirements.interface.every(
-        (item) =>
-          item.fulfillment !== undefined ||
-          item.fulfillment !== null ||
-          item.fulfillment !== -1
-      )
+      dataItem.requirements.interface.every((item) => {
+        if (item.status === 0) {
+          return item.fulfillment !== null && item.fulfillment !== -1;
+        }
+
+        return true;
+      })
     );
+
     const isTestHarnessInputValid = data.every(
       (dataItem) =>
         dataItem.interfaceCompliance &&
@@ -333,13 +335,15 @@ const SelectBBs = ({
     IRSCFormRef,
     () => ({
       validate: () => {
-        const isValid = isFulfillmentValid(selectedItems);
+        const isValid = isFulfillmentValid(
+          updatedAllItems as ComplianceRequirementsType[]
+        );
         setIsTableValid(isValid);
 
         return isValid;
       },
     }),
-    [selectedItems]
+    [updatedAllItems]
   );
 
   const displayPills = selectedItems.map((item) => {

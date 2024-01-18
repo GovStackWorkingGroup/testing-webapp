@@ -4,7 +4,7 @@ exports[`Unit tests for SubTableRow component: should render the SubTableRow com
 <div>
   <a
     class="sub-table-link"
-    href="/Test Product/bb-payments/07112c0a-8263-4717-92ce-c52bca785624"
+    href="/apiTesting/Test Product/bb-payments/07112c0a-8263-4717-92ce-c52bca785624"
   >
     <div
       class="sub-table-row"
