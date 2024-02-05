@@ -16,7 +16,7 @@ const defaultSortBy = {
   overallCompatibility: { field: 'overallCompatibility', order: null }
 } as SoftwaresTableSortByType;
 
-const ProductTable = ({ showAll }) => {
+const ProductTable = ({ showAll }: { showAll: boolean }) => {
   const [productsList, setProductsList] = useState<ProductsType[]>([]);
   const [productListLength, setProductListLength] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
