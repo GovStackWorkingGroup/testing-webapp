@@ -80,8 +80,8 @@ export default class ReportUploadRequestHandler {
       productMetaData: await this.loadProductInfo(),
       start: {
         timestamp: {
-          seconds: executionResult.start.getTime() / 1000,
-          nanos: (executionResult.start.getMilliseconds() % 1000) * 1e6
+          seconds: executionResult.start?.timestamp?.seconds,
+          nanos: executionResult.start?.timestamp?.nanos
         }
       },
     };
