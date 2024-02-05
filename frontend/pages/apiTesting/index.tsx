@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Definition from '../../components/Definition';
 import ProductTable from '../../components/table/ProductTable';
@@ -9,6 +9,7 @@ import useTranslations from '../../hooks/useTranslation';
 const ApiTestingPage = () => {
   const router = useRouter();
   const { format } = useTranslations();
+  const [showAll, setShowAll] = useState(false);
 
   const processToken = (token: string | string[]) => {
     const tokenValue = Array.isArray(token) ? token[0] : token;
@@ -16,13 +17,17 @@ const ApiTestingPage = () => {
   };
 
   const updateQueryParams = () => {
-    const { token, ...rest } = router.query;
+    const { token, showAll, ...rest } = router.query;
     if (token) {
       processToken(token);
       router.replace({
         pathname: router.pathname,
         query: rest,
       }, undefined, { shallow: true });
+    }
+
+    if (showAll) {
+      setShowAll(true);
     }
   };
 
@@ -58,7 +63,7 @@ const ApiTestingPage = () => {
           hasRedirecting={true}
           note={format('app.definition.note')}
         />
-        <ProductTable />
+        <ProductTable showAll={showAll} />
       </main>
     </div>
   );

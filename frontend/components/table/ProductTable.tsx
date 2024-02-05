@@ -16,7 +16,7 @@ const defaultSortBy = {
   overallCompatibility: { field: 'overallCompatibility', order: null }
 } as SoftwaresTableSortByType;
 
-const ProductTable = () => {
+const ProductTable = ({ showAll }: { showAll: boolean }) => {
   const [productsList, setProductsList] = useState<ProductsType[]>([]);
   const [productListLength, setProductListLength] = useState<number>(0);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +30,7 @@ const ProductTable = () => {
     const fetchData = async () => {
       try {
         const [data, count] = await Promise.all([
-          getSoftwaresData(0, sortBy),
+          getSoftwaresData(0, sortBy, 'main', showAll),
           getSoftwareListCount()
         ]);
 
@@ -49,7 +49,7 @@ const ProductTable = () => {
     };
 
     fetchData();
-  }, [sortBy]);
+  }, [sortBy, showAll]);
 
   const handleLoadMoreData = useCallback(async () => {
     try {

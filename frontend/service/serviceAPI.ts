@@ -52,13 +52,17 @@ const baseFetch = async (url: string): Promise<ProductsListType> => {
 export const getSoftwaresData = async (
   offset: number,
   sortBy: SoftwaresTableSortByType,
-  branch?: string
+  branch?: string,
+  showAll?: boolean
 ): Promise<Success<ProductsListType> | Failure> => {
   try {
     const url = new URL(`${baseUrl}/report/`);
-    url.searchParams.set('limit', '20');
+
     url.searchParams.set('offset', offset.toString());
-    url.searchParams.set('branch', branch || 'main');
+    if (!showAll) {
+      url.searchParams.set('limit', '20');
+      url.searchParams.set('branch', branch || 'main');
+    }
 
     const sortedParameters = handleFieldsToSort(sortBy);
     for (const param of sortedParameters.split('&')) {
