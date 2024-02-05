@@ -30,7 +30,7 @@ const ProductTable = ({ showAll }: { showAll: boolean }) => {
     const fetchData = async () => {
       try {
         const [data, count] = await Promise.all([
-          getSoftwaresData(0, sortBy),
+          getSoftwaresData(0, sortBy, 'main', showAll),
           getSoftwareListCount()
         ]);
 
