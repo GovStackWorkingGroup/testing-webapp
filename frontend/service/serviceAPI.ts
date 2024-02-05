@@ -57,9 +57,12 @@ export const getSoftwaresData = async (
 ): Promise<Success<ProductsListType> | Failure> => {
   try {
     const url = new URL(`${baseUrl}/report/`);
-    !showAll && url.searchParams.set('limit', '20');
-    url.searchParams.set('offset', offset.toString());
-    !showAll && url.searchParams.set('branch', branch || 'main');
+
+    if (!showAll) {
+      url.searchParams.set('limit', '20');
+      url.searchParams.set('offset', offset.toString());
+      url.searchParams.set('branch', branch || 'main');
+    }
 
     const sortedParameters = handleFieldsToSort(sortBy);
     for (const param of sortedParameters.split('&')) {
