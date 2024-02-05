@@ -58,9 +58,9 @@ export const getSoftwaresData = async (
   try {
     const url = new URL(`${baseUrl}/report/`);
 
+    url.searchParams.set('offset', offset.toString());
     if (!showAll) {
       url.searchParams.set('limit', '20');
-      url.searchParams.set('offset', offset.toString());
       url.searchParams.set('branch', branch || 'main');
     }
 
