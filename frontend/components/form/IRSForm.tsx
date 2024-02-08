@@ -24,7 +24,7 @@ const IRSForm = ({
   IRSCRequirementsFormRef,
   onEdited,
 }: IRSFormProps) => {
-  const [activeTab, setActiveTab] = useState<activeTabProps>('interface');
+  const [activeTab, setActiveTab] = useState<activeTabProps>('specification');
   const [updatedInterfaceData, setUpdatedInterfaceData] = useState<
     ComplianceRequirementsType[] | undefined
   >();
@@ -186,19 +186,19 @@ const IRSForm = ({
       <div className="irsc-tab-selector">
         <div
           className={classNames('irsc-single-tab', {
-            active: activeTab === 'interface',
-          })}
-          onClick={() => setActiveTab('interface')}
-        >
-          {format('table.interface_compliance.label')}
-        </div>
-        <div
-          className={classNames('irsc-single-tab', {
             active: activeTab === 'specification',
           })}
           onClick={() => setActiveTab('specification')}
         >
           {format('table.requirement_specification_compliance.label')}
+        </div>
+        <div
+          className={classNames('irsc-single-tab', {
+            active: activeTab === 'interface',
+          })}
+          onClick={() => setActiveTab('interface')}
+        >
+          {format('table.interface_compliance.label')}
         </div>
       </div>
       <InterfaceCompliance
