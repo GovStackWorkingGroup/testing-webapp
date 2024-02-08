@@ -30,13 +30,33 @@ class GitBookCollectionManager {
     }
 
     async fetchCollections(titleStartsWith: string = '') {
-        const response = await gitBookClient.get(`/v1/orgs/${this.orgId}/collections`);
+        let allCollections: SpaceType[] = [];
+
         const lowerCaseTitleStartsWith = titleStartsWith.toLowerCase();
 
-        if (!response || response.status !== 200 || !response.data || !response.data.items) {
-            throw new GitBookCollectionManagerError('Failed to fetch collections.');
+        const { baseURL, apiKey } = appConfig.gitBook;
+        const collectionUrl = `${baseURL}/v1/orgs/${this.orgId}/collections`
+        const response = await fetch(collectionUrl, 
+          {headers: { 'Authorization': `Bearer ${apiKey}` }})
+        let data = await response.json();
+
+        if (!response || response.status !== 200 || !data || !data.items) {
+          throw new GitBookCollectionManagerError('Failed to fetch collections.');
         }
-        return response.data.items
+
+        allCollections = allCollections.concat(data.items);
+        // If it contains a 'next' object, call again to get remaining items - ?page=next-page-id
+        while (data.next) {
+          const response = await fetch(`${collectionUrl}?page=${data.next.page}`, 
+            {headers: { 'Authorization': `Bearer ${apiKey}` }})
+          data = await response.json();
+          allCollections = allCollections.concat(data.items);
+        }
+        
+        allCollections.map((item) => {
+          console.log(JSON.stringify(item.title));
+        })
+        return allCollections
             .filter(collection => collection.title.toLowerCase().startsWith(lowerCaseTitleStartsWith))
             .map(collection => ({
                 id: collection.id,
@@ -51,15 +71,23 @@ class GitBookCollectionManager {
     }
 
     async fetchLatestVersionSpaceIdAndVersion(collectionId) {
+        // Note that GovStack is no longer using semantic versioning. 
+        // For now, pull from the development branch. 
+        // TO DO: Allow user to select version of spec that they want to measure compliance against,
+        //    which means storing functional requirements for each version of each spec
         const spaces = await this.fetchSpacesForCollection(collectionId);
         let highestVersionSpace: SpaceType | null = null;
 
         spaces.forEach(space => {
-            if (this.isVersion(space.title)) {
+          if (space.title === 'development') {
+            highestVersionSpace = space;
+          }
+
+          /*  if (this.isVersion(space.title)) {
                 if (!highestVersionSpace || this.compareVersions(space.title, highestVersionSpace.title) > 0) {
                     highestVersionSpace = space;
                 }
-            }
+            } */
         });
 
         if (!highestVersionSpace) {
