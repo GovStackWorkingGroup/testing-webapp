@@ -74,8 +74,12 @@ const processBBRequirements = async () => {
                 const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
                 const requirements = { crossCutting, functional, interface: architecturalRequirements.requirements };
                 const dateOfSave = new Date().toISOString();
-                const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
-                await bbRequirement.save();
+                //const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
+                //await bbRequirement.save();
+                const query = { bbKey };
+                const update = { bbName, bbVersion: spaceInfo.version, dateOfSave, requirements };
+                const options = { upsert: true };
+                BBRequirements.updateOne(query, update, options);
 
                 return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
             } catch (outerError) {
