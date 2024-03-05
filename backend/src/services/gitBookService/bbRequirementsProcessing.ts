@@ -66,7 +66,7 @@ const processBBRequirements = async () => {
         const allPageContents = await Promise.all(bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
             try {
                 const spaceInfo = await collectionManager.fetchLatestVersionSpaceIdAndVersion(collectionId);
-                if (!spaceInfo) {
+                if (!spaceInfo || !spaceInfo.spaceId ||!spaceInfo.version) {
                     throw new Error('No valid space found for the collection');
                 }
 
