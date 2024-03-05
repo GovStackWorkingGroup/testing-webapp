@@ -72,22 +72,22 @@ class GitBookCollectionManager {
 
     async fetchLatestVersionSpaceIdAndVersion(collectionId) {
         // Note that GovStack is no longer using semantic versioning. 
-        // For now, pull from the development branch. 
+ 
         // TO DO: Allow user to select version of spec that they want to measure compliance against,
         //    which means storing functional requirements for each version of each spec
         const spaces = await this.fetchSpacesForCollection(collectionId);
         let highestVersionSpace: SpaceType | null = null;
 
         spaces.forEach(space => {
-          if (space.title === 'development') {
+          /*if (space.title === 'development') {
             highestVersionSpace = space;
-          }
+          }*/
 
-          /*  if (this.isVersion(space.title)) {
-                if (!highestVersionSpace || this.compareVersions(space.title, highestVersionSpace.title) > 0) {
-                    highestVersionSpace = space;
-                }
-            } */
+          if (this.isVersion(space.title)) {
+            if (!highestVersionSpace || this.compareVersions(space.title, highestVersionSpace.title) > 0) {
+                highestVersionSpace = space;
+            }
+          }
         });
 
         if (!highestVersionSpace) {
@@ -98,7 +98,7 @@ class GitBookCollectionManager {
 
     };
 
-    // Checks if the title is in semantic versioning format (Major.Minor.Patch).
+    // Checks if the title is in GovStack version format ({YY}Q{q} - 23Q4, 24Q2, etc)
     isVersion(title: string) {
         return /^\d{2}Q[1-4]$/.test(title);
     };
