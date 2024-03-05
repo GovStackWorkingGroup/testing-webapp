@@ -91,7 +91,7 @@ class GitBookCollectionManager {
         });
 
         if (!highestVersionSpace) {
-            highestVersionSpace = spaces.length > 0 ? spaces[0] : null;
+            highestVersionSpace = { id: '', title: '' };
         }
 
         return highestVersionSpace ? { spaceId: highestVersionSpace.id, version: highestVersionSpace.title } : null;
