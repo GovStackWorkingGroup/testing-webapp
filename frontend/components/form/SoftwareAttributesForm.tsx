@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
-import { validate } from 'email-validator';
+import validator from 'validator';
 import { toast } from 'react-toastify';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
@@ -15,8 +15,8 @@ import { softwareAttributesDefaultValues } from './helpers';
 export type FormValuesType = {
   softwareName: { value: string; error: boolean };
   softwareLogo: { value: File | undefined; error: boolean };
-  softwareWebsite: { value: string; error: boolean };
-  softwareDocumentation: { value: string; error: boolean };
+  softwareWebsite: { value: string; error: { error: boolean; message: string } };
+  softwareDocumentation: { value: string; error: { error: boolean; message: string } };
   toolDescription: { value: string; error: boolean };
   email: { value: string; error: { error: boolean; message: string } };
   confirmEmail: { value: string; error: { error: boolean; message: string } };
@@ -91,10 +91,13 @@ const SoftwareAttributesForm = ({
             value: logoFile ? (logoFile as File) : undefined,
             error: false,
           },
-          softwareWebsite: { value: draftData.website, error: false },
+          softwareWebsite: {
+            value: draftData.website,
+            error: { error: false, message: '' },
+          },
           softwareDocumentation: {
             value: draftData.documentation,
-            error: false,
+            error: { error: false, message: '' },
           },
           toolDescription: {
             value: draftData.description,
@@ -143,14 +146,15 @@ const SoftwareAttributesForm = ({
   const setFieldValues = (
     name: string,
     value: string,
-    isError: boolean
+    isError: boolean,
+    message: string
   ): FormValuesType => ({
     ...formValues,
     [name]: {
       value,
       error: {
         error: isError,
-        message: isError ? format('form.invalid_email.message') : '',
+        message
       },
     },
   });
@@ -161,8 +165,11 @@ const SoftwareAttributesForm = ({
     const { name, value } = event.target;
 
     if (name === 'email' || name === 'confirmEmail') {
-      const isError = !validate(value);
-      setFormValues(setFieldValues(name, value, isError));
+      const isError = !validator.isEmail(value);
+      setFormValues(setFieldValues(name, value, isError, format('form.invalid_email.message')));
+    } else if (name === 'softwareWebsite' || name ==='softwareDocumentation') {
+      const isError = !validator.isURL(value, { require_protocol: true });
+      setFormValues(setFieldValues(name, value, isError, format('form.invalid_url.message')));
     } else {
       setFormValues((prevFormValues) => ({
         ...prevFormValues,
@@ -215,7 +222,7 @@ const SoftwareAttributesForm = ({
           isValid = false;
         }
 
-        if (!validate(field.value as string)) {
+        if (!validator.isEmail(field.value as string)) {
           updatedValues.email.error.error = true;
           updatedValues.email.error.message = format(
             'form.invalid_email.message'
@@ -223,7 +230,7 @@ const SoftwareAttributesForm = ({
           isValid = false;
         }
       } else if (fieldName === 'confirmEmail') {
-        if (!validate(field.value as string)) {
+        if (!validator.isEmail(field.value as string)) {
           updatedValues.confirmEmail.error.error = true;
           updatedValues.confirmEmail.error.message = format(
             'form.invalid_email.message'
@@ -238,10 +245,28 @@ const SoftwareAttributesForm = ({
           );
           isValid = false;
         }
+      } else if (fieldName === 'softwareWebsite') {
+        if (!validator.isURL(field.value as string, { require_protocol: true })) {
+          updatedValues.softwareWebsite.error.error = true;
+          updatedValues.softwareWebsite.error.message = format(
+            'form.invalid_url.message'
+          );
+          isValid = false;
+        }
+      } else if (fieldName === 'softwareDocumentation') {
+        if (!validator.isURL(field.value as string, { require_protocol: true })) {
+          updatedValues.softwareDocumentation.error.error = true;
+          updatedValues.softwareDocumentation.error.message = format(
+            'form.invalid_url.message'
+          );
+          isValid = false;
+        }
       } else if (
         typeof field.value === 'string' &&
         fieldName !== 'email' &&
-        fieldName !== 'confirmEmail'
+        fieldName !== 'confirmEmail' &&
+        fieldName !=='softwareWebsite' &&
+        fieldName !=='softwareDocumentation'
       ) {
         if (field.value.trim() === '') {
           if ('error' in updatedValues[fieldName as keyof FormValuesType]) {
@@ -323,9 +348,9 @@ const SoftwareAttributesForm = ({
               name="softwareWebsite"
               inputTitle={format('software_website.label')}
               tipMessage={format('form.tip_website.label')}
-              errorMessage={format('form.required_field.message')}
+              errorMessage={formValues.softwareWebsite?.error?.message}
               inputKey="key-software-website"
-              isInvalid={formValues.softwareWebsite?.error}
+              isInvalid={formValues.softwareWebsite?.error?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareWebsite.value}
@@ -336,9 +361,9 @@ const SoftwareAttributesForm = ({
               name="softwareDocumentation"
               inputTitle={format('software_documentation.label')}
               tipMessage={format('form.tip_documentation.label')}
-              errorMessage={format('form.required_field.message')}
+              errorMessage={formValues.softwareDocumentation?.error?.message}
               inputKey="key-software-documentation"
-              isInvalid={formValues.softwareDocumentation?.error}
+              isInvalid={formValues.softwareDocumentation?.error?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareDocumentation.value}
