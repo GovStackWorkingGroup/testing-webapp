@@ -108,6 +108,7 @@ export const en = {
     'To proceed you must fill in all the required fields.',
   'form.invalid_email.message': 'Invalid email address.',
   'form.invalid_email_match.message': 'Email addresses do not match.',
+  'form.invalid_url.message': 'Must provide a valid URL (including http:// or https://).',
   'form.invalid_doc_file_format.message':
     'Invalid file format. Please select a PDF, word document, or plain text file.',
   'form.invalid_image_file_format.message':

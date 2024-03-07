@@ -100,22 +100,27 @@ class GitBookCollectionManager {
 
     // Checks if the title is in GovStack version format ({YY}Q{q} - 23Q4, 24Q2, etc)
     isVersion(title: string) {
-        return /^\d{2}Q[1-4]$/.test(title);
+        return /^\d{2}Q[1-4](.\d)?$/.test(title);
     };
 
     versionToArray(versionTitle: string) {
-        const matches = versionTitle.match(/^(\d{2})Q([1-4])$/);
-        return matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10)] : [0, 0];
+        const matches = versionTitle.match(/^(\d{2})Q([1-4]).?(\d)?$/);
+        return matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3], 10)] : [0, 0, 0];
     };
 
     compareVersions(version1: string, version2: string) {
-        const [year1, quarter1] = this.versionToArray(version1);
-        const [year2, quarter2] = this.versionToArray(version2);
+        const [year1, quarter1, patch1] = this.versionToArray(version1);
+        const [year2, quarter2, patch2] = this.versionToArray(version2);
     
         if (year1 > year2) return 1;
         if (year1 < year2) return -1;
         if (quarter1 > quarter2) return 1;
         if (quarter1 < quarter2) return -1;
+        if (patch1 !== undefined) {
+          if (patch1 > patch2 || isNaN(patch2)) return 1;
+          if (patch1 < patch2) return -1;
+        }
+
         return 0;
     };
 
