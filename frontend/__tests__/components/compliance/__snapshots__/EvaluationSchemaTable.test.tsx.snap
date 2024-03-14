@@ -170,7 +170,7 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
         <td
           class="border"
         >
-          Interface Compliance
+          API Compliance
         </td>
         <td
           class="td-row-details"

@@ -105,7 +105,7 @@ describe('GitBook API', () => {
 
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractCrossCuttingRequirements(testData);
+            const result = contentManager.extractCrossCuttingRequirements(testData, null);
             if ('error' in result) {
                 throw result.error;
             }
@@ -130,7 +130,7 @@ describe('GitBook API', () => {
           
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractCrossCuttingRequirements(testData);
+            const result = contentManager.extractCrossCuttingRequirements(testData, null);
             if ('error' in result) {
                 throw result.error;
             }

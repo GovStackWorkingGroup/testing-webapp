@@ -21,7 +21,7 @@ const processBBRequirements = async () => {
                 const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
                 let extractResult;
                 if (pageTypeRegex === CROSS_CUTTING_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent);
+                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null);
                 } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX) {
                     extractResult = pageContentManager.extractFunctionalRequirements(pageContent);
                 }
@@ -42,7 +42,7 @@ const processBBRequirements = async () => {
         return results.flat().filter(r => r !== null);
     };
 
-    const processInterfaceCompliancePages = async (govStackSpecCollections) => {
+    const processInterfaceCompliancePages = async (govStackSpecCollections, API_REQUIREMENTS) => {
         if (govStackSpecCollections.length === 0) {
             throw new Error("No collections provided for processing.");
         }
@@ -54,14 +54,17 @@ const processBBRequirements = async () => {
             fetchedGovStackSpecNestedPagesfetche, CROSS_CUTTING_REQUIREMENTS_REGEX
         );
         const pageContent = await spaceManager.fetchPageContent(spaceId, filteredPagesIds[0]);
-        const extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent);
+        const extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS);
         return extractResult;
     };
 
     try {
         const bbCollections = await collectionManager.fetchCollections('bb');
         const govStackSpecCollections = await collectionManager.fetchCollections('GovStack Specification');
-        const architecturalRequirements = await processInterfaceCompliancePages(govStackSpecCollections);
+        // These are the Cross-cutting requirements that relate to APIs. We may eventually pull this 
+        // out into a configuration file
+        const API_REQUIREMENTS = ["5.1", "5.2", "5.3", "5.4", "5.6", "5.13"]
+        const architecturalRequirements = await processInterfaceCompliancePages(govStackSpecCollections, API_REQUIREMENTS);
 
         const allPageContents = await Promise.all(bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
             try {

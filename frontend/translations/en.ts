@@ -183,7 +183,7 @@ export const en = {
   'table.draft.label': 'Draft',
   'table.hide_older_versions.label': 'Hide older versions',
   'table.interface.label': 'Interface',
-  'table.interface_compliance.label': 'Interface Compliance',
+  'table.interface_compliance.label': 'API Compliance',
   'table.in_review.label': 'In Review',
   'table.last_update.label': 'Last Update',
   'table.level_1.label': 'Level 1',
