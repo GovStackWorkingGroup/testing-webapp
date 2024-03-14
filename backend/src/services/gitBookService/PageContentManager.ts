@@ -57,11 +57,10 @@ class GitBookPageContentManager {
         const requirements: Requirement[] = [];
         const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
 
-        console.log(API_REQUIREMENTS)
         nodes.forEach(node => {
             if (node.type === 'heading-1' && node.nodes) {
                 let textContent = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
-                const regexMatch = textContent.match(numericPrefixRegex)[0]?.toString().trim()
+                const regexMatch = textContent.match(numericPrefixRegex) && textContent.match(numericPrefixRegex)[0]?.toString().trim()
                 if (!API_REQUIREMENTS || (regexMatch && API_REQUIREMENTS.includes(regexMatch))) {
                   textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
                   let status = this.extractStatus(textContent);
