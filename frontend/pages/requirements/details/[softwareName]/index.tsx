@@ -222,6 +222,7 @@ const SoftwareComplianceDetailsPage = () => {
           <div className="software-attributes-section">
             <Input
               name="softwareName"
+              isInvalid={false}
               inputTitle={format('form.software_delete.placeholder')}
               errorMessage={format('form.required_field.message')}
               onChange={(event) => handleInputChange(event)}
