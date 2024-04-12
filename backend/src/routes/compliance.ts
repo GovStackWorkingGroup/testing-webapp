@@ -31,6 +31,8 @@ const buildComplianceRoutes = (controller: any) => {
 
   router.patch('/compliance/drafts/:draftId', limiter, filesUpload, controller.editDraftForm);
 
+  router.delete('/compliance/forms/:id', limiter, verifyGithubToken, controller.deleteForm);
+
   return router;
 };
 
