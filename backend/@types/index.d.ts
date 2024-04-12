@@ -186,6 +186,7 @@ declare module 'myTypes' {
     rollbackFormStatus: (orignalData: draftDataForRollback) => Promise<{success: boolean, errors: string[]}>;
     editDraftForm: (draftId: string, updateData: Partial<ComplianceReport>) => Promise<void>;
     updateFormData: (draftId: string, updatedData, skipStatusCheck?: Boolean) => Promise<{success: boolean, errors: string[]}>;
+    deleteForm: (draftId: string) => Promise<{success: boolean, errors: string[]}>;
     getAllBBRequirements: () => Promise<AllBBRequirements>;
     getBBRequirements(bbKey: string): Promise<BBRequirement[]>;
     getBBs(): Promise<Partial<BBRequirement>[]>;

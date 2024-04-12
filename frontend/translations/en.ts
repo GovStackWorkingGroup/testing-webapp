@@ -126,6 +126,8 @@ export const en = {
   'form.form_submit_success_inform.message':
     'We will inform you about the progress of the process via email provided in the form. You can also use this unique link to follow the progress:',
   'form.form_update_success.message': 'Form saved successfully',
+  'form.form_deleted_success.,message': 'Form deleted successfully',
+  'form.form_deleted_error.,message': 'Form deleted successfully',
   'form.form_update_error.message': 'Form saving failed',
   'form.point_of_contact.label': 'Point of contact',
   'form.clear_selection.label': 'Clear selection',
@@ -133,6 +135,8 @@ export const en = {
   'form.required_label': 'Required',
   'form.select_building_blocks.label':
     'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.software_delete.label': 'Delete this Entry',
+  'form.software_delete.placeholder': 'Enter the software name to delete',
   'form.software_version.label': 'Software Version',
   'form.test_harness.title.label': 'Test Harness Result',
   'form.table.title.label': 'Architectural Cross-Cutting Requirements',

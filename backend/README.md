@@ -152,6 +152,10 @@ The MongoDB database for this application stores several types of documents, eac
   - Allows editing of a draft. Note that this will overwrite the entire field being edited.
   - Middleware: `limiter`, `filesUpload`.
 
+- `DELETE /compliance/forms/:id`
+  - For reviewers, deletes a form that was submitted.
+  - Middleware: `limiter`, `verifyGithubToken`.
+
 ## Environment Configuration
 **Feature Flags**
 
