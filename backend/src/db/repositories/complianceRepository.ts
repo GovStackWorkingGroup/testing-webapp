@@ -307,6 +307,25 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
+  async deleteForm(formId: string): Promise<{ success: boolean, errors: string[] }> {
+    const errors: string[] = [];
+
+    try {
+      const form = await Compliance.findOne({ _id: formId });
+
+      if (!form) {
+        errors.push(`Form with ID ${formId} does not exist.`);
+      } else {
+        await Compliance.deleteOne({ _id: formId });
+      }
+
+      return { success: true, errors };
+    } catch (error: any) {
+      console.error(`Error deleting the form with ID ${formId}:`, error);
+      return { success: false, errors: [error.message || 'Unknown error occurred'] };
+    }
+  },
+
   async editDraftForm(draftId: string, updatedData: Partial<ComplianceReport>): Promise<void> {
     try {
       const draft = await Compliance.findOne({ uniqueId: draftId });

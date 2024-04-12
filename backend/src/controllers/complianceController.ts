@@ -13,6 +13,7 @@ import GetBBsRequestHandler from '../useCases/compliance/handleGetBBs';
 import GetDraftDetailRequestHandler from '../useCases/compliance/handleGetDraftDetail';
 import AcceptComplianceFormRequestHandler from '../useCases/compliance/handleAcceptForm';
 import RejectComplianceFormRequestHandler from '../useCases/compliance/handleRejectForm';
+import DeleteComplianceFormRequestHandler from '../useCases/compliance/handleDeleteForm';
 import UpdateFormRequestHandler from '../useCases/compliance/handleUpdateForm';
 import GetAvailableFiltersRequestHandler from '../useCases/compliance/handleGetAvailableFiltersRequestHandler';
 
@@ -98,6 +99,14 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   };
 
+  const deleteForm = (req: Request, res: Response): void => {
+    const deleteId = req.params.id;
+
+    new DeleteComplianceFormRequestHandler(req, res, repository, deleteId)
+      .deleteForm()
+      .catch((err: any) => default500Error(res, err));
+  };
+
   const editDraftForm = async (req: Request, res: Response): Promise<void> => {
     const draftId = req.params.draftId;
 
@@ -136,6 +145,7 @@ const complianceController = (
     acceptForm,
     rejectForm,
     updateForm,
+    deleteForm,
     editDraftForm,
     getAllBBRequirements,
     getBBRequirements,

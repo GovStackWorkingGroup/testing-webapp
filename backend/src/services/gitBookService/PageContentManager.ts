@@ -47,7 +47,8 @@ class GitBookPageContentManager {
     }
 
 
-    extractCrossCuttingRequirements(pageContent) {
+    extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS) {
+
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
@@ -59,12 +60,14 @@ class GitBookPageContentManager {
         nodes.forEach(node => {
             if (node.type === 'heading-1' && node.nodes) {
                 let textContent = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
-                textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
-
-                let status = this.extractStatus(textContent);
-                if (status !== undefined) {
-                    textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                    requirements.push({ status, requirement: textContent });
+                const regexMatch = textContent.match(numericPrefixRegex) && textContent.match(numericPrefixRegex)[0]?.toString().trim()
+                if (!API_REQUIREMENTS || (regexMatch && API_REQUIREMENTS.includes(regexMatch))) {
+                  textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
+                  let status = this.extractStatus(textContent);
+                  if (status !== undefined) {
+                      textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+                      requirements.push({ status, requirement: textContent });
+                  }
                 }
             }
         });

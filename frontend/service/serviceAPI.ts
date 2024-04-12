@@ -588,6 +588,33 @@ export const handleReviewSoftwareForm = async (
     });
 };
 
+export const handleDeleteSoftwareForm = async (
+  id: string,
+) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  return await fetch(`${baseUrl}/compliance/forms/${id}/`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+
+      return response.json();
+    })
+    .then<Success<SubmittingFormResponseType>>((response) => {
+      return { data: response, status: true };
+    })
+    .catch<Failure>((error) => {
+      return { error, status: false };
+    });
+};
+
 // This endpoint do not connect to project BE
 export const checkIfImageUrlExists = async (url: string): Promise<boolean> => {
   try {

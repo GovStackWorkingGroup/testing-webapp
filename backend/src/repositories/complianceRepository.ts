@@ -86,6 +86,15 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
+  const deleteForm = async (formId: string) => {
+    try {
+      return await repository.deleteForm(formId);
+    } catch (error) {
+      console.error('There was an error while deletiong the form', error);
+      throw error;
+    }
+  };
+
   const updateFormData = async (formId: string, updatedData) => {
     try {
       return await repository.updateFormData(formId, updatedData);
@@ -152,6 +161,7 @@ const getBBRequirements = async (bbKey: string): Promise<BBRequirement[]> => {
     submitForm,
     updateFormStatus,
     updateFormData,
+    deleteForm,
     rollbackFormStatus,
     getBBs,
     editDraftForm,

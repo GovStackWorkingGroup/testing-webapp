@@ -103,7 +103,7 @@ const IRSCCrossCuttingTableType = ({
             <div className="irsc-table-textarea">
               <textarea
                 name="comment"
-                maxLength={100}
+                maxLength={250}
                 value={comment}
                 onChange={(event) => {
                   setComment(event.target.value);
