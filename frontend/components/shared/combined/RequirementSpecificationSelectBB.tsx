@@ -172,8 +172,10 @@ const RequirementSpecificationSelectBBs = ({
 
               if (
                 matchingFirstArrItem &&
+                (formDetail.bbDetails[bbKey].requirementSpecificationCompliance
+                  .crossCuttingRequirements.length ||
                 formDetail.bbDetails[bbKey].requirementSpecificationCompliance
-                  .crossCuttingRequirements.length
+                  .functionalRequirements.length)
               ) {
                 combinedItem = {
                   bbName: matchingFirstArrItem.bbName,
