@@ -56,7 +56,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" }
+      status: { $first: "$status" },
+      objectId: { $first: "$objectId" }
     }
   },
   {
@@ -75,7 +76,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" }
+      status: { $first: "$status" },
+      objectId: { $first: "$objectId" }
     }
   },
   {
@@ -84,7 +86,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       compliance: {
         $push: {
           softwareVersion: "$_id.softwareVersion",
-          bbDetails: "$bbDetails"
+          bbDetails: "$bbDetails",
+          _id: "$objectId" // Add _id at the same level as softwareVersion
         }
       },
       logo: { $first: "$logo" },
