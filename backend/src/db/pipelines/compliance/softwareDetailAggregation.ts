@@ -3,6 +3,9 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     $match: { softwareName }
   },
   {
+    $sort: { _id: -1 } // Sort documents by their _id in descending order
+  },
+  {
     $project: {
       objectId: "$_id", // Use the actual _id field from the document
       softwareName: 1,
@@ -110,6 +113,6 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $limit: 1 // Return the first matching object
+    $limit: 1 // Return the latest matching object
   }
 ];
