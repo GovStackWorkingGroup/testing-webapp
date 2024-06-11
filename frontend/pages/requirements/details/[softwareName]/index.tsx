@@ -65,7 +65,6 @@ const SoftwareComplianceDetailsPage = () => {
   }, [softwareDetail]);
 
   const fetchData = async (softwareName: string) => {
-    console.log("fetchData");
     const data = await getSoftwareDetails(softwareName);
     if (data.status) {
       setSoftwareDetail(data.data);

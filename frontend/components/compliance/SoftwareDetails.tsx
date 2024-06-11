@@ -26,9 +26,6 @@ const SoftwareDetails = ({
   redirectToStep,
   viewReportDetails,
 }: SoftwareDetailsProps) => {
-
-  console.log("ID", softwareId);
-
   const { format } = useTranslations();
   const router = useRouter();
 
