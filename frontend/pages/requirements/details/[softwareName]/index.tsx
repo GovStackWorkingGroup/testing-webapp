@@ -83,12 +83,12 @@ const SoftwareComplianceDetailsPage = () => {
   ) => {
     const { name, value } = event.target;
 
-    if (name === 'softwareName' ) {
+    if (name === 'softwareName') {
       setDeleteSoftwareName(value);
     }
   };
 
-  const handleDeleteEntry = async() => {
+  const handleDeleteEntry = async () => {
     if (deleteSoftwareName === softwareName) {
       await handleDeleteSoftwareForm(softwareDetail[0]._id).then(
         (response) => {
@@ -218,7 +218,7 @@ const SoftwareComplianceDetailsPage = () => {
             showContactDetails={true}
           />
         </SoftwareDetails>
-        { isLoggedIn && (
+        {isLoggedIn && (
           <div className="software-attributes-section">
             <Input
               name="softwareName"
@@ -237,34 +237,34 @@ const SoftwareComplianceDetailsPage = () => {
           </div>
         )}
         {softwareDetail.length && softwareDetail[0].compliance.length
-        ? softwareDetail[0].compliance.map((item, indexKey) => (
-          <SoftwareDetails
-            title={format('app.compliance_with.label')}
-            complianceSection={true}
-            softwareVersion={item.softwareVersion}
-            softwareId={softwareDetail[0].compliance[indexKey]._id} // Pass the correct ID for each compliance item
-            key={`software-compliance-with-${indexKey}`}
-            viewReportDetails={true}
-          >
-            {isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1 ? (
-              <ComplianceDetailTable
-                data={softwareDetailsDataToApprove}
-                handleOpenEvaluationSchemaModal={(value) =>
-                  setDisplayEvaluationSchemaModal(value)
-                }
-                setUpdatedData={(data) => {
-                  setUpdatedData(data);
-                  setIsFormSaved(false);
-                }}
-              />
-            ) : (
-              <SoftwareComplianceWith
-                softwareComplianceData={item.bbDetails}
-              />
-            )}
-          </SoftwareDetails>
-        ))
-        : null}
+          ? softwareDetail[0].compliance.map((item, indexKey) => (
+            <SoftwareDetails
+              title={format('app.compliance_with.label')}
+              complianceSection={true}
+              softwareVersion={item.softwareVersion}
+              softwareId={softwareDetail[0].compliance[indexKey]._id} // Pass the correct ID for each compliance item
+              key={`software-compliance-with-${indexKey}`}
+              viewReportDetails={true}
+            >
+              {isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1 ? (
+                <ComplianceDetailTable
+                  data={softwareDetailsDataToApprove}
+                  handleOpenEvaluationSchemaModal={(value) =>
+                    setDisplayEvaluationSchemaModal(value)
+                  }
+                  setUpdatedData={(data) => {
+                    setUpdatedData(data);
+                    setIsFormSaved(false);
+                  }}
+                />
+              ) : (
+                <SoftwareComplianceWith
+                  softwareComplianceData={item.bbDetails}
+                />
+              )}
+            </SoftwareDetails>
+          ))
+          : null}
 
       </div>
       {(isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1) &&
