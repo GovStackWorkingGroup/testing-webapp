@@ -11,6 +11,7 @@ const processBBRequirements = async () => {
     const CROSS_CUTTING_REQUIREMENTS_REGEX = /cross[\s-]?cutting[\s-]?requirements/i;
     const FUNCTIONAL_REQUIREMENTS_REGEX = /functional[\s-]?requirements/i;
     const INTERFACE_REQUIREMENTS_REGEX = /Architecture[\s-]?and[\s-]?Nonfunctional[\s-]?Requirements/i;
+    const KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX = /key[\s-]?digital[\s-]?functionalities/i;
 
     let errors: string[] = [];
 
@@ -24,6 +25,8 @@ const processBBRequirements = async () => {
                     extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null);
                 } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX) {
                     extractResult = pageContentManager.extractFunctionalRequirements(pageContent);
+                } else if (pageTypeRegex === KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX) {
+                    extractResult = pageContentManager.extractKeyDigitalFunctionalitiesRequirements(pageContent);
                 }
 
                 if (extractResult.error) {
@@ -75,7 +78,8 @@ const processBBRequirements = async () => {
 
                 const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
                 const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
-                const requirements = { crossCutting, functional, interface: architecturalRequirements.requirements };
+                const keyDigitalFunctionalities = await processPages(spaceInfo, KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX);
+                const requirements = { crossCutting, functional, keyDigitalFunctionalities, interface: architecturalRequirements.requirements };
                 const dateOfSave = new Date().toISOString();
                 const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
                 await BBRequirements.deleteMany({ bbKey, bbName, bbVersion: spaceInfo.version });
