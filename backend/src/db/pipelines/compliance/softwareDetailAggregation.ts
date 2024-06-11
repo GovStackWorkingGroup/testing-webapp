@@ -101,6 +101,9 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
+    $sort: { _id: -1 } // Sort documents by their _id in descending order
+  },
+  {
     $project: {
       _id: 0,
       softwareName: "$_id",
