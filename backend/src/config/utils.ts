@@ -2,7 +2,7 @@
 
 const parseDuration = (duration: string) => {
     const [days, hours, minutes, seconds, milliseconds] = duration.split('*').map(Number);
-    return (days || 1) * (hours || 1) * (minutes || 1) * (seconds || 1) * (milliseconds || 1);
+    return (days || 1) * (hours || 24) * (minutes || 60) * (seconds || 60) * (milliseconds || 1000);
   };
 
 export {
