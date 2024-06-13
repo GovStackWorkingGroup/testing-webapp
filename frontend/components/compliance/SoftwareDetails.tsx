@@ -57,7 +57,6 @@ const SoftwareDetails = ({
           {viewReportDetails && (
             <Button
               type="link"
-              // className="software-attributes-title-edit-link"
               href={`/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails/${softwareId}`}
               text={format('app.view_report_details.label')}
               styles="primary-button"
