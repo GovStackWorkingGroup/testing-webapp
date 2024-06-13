@@ -160,11 +160,17 @@ class GitBookPageContentManager {
 
     processTextForRequirement(text, requirements) {
         // Remove leading numeric sequences like "number.number.number"
-        text = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
+        const sanitizedText = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
+        
         let status = this.extractStatus(text);
         if (status !== undefined) {
-            text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim()+".";
-            requirements.push({ status, requirement: text });
+            const regex = /\((REQUIRED|RECOMMENDED|OPTIONAL)\)/;
+            const match = sanitizedText.match(regex);
+            const textReqRecOpt = match ? match[0] : '';
+            const modifiedText = sanitizedText.replace(regex, '').trim();
+            const finalText = textReqRecOpt + ' ' + modifiedText + ".";
+
+            requirements.push({ status, requirement: finalText });
         }
     }
 
