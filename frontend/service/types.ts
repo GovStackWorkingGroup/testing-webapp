@@ -102,6 +102,7 @@ export type BBDetailsType = {
     requirementSpecificationCompliance: {
       crossCuttingRequirements: RequirementsType[];
       functionalRequirements: RequirementsType[];
+      keyDigitalFunctionalitiesRequirements: RequirementsType[];
     };
     interfaceCompliance: {
       testHarnessResult: string;
@@ -166,6 +167,7 @@ export type IRSCSoftwareDraftToUpdateType = {
     crossCutting: RequirementsType[];
     functional: RequirementsType[];
     interface: RequirementsType[];
+    keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -182,6 +184,7 @@ export type ComplianceRequirementsType = {
     crossCutting: RequirementsType[] | never[];
     functional: RequirementsType[] | never[];
     interface: RequirementsType[] | never[];
+    keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;

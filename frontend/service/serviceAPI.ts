@@ -438,6 +438,14 @@ export const updateDraftDetailsStepThree = async (
             _id: functionalItem._id,
           })
         ),
+        keyDigitalFunctionalitiesRequirements: requirements.keyDigitalFunctionalities.map(
+          (KDFItem) => ({
+            requirement: KDFItem.requirement,
+            comment: KDFItem.comment,
+            fulfillment: KDFItem.fulfillment,
+            _id: KDFItem._id,
+          })
+        )
       },
       interfaceCompliance: {
         testHarnessResult: interfaceCompliance?.testHarnessResult || '',

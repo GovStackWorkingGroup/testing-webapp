@@ -99,6 +99,7 @@ export const en = {
   'form.filled_compliance_form.label': 'Filled Compliance Forms',
   'form.filling_required.label': 'Filling this form is required.',
   'form.functional_requirements.label': 'Functional Requirements',
+  'form.kdf_requirements.label': 'Key Digital Functionalities Requirements',
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
   'form.header.requirement.label': 'Requirement',
