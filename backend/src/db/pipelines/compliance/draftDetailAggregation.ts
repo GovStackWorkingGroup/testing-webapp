@@ -46,7 +46,8 @@ export const draftDetailAggregationPipeline = (draftUuid: string): any[] => {
                                             },
                                             requirementSpecificationCompliance: {
                                                 crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
-                                                functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
+                                                functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements",
+                                                keyDigitalFunctionalities: "$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalities",
                                             },
                                             deploymentCompliance: "$$bbDetail.v.deploymentCompliance"
                                         }

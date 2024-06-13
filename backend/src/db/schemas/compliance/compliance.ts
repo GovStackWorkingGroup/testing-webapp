@@ -70,6 +70,10 @@ const requirementSpecificationComplianceSchema = new mongoose.Schema({
     type: [RequirementSchema],
     default: [],
   },
+  keyDigitalFunctionalities: {
+    type: [RequirementSchema],
+    default: [],
+  },
   notes: {
     type: String,
     default: ''

@@ -1,4 +1,5 @@
 import { RequirementStatusEnum } from "myTypes";
+import KeyDigitalFunctionalitiesExtractor from "./KeyDigitalFunctionalitiesExtractor";
 
 type Requirement = {
     status: RequirementStatusEnum;
@@ -16,6 +17,12 @@ class GitBookPageContentManager {
     static REQUIRED_TEXT = "(REQUIRED)";
     static RECOMMENDED_TEXT = "(RECOMMENDED)";
     static OPTIONAL_TEXT = "(OPTIONAL)";
+
+    private kdfExtractor: KeyDigitalFunctionalitiesExtractor;
+
+    constructor() {
+        this.kdfExtractor = new KeyDigitalFunctionalitiesExtractor();
+    }
 
     extractInterfaceRequirements(documentObject, _) {
         if (!documentObject.pages || !Array.isArray(documentObject.pages)) {
@@ -99,6 +106,10 @@ class GitBookPageContentManager {
         });
 
         return { requirements };
+    }
+
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any) {
+        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent);
     }
 
     extractTextFromNode(node) {
