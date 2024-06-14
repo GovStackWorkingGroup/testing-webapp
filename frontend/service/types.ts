@@ -89,6 +89,7 @@ export type SoftwareDetailsType = {
   pointOfContact: string;
   compliance: [
     {
+      _id: string | undefined;
       softwareVersion: string;
       bbDetails: Compliance[];
     }
