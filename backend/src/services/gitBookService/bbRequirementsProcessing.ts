@@ -13,20 +13,26 @@ const processBBRequirements = async () => {
     const INTERFACE_REQUIREMENTS_REGEX = /Architecture[\s-]?and[\s-]?Nonfunctional[\s-]?Requirements/i;
     const KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX = /key[\s-]?digital[\s-]?functionalities/i;
 
+    const CROSS_CUTTING_REQUIREMENTS_URL = "5-cross-cutting-requirements"
+    const FUNCTIONAL_REQUIREMENTS_URL = "6-functional-requirements"
+    const INTERFACE_REQUIREMENTS_URL = "architecture-and-nonfunctional-requirements/5-cross-cutting-requirements";
+    const KEY_DIGITAL_FUNCTIONALITIES_URL = "4-key-digital-functionalities"
+
     let errors: string[] = [];
 
     const processPages = async (spaceInfo, pageTypeRegex) => {
         const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, pageTypeRegex);
         const results = await Promise.all(pageIds.map(async (pageId) => {
             try {
-                const pageContent = await spaceManager.fetchPageContent(spaceInfo.spaceId, pageId);
+                const spaceID = spaceInfo.spaceId;
+                const pageContent = await spaceManager.fetchPageContent(spaceID, pageId);
                 let extractResult;
                 if (pageTypeRegex === CROSS_CUTTING_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null);
+                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null, spaceID, CROSS_CUTTING_REQUIREMENTS_URL);
                 } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent);
+                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent, spaceID, FUNCTIONAL_REQUIREMENTS_URL);
                 } else if (pageTypeRegex === KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractKeyDigitalFunctionalitiesRequirements(pageContent);
+                    extractResult = pageContentManager.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, KEY_DIGITAL_FUNCTIONALITIES_URL);
                 }
 
                 if (extractResult.error) {
@@ -57,7 +63,7 @@ const processBBRequirements = async () => {
             fetchedGovStackSpecNestedPagesfetche, CROSS_CUTTING_REQUIREMENTS_REGEX
         );
         const pageContent = await spaceManager.fetchPageContent(spaceId, filteredPagesIds[0]);
-        const extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS);
+        const extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS, spaceId, INTERFACE_REQUIREMENTS_URL);
         return extractResult;
     };
 

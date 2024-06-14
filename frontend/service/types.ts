@@ -136,6 +136,7 @@ export type Requirement = {
   comment: string;
   fulfillment: number;
   status: number;
+  link?: string;
 };
 export type DeploymentCompliance = {
   documentation: string | File;
@@ -199,6 +200,7 @@ export type RequirementsType = {
   fulfillment: number;
   _id?: string;
   status: number;
+  link?: string;
 };
 
 export type SoftwareDetailsDataType = {
