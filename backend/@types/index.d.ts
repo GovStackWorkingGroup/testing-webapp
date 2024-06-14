@@ -112,7 +112,7 @@ declare module 'myTypes' {
     requirementSpecificationCompliance: {
       crossCuttingRequirements: Requirement[];
       functionalRequirements: Requirement[];
-      keyDigitalFunctionalities: Requirement[];
+      keyDigitalFunctionalitiesRequirements: Requirement[];
     };
     deploymentCompliance: {
       documentation: {

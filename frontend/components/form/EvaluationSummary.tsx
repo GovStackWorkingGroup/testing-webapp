@@ -82,6 +82,10 @@ const EvaluationSummary = () => {
           Object.keys(
             bbDetails[key].requirementSpecificationCompliance
               .functionalRequirements
+          ).length > 0 ||
+          Object.keys(
+            bbDetails[key].requirementSpecificationCompliance
+              .keyDigitalFunctionalitiesRequirements
           ).length > 0)
       ) {
         keysWithNonEmptyInterfaceCompliance.push(key);
