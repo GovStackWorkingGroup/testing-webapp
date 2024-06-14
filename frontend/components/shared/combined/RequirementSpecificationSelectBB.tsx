@@ -414,8 +414,6 @@ const RequirementSpecificationSelectBBs = ({
   });
 
   const displayTable = selectedItems.map((item) => {
-    console.log(item, selectedItems);
-
     return (
       <div key={item.bbKey}>
         {item.requirements?.crossCutting.length ? (

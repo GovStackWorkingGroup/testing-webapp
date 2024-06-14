@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTable, Cell } from 'react-table';
+import { useTable, Column, CellProps } from 'react-table';
 import classNames from 'classnames';
 import {
   FaRegCircleCheck,
@@ -76,16 +76,16 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
     setData(updatedData as ComplianceRequirementsType);
   };
 
-  const columns = useMemo(
+  const columns : Column<RequirementsType>[] = useMemo(
     () => [
       {
-        Header: () => format('form.header.requirement.label'),
+        Header: format('form.header.requirement.label'),
         accessor: 'requirement',
       },
       {
         Header: format('form.header.comment.label'),
         accessor: 'comment',
-        Cell: ({ row }: Cell<RequirementsType>) => {
+        Cell: ({ row }: CellProps<RequirementsType>) => {
           const [comment, setComment] = useState<string>(row.values.comment);
           const [active, setActive] = useState(false);
 
@@ -187,10 +187,8 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
     [data.requirements.keyDigitalFunctionalities]
   );
 
-  // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
         useTable({
-          // @ts-ignore
           columns,
           data: data.requirements.keyDigitalFunctionalities,
         });
