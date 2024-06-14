@@ -75,7 +75,6 @@ class GitBookPageContentManager {
                     let status = this.extractStatus(textContent);
                     if (status !== undefined) {
                         textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                        // console.log(link);
                         requirements.push({ status, requirement: textContent, link });
                     }
                 }
@@ -100,7 +99,6 @@ class GitBookPageContentManager {
                     return textNode.leaves.map(leaf => leaf.text).join('');
                 }).join('');
                 savedHeading = headingText;
-                console.log(`Heading: ${headingText}`);
                 this.processTextForRequirement(headingText, requirements, spaceID, requirementURL, savedHeading);
             }
             else if (node.type == 'list-unordered' || node.type == 'list-ordered') {
