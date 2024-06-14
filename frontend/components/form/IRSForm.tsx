@@ -45,7 +45,7 @@ const IRSForm = ({
       const updatedData = updatedInterfaceData.map((data) => {
         return {
           ...data,
-          requirements: { crossCutting: [], functional: [], interface: [] },
+          requirements: { crossCutting: [], functional: [], interface: [], keyDigitalFunctionalities: [] },
         };
       });
       setAllData(updatedData);
