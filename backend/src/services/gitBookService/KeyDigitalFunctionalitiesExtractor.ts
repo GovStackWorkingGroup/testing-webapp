@@ -1,3 +1,5 @@
+import { appConfig } from "../../config";
+
 class GitBookPageManagerError extends Error {
     constructor(message) {
         super(message);
@@ -6,17 +8,17 @@ class GitBookPageManagerError extends Error {
 }
 
 class KeyDigitalFunctionalitiesExtractor {
-    extractKeyDigitalFunctionalitiesRequirements(pageContent: any) {
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID, requirementURL) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
 
-        const requirements: { status: number; requirement: string }[] = [];
+        const requirements: { status: number; requirement: string; link: string }[] = [];
         const nodes: any[] = pageContent.document.nodes;
 
-        nodes.forEach((node, index) => {
+        nodes.forEach((node, index) => {    
             if (this.isRelevantHeading(node, '4.')) {
-                this.processHeadingAndSubHeadings(nodes, index, requirements);
+                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL);
             }
         });
 
@@ -31,7 +33,7 @@ class KeyDigitalFunctionalitiesExtractor {
         return false;
     }
 
-    private processHeadingAndSubHeadings(nodes: any[], startIndex: number, requirements: { status: number; requirement: string }[]) {
+    private processHeadingAndSubHeadings(nodes: any[], startIndex: number, requirements: { status: number; requirement: string; link: string }[], spaceID: string, requirementURL: string) {
         const { headingText, currentHeadingLevel, contentUnderHeading } = this.initializeHeadingProcessing(nodes, startIndex);
 
         let index = startIndex + 1;
@@ -42,14 +44,14 @@ class KeyDigitalFunctionalitiesExtractor {
             if (this.isNewSection(node, currentHeadingLevel)) break;
 
             if (this.isRelevantHeading(node, '4.')) {
-                this.processHeadingAndSubHeadings(nodes, index, requirements);
+                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL);
                 index++;
                 continue;
             }
 
             if (this.isListNode(node.type)) {
                 hasList = true;
-                this.processListNode(node, requirements);
+                this.processListNode(node, requirements, spaceID, requirementURL, headingText);
             } else if (!hasList) {
                 contentUnderHeading.push(this.extractTextFromNodeKDF(node));
             }
@@ -58,7 +60,8 @@ class KeyDigitalFunctionalitiesExtractor {
         }
 
         if (!hasList && contentUnderHeading.length > 0) {
-            requirements.push({ status: 0, requirement: contentUnderHeading.join(' ').trim() });
+            const link = this.generateLink(headingText, spaceID, requirementURL);
+            requirements.push({ status: 0, requirement: contentUnderHeading.join(' ').trim(), link });
         }
     }
 
@@ -83,15 +86,22 @@ class KeyDigitalFunctionalitiesExtractor {
         return match ? match[1].split('.').length : 0;
     }
 
-    private processListNode(node: any, requirements: { status: number; requirement: string }[]) {
+    private processListNode(node: any, requirements: { status: number; requirement: string; link: string }[], spaceID: string, url: string, headingText: string) {
         if (node.nodes) {
             node.nodes.forEach((item: any) => {
                 const itemText = this.extractTextFromNodeKDF(item);
                 if (itemText.trim()) {
-                    requirements.push({ status: 0, requirement: itemText.trim() });
+                    const link = this.generateLink(headingText, spaceID, url);
+                    requirements.push({ status: 0, requirement: itemText.trim(), link });
                 }
             });
         }
+    }
+
+    private generateLink(heading, spaceID, requirementURL) {
+        const modifiedBaseURL = appConfig.gitBook.baseURL.replace('api', 'app');
+        const id = 'id-' + heading.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\.-]/g, '');
+        return `${modifiedBaseURL}/o/${appConfig.gitBook.orgId}/s/${spaceID}/${requirementURL}#${id}`;
     }
 
     private extractTextFromNodeKDF(node: any): string {

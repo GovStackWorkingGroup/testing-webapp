@@ -34,6 +34,10 @@ export const RequirementSchema = new mongoose.Schema({
     enum: Object.values(RequirementStatusEnum),
     default: RequirementStatusEnum.REQUIRED
   },
+  link: {
+    type: String,
+    default: ''
+  }
 });
 
 const interfaceComplianceSchema = new mongoose.Schema({

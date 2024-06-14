@@ -1,9 +1,11 @@
 import { RequirementStatusEnum } from "myTypes";
 import KeyDigitalFunctionalitiesExtractor from "./KeyDigitalFunctionalitiesExtractor";
+import { appConfig } from "../../config";
 
 type Requirement = {
     status: RequirementStatusEnum;
     requirement: string;
+    link?: string;
 };
 
 class GitBookPageManagerError extends Error {
@@ -54,8 +56,7 @@ class GitBookPageContentManager {
     }
 
 
-    extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS) {
-
+    extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS, spaceID = '', requirementURL) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
@@ -69,12 +70,14 @@ class GitBookPageContentManager {
                 let textContent = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
                 const regexMatch = textContent.match(numericPrefixRegex) && textContent.match(numericPrefixRegex)[0]?.toString().trim()
                 if (!API_REQUIREMENTS || (regexMatch && API_REQUIREMENTS.includes(regexMatch))) {
-                  textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
-                  let status = this.extractStatus(textContent);
-                  if (status !== undefined) {
-                      textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                      requirements.push({ status, requirement: textContent });
-                  }
+                    const link = this.generateLink(textContent, spaceID, requirementURL);
+                    textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
+                    let status = this.extractStatus(textContent);
+                    if (status !== undefined) {
+                        textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+                        // console.log(link);
+                        requirements.push({ status, requirement: textContent, link });
+                    }
                 }
             }
         });
@@ -82,34 +85,36 @@ class GitBookPageContentManager {
         return { requirements };
     }
 
-    extractFunctionalRequirements(pageContent) {
+    extractFunctionalRequirements(pageContent, spaceID: string = '', requirementURL) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
 
         const nodes = pageContent.document.nodes;
         const requirements: Requirement[] = [];
+        let savedHeading: string = '';
 
         nodes.forEach(node => {
-            if (node.type == 'heading-2') {
+            if (node.type == 'heading-1' || node.type == 'heading-2') {
                 const headingText = node.nodes.map(textNode => {
                     return textNode.leaves.map(leaf => leaf.text).join('');
                 }).join('');
-                this.processTextForRequirement(headingText, requirements);
+                savedHeading = headingText;
+                console.log(`Heading: ${headingText}`);
+                this.processTextForRequirement(headingText, requirements, spaceID, requirementURL, savedHeading);
             }
             else if (node.type == 'list-unordered' || node.type == 'list-ordered') {
                 node.nodes.forEach(item => {
                     let itemText = this.extractTextFromNode(item);
-                    this.processTextForRequirement(itemText, requirements);
+                    this.processTextForRequirement(itemText, requirements, spaceID, requirementURL, savedHeading);
                 });
             }
         });
 
         return { requirements };
     }
-
-    extractKeyDigitalFunctionalitiesRequirements(pageContent: any) {
-        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent);
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID: string, url) {
+        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, url);
     }
 
     extractTextFromNode(node) {
@@ -138,13 +143,14 @@ class GitBookPageContentManager {
         return textContent;
     }
 
-    processTextForRequirement(text, requirements) {
+    processTextForRequirement(text, requirements, spaceID: string = '', requirementURL, urlHeading: string = '') {
+        const link = this.generateLink(urlHeading, spaceID, requirementURL);
         // Remove leading numeric sequences like "number.number.number"
         text = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
         let status = this.extractStatus(text);
         if (status !== undefined) {
             text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-            requirements.push({ status, requirement: text });
+            requirements.push({ status, requirement: text, link });
         }
     }
 
@@ -171,6 +177,12 @@ class GitBookPageContentManager {
             .map(page => page.id); // Extract the page IDs
 
         return filteredPageIds;
+    }
+
+    generateLink(heading, spaceID, requirementURL) {
+        const modifiedBaseURL = appConfig.gitBook.baseURL.replace('api', 'app');
+        const id = 'id-' + heading.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\.-]/g, '');
+        return `${modifiedBaseURL}/o/${appConfig.gitBook.orgId}/s/${spaceID}/${requirementURL}#${id}`;
     }
 }
 
