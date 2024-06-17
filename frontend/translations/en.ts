@@ -44,7 +44,7 @@ export const en = {
   'app.software_attributes.label': 'Software Attributes',
   'app.software_requirements_compliance.label':
     'Software Requirements Compliance',
-  'app.view_report_details.label': 'view report details',
+  'app.view_report_details.label': 'View report details',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
