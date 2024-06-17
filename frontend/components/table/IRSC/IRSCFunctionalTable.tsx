@@ -7,7 +7,6 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
-import ShowMoreText from 'react-show-more-text';
 import {
   ComplianceRequirementsType,
   IRSCTableType,
