@@ -56,32 +56,57 @@ class GitBookPageContentManager {
     }
 
 
-    extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS, spaceID = '', requirementURL) {
-        if (!pageContent?.document?.nodes) {
-            return { error: new GitBookPageManagerError("Invalid page content format.") };
-        }
+    extractCrossCuttingRequirements(pageContent, _, spaceID = '', requirementURL) {
+        try {
+            if (!pageContent?.document?.nodes) {
+                throw new GitBookPageManagerError("Invalid page content format.");
+            }
 
-        const nodes = pageContent.document.nodes;
-        const requirements: Requirement[] = [];
-        const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
+            const nodes = pageContent.document.nodes;
+            const requirements: Requirement[] = [];
+            const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
 
-        nodes.forEach(node => {
-            if (node.type === 'heading-1' && node.nodes) {
-                let textContent = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
-                const regexMatch = textContent.match(numericPrefixRegex) && textContent.match(numericPrefixRegex)[0]?.toString().trim()
-                if (!API_REQUIREMENTS || (regexMatch && API_REQUIREMENTS.includes(regexMatch))) {
-                    const link = this.generateLink(textContent, spaceID, requirementURL);
-                    textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
-                    let status = this.extractStatus(textContent);
-                    if (status !== undefined) {
-                        textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                        requirements.push({ status, requirement: textContent, link });
+            let currentRequirement: Requirement | null = null;
+
+            nodes.forEach((node: any) => {
+                if ((node.type === 'heading-1' || node.type === 'heading-2' || node.type === 'heading-3') && node.nodes) {
+                    if (currentRequirement) {
+                        requirements.push(currentRequirement);
+                        currentRequirement = null;
                     }
+                    let headerText = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
+                    const link = this.generateLink(headerText, spaceID, requirementURL);
+                    headerText = headerText.replace(numericPrefixRegex, ''); // Remove numeric prefix
+                    let status = this.extractStatus(headerText);
+                if (status !== undefined) {
+                    headerText = headerText.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+                    currentRequirement = { status, requirement: headerText, link };
+                }
+            } else if (currentRequirement) {
+                if (node.object === 'block') {
+                    let textContent = node.nodes.map(n => this.extractText(n)).join('');
+                    currentRequirement.requirement += ' ' + textContent.trim();
                 }
             }
         });
 
+        if (currentRequirement) {
+            requirements.push(currentRequirement);
+        }
+
         return { requirements };
+    } catch (error) {
+        return { error: new GitBookPageManagerError((error as Error).message) };
+    }
+}
+
+    private extractText(node: any): string {
+        if (node.object === 'text') {
+            return node.leaves.map((leaf: any) => leaf.text).join('');
+        } else if (node.object === 'block' || node.object === 'inline') {
+            return node.nodes.map((n: any) => this.extractText(n)).join('');
+        }
+        return '';
     }
 
     extractFunctionalRequirements(pageContent, spaceID: string = '', requirementURL) {
@@ -147,7 +172,7 @@ class GitBookPageContentManager {
         text = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
         let status = this.extractStatus(text);
         if (status !== undefined) {
-            text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
+            text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim()+".";
             requirements.push({ status, requirement: text, link });
         }
     }
