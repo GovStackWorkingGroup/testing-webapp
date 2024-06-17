@@ -13,6 +13,7 @@ import {
   RequirementsType,
 } from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
+import TableCells from '../../shared/TableCells';
 
 const IRSCInterfaceTable = ({
   selectedData,
@@ -259,13 +260,7 @@ const IRSCInterfaceTable = ({
                       : ''
                   }`}
                 >
-                  {row.cells.map((cell: any, indexKey: number) => {
-                    return (
-                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
+                  <TableCells row={row}/>
                 </tr>
               );
             }
