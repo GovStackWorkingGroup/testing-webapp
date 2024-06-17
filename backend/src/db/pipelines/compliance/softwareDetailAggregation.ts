@@ -18,13 +18,13 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $unwind: "$compliance"
+    $unwind: { path: "$compliance", preserveNullAndEmptyArrays: true }
   },
   {
     $addFields: {
       "compliance.bbDetailsArray": {
         $map: {
-          input: { $objectToArray: "$compliance.bbDetails" },
+          input: { $ifNull: [{ $objectToArray: "$compliance.bbDetails" }, []] },
           as: "detail",
           in: {
             "bbName": "$$detail.k",
@@ -38,21 +38,21 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $unwind: "$compliance.bbDetailsArray"
+    $unwind: { path: "$compliance.bbDetailsArray", preserveNullAndEmptyArrays: true }
   },
   {
     $group: {
       _id: {
         softwareName: "$softwareName",
-        softwareVersion: "$compliance.version",
-        bbName: "$compliance.bbDetailsArray.bbName"
+        softwareVersion: { $ifNull: ["$compliance.version", "N/A"] },
+        bbName: { $ifNull: ["$compliance.bbDetailsArray.bbName", "N/A"] }
       },
       bbVersions: {
         $push: {
-          bbVersion: "$compliance.bbDetailsArray.bbVersion",
-          requirements: "$compliance.bbDetailsArray.requirements",
-          interface: "$compliance.bbDetailsArray.interface",
-          deploymentCompliance: "$compliance.bbDetailsArray.deploymentCompliance"
+          bbVersion: { $ifNull: ["$compliance.bbDetailsArray.bbVersion", "N/A"] },
+          requirements: { $ifNull: ["$compliance.bbDetailsArray.requirements", {}] },
+          interface: { $ifNull: ["$compliance.bbDetailsArray.interface", {}] },
+          deploymentCompliance: { $ifNull: ["$compliance.bbDetailsArray.deploymentCompliance", {}] }
         }
       },
       logo: { $first: "$logo" },
