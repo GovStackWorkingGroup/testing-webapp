@@ -213,6 +213,9 @@ export const en = {
     'Requirement Specification Compliance',
   'table.website.label': 'Website',
 
+  'text.showMore': 'Show More',
+  'text.showLess': 'Show Less',
+
   'test_table.category.label': 'Category',
   'test_table.failed': 'Failed',
   'test_table.last_update.label': 'Last update:',
