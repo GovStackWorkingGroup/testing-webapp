@@ -14,6 +14,7 @@ import {
   RequirementsType,
 } from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
+import TableCells from '../../shared/TableCells';
 
 const IRSCFunctionalTable = ({
   selectedData,
@@ -243,31 +244,7 @@ const IRSCFunctionalTable = ({
                       : ''
                   }`}
                 >
-                  {row.cells.map((cell: any, indexKey: number) => {
-                    if (indexKey === 0) {
-                      return (
-                        <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                          <div>
-                            <ShowMoreText
-                              lines={3}
-                              more={format('text.showMore')}
-                              less={format('text.showLess')}
-                              anchorClass="show-more"
-                              expanded={false}
-                            >
-                              {cell.render('Cell')}
-                            </ShowMoreText>
-                          </div>
-                        </td>
-                      );
-                    } else {
-                      return (
-                        <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                          {cell.render('Cell')}
-                        </td>
-                      );
-                    }
-                  })}
+                  <TableCells row={row}/>
                 </tr>
               );
             }
