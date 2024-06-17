@@ -4,7 +4,6 @@ import { limiter } from '../config/index';
 import { createFileUploadMiddleware } from '../middlewares/fileUpload';
 import verifyOptionalGithubToken from '../middlewares/optionalAuthMiddleware';
 import verifyGithubToken from '../middlewares/requiredAuthMiddleware';
-import { testFetchReqWithDesc } from '../controllers/testFetchReqWithDesc';
 
 const filesUpload = createFileUploadMiddleware();
 const buildComplianceRoutes = (controller: any) => {
@@ -25,7 +24,6 @@ const buildComplianceRoutes = (controller: any) => {
   router.post('/compliance/drafts', limiter, filesUpload, controller.createOrSubmitForm);
 
   router.post('/compliance/drafts/submit', limiter, controller.submitForm);
-  router.post('/compliance/test/requirements', limiter, testFetchReqWithDesc);
   
   router.patch('/compliance/forms/:id/accept', limiter, verifyGithubToken, controller.acceptForm);
   router.patch('/compliance/forms/:id/reject', limiter, verifyGithubToken, controller.rejectForm);
