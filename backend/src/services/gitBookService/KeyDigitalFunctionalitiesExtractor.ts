@@ -1,4 +1,5 @@
 import { appConfig } from "../../config";
+import { RequirementStatusEnum } from "../../db/schemas/compliance/complianceUtils";
 
 class GitBookPageManagerError extends Error {
     constructor(message) {
@@ -38,6 +39,7 @@ class KeyDigitalFunctionalitiesExtractor {
 
         let index = startIndex + 1;
         let hasList = false;
+        const keyDigitalFunctionalitiesStatus = "(REQUIRED)";
 
         while (index < nodes.length) {
             const node = nodes[index];
@@ -61,7 +63,11 @@ class KeyDigitalFunctionalitiesExtractor {
 
         if (!hasList && contentUnderHeading.length > 0) {
             const link = this.generateLink(headingText, spaceID, requirementURL);
-            requirements.push({ status: 0, requirement: contentUnderHeading.join(' ').trim(), link });
+            requirements.push({
+                status: RequirementStatusEnum.REQUIRED,
+                requirement: `${keyDigitalFunctionalitiesStatus} ${contentUnderHeading.join(' ').trim()}`,
+                link
+            });
         }
     }
 
