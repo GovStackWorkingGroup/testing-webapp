@@ -103,7 +103,7 @@ const ListOfCandidateResults = () => {
                         break;
                       }
                     } else if (property === 'deploymentCompliance') {
-                      cell.push({ value: item[property].level });
+                      cell.push({ value: item[property] ? item[property].level : '' });
                     } else {
                       cell.push({ value: item[property] });
                     }
