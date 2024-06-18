@@ -94,6 +94,7 @@ export const en = {
   'form.error_loading_file.message': 'Error loading file. Please try again.',
   'form.evaluation_summary_title.label':
     'Make sure all data entered is correct',
+  'form.expirationDate': 'This draft will expire on {date}',
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
   'form.filled_compliance_form.label': 'Filled Compliance Forms',
