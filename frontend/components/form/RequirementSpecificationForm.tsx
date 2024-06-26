@@ -22,6 +22,8 @@ const RequirementSpecificationComplianceForm = ({
     ComplianceRequirementsType[] | undefined
   >();
 
+  const isFormActive = true;
+
   const { format } = useTranslations();
 
   useEffect(() => {
@@ -47,6 +49,7 @@ const RequirementSpecificationComplianceForm = ({
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+          isFormActive={isFormActive}
         />
       </div>
     </div>

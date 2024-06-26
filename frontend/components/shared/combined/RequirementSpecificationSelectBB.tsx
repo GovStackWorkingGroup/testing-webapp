@@ -20,6 +20,7 @@ type SelectorWithPillsProps = {
   IRSCRequirementsFormRef?: RefObject<IRSCRequirementsFormRef>;
   readOnlyView?: boolean;
   readOnlyData?: SoftwareDetailsDataType;
+  isFormActive?: boolean;
 };
 
 const RequirementSpecificationSelectBBs = ({
@@ -28,6 +29,7 @@ const RequirementSpecificationSelectBBs = ({
   IRSCRequirementsFormRef,
   readOnlyView = false,
   readOnlyData,
+  isFormActive = false,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -427,6 +429,7 @@ const RequirementSpecificationSelectBBs = ({
               setUpdatedData={setUpdatedCrossCuttingData}
               isTableValid={isCrossCuttingTableValid}
               readOnlyView={readOnlyView}
+              isFormActive={isFormActive}
             />
           </>
         ) : null}
@@ -440,6 +443,7 @@ const RequirementSpecificationSelectBBs = ({
               setUpdatedData={setUpdatedFunctionalData}
               isTableValid={isFunctionalTableValid}
               readOnlyView={readOnlyView}
+              isFormActive={isFormActive}
             />
           </>
         ) : null}
@@ -453,6 +457,7 @@ const RequirementSpecificationSelectBBs = ({
               setUpdatedData={setUpdatedKDFData}
               isTableValid={isKDFTableValid}
               readOnlyView={readOnlyView}
+              isFormActive={isFormActive}
             />
           </>
         ) : null}
