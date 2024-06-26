@@ -106,19 +106,19 @@ const ReportViewDetail = () => {
           </div>
           <div
             className={classNames('report-detail-single-tab', {
-              active: activeTab === 'interface',
-            })}
-            onClick={() => setActiveTab('interface')}
-          >
-            {format('table.interface_compliance.label')}
-          </div>
-          <div
-            className={classNames('report-detail-single-tab', {
               active: activeTab === 'specification',
             })}
             onClick={() => setActiveTab('specification')}
           >
             {format('table.requirement_specification_compliance.label')}
+          </div>
+          <div
+            className={classNames('report-detail-single-tab', {
+              active: activeTab === 'interface',
+            })}
+            onClick={() => setActiveTab('interface')}
+          >
+            {format('table.interface_compliance.label')}
           </div>
         </div>
         {activeTab === 'deployment' && (
