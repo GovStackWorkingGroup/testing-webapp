@@ -23,9 +23,22 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
+  const dataKDF = data.requirements.keyDigitalFunctionalities;
+
+  const requiredNumber = dataKDF.filter(item => item.status === 0).length;
+  const recommendedNumber = dataKDF.filter(item => item.status === 1).length;
+  const optionalNumber = dataKDF.filter(item => item.status === 2).length;
+
+  const [filledRequired, setFilledRequired] = useState<number>(0);
+  const [filledRecommended, setFilledRecommended] = useState<number>(0);
+  const [filledOptional, setFilledOptional] = useState<number>(0);
+
   const { format } = useTranslations();
 
-  useEffect(() => setUpdatedData(data), [data]);
+  useEffect(() => {
+    setUpdatedData(data);
+    updateNumberOfFulfilledRequirements();
+  }, [data]);
 
   const updateData = (
     cellId: string,
@@ -33,7 +46,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
     value: string | number | null
   ) => {
     if (type === 'fulfillment') {
-      return data.requirements.keyDigitalFunctionalities.map((item) =>
+      return dataKDF.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -42,7 +55,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           : item
       );
     } else if (type === 'comment') {
-      return data.requirements.keyDigitalFunctionalities.map((item) =>
+      return dataKDF.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -51,6 +64,15 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           : item
       );
     }
+  };
+
+  const updateNumberOfFulfilledRequirements = () => {
+    setFilledRequired(dataKDF.filter(item =>
+      item.status === 0 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+    setFilledRecommended(dataKDF.filter(item =>
+      item.status === 1 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+    setFilledOptional(dataKDF.filter(item =>
+      item.status === 2 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
   };
 
   const handleUpdateField = (
@@ -96,7 +118,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                 'counter-active': active,
               })}
             >
-              {comment.length}/100
+              {comment.length}/250
             </div>
           );
 
@@ -185,16 +207,16 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
         },
       },
     ],
-    [data.requirements.keyDigitalFunctionalities]
+    [dataKDF]
   );
 
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
         useTable({
           columns,
-          data: data.requirements.keyDigitalFunctionalities,
+          data: dataKDF,
         });
 
-  return data.requirements.keyDigitalFunctionalities?.length ? (
+  return dataKDF?.length ? (
     <div className="irsc-table-container">
       <table {...getTableProps()} className="irsc-table">
         <thead>
@@ -221,7 +243,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           {rows.some((item) => item.original.status === 0) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {format('form.required_label')}
+                {`${format('form.required_label')} ${filledRequired}/${requiredNumber}`}
               </td>
             </tr>
           )}
@@ -249,7 +271,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           {rows.some((item) => item.original.status === 1) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {format('table.recommended_not_required.label')}
+                {`${format('table.recommended_not_required.label')} ${filledRecommended}/${recommendedNumber}`}
               </td>
             </tr>
           )}
@@ -276,7 +298,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           {rows.some((item) => item.original.status === 2) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {format('table.optional_not_required.label')}
+                {`${format('table.optional_not_required.label')} ${filledOptional}/${optionalNumber}`}
               </td>
             </tr>
           )}
