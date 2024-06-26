@@ -65,6 +65,7 @@ const InterfaceComplianceForm = ({
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCFormRef={IRSCFormRef}
+          isFormActive={true}
         />
       </div>
     </div>

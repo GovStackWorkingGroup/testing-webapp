@@ -47,6 +47,7 @@ const RequirementSpecificationComplianceForm = ({
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+          isFormActive={true}
         />
       </div>
     </div>

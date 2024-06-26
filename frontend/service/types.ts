@@ -306,4 +306,5 @@ export type IRSCTableType = {
   setUpdatedData: (data: ComplianceRequirementsType) => void;
   isTableValid: boolean;
   readOnlyView?: boolean;
+  isFormActive?: boolean;
 };
