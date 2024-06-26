@@ -20,7 +20,7 @@ import BackToPageButton from '../shared/buttons/BackToPageButton';
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
 const ReportViewDetail = () => {
-  const [activeTab, setActiveTab] = useState<activeTabProps>('deployment');
+  const [activeTab, setActiveTab] = useState<activeTabProps>('specification');
   const [requirementsData, setRequirementsData] =
     useState<ComplianceRequirementsType[]>();
   const [softwareDetailsData, setSoftwareDetailsData] =
