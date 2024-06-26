@@ -20,7 +20,7 @@ const IRSCFunctionalTable = ({
   setUpdatedData,
   isTableValid,
   readOnlyView = false,
-  isFormActive = true
+  isFormActive
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 

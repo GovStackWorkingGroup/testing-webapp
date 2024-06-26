@@ -22,6 +22,7 @@ type SelectorWithPillsProps = {
   IRSCFormRef?: RefObject<IRSCFormRef>;
   readOnlyView?: boolean;
   readOnlyData?: SoftwareDetailsDataType;
+  isFormActive?: boolean;
 };
 
 const SelectBBs = ({
@@ -30,6 +31,7 @@ const SelectBBs = ({
   IRSCFormRef,
   readOnlyView = false,
   readOnlyData,
+  isFormActive = false,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -390,6 +392,7 @@ const SelectBBs = ({
           setUpdatedData={setUpdatedData}
           isTableValid={isTableValid}
           readOnlyView={readOnlyView}
+          isFormActive={isFormActive}
         />
       </div>
     );
