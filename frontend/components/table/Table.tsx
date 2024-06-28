@@ -4,8 +4,6 @@ import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
-import { FaExternalLinkAlt } from 'react-icons/fa';
-import { CgExternal } from 'react-icons/cg';
 import { FiExternalLink } from 'react-icons/fi';
 import {
   Cell,
