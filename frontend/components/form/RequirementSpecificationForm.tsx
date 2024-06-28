@@ -43,7 +43,8 @@ const RequirementSpecificationComplianceForm = ({
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
         <p className="text-18">{format('form.select_building_blocks.top.label',
-          { Gitbook: <a className="software-attributes-title-edit-link no-underline" href={'https://govstack.gitbook.io/specification'}>Gitbook</a> })}</p>
+          { Gitbook: <a className="software-attributes-title-edit-link no-underline"
+            href={'https://govstack.gitbook.io/specification'}>Gitbook</a> })}</p>
         <ol>
           <li>
             <p className="text-18">{format('form.select_building_blocks.list.first.label')}</p>
