@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import useTranslations from '../../hooks/useTranslation';
 import { getComplianceList } from '../../service/serviceAPI';
-import { CellValue, DataType, SingleComplianceItem, ListFilters } from '../../service/types';
+import { CellValue, DataType, SingleComplianceItem, ListFilters, ParentOfCandidatesResult } from '../../service/types';
 import Table from '../table/Table';
 import InfoModal from '../shared/modals/InfoModal';
 import Button from '../shared/buttons/Button';
@@ -77,12 +77,32 @@ const ListOfCandidateResults = () => {
         'requirementSpecificationCompliance',
         'interfaceCompliance',
       ];
+      const parents = Object.entries(fetchedData.data.data).map(([name, children]) => ({ name, children }));
 
-      for (const key in fetchedData.data.data) {
-        if (Object.prototype.hasOwnProperty.call(fetchedData.data.data, key)) {
+      const getLatestSubmissionDate = (children: SingleComplianceItem[]) => {
+        return children.reduce((latest, child) => {
+          return new Date(child.submissionDate) > new Date(latest) ? child.submissionDate : latest;
+        }, children[0].submissionDate);
+      };
+
+      parents.sort((a: ParentOfCandidatesResult, b: ParentOfCandidatesResult) => {
+        const aLatestDate = getLatestSubmissionDate(a.children);
+        const bLatestDate = getLatestSubmissionDate(b.children);
+
+        return new Date(bLatestDate).getTime() - new Date(aLatestDate).getTime();
+      });
+
+      const transformedSortedData = parents.reduce((acc: any, parent) => {
+        acc[parent.name] = parent.children;
+
+        return acc;
+      }, {});
+
+      for (const key in transformedSortedData) {
+        if (Object.prototype.hasOwnProperty.call(transformedSortedData, key)) {
           let subHeaderAdded = false;
           transformedData.rows.push(
-            ...fetchedData.data.data[key].map(
+            ...transformedSortedData[key].map(
               (item: SingleComplianceItem, index: number) => {
                 const cell: CellValue[] = [];
                 for (const property of propertyOrder) {

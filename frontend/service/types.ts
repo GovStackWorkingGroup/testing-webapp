@@ -58,6 +58,11 @@ export type SingleComplianceItem = {
   submissionDate: string;
 };
 
+export type ParentOfCandidatesResult = {
+  name: string;
+  children: SingleComplianceItem[];
+}
+
 export type ComplianceList = {
   count: number;
   data: Record<string, SingleComplianceItem[]>;
@@ -224,7 +229,7 @@ export type TableProps = {
 };
 
 export type CellValue = {
-  value: string | number | boolean;
+  value: formatTranslationType | number | boolean;
 };
 
 export type CellValues = {
@@ -308,3 +313,5 @@ export type IRSCTableType = {
   readOnlyView?: boolean;
   isFormActive?: boolean;
 };
+
+export type formatTranslationType = string | JSX.Element | (string | JSX.Element)[] | undefined;
