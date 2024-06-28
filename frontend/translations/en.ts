@@ -213,7 +213,7 @@ export const en = {
   'table.rejected.label': 'Rejected',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
-  'table.requirement_specification.label': 'Requirement Specification',
+  'table.requirement_specification.label': 'Requirement Specification Compliance',
   'table.requirement_specification_compliance.label':
     'Requirement Specification Compliance',
   'table.website.label': 'Website',

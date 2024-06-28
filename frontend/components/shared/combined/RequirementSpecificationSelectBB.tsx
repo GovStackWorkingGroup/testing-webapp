@@ -420,6 +420,7 @@ const RequirementSpecificationSelectBBs = ({
       <div key={item.bbKey}>
         {item.requirements?.keyDigitalFunctionalities?.length ? (
           <>
+            <p className="table-container-name">{item.bbName} BB</p>
             <p className="table-container-title">
               {format('form.kdf_requirements.label')}
             </p>
@@ -434,7 +435,6 @@ const RequirementSpecificationSelectBBs = ({
         ) : null}
         {item.requirements?.crossCutting.length ? (
           <>
-            <p className="table-container-name">{item.bbName} BB</p>
             <p className="table-container-title">
               {format('form.cross_cutting_requirements.label')}
             </p>

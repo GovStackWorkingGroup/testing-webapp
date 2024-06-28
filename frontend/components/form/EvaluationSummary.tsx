@@ -110,22 +110,6 @@ const EvaluationSummary = () => {
     },
     {
       cell: [
-        { value: format('table.interface.label') },
-        {
-          values: [
-            {
-              values: getObjectKeysWithNonEmptyInterfaceCompliance(
-                draftData?.formDetails[0].bbDetails
-              ).map((bb) => {
-                return { value: bb };
-              }),
-            },
-          ],
-        },
-      ],
-    },
-    {
-      cell: [
         { value: format('table.requirement_specification.label') },
         {
           values: [
@@ -140,6 +124,22 @@ const EvaluationSummary = () => {
         },
       ],
     },
+    {
+      cell: [
+        { value: format('table.interface.label') },
+        {
+          values: [
+            {
+              values: getObjectKeysWithNonEmptyInterfaceCompliance(
+                draftData?.formDetails[0].bbDetails
+              ).map((bb) => {
+                return { value: bb };
+              }),
+            },
+          ],
+        },
+      ],
+    }
   ];
 
   return (
