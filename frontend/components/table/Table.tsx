@@ -4,6 +4,9 @@ import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
+import { FaExternalLinkAlt } from 'react-icons/fa';
+import { CgExternal } from 'react-icons/cg';
+import { FiExternalLink } from 'react-icons/fi';
 import {
   Cell,
   CellValue,
@@ -194,7 +197,7 @@ const Table = ({
                                 pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                               }}
                             >
-                              <p>{row.subHeader}</p>
+                              <p><FiExternalLink /> {row.subHeader}</p>
                             </Link>
                           </div>
                         </td>
