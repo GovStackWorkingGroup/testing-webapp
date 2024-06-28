@@ -42,7 +42,20 @@ const RequirementSpecificationComplianceForm = ({
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
-        <p className="text-18">{format('form.select_building_blocks.label')}</p>
+        <p className="text-18">{format('form.select_building_blocks.top.label',
+          { Gitbook: <a className="software-attributes-title-edit-link no-underline" href={'https://govstack.gitbook.io/specification'}>Gitbook</a> })}</p>
+        <ol>
+          <li>
+            <p className="text-18">{format('form.select_building_blocks.list.first.label')}</p>
+          </li>
+          <li>
+            <p className="text-18">{format('form.select_building_blocks.list.second.label')}</p>
+          </li>
+          <li>
+            <p className="text-18">{format('form.select_building_blocks.list.third.label')}</p>
+          </li>
+        </ol>
+        <p className="text-18">{format('form.select_building_blocks.bottom.label')}</p>
         <RequirementSpecificationSelectBBs
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}

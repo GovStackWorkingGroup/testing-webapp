@@ -418,6 +418,20 @@ const RequirementSpecificationSelectBBs = ({
   const displayTable = selectedItems.map((item) => {
     return (
       <div key={item.bbKey}>
+        {item.requirements?.keyDigitalFunctionalities?.length ? (
+          <>
+            <p className="table-container-title">
+              {format('form.kdf_requirements.label')}
+            </p>
+            <IRSCKeyDigitalFunctionalitiesTableType
+              selectedData={item}
+              setUpdatedData={setUpdatedKDFData}
+              isTableValid={isKDFTableValid}
+              readOnlyView={readOnlyView}
+              isFormActive={isFormActive}
+            />
+          </>
+        ) : null}
         {item.requirements?.crossCutting.length ? (
           <>
             <p className="table-container-name">{item.bbName} BB</p>
@@ -442,20 +456,6 @@ const RequirementSpecificationSelectBBs = ({
               selectedData={item}
               setUpdatedData={setUpdatedFunctionalData}
               isTableValid={isFunctionalTableValid}
-              readOnlyView={readOnlyView}
-              isFormActive={isFormActive}
-            />
-          </>
-        ) : null}
-        {item.requirements?.keyDigitalFunctionalities?.length ? (
-          <>
-            <p className="table-container-title">
-              {format('form.kdf_requirements.label')}
-            </p>
-            <IRSCKeyDigitalFunctionalitiesTableType
-              selectedData={item}
-              setUpdatedData={setUpdatedKDFData}
-              isTableValid={isKDFTableValid}
               readOnlyView={readOnlyView}
               isFormActive={isFormActive}
             />

@@ -135,8 +135,12 @@ export const en = {
   'form.clear_selection.label': 'Clear selection',
   'form.reject.label': 'Reject Form',
   'form.required_label': 'Required',
-  'form.select_building_blocks.label':
-    'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.select_building_blocks.top.label':
+    'In this section, you can evaluate whether your product adheres to GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment. (For reference, view full GovStack specifications on {Gitbook})',
+  'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simoultaneously)',
+  'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with cross-cutting requirements, followed by functional requirements)',
+  'form.select_building_blocks.list.third.label': 'Comment on the approval/disapproval where needed',
+  'form.select_building_blocks.bottom.label': 'By following these steps, you can systematically assess and demonstrate your product\'s compliance with GovStack Building Block specifications. This process helps ensure that your product meets GovStack requirements and identifies areas for potential enhancement.',
   'form.software_delete.label': 'Delete this Entry',
   'form.software_delete.placeholder': 'Enter the software name to delete',
   'form.software_version.label': 'Software Version',
