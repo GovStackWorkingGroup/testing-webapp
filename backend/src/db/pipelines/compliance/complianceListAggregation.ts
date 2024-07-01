@@ -22,7 +22,7 @@ export const createAggregationPipeline = (
 
     let statusConditions = {
         status: {
-            $in: isAuthenticated 
+            $in: isAuthenticated
                 ? [StatusEnum.IN_REVIEW, StatusEnum.APPROVED, StatusEnum.REJECTED, StatusEnum.DRAFT]
                 : [StatusEnum.IN_REVIEW, StatusEnum.APPROVED]
         }
@@ -37,6 +37,7 @@ export const createAggregationPipeline = (
         {
             $project: {
                 softwareName: 1,
+                logo: { $ifNull: ["$logo", null] },
                 softwareVersion: { $ifNull: ["$compliance.version", null] },
                 bb: { $ifNull: ["$bbDetailsArray.k", null] },
                 bbVersion: { $ifNull: ["$bbDetailsArray.v.bbVersion", null] },
