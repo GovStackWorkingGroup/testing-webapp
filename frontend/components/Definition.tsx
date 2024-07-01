@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import { formatTranslationType } from '../service/types';
 
 type DefinitionType = {
-  title: string;
+  title: formatTranslationType;
   hasRedirecting?: boolean;
-  description: string ;
-  descriptionPartTwo?: string;
-  note?: string;
+  description: formatTranslationType;
+  descriptionPartTwo?: formatTranslationType;
+  note?: formatTranslationType;
   customStyle?: string;
 };
 
@@ -27,9 +27,11 @@ const Definition = ({
     <div data-testid="definition-description">
       {hasRedirecting ? (
         <div>
+          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
             {description || ''}
           </ReactMarkdown>
+          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
             {descriptionPartTwo || ''}
           </ReactMarkdown>

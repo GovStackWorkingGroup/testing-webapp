@@ -6,10 +6,10 @@ const EvaluationSchemaTable = () => {
   const { format } = useTranslations();
 
   const headers = [
-    format('evaluation_schema.compliance.label'),
-    format('evaluation_schema.requirement.label'),
-    format('evaluation_schema.level_1.label'),
-    format('evaluation_schema.level_2.label'),
+    'evaluation_schema.compliance.label',
+    'evaluation_schema.requirement.label',
+    'evaluation_schema.level_1.label',
+    'evaluation_schema.level_2.label',
   ];
 
   const data: DataType = {
