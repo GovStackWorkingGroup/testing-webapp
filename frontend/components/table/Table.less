@@ -132,6 +132,10 @@ table.main-table {
   cursor: pointer;
 }
 
+.cursor-pointer {
+  cursor: pointer;
+}
+
 .tr-subheader {
   background-color: @blue-10;
   border: 1px solid @border-grey;
@@ -146,7 +150,10 @@ table.main-table {
 }
 
 .tr-subheader-container > p {
+  display: flex;
+  align-items: center;
   color: @accents-and-btn;
+  gap: 3px;
 }
 
 .td-subheader {

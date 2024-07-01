@@ -62,7 +62,7 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
         <td
           class="border"
         >
-          Requirement Specification
+          Requirement Specification Compliance
         </td>
         <td
           class="td-row-details"

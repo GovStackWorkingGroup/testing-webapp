@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import useTranslations from '../../hooks/useTranslation';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import Button from '../shared/buttons/Button';
+import { formatTranslationType } from '../../service/types';
 
 type SoftwareDetailsProps = {
-  title: string;
+  title: formatTranslationType;
   children: React.ReactNode;
   complianceSection?: boolean;
   softwareVersion?: string;
