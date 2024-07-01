@@ -4,11 +4,11 @@ import classNames from 'classnames';
 import { formatTranslationType } from '../service/types';
 
 type DefinitionType = {
-  title: string | formatTranslationType;
+  title: string;
   hasRedirecting?: boolean;
-  description: string | formatTranslationType;
+  description: string ;
   descriptionPartTwo?: string;
-  note?: string | formatTranslationType;
+  note?: string;
   customStyle?: string;
 };
 
