@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { RiFileDownloadLine, RiLink } from 'react-icons/ri';
+import dynamic from 'next/dynamic';
 import useTranslations from '../../hooks/useTranslation';
 import SelectBBs from '../shared/combined/SelectBBs';
 import {
@@ -14,8 +15,12 @@ import {
   ComplianceRequirementsType,
   SoftwareDetailsDataType,
 } from '../../service/types';
-import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
 import BackToPageButton from '../shared/buttons/BackToPageButton';
+
+const RequirementSpecificationSelectBBs = dynamic(
+  () => import('../shared/combined/RequirementSpecificationSelectBB'),
+  { ssr: false }
+);
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
