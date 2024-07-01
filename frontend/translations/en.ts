@@ -135,8 +135,9 @@ export const en = {
   'form.clear_selection.label': 'Clear selection',
   'form.reject.label': 'Reject Form',
   'form.required_label': 'Required',
-  'form.select_building_blocks.top.label':
-    'In this section, you can evaluate whether your product adheres to GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment. (For reference, view full GovStack specifications on {Gitbook})',
+  'form.select_building_blocks.top.label': `In this section, you can evaluate whether your product adheres to 
+  GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment.
+   (For reference, view full GovStack specifications on [GitBook](https://govstack.gitbook.io/specification/))`,
   'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simoultaneously)',
   'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with cross-cutting requirements, followed by functional requirements)',
   'form.select_building_blocks.list.third.label': 'Comment on the approval/disapproval where needed',
