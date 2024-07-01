@@ -229,7 +229,7 @@ export type TableProps = {
 };
 
 export type CellValue = {
-  value: formatTranslationType | number | boolean;
+  value: string | number | boolean | formatTranslationType | undefined;
 };
 
 export type CellValues = {

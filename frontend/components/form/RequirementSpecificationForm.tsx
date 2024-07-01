@@ -43,8 +43,9 @@ const RequirementSpecificationComplianceForm = ({
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
+        {/* @ts-ignore */}
         <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.top.label') || ''}
+          {format('form.select_building_blocks.top.label')}
         </ReactMarkdown>
         <ol>
           <li>

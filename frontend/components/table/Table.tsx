@@ -10,7 +10,7 @@ import {
   CellValue,
   CellValues,
   DataRow,
-  DataType,
+  DataType, formatTranslationType,
 } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
@@ -261,6 +261,7 @@ const Table = ({
                             1,
                             2,
                             true,
+                          // @ts-ignore
                           ].includes(cell.value)
                         ) {
                           return (
