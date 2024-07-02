@@ -139,7 +139,7 @@ export const en = {
   GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment.
    (For reference, view full GovStack specifications on [GitBook](https://govstack.gitbook.io/specification/))`,
   'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simoultaneously)',
-  'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with cross-cutting requirements, followed by functional requirements)',
+  'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with key digital functionalities, followed by cross-cutting requirements, and functional requirements)',
   'form.select_building_blocks.list.third.label': 'Comment on the approval/disapproval where needed',
   'form.select_building_blocks.bottom.label': 'By following these steps, you can systematically assess and demonstrate your product\'s compliance with GovStack Building Block specifications. This process helps ensure that your product meets GovStack requirements and identifies areas for potential enhancement.',
   'form.software_delete.label': 'Delete this Entry',
