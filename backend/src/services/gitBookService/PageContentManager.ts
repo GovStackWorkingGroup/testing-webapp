@@ -61,13 +61,13 @@ class GitBookPageContentManager {
             if (!pageContent?.document?.nodes) {
                 throw new GitBookPageManagerError("Invalid page content format.");
             }
-
+    
             const nodes = pageContent.document.nodes;
             const requirements: Requirement[] = [];
             const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
-
+    
             let currentRequirement: Requirement | null = null;
-
+    
             nodes.forEach((node: any) => {
                 if ((node.type === 'heading-1' || node.type === 'heading-2' || node.type === 'heading-3') && node.nodes) {
                     if (currentRequirement) {
@@ -78,27 +78,30 @@ class GitBookPageContentManager {
                     const link = this.generateLink(headerText, spaceID, requirementURL);
                     headerText = headerText.replace(numericPrefixRegex, ''); // Remove numeric prefix
                     let status = this.extractStatus(headerText);
-                if (status !== undefined) {
-                    headerText = headerText.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                    currentRequirement = { status, requirement: headerText, link };
+                    if (status !== undefined) {
+                        const statusMatch = headerText.match(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/);
+                        if (statusMatch) {
+                            headerText = statusMatch[0] + ' ' + headerText.replace(statusMatch[0], '').trim();
+                        }
+                        currentRequirement = { status, requirement: headerText, link };
+                    }
+                } else if (currentRequirement) {
+                    if (node.object === 'block') {
+                        let textContent = node.nodes.map(n => this.extractText(n)).join('');
+                        currentRequirement.requirement += ' ' + textContent.trim();
+                    }
                 }
-            } else if (currentRequirement) {
-                if (node.object === 'block') {
-                    let textContent = node.nodes.map(n => this.extractText(n)).join('');
-                    currentRequirement.requirement += ' ' + textContent.trim();
-                }
+            });
+    
+            if (currentRequirement) {
+                requirements.push(currentRequirement);
             }
-        });
-
-        if (currentRequirement) {
-            requirements.push(currentRequirement);
+    
+            return { requirements };
+        } catch (error) {
+            return { error: new GitBookPageManagerError((error as Error).message) };
         }
-
-        return { requirements };
-    } catch (error) {
-        return { error: new GitBookPageManagerError((error as Error).message) };
     }
-}
 
     private extractText(node: any): string {
         if (node.object === 'text') {
