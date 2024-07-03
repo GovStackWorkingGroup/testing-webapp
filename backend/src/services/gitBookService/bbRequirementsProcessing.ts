@@ -81,7 +81,7 @@ const processBBRequirements = async () => {
                 if (!spaceInfo || !spaceInfo.spaceId ||!spaceInfo.version) {
                     throw new Error('No valid space found for the collection');
                 }
-
+                bbName = getBuildingBlockName(bbKey, bbName);
                 const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
                 const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
                 const keyDigitalFunctionalities = await processPages(spaceInfo, KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX);
@@ -112,6 +112,13 @@ const processBBRequirements = async () => {
             errors: [...errors, `General error: ${(error as Error).message}`]
         };
     }
+};
+
+const getBuildingBlockName = (bbKey: string, bbName: string): string => {
+    if (bbKey == 'bb-gis') {
+        return 'GIS';
+    }
+    return bbName;
 };
 
 export { processBBRequirements };
