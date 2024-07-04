@@ -183,7 +183,7 @@ const Table = ({
                                 className="details-arrow"
                                 onClick={() =>
                                   handleExpandSubHeaderRows(
-                                            row.subHeader as string
+                                      row.subHeader as string
                                   )
                                 }
                               >
