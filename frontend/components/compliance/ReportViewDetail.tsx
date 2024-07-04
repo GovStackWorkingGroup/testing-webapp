@@ -87,6 +87,7 @@ const ReportViewDetail = () => {
       const data = await getSoftwareDetailsReport(softwareId as string);
       if (data.status) {
         setSoftwareDetailsData(data.data);
+
       }
     }
   };
@@ -154,14 +155,14 @@ const ReportViewDetail = () => {
             </Link>
           </div>
         )}
-        {activeTab === 'interface' && (
+        {activeTab === 'interface' && softwareDetailsData !== undefined && (
           <SelectBBs
             interfaceRequirementsData={requirementsData}
             readOnlyView={true}
             readOnlyData={softwareDetailsData}
           />
         )}
-        {activeTab === 'specification' && (
+        {activeTab === 'specification' && softwareDetailsData !== undefined && (
           <RequirementSpecificationSelectBBs
             interfaceRequirementsData={requirementsData}
             readOnlyView={true}
