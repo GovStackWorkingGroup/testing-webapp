@@ -19,8 +19,7 @@ const IRSCFunctionalTable = ({
   selectedData,
   setUpdatedData,
   isTableValid,
-  readOnlyView = false,
-  isFormActive
+  readOnlyView = false
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
@@ -246,7 +245,7 @@ const IRSCFunctionalTable = ({
           {rows.some((item) => item.original.status === 0) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('form.required_label')} ${isFormActive ? `${filledRequired}/${requiredNumber}` : ''}`}
+                {`${format('form.required_label')} ${filledRequired}/${requiredNumber}`}
               </td>
             </tr>
           )}
@@ -274,8 +273,7 @@ const IRSCFunctionalTable = ({
           {rows.some((item) => item.original.status === 1) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('table.recommended_not_required.label')}
-                 ${isFormActive ? `${filledRecommended}/${recommendedNumber}`: ''}`}
+                {`${format('table.recommended_not_required.label')} ${filledRecommended}/${recommendedNumber}`}
               </td>
             </tr>
           )}
@@ -302,8 +300,7 @@ const IRSCFunctionalTable = ({
           {rows.some((item) => item.original.status === 2) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('table.optional_not_required.label')} 
-                 ${isFormActive ? `${filledOptional}/${optionalNumber}`: ''}`}
+                {`${format('table.optional_not_required.label')} ${filledOptional}/${optionalNumber}`}
               </td>
             </tr>
           )}
