@@ -231,6 +231,7 @@ export type TableProps = {
 
 export type CellValue = {
   value: string | number | boolean | formatTranslationType | undefined;
+  logo?: string;
 };
 
 export type CellValues = {
@@ -243,9 +244,9 @@ export type Cell =
   | { values: CellValues[] };
 
 export type DataRow = {
-  logo: string;
   cell: Cell[];
   subHeader?: string;
+  logo?: string;
 };
 
 export type InputOptionsProps = {
