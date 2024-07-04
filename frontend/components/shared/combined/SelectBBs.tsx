@@ -410,7 +410,7 @@ const SelectBBs = ({
           handleSetOptions={handleSetOptions}
         />
       )}
-      {selectedItems.length > 0 && (
+      {selectedItems.length > 0 ? (
         <div>
           <div className="pills-container">
             {readOnlyView ? (
@@ -428,6 +428,11 @@ const SelectBBs = ({
             {displayPills}
           </div>
           {displayTable}
+        </div>
+      ) : (
+        <div>
+          {format('app.view_report_details.noInformation',
+            { section: `${format('table.interface_compliance.label')}` })}
         </div>
       )}
     </div>
