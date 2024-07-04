@@ -46,6 +46,7 @@ export type BuildingBlockTestSummary = {
 };
 
 export type SingleComplianceItem = {
+  logo: string;
   _id: string;
   bb: string;
   bbVersion: string;
@@ -242,6 +243,7 @@ export type Cell =
   | { values: CellValues[] };
 
 export type DataRow = {
+  logo: string;
   cell: Cell[];
   subHeader?: string;
 };

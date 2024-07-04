@@ -133,7 +133,7 @@ const ListOfCandidateResults = () => {
                 if (!subHeaderAdded && index === 0) {
                   subHeaderAdded = true;
 
-                  return { cell, subHeader: key };
+                  return { cell, subHeader: key, logo: item.logo };
                 } else {
                   return { cell };
                 }

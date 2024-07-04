@@ -15,6 +15,7 @@ import {
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
+import { baseUrl } from '../../service/serviceAPI';
 
 type TableProps = {
   data: DataType;
@@ -182,20 +183,24 @@ const Table = ({
                                 className="details-arrow"
                                 onClick={() =>
                                   handleExpandSubHeaderRows(
-                                    row.subHeader as string
+                                            row.subHeader as string
                                   )
                                 }
                               >
-                                <RiArrowDownSLine />
+                                <RiArrowDownSLine/>
                               </div>
                             )}
+                            <img
+                              className="img-logo list-of-candidate-table-logo"
+                              src={`${baseUrl}/${row.logo}`}
+                            />
                             <Link
                               className="tr-subheader-container"
                               href={{
                                 pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                               }}
                             >
-                              <p><FiExternalLink /> {row.subHeader}</p>
+                              <p><FiExternalLink/> {row.subHeader}</p>
                             </Link>
                           </div>
                         </td>
@@ -219,20 +224,24 @@ const Table = ({
                               className="details-arrow"
                               onClick={() =>
                                 handleExpandSubHeaderRows(
-                                  row.subHeader as string
+                                          row.subHeader as string
                                 )
                               }
                             >
-                              <RiArrowUpSLine />
+                              <RiArrowUpSLine/>
                             </div>
                           )}
+                          <img
+                            className="img-logo list-of-candidate-table-logo"
+                            src={`${baseUrl}/${row.logo}`}
+                          />
                           <Link
                             className="tr-subheader-container"
                             href={{
                               pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                             }}
                           >
-                            <p>{row.subHeader}</p>
+                            <p><FiExternalLink/> {row.subHeader}</p>
                           </Link>
                         </div>
                       </td>
