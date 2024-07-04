@@ -284,13 +284,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                   key={`row-${indexKey}`}
                   className="irsc-table-rows"
                 >
-                  {row.cells.map((cell: any, indexKey: number) => {
-                    return (
-                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
+                  <TableCells row={row}/>
                 </tr>
               );
             }
@@ -311,13 +305,7 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                   key={`row-${indexKey}`}
                   className="irsc-table-rows"
                 >
-                  {row.cells.map((cell: any, indexKey: number) => {
-                    return (
-                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
+                  <TableCells row={row}/>
                 </tr>
               );
             }
