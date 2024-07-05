@@ -97,7 +97,8 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" }
+      status: { $first: "$status" },
+      objectId: { $first: "$objectId" }
     }
   },
   {
@@ -105,7 +106,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   },
   {
     $project: {
-      _id: 1,
+      _id: "$objectId",
       softwareName: "$_id",
       compliance: 1,
       logo: 1,
