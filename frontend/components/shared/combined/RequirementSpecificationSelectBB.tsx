@@ -477,7 +477,7 @@ const RequirementSpecificationSelectBBs = ({
           handleSetOptions={handleSetOptions}
         />
       )}
-      {selectedItems.length > 0 && (
+      {selectedItems.length > 0 ? (
         <div>
           <div className="pills-container">
             {readOnlyView ? (
@@ -496,6 +496,11 @@ const RequirementSpecificationSelectBBs = ({
             {displayPills}
           </div>
           {displayTable}
+        </div>
+      ) : (
+        <div>
+          {format('app.view_report_details.noInformation',
+            { section: `${format('table.requirement_specification_compliance.label')}` })}
         </div>
       )}
     </div>
