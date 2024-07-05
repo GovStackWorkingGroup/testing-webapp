@@ -105,7 +105,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   },
   {
     $project: {
-      _id: 0,
+      _id: 1,
       softwareName: "$_id",
       compliance: 1,
       logo: 1,
