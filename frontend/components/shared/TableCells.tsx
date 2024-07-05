@@ -49,7 +49,7 @@ const TableCells = ({ row, expanded = false }: TableCellProps) => {
           <div className='description-buttons'>
             <div>
               <Link href={cell.row.original.link} className='description-buttons' target="_blank" rel="noopener noreferrer">
-              Go to requirement
+                {format('form.description.goToRequirement')}
               </Link>
             </div>
             {isTruncatable && (
