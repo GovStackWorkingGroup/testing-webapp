@@ -161,6 +161,7 @@ export const en = {
   'form.question_line.here': 'here',
   'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance':
     ' and see instructions on how to configure interface compliance.',
+  'form.description.goToRequirement': 'Go to requirement',
 
   'image.alt.logoFor': 'Logo for: {name}',
 

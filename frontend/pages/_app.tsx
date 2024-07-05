@@ -29,6 +29,7 @@ import * as translations from '../translations';
 import type { AppProps } from 'next/app';
 import 'react-toastify/dist/ReactToastify.css';
 import '../components/shared/Pill.less';
+import '../components/shared/TableCells.less';
 import '../components/shared/combined/SelectBBs.less';
 import '../components/table/IRSC/IRSCTable.less';
 
