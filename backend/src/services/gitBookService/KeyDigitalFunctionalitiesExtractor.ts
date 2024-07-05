@@ -9,7 +9,9 @@ class GitBookPageManagerError extends Error {
 }
 
 class KeyDigitalFunctionalitiesExtractor {
-    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID, requirementURL) {
+    private static readonly DEFAULT_REQUIREMENT_STATUS = "(REQUIRED)";
+
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID, requirementURL, bbKey) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
@@ -17,9 +19,9 @@ class KeyDigitalFunctionalitiesExtractor {
         const requirements: { status: number; requirement: string; link: string }[] = [];
         const nodes: any[] = pageContent.document.nodes;
 
-        nodes.forEach((node, index) => {    
+        nodes.forEach((node, index) => {
             if (this.isRelevantHeading(node, '4.')) {
-                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL);
+                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL, bbKey);
             }
         });
 
@@ -34,26 +36,25 @@ class KeyDigitalFunctionalitiesExtractor {
         return false;
     }
 
-    private processHeadingAndSubHeadings(nodes: any[], startIndex: number, requirements: { status: number; requirement: string; link: string }[], spaceID: string, requirementURL: string) {
+    private processHeadingAndSubHeadings(nodes: any[], startIndex: number, requirements: { status: number; requirement: string; link: string }[], spaceID: string, requirementURL: string, bbKey) {
         const { headingText, currentHeadingLevel, contentUnderHeading } = this.initializeHeadingProcessing(nodes, startIndex);
 
         let index = startIndex + 1;
         let hasList = false;
-        const keyDigitalFunctionalitiesStatus = "(REQUIRED)";
 
         while (index < nodes.length) {
             const node = nodes[index];
             if (this.isNewSection(node, currentHeadingLevel)) break;
 
             if (this.isRelevantHeading(node, '4.')) {
-                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL);
+                this.processHeadingAndSubHeadings(nodes, index, requirements, spaceID, requirementURL, bbKey);
                 index++;
                 continue;
             }
 
             if (this.isListNode(node.type)) {
                 hasList = true;
-                this.processListNode(node, requirements, spaceID, requirementURL, headingText);
+                this.processListNode(node, requirements, spaceID, requirementURL, headingText, bbKey);
             } else if (!hasList) {
                 contentUnderHeading.push(this.extractTextFromNodeKDF(node));
             }
@@ -62,10 +63,10 @@ class KeyDigitalFunctionalitiesExtractor {
         }
 
         if (!hasList && contentUnderHeading.length > 0) {
-            const link = this.generateLink(headingText, spaceID, requirementURL);
+            const link = this.generateLink(headingText, spaceID, requirementURL, bbKey);
             requirements.push({
                 status: RequirementStatusEnum.REQUIRED,
-                requirement: `${keyDigitalFunctionalitiesStatus} ${contentUnderHeading.join(' ').trim()}`,
+                requirement: `${KeyDigitalFunctionalitiesExtractor.DEFAULT_REQUIREMENT_STATUS} ${contentUnderHeading.join(' ').trim()}`,
                 link
             });
         }
@@ -92,23 +93,25 @@ class KeyDigitalFunctionalitiesExtractor {
         return match ? match[1].split('.').length : 0;
     }
 
-    private processListNode(node: any, requirements: { status: number; requirement: string; link: string }[], spaceID: string, url: string, headingText: string) {
+    private processListNode(node: any, requirements: { status: number; requirement: string; link: string }[],
+        spaceID: string, url: string, headingText: string, bbKey) {
         if (node.nodes) {
             node.nodes.forEach((item: any) => {
                 const itemText = this.extractTextFromNodeKDF(item);
                 if (itemText.trim()) {
-                    const link = this.generateLink(headingText, spaceID, url);
-                    requirements.push({ status: 0, requirement: itemText.trim(), link });
+                    const link = this.generateLink(headingText, spaceID, url, bbKey);
+                    requirements.push({ status: RequirementStatusEnum.REQUIRED, requirement: `${KeyDigitalFunctionalitiesExtractor.DEFAULT_REQUIREMENT_STATUS} ${itemText.trim()}`, link });
                 }
             });
         }
     }
 
-    private generateLink(heading, spaceID, requirementURL) {
-        const modifiedBaseURL = appConfig.gitBook.baseURL.replace('api', 'app');
+    private generateLink(heading, _, requirementURL, bbKey) {
         const id = 'id-' + heading.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\.-]/g, '');
-        return `${modifiedBaseURL}/o/${appConfig.gitBook.orgId}/s/${spaceID}/${requirementURL}#${id}`;
+        const baseURL = "https://govstack.gitbook.io";
+        return `${baseURL}/${bbKey}/${requirementURL}#${id}`;
     }
+
 
     private extractTextFromNodeKDF(node: any): string {
         if (node.object === 'text') {
