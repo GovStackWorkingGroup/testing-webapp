@@ -56,18 +56,18 @@ class GitBookPageContentManager {
     }
 
 
-    extractCrossCuttingRequirements(pageContent, _, spaceID = '', requirementURL) {
+    extractCrossCuttingRequirements(pageContent, _, requirementURL, bbKey) {
         try {
             if (!pageContent?.document?.nodes) {
                 throw new GitBookPageManagerError("Invalid page content format.");
             }
-    
+
             const nodes = pageContent.document.nodes;
             const requirements: Requirement[] = [];
             const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
-    
+
             let currentRequirement: Requirement | null = null;
-    
+
             nodes.forEach((node: any) => {
                 if ((node.type === 'heading-1' || node.type === 'heading-2' || node.type === 'heading-3') && node.nodes) {
                     if (currentRequirement) {
@@ -75,7 +75,7 @@ class GitBookPageContentManager {
                         currentRequirement = null;
                     }
                     let headerText = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
-                    const link = this.generateLink(headerText, spaceID, requirementURL);
+                    const link = this.generateLink(headerText, bbKey, requirementURL);
                     headerText = headerText.replace(numericPrefixRegex, ''); // Remove numeric prefix
                     let status = this.extractStatus(headerText);
                     if (status !== undefined) {
@@ -92,11 +92,11 @@ class GitBookPageContentManager {
                     }
                 }
             });
-    
+
             if (currentRequirement) {
                 requirements.push(currentRequirement);
             }
-    
+
             return { requirements };
         } catch (error) {
             return { error: new GitBookPageManagerError((error as Error).message) };
@@ -112,7 +112,7 @@ class GitBookPageContentManager {
         return '';
     }
 
-    extractFunctionalRequirements(pageContent, spaceID: string = '', requirementURL) {
+    extractFunctionalRequirements(pageContent, requirementURL, bbKey) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
@@ -127,20 +127,20 @@ class GitBookPageContentManager {
                     return textNode.leaves.map(leaf => leaf.text).join('');
                 }).join('');
                 savedHeading = headingText;
-                this.processTextForRequirement(headingText, requirements, spaceID, requirementURL, savedHeading);
+                this.processTextForRequirement(headingText, requirements, requirementURL, savedHeading, bbKey);
             }
             else if (node.type == 'list-unordered' || node.type == 'list-ordered') {
                 node.nodes.forEach(item => {
                     let itemText = this.extractTextFromNode(item);
-                    this.processTextForRequirement(itemText, requirements, spaceID, requirementURL, savedHeading);
+                    this.processTextForRequirement(itemText, requirements, requirementURL, savedHeading, bbKey);
                 });
             }
         });
 
         return { requirements };
     }
-    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID: string, url) {
-        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, url);
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID: string, url, bbKey) {
+        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, url, bbKey);
     }
 
     extractTextFromNode(node) {
@@ -169,11 +169,11 @@ class GitBookPageContentManager {
         return textContent;
     }
 
-    processTextForRequirement(text, requirements, spaceID: string = '', requirementURL, urlHeading: string = '') {
-        const link = this.generateLink(urlHeading, spaceID, requirementURL);
+    processTextForRequirement(text, requirements, requirementURL, urlHeading: string = '', bbKey) {
+        const link = this.generateLink(urlHeading, bbKey, requirementURL);
         // Remove leading numeric sequences like "number.number.number"
         const sanitizedText = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
-        
+
         let status = this.extractStatus(text);
         if (status !== undefined) {
             const regex = /\((REQUIRED|RECOMMENDED|OPTIONAL)\)/;
@@ -211,11 +211,13 @@ class GitBookPageContentManager {
         return filteredPageIds;
     }
 
-    generateLink(heading, spaceID, requirementURL) {
-        const modifiedBaseURL = appConfig.gitBook.baseURL.replace('api', 'app');
+    generateLink(heading: string, bbKey: string, requirementURL: string): string {
         const id = 'id-' + heading.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\.-]/g, '');
-        return `${modifiedBaseURL}/o/${appConfig.gitBook.orgId}/s/${spaceID}/${requirementURL}#${id}`;
+        const baseURL = "https://govstack.gitbook.io";
+        const bbKeySegment = bbKey ? `/${bbKey}` : '';
+        return `${baseURL}${bbKeySegment}/${requirementURL}#${id}`;
     }
+
 }
 
 export default GitBookPageContentManager;

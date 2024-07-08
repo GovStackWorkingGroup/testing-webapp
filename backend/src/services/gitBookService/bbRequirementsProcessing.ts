@@ -15,12 +15,12 @@ const processBBRequirements = async () => {
 
     const CROSS_CUTTING_REQUIREMENTS_URL = "5-cross-cutting-requirements"
     const FUNCTIONAL_REQUIREMENTS_URL = "6-functional-requirements"
-    const INTERFACE_REQUIREMENTS_URL = "architecture-and-nonfunctional-requirements/5-cross-cutting-requirements";
+    const INTERFACE_REQUIREMENTS_URL = "specification/architecture-and-nonfunctional-requirements/5-cross-cutting-requirements";
     const KEY_DIGITAL_FUNCTIONALITIES_URL = "4-key-digital-functionalities"
 
     let errors: string[] = [];
 
-    const processPages = async (spaceInfo, pageTypeRegex) => {
+    const processPages = async (spaceInfo, pageTypeRegex, bbKey) => {
         const pageIds = await spaceManager.fetchPages(spaceInfo.spaceId, pageTypeRegex);
         const results = await Promise.all(pageIds.map(async (pageId) => {
             try {
@@ -28,11 +28,11 @@ const processBBRequirements = async () => {
                 const pageContent = await spaceManager.fetchPageContent(spaceID, pageId);
                 let extractResult;
                 if (pageTypeRegex === CROSS_CUTTING_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null, spaceID, CROSS_CUTTING_REQUIREMENTS_URL);
+                    extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, null, CROSS_CUTTING_REQUIREMENTS_URL, bbKey);
                 } else if (pageTypeRegex === FUNCTIONAL_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent, spaceID, FUNCTIONAL_REQUIREMENTS_URL);
+                    extractResult = pageContentManager.extractFunctionalRequirements(pageContent, FUNCTIONAL_REQUIREMENTS_URL, bbKey);
                 } else if (pageTypeRegex === KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX) {
-                    extractResult = pageContentManager.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, KEY_DIGITAL_FUNCTIONALITIES_URL);
+                    extractResult = pageContentManager.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, KEY_DIGITAL_FUNCTIONALITIES_URL, bbKey);
                 }
 
                 if (extractResult.error) {
@@ -55,7 +55,9 @@ const processBBRequirements = async () => {
         if (govStackSpecCollections.length === 0) {
             throw new Error("No collections provided for processing.");
         }
-        const spaceInfo = await Promise.all(govStackSpecCollections.map(collection => collectionManager.fetchLatestVersionSpaceIdAndVersion(collection.id)));
+        const spaceInfo = await Promise.all(govStackSpecCollections.map(
+            collection => collectionManager.fetchLatestVersionSpaceIdAndVersion(collection.id)
+        ));
         const spaceId = spaceInfo[0].spaceId;
         const fetchedGovStackSpecPages: string[] = await spaceManager.fetchPages(spaceId, INTERFACE_REQUIREMENTS_REGEX)
         const fetchedGovStackSpecNestedPagesfetche = await spaceManager.fetchPageContent(spaceId, fetchedGovStackSpecPages[0]);
@@ -63,14 +65,16 @@ const processBBRequirements = async () => {
             fetchedGovStackSpecNestedPagesfetche, CROSS_CUTTING_REQUIREMENTS_REGEX
         );
         const pageContent = await spaceManager.fetchPageContent(spaceId, filteredPagesIds[0]);
-        const extractResult = pageContentManager.extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS, spaceId, INTERFACE_REQUIREMENTS_URL);
+        const extractResult = pageContentManager.extractCrossCuttingRequirements(
+            pageContent, API_REQUIREMENTS, INTERFACE_REQUIREMENTS_URL, ""
+            );
         return extractResult;
     };
 
     try {
         const bbCollections = await collectionManager.fetchCollections('bb');
         const govStackSpecCollections = await collectionManager.fetchCollections('GovStack Specification');
-        // These are the Cross-cutting requirements that relate to APIs. We may eventually pull this 
+        // These are the Cross-cutting requirements that relate to APIs. We may eventually pull this
         // out into a configuration file
         const API_REQUIREMENTS = ["5.1", "5.2", "5.3", "5.4", "5.6", "5.13"]
         const architecturalRequirements = await processInterfaceCompliancePages(govStackSpecCollections, API_REQUIREMENTS);
@@ -82,9 +86,9 @@ const processBBRequirements = async () => {
                     throw new Error('No valid space found for the collection');
                 }
                 bbName = getBuildingBlockName(bbKey, bbName);
-                const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX);
-                const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX);
-                const keyDigitalFunctionalities = await processPages(spaceInfo, KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX);
+                const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX, bbKey);
+                const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX, bbKey);
+                const keyDigitalFunctionalities = await processPages(spaceInfo, KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX, bbKey);
                 const requirements = { crossCutting, functional, keyDigitalFunctionalities, interface: architecturalRequirements.requirements };
                 const dateOfSave = new Date().toISOString();
                 const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
