@@ -68,11 +68,11 @@ const IRSCInterfaceTable = ({
 
   const updateNumberOfFulfilledRequirements = () => {
     setFilledRequired(dataInterface.filter(item =>
-      item.status === 0 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 0 && (item.fulfillment === 1)).length);
     setFilledRecommended(dataInterface.filter(item =>
-      item.status === 1 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 1 && (item.fulfillment === 1)).length);
     setFilledOptional(dataInterface.filter(item =>
-      item.status === 2 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 2 && (item.fulfillment === 1)).length);
   };
 
   const handleUpdateField = (

@@ -68,11 +68,11 @@ const IRSCFunctionalTable = ({
 
   const updateNumberOfFulfilledRequirements = () => {
     setFilledRequired(dataFunctional.filter(item =>
-      item.status === 0 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 0 && (item.fulfillment === 1)).length);
     setFilledRecommended(dataFunctional.filter(item =>
-      item.status === 1 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 1 && (item.fulfillment === 1)).length);
     setFilledOptional(dataFunctional.filter(item =>
-      item.status === 2 && (item.fulfillment === 0 || item.fulfillment === 1)).length);
+      item.status === 2 && (item.fulfillment === 1)).length);
   };
 
   const handleUpdateField = (
