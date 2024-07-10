@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import ReactMarkdown from 'react-markdown';
 import Definition from '../../components/Definition';
 import ProductTable from '../../components/table/ProductTable';
 import useTranslations from '../../hooks/useTranslation';
@@ -59,10 +60,17 @@ const ApiTestingPage = () => {
       <main>
         <Definition
           title={format('app.definition.title')}
-          description={format('app.definition.description')}
-          hasRedirecting={true}
-          note={format('app.definition.note')}
-        />
+        >
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {format('app.definition.description.part_1')}
+          </ReactMarkdown>
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {format('app.definition.description.part_2')}
+          </ReactMarkdown>
+          <ReactMarkdown className="definition-description" linkTarget="_blank">
+            {format('app.definition.description.part_3')}
+          </ReactMarkdown>
+        </Definition>
         <ProductTable showAll={showAll} />
       </main>
     </div>

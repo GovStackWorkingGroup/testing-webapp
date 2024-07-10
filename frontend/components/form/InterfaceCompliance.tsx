@@ -43,37 +43,26 @@ const InterfaceComplianceForm = ({
 
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
-      <div className="question-line">
-        <AiOutlineQuestionCircle className="form-question-mark-icon" />
-        <p className="question-line-text">
-          {format('form.question_line.not_sure_how_to_start')}
-          {format('form.question_line.click')}
-          <Link
-            className="question-line-link"
-            href={CONFLUENCE_INSTRUCTIONS_LINK}
-            target="_blank"
-          >
-            {format('form.question_line.here')}
-          </Link>
-          {format(
-            'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance'
-          )}
-        </p>
-      </div>
       <div className="interface-bb-selector">
         {/* @ts-ignore */}
         <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.top.label')}
+          {format('form.select_building_blocks.api.top.label.part_1')}
+        </ReactMarkdown>
+        <ReactMarkdown className="definition-description" linkTarget="_blank">
+          {format('form.select_building_blocks.api.top.label.part_2')}
         </ReactMarkdown>
         <ol>
           <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.first.label')}</p>
+            <p className="definition-description">{format('form.select_building_blocks.api.list.first.label')}</p>
           </li>
           <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.second.label')}</p>
+            <p className="definition-description">{format('form.select_building_blocks.api.list.second.label')}</p>
           </li>
           <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.third.label')}</p>
+            <p className="definition-description">{format('form.select_building_blocks.api.list.third.label')}</p>
+          </li>
+          <li>
+            <p className="definition-description">{format('form.select_building_blocks.api.list.fourth.label')}</p>
           </li>
         </ol>
         <p className="definition-description">{format('form.select_building_blocks.bottom.label')}</p>
