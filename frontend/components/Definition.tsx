@@ -30,13 +30,11 @@ const Definition = ({
     <div data-testid="definition-description">
       {hasRedirecting ? (
         <div>
-          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {description || ''}
+            {`${description}`}
           </ReactMarkdown>
-          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {descriptionPartTwo || ''}
+            {`${descriptionPartTwo}`}
           </ReactMarkdown>
         </div>
       ) : (

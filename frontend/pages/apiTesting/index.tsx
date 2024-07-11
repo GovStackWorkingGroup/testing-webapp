@@ -62,13 +62,13 @@ const ApiTestingPage = () => {
           title={format('app.definition.title')}
         >
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {format('app.definition.description.part_1')}
+            {`${format('app.definition.description.part_1')}`}
           </ReactMarkdown>
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {format('app.definition.description.part_2')}
+            {`${format('app.definition.description.part_2')}`}
           </ReactMarkdown>
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {format('app.definition.description.part_3')}
+            {`${format('app.definition.description.part_3')}`}
           </ReactMarkdown>
         </Definition>
         <ProductTable showAll={showAll} />

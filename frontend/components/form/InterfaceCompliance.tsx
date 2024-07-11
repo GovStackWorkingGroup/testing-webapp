@@ -1,12 +1,9 @@
 import React, { RefObject, useEffect, useState } from 'react';
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
-import Link from 'next/link';
 import ReactMarkdown from 'react-markdown';
 import SelectBBs, { IRSCFormRef } from '../shared/combined/SelectBBs';
 import { getComplianceRequirements } from '../../service/serviceAPI';
 import { ComplianceRequirementsType } from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
-import { CONFLUENCE_INSTRUCTIONS_LINK } from '../../service/constants';
 
 type InterfaceComplianceFormProps = {
   setUpdatedBBs: (data: ComplianceRequirementsType[] | undefined) => void;
@@ -44,12 +41,11 @@ const InterfaceComplianceForm = ({
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
-        {/* @ts-ignore */}
         <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.api.top.label.part_1')}
+          {`${format('form.select_building_blocks.api.top.label.part_1')}`}
         </ReactMarkdown>
         <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.api.top.label.part_2')}
+          {`${format('form.select_building_blocks.api.top.label.part_2')}`}
         </ReactMarkdown>
         <ol>
           <li>
