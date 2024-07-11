@@ -49,7 +49,7 @@ const InterfaceComplianceForm = ({
           {format('form.select_building_blocks.api.top.label.part_1')}
         </ReactMarkdown>
         <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.api.top.label.part_2')}
+          {format('form.select_building_blocks.api.top.label.part_1') + ''}
         </ReactMarkdown>
         <ol>
           <li>
