@@ -77,21 +77,14 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
                 <td
                   class="border-none border-bottom"
                 >
-                  Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="border-none border-bottom"
-                >
-                  Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications
+                  Fulfillment of REQUIRED cross-cutting requirements stated in the respective BB specifications
                 </td>
               </tr>
               <tr>
                 <td
                   class="border-none"
                 >
-                  Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications
+                  Fulfillment of REQUIRED functional requirements stated in the respective BB specifications
                 </td>
               </tr>
             </tbody>
@@ -110,21 +103,14 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
                 <td
                   class="border-none border-bottom"
                 >
-                  All
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="border-none border-bottom"
-                >
-                  ≥ 1
+                  &gt;50%
                 </td>
               </tr>
               <tr>
                 <td
                   class="border-none"
                 >
-                  ≥ 1
+                  &gt;90%
                 </td>
               </tr>
             </tbody>
@@ -143,21 +129,14 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
                 <td
                   class="border-none border-bottom"
                 >
-                  All
-                </td>
-              </tr>
-              <tr>
-                <td
-                  class="border-none border-bottom"
-                >
-                  All
+                  &gt;50%
                 </td>
               </tr>
               <tr>
                 <td
                   class="border-none"
                 >
-                  All
+                  &gt;90%
                 </td>
               </tr>
             </tbody>
@@ -192,7 +171,7 @@ exports[`Unit tests for EvaluationSchemaTable component: should render the compo
                 <td
                   class="border-none"
                 >
-                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications
+                  Fulfillment of REQUIRED API related requirements in the Architecture BB specifications (ch. 5.1-5.4, 5.6, 5.13)
                 </td>
               </tr>
             </tbody>
