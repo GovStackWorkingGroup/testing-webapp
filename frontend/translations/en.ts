@@ -70,17 +70,19 @@ export const en = {
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
   'evaluation_schema.fulfillment.label': 'Fulfillment',
   'evaluation_schema.fulfillment_of_required_api.label':
-    'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
-  'evaluation_schema.fulfillment_of_required_key.label':
-    'Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications',
+    'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications (ch. 5.1-5.4, 5.6, 5.13)',
+  'evaluation_schema.fulfillment_of_required_cc.label':
+    'Fulfillment of REQUIRED cross-cutting requirements stated in the respective BB specifications',
   'evaluation_schema.fulfillment_of_required_functional_requirements.label':
-    'Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications',
+    'Fulfillment of REQUIRED functional requirements stated in the respective BB specifications',
   'evaluation_schema.fulfillment_of_required_cross_cutting_requirements.label':
     'Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications',
   'evaluation_schema.fulfillment_of_service_api.label':
     'Fulfillment of Service API requirements',
   'evaluation_schema.level_1.label': 'Level 1',
   'evaluation_schema.level_2.label': 'Level 2',
+  'evaluation_schema.over50.label': '>50%',
+  'evaluation_schema.over90.label': '>90%',
   'evaluation_schema.optional.label': 'Optional',
   'evaluation_schema.comment.label': 'Comment',
   'evaluation_schema.requirement.label': 'Requirement',
