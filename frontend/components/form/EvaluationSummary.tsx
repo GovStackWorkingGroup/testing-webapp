@@ -98,7 +98,7 @@ const EvaluationSummary = () => {
   const rows: DataRow[] = [
     {
       cell: [
-        { value: format('table.deployment_compliance.label') },
+        { value: format('table.deployment.label') },
         {
           values: [
             {
@@ -126,7 +126,7 @@ const EvaluationSummary = () => {
     },
     {
       cell: [
-        { value: format('table.interface_compliance.label') },
+        { value: format('table.interface.label') },
         {
           values: [
             {

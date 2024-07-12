@@ -18,7 +18,7 @@ export const softwareComplianceFormSteps = [
     step: 2,
   },
   {
-    label: 'app.api_requirement_specification.label',
+    label: 'app.interface_requirement_specification.label',
     step: 3,
   },
   {

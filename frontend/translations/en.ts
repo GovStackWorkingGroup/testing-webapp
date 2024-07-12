@@ -1,22 +1,21 @@
 // All guidelines for the translations can be found in the file README.md
 export const en = {
-  'app.api-testing.label': 'API Compliance Testing',
+  'app.api-testing.label': 'API testing',
   'app.back_to_reports_list.label': '< Back to Report List',
   'app.compatibility.label': 'Compatibility',
   'app.compliance_with.label': 'Compliance with',
   'app.check_compliance.label': 'Check Compliance',
-  'app.definition.description.part_1': `This pages shows the results of the automated API Compliance testing against
-   the API specifications of each [Building Blocks](https://govstack.gitbook.io/specification/).`,
-  'app.definition.description.part_2': `The result report is a prerequisite to submitting the API Compliance part of
-   the overall compliance assessment (see Software Requirement Compliance at the top menu).`,
-  'app.definition.description.part_3': `For each Building Blocks a series of APIs have been defined and tests have
-   been developed which any compliant product must be able to pass. These tests are run against candidate software.
-    This page provides detailed information on which tests are passing and which are failing. Users may select any
-     building block that they are interested and view candidate software as well as their current level of compliance
-      with the API.`,
+  'app.definition.description': `This web application is used to show how candidate products align with
+  the technical specifications that have been developed by [Govstack](https://www.govstack.global/)
+  for various [Building Blocks](https://govstack.gitbook.io/specification/). For each
+  Building Blocks a series of APIs have been defined and tests have been developed which any compliant
+  product must be able to pass. These tests are run against candidate platforms and this application 
+  provides detailed information on which tests are passing and which are failing. Users may select any
+  building block that they are interested and view candidate products as well as their current level
+  of compliance with the API.`,
   'app.definition.note':
     'Note: Technical/API compliance is only a part of the full GovStack compliance process',
-  'app.definition.title': 'API Compliance Testing',
+  'app.definition.title': 'GovStack Building Block Compliance Platform',
   'app.definition_self_assessment.title': 'Self-Assessment of Compliance',
   'app.reports.title': 'Reports',
   'app.definition_self_assessment_part_1.description':
@@ -32,8 +31,8 @@ export const en = {
   'app.evaluation_schema.label': 'Evaluation Schema',
   'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
-  'app.api_requirement_specification.label':
-    'API Compliance & Requirement Specification Compliance',
+  'app.interface_requirement_specification.label':
+    'Interface & Requirement Specification Compliance',
   'app.login.label': 'Log In',
   'app.logout.label': 'Log Out',
   'app.tests_passed.label': 'Tests Passed',
@@ -70,19 +69,17 @@ export const en = {
   'evaluation_schema.equal_or_more_than_1.label': '≥ 1',
   'evaluation_schema.fulfillment.label': 'Fulfillment',
   'evaluation_schema.fulfillment_of_required_api.label':
-    'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications (ch. 5.1-5.4, 5.6, 5.13)',
-  'evaluation_schema.fulfillment_of_required_cc.label':
-    'Fulfillment of REQUIRED cross-cutting requirements stated in the respective BB specifications',
+    'Fulfillment of REQUIRED API related requirements in the Architecture BB specifications',
+  'evaluation_schema.fulfillment_of_required_key.label':
+    'Fulfillment of REQUIRED Key Digital Functionalities stated in the respective BB specifications',
   'evaluation_schema.fulfillment_of_required_functional_requirements.label':
-    'Fulfillment of REQUIRED functional requirements stated in the respective BB specifications',
+    'Fulfillment of REQUIRED cross-cutting and functional requirements stated in the respective BB specifications',
   'evaluation_schema.fulfillment_of_required_cross_cutting_requirements.label':
     'Fulfillment of REQUIRED cross-cutting requirements stated in the Architecture BB specifications',
   'evaluation_schema.fulfillment_of_service_api.label':
     'Fulfillment of Service API requirements',
   'evaluation_schema.level_1.label': 'Level 1',
   'evaluation_schema.level_2.label': 'Level 2',
-  'evaluation_schema.over50.label': '>50%',
-  'evaluation_schema.over90.label': '>90%',
   'evaluation_schema.optional.label': 'Optional',
   'evaluation_schema.comment.label': 'Comment',
   'evaluation_schema.requirement.label': 'Requirement',
@@ -140,21 +137,12 @@ export const en = {
   'form.reject.label': 'Reject Form',
   'form.required_label': 'Required',
   'form.select_building_blocks.top.label': `In this section, you can evaluate whether your product adheres to 
-  GovStack requirement specifications. Follow the steps below to complete the compliance assessment.
+  GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment.
    (For reference, view full GovStack specifications on [GitBook](https://govstack.gitbook.io/specification/))`,
-  'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simultaneously)',
+  'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simoultaneously)',
   'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with key digital functionalities, followed by cross-cutting requirements, and functional requirements)',
   'form.select_building_blocks.list.third.label': 'Comment on the approval/disapproval where needed',
   'form.select_building_blocks.bottom.label': 'By following these steps, you can systematically assess and demonstrate your product\'s compliance with GovStack Building Block specifications. This process helps ensure that your product meets GovStack requirements and identifies areas for potential enhancement.',
-  'form.select_building_blocks.api.top.label.part_1': `In this section, you can include your API Compliance results into
-   the compliance assessment report. The precondition is conduct the API Compliance testing (see menu item on top and
-    our step-by-step [instructions](https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance)).`,
-  'form.select_building_blocks.api.top.label.part_2': `Once you have completed the API Compliance testing, follow the steps below to complete the compliance assessment. (For reference, view full GovStack specifications on [GitBook](https://govstack.gitbook.io/specification/))`,
-  'form.select_building_blocks.api.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simultaneously)',
-  'form.select_building_blocks.api.list.second.label': 'Insert the link to the API Compliance testing results',
-  'form.select_building_blocks.api.list.third.label': 'Approve/ Disapprove each cross-cutting requirements',
-  'form.select_building_blocks.api.list.fourth.label': 'Comment on the approval/disapproval where needed',
-  'form.select_building_blocks.api.bottom.label': 'By following these steps, you can systematically assess and demonstrate your product\'s compliance with GovStack Building Block specifications. This process helps ensure that your product meets GovStack requirements and identifies areas for potential enhancement.',
   'form.software_delete.label': 'Delete this Entry',
   'form.software_delete.placeholder': 'Enter the software name to delete',
   'form.software_version.label': 'Software Version',
@@ -208,7 +196,6 @@ export const en = {
   'table.draft.label': 'Draft',
   'table.hide_older_versions.label': 'Hide older versions',
   'table.interface.label': 'Interface',
-  'table.api.label': 'API',
   'table.interface_compliance.label': 'API Compliance',
   'table.in_review.label': 'In Review',
   'table.last_update.label': 'Last Update',
