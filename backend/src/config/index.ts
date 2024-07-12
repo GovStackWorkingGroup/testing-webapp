@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 import { MongoConnection } from './connectionStringBuilder';
 import rateLimit from "express-rate-limit"; 
-import { parseDuration } from './utils';
+
 dotenv.config();
 
 interface AppConfig {
@@ -61,9 +61,7 @@ const appConfig: AppConfig = {
   appName: process.env.appName || 'testing-webapp-api',
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
-  draftExpirationTime: process.env.DRAFT_EXPIRATION_TIME 
-    ? parseDuration(process.env.DRAFT_EXPIRATION_TIME) 
-    : 30 * 24 * 60 * 60 * 1000,
+  draftExpirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
   frontendHost: process.env.FE_HOST,
   cron: {
     removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM

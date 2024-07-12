@@ -45,7 +45,7 @@ const IRSForm = ({
       const updatedData = updatedInterfaceData.map((data) => {
         return {
           ...data,
-          requirements: { crossCutting: [], functional: [], interface: [], keyDigitalFunctionalities: [] },
+          requirements: { crossCutting: [], functional: [], interface: [] },
         };
       });
       setAllData(updatedData);
@@ -129,7 +129,6 @@ const IRSForm = ({
     const validateResultArray = data.map((item) => {
       let isCrossCuttingValid;
       let isFunctionalValid;
-      let isKDFValid;
       let isInterfaceValid;
 
       const validateData = (data: RequirementsType[]): boolean => {
@@ -153,7 +152,7 @@ const IRSForm = ({
       ) {
         isCrossCuttingValid = validateData(item.requirements.crossCutting);
         isFunctionalValid = validateData(item.requirements.functional);
-        isKDFValid = validateData(item.requirements.keyDigitalFunctionalities);
+
         if (
           item.interfaceCompliance.requirements &&
           item.interfaceCompliance.requirements.length
@@ -167,7 +166,7 @@ const IRSForm = ({
         }
       }
 
-      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid && isKDFValid;
+      return isCrossCuttingValid && isFunctionalValid && isInterfaceValid;
     });
 
     return validateResultArray.every((item) => item);

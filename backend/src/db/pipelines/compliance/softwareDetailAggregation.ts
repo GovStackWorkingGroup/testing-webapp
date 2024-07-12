@@ -1,9 +1,6 @@
 export const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
   {
-    $match: { softwareName }
-  },
-  {
-    $sort: { _id: -1 } // Sort documents by their _id in descending order
+    $match: { "softwareName": softwareName }
   },
   {
     $project: {
@@ -18,56 +15,57 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $unwind: { path: "$compliance", preserveNullAndEmptyArrays: true }
+    $unwind: "$compliance"
   },
   {
     $addFields: {
       "compliance.bbDetailsArray": {
         $map: {
-          input: { $ifNull: [{ $objectToArray: "$compliance.bbDetails" }, []] },
+          input: { $objectToArray: "$compliance.bbDetails" },
           as: "detail",
           in: {
             "bbName": "$$detail.k",
             "bbVersion": "$$detail.v.bbVersion",
             "requirements": "$$detail.v.requirementSpecificationCompliance",
             "interface": "$$detail.v.interfaceCompliance",
-            "deploymentCompliance": "$$detail.v.deploymentCompliance"
+            "deploymentCompliance": "$$detail.v.deploymentCompliance" 
           }
         }
       }
     }
   },
   {
-    $unwind: { path: "$compliance.bbDetailsArray", preserveNullAndEmptyArrays: true }
+    $unwind: "$compliance.bbDetailsArray"
   },
   {
     $group: {
       _id: {
+        objectId: "$objectId",
         softwareName: "$softwareName",
-        softwareVersion: { $ifNull: ["$compliance.version", "N/A"] },
-        bbName: { $ifNull: ["$compliance.bbDetailsArray.bbName", "N/A"] }
+        version: "$compliance.version",
+        bbName: "$compliance.bbDetailsArray.bbName"
       },
       bbVersions: {
         $push: {
-          bbVersion: { $ifNull: ["$compliance.bbDetailsArray.bbVersion", "N/A"] },
-          requirements: { $ifNull: ["$compliance.bbDetailsArray.requirements", {}] },
-          interface: { $ifNull: ["$compliance.bbDetailsArray.interface", {}] },
-          deploymentCompliance: { $ifNull: ["$compliance.bbDetailsArray.deploymentCompliance", {}] }
+          bbVersion: "$compliance.bbDetailsArray.bbVersion",
+          requirements: "$compliance.bbDetailsArray.requirements",
+          interface: "$compliance.bbDetailsArray.interface",
+          deploymentCompliance: "$compliance.bbDetailsArray.deploymentCompliance"
         }
       },
       logo: { $first: "$logo" },
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" },
-      objectId: { $first: "$objectId" }
+      status: { $first: "$status" }
     }
   },
   {
     $group: {
       _id: {
+        objectId: "$_id.objectId",
         softwareName: "$_id.softwareName",
-        softwareVersion: "$_id.softwareVersion"
+        version: "$_id.version"
       },
       bbDetails: {
         $push: {
@@ -79,36 +77,14 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: { $first: "$website" },
       documentation: { $first: "$documentation" },
       pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" },
-      objectId: { $first: "$objectId" }
+      status: { $first: "$status" }
     }
-  },
-  {
-    $group: {
-      _id: "$_id.softwareName",
-      compliance: {
-        $push: {
-          softwareVersion: "$_id.softwareVersion",
-          bbDetails: "$bbDetails",
-          _id: "$objectId" // Add _id at the same level as softwareVersion
-        }
-      },
-      logo: { $first: "$logo" },
-      website: { $first: "$website" },
-      documentation: { $first: "$documentation" },
-      pointOfContact: { $first: "$pointOfContact" },
-      status: { $first: "$status" },
-      objectId: { $first: "$objectId" }
-    }
-  },
-  {
-    $sort: { _id: -1 } // Sort documents by their _id in descending order
   },
   {
     $project: {
-      _id: "$objectId",
-      softwareName: "$_id",
-      compliance: 1,
+      objectId: "$_id.objectId",
+      softwareVersion: "$_id.version",
+      bbDetails: 1,
       logo: 1,
       website: 1,
       documentation: 1,
@@ -117,6 +93,36 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
   {
-    $limit: 1 // Return the latest matching object
+    $sort: { "softwareVersion": 1 } // Sorting by version
+  },
+  {
+    $group: {
+      _id: "$objectId",
+      softwareName: { $first: "$_id.softwareName" },
+      compliance: {
+        $push: {
+          softwareVersion: "$softwareVersion",
+          bbDetails: "$bbDetails"
+        }
+      },
+      logo: { $first: "$logo" },
+      website: { $first: "$website" },
+      documentation: { $first: "$documentation" },
+      pointOfContact: { $first: "$pointOfContact" },
+      status: { $first: "$status" }
+    }
+  },
+  {
+    $project: {
+      _id: 1,
+      softwareName: 1,
+      logo: 1,
+      website: 1,
+      documentation: 1,
+      pointOfContact: 1,
+      compliance: 1,
+      deploymentCompliance: 1,
+      status: 1
+    }
   }
 ];

@@ -10,18 +10,17 @@ import DragDrop from '../shared/DragAndDrop';
 import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
 import { fetchFileDetails } from '../../service/serviceAPI';
 import useGetDraftData from '../../hooks/useGetDraftDetail';
-import { formatTranslationType } from '../../service/types';
 import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
   softwareName: { value: string; error: boolean };
   softwareLogo: { value: File | undefined; error: boolean };
-  softwareWebsite: { value: string; error: { error: boolean; message: formatTranslationType } };
-  softwareDocumentation: { value: string; error: { error: boolean; message: formatTranslationType } };
+  softwareWebsite: { value: string; error: { error: boolean; message: string } };
+  softwareDocumentation: { value: string; error: { error: boolean; message: string } };
   toolDescription: { value: string; error: boolean };
-  email: { value: string; error: { error: boolean; message: formatTranslationType } };
-  confirmEmail: { value: string; error: { error: boolean; message: formatTranslationType } };
-  softwareVersion: { value: string; error: { error: boolean; message: formatTranslationType } };
+  email: { value: string; error: { error: boolean; message: string } };
+  confirmEmail: { value: string; error: { error: boolean; message: string } };
+  softwareVersion: { value: string; error: boolean };
 };
 
 export type SoftwareAttributedRef = {
@@ -114,7 +113,7 @@ const SoftwareAttributesForm = ({
           },
           softwareVersion: {
             value: draftData.formDetails[0].version,
-            error: { error: false, message: '' },
+            error: false,
           },
         };
         setFormValues(draftDetail);
@@ -148,7 +147,7 @@ const SoftwareAttributesForm = ({
     name: string,
     value: string,
     isError: boolean,
-    message: formatTranslationType
+    message: string
   ): FormValuesType => ({
     ...formValues,
     [name]: {
@@ -326,7 +325,7 @@ const SoftwareAttributesForm = ({
               inputTitle={format('form.software_version.label')}
               errorMessage={format('form.required_field.message')}
               inputKey="key-software-version"
-              isInvalid={formValues.softwareVersion?.error.error}
+              isInvalid={formValues.softwareVersion?.error}
               required
               onChange={(event) => handleInputChange(event)}
               value={formValues.softwareVersion.value}

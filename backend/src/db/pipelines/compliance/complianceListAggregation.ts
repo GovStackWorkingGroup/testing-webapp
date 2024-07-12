@@ -22,8 +22,8 @@ export const createAggregationPipeline = (
 
     let statusConditions = {
         status: {
-            $in: isAuthenticated
-                ? [StatusEnum.IN_REVIEW, StatusEnum.APPROVED, StatusEnum.REJECTED, StatusEnum.DRAFT]
+            $in: isAuthenticated 
+                ? [StatusEnum.IN_REVIEW, StatusEnum.APPROVED, StatusEnum.REJECTED]
                 : [StatusEnum.IN_REVIEW, StatusEnum.APPROVED]
         }
     };
@@ -31,21 +31,20 @@ export const createAggregationPipeline = (
     const aggregationPipeline: unknown[] = [
         ...(softwareConditions.length > 0 ? [{ $match: { $or: softwareConditions } }] : []),
         { $match: statusConditions },
-        { $unwind: { path: "$compliance", preserveNullAndEmptyArrays: true } },
+        { $unwind: "$compliance" },
         { $addFields: { "bbDetailsArray": { $objectToArray: "$compliance.bbDetails" } } },
-        { $unwind: { path: "$bbDetailsArray", preserveNullAndEmptyArrays: true } },
+        { $unwind: "$bbDetailsArray" },
         {
             $project: {
                 softwareName: 1,
-                logo: { $ifNull: ["$logo", null] },
-                softwareVersion: { $ifNull: ["$compliance.version", null] },
-                bb: { $ifNull: ["$bbDetailsArray.k", null] },
-                bbVersion: { $ifNull: ["$bbDetailsArray.v.bbVersion", null] },
-                status: { $ifNull: ["$bbDetailsArray.v.status", null] },
-                submissionDate: { $ifNull: ["$bbDetailsArray.v.submissionDate", null] },
-                deploymentCompliance: { $ifNull: ["$bbDetailsArray.v.deploymentCompliance", null] },
-                requirementSpecificationCompliance: { $ifNull: ["$bbDetailsArray.v.requirementSpecificationCompliance.level", null] },
-                interfaceCompliance: { $ifNull: ["$bbDetailsArray.v.interfaceCompliance.level", null] }
+                softwareVersion: "$compliance.version",
+                bb: "$bbDetailsArray.k",
+                bbVersion: "$bbDetailsArray.v.bbVersion",
+                status: "$bbDetailsArray.v.status",
+                submissionDate: "$bbDetailsArray.v.submissionDate",
+                deploymentCompliance: "$bbDetailsArray.v.deploymentCompliance",
+                requirementSpecificationCompliance: "$bbDetailsArray.v.requirementSpecificationCompliance.level",
+                interfaceCompliance: "$bbDetailsArray.v.interfaceCompliance.level"
             }
         },
         ...(bbConditions.length > 0 ? [{ $match: { $or: bbConditions } }] : []),

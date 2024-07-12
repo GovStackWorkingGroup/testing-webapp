@@ -28,7 +28,6 @@ export const aggregationPipeline = (): any[] => [
           crossCutting: "$requirements.crossCutting",
           functional: "$requirements.functional",
           interface: "$requirements.interface",
-          keyDigitalFunctionalities: "$requirements.keyDigitalFunctionalities"
         }
       }
     }

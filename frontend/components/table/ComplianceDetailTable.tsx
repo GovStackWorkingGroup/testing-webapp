@@ -256,158 +256,7 @@ const ComplianceDetailTable = ({
             </td>
           </tr>
           <tr className="border">
-            <td>
-              {format('evaluation_schema.requirement_specification.label')}
-            </td>
-            <td className="td-row-details">
-              <table className="main-table">
-                <tbody>
-                  <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
-                        <tbody>
-                          {transformedData?.map((item, indexKey) => {
-                            if (
-                              item.requirementSpecificationCompliance
-                                .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
-                            ) {
-                              return (
-                                <tr
-                                  key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
-                                >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
-                                      <p>{format(item.bbName)}</p>
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          })}
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td className="td-row-details">
-              <table className="main-table">
-                <tbody>
-                  <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
-                        <tbody>
-                          {transformedData?.map((item, indexKey) => {
-                            if (
-                              item.requirementSpecificationCompliance
-                                .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
-                            ) {
-                              return (
-                                <tr
-                                  key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
-                                >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <CustomSelect
-                                      options={[
-                                        {
-                                          value: `requirement-${item.bbName}`,
-                                          label: format(
-                                            'evaluation_schema.level_1.label'
-                                          ),
-                                        },
-                                        {
-                                          value: `requirement-${item.bbName}`,
-                                          label: format(
-                                            'evaluation_schema.level_2.label'
-                                          ),
-                                        },
-                                        {
-                                          value: `requirement-${item.bbName}`,
-                                          label: format('table.N/A.label'),
-                                        },
-                                      ]}
-                                      onChange={handleOnSelect}
-                                      placeholder={format('app.select.label')}
-                                    />
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          })}
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-            <td className="td-row-details">
-              <table className="main-table">
-                <tbody>
-                  <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table">
-                        <tbody>
-                          {transformedData?.map((item, indexKey) => {
-                            if (
-                              item.requirementSpecificationCompliance
-                                .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
-                            ) {
-                              return (
-                                <tr
-                                  key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
-                                >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="notes-container">
-                                      <textarea
-                                        id={`requirement-${item.bbName}`}
-                                        className="notes-textarea"
-                                        onChange={(event) =>
-                                          handleTextarea(
-                                                  `requirement-${item.bbName}`,
-                                                  event?.target.value
-                                          )
-                                        }
-                                      />
-                                    </div>
-                                  </td>
-                                </tr>
-                              );
-                            }
-                          })}
-                        </tbody>
-                      </table>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr className="border">
-            <td>{format('table.interface_compliance.label')}</td>
+            <td>{format('table.interface.label')}</td>
             <td className="td-row-details">
               <table className="main-table">
                 <tbody>
@@ -427,7 +276,7 @@ const ComplianceDetailTable = ({
                                     })}
                                   >
                                     <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
+                                      <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
                                     </div>
                                   </td>
@@ -519,8 +368,159 @@ const ComplianceDetailTable = ({
                                         className="notes-textarea"
                                         onChange={(event) =>
                                           handleTextarea(
-                                                  `interface-${item.bbName}`,
-                                                  event?.target.value
+                                            `interface-${item.bbName}`,
+                                            event?.target.value
+                                          )
+                                        }
+                                      />
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          })}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr className="border">
+            <td>
+              {format('evaluation_schema.requirement_specification.label')}
+            </td>
+            <td className="td-row-details">
+              <table className="main-table">
+                <tbody>
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
+                        <tbody>
+                          {transformedData?.map((item, indexKey) => {
+                            if (
+                              item.requirementSpecificationCompliance
+                                .crossCuttingRequirements.length ||
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
+                            ) {
+                              return (
+                                <tr
+                                  key={`details-divided-cell-values-${item}-${indexKey}`}
+                                  className=""
+                                >
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
+                                    <div className="td-bb-image-name-container">
+                                      <BBImage imagePath={item.bbName} />
+                                      <p>{format(item.bbName)}</p>
+                                    </div>
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          })}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td className="td-row-details">
+              <table className="main-table">
+                <tbody>
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table ">
+                        <tbody>
+                          {transformedData?.map((item, indexKey) => {
+                            if (
+                              item.requirementSpecificationCompliance
+                                .crossCuttingRequirements.length ||
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
+                            ) {
+                              return (
+                                <tr
+                                  key={`details-divided-cell-values-${item}-${indexKey}`}
+                                  className=""
+                                >
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
+                                    <CustomSelect
+                                      options={[
+                                        {
+                                          value: `requirement-${item.bbName}`,
+                                          label: format(
+                                            'evaluation_schema.level_1.label'
+                                          ),
+                                        },
+                                        {
+                                          value: `requirement-${item.bbName}`,
+                                          label: format(
+                                            'evaluation_schema.level_2.label'
+                                          ),
+                                        },
+                                        {
+                                          value: `requirement-${item.bbName}`,
+                                          label: format('table.N/A.label'),
+                                        },
+                                      ]}
+                                      onChange={handleOnSelect}
+                                      placeholder={format('app.select.label')}
+                                    />
+                                  </td>
+                                </tr>
+                              );
+                            }
+                          })}
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+            <td className="td-row-details">
+              <table className="main-table">
+                <tbody>
+                  <tr>
+                    <td className="td-row-details td-full-width border-none">
+                      <table className="main-table">
+                        <tbody>
+                          {transformedData?.map((item, indexKey) => {
+                            if (
+                              item.requirementSpecificationCompliance
+                                .crossCuttingRequirements.length ||
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
+                            ) {
+                              return (
+                                <tr
+                                  key={`details-divided-cell-values-${item}-${indexKey}`}
+                                  className=""
+                                >
+                                  <td
+                                    className={classNames('border-none', {
+                                      'border-bottom': indexKey === 1,
+                                    })}
+                                  >
+                                    <div className="notes-container">
+                                      <textarea
+                                        id={`requirement-${item.bbName}`}
+                                        className="notes-textarea"
+                                        onChange={(event) =>
+                                          handleTextarea(
+                                            `requirement-${item.bbName}`,
+                                            event?.target.value
                                           )
                                         }
                                       />

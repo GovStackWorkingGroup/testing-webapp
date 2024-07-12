@@ -13,7 +13,6 @@ import {
   RequirementsType,
 } from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
-import TableCells from '../../shared/TableCells';
 
 const IRSCCrossCuttingTableType = ({
   selectedData,
@@ -25,20 +24,7 @@ const IRSCCrossCuttingTableType = ({
 
   const { format } = useTranslations();
 
-  const dataCC = data.requirements.crossCutting;
-
-  const requiredNumber = dataCC.filter(item => item.status === 0).length;
-  const recommendedNumber = dataCC.filter(item => item.status === 1).length;
-  const optionalNumber = dataCC.filter(item => item.status === 2).length;
-
-  const [filledRequired, setFilledRequired] = useState<number>(0);
-  const [filledRecommended, setFilledRecommended] = useState<number>(0);
-  const [filledOptional, setFilledOptional] = useState<number>(0);
-
-  useEffect(() => {
-    setUpdatedData(data);
-    updateNumberOfFulfilledRequirements();
-  }, [data]);
+  useEffect(() => setUpdatedData(data), [data]);
 
   const updateData = (
     cellId: string,
@@ -64,15 +50,6 @@ const IRSCCrossCuttingTableType = ({
           : item
       );
     }
-  };
-
-  const updateNumberOfFulfilledRequirements = () => {
-    setFilledRequired(dataCC.filter(item =>
-      item.status === 0 && (item.fulfillment === 1)).length);
-    setFilledRecommended(dataCC.filter(item =>
-      item.status === 1 && (item.fulfillment === 1)).length);
-    setFilledOptional(dataCC.filter(item =>
-      item.status === 2 && (item.fulfillment === 1)).length);
   };
 
   const handleUpdateField = (
@@ -118,7 +95,7 @@ const IRSCCrossCuttingTableType = ({
                 'counter-active': active,
               })}
             >
-              {comment.length}/250
+              {comment.length}/100
             </div>
           );
 
@@ -245,7 +222,7 @@ const IRSCCrossCuttingTableType = ({
           {rows.some((item) => item.original.status === 0) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('form.required_label')} ${filledRequired}/${requiredNumber}`}
+                {format('form.required_label')}
               </td>
             </tr>
           )}
@@ -265,7 +242,13 @@ const IRSCCrossCuttingTableType = ({
                       : ''
                   }`}
                 >
-                  <TableCells row={row}/>
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             }
@@ -273,7 +256,7 @@ const IRSCCrossCuttingTableType = ({
           {rows.some((item) => item.original.status === 1) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('table.recommended_not_required.label')} ${filledRecommended}/${recommendedNumber}`}
+                {format('table.recommended_not_required.label')}
               </td>
             </tr>
           )}
@@ -286,7 +269,13 @@ const IRSCCrossCuttingTableType = ({
                   key={`row-${indexKey}`}
                   className="irsc-table-rows"
                 >
-                  <TableCells row={row}/>
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             }
@@ -294,7 +283,7 @@ const IRSCCrossCuttingTableType = ({
           {rows.some((item) => item.original.status === 2) && (
             <tr>
               <td className="irsc-table-header-required" colSpan={3}>
-                {`${format('table.optional_not_required.label')} ${filledOptional}/${optionalNumber}`}
+                {format('table.optional_not_required.label')}
               </td>
             </tr>
           )}
@@ -307,7 +296,13 @@ const IRSCCrossCuttingTableType = ({
                   key={`row-${indexKey}`}
                   className="irsc-table-rows"
                 >
-                  <TableCells row={row}/>
+                  {row.cells.map((cell: any, indexKey: number) => {
+                    return (
+                      <td {...cell.getCellProps()} key={`cell-td-${indexKey}`}>
+                        {cell.render('Cell')}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             }
