@@ -3,6 +3,7 @@ import Select, { components, MultiValue } from 'react-select';
 import { useIntl } from 'react-intl';
 import _ from 'lodash';
 import useTranslations from '../../../hooks/useTranslation';
+import { formatTranslationType } from '../../../service/types';
 import Checkbox from './Checkbox';
 
 interface OptionType {
@@ -17,7 +18,7 @@ interface VersionType {
 
 interface MultiSelectDropdownProps {
   onChange: (selectedItems: string[]) => void;
-  placeholder: string;
+  placeholder: formatTranslationType;
   availableItems: OptionType[];
   availableVersions: VersionType;
 }

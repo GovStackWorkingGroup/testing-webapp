@@ -1,7 +1,8 @@
 import classNames from 'classnames';
+import { formatTranslationType } from '../../../service/types';
 
 type CheckboxProps = {
-  label: string;
+  label: formatTranslationType;
   checked: boolean;
   onChange?: (checked: boolean) => void;
   className?: string;

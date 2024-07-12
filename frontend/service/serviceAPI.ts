@@ -427,6 +427,7 @@ export const updateDraftDetailsStepThree = async (
             requirement: crossCuttingItem.requirement,
             comment: crossCuttingItem.comment,
             fulfillment: crossCuttingItem.fulfillment,
+            link: crossCuttingItem.link,
             _id: crossCuttingItem._id,
           })
         ),
@@ -435,9 +436,19 @@ export const updateDraftDetailsStepThree = async (
             requirement: functionalItem.requirement,
             comment: functionalItem.comment,
             fulfillment: functionalItem.fulfillment,
+            link: functionalItem.link,
             _id: functionalItem._id,
           })
         ),
+        keyDigitalFunctionalitiesRequirements: requirements.keyDigitalFunctionalities.map(
+          (KDFItem) => ({
+            requirement: KDFItem.requirement,
+            comment: KDFItem.comment,
+            fulfillment: KDFItem.fulfillment,
+            link: KDFItem.link,
+            _id: KDFItem._id,
+          })
+        )
       },
       interfaceCompliance: {
         testHarnessResult: interfaceCompliance?.testHarnessResult || '',

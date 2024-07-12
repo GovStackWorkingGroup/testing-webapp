@@ -48,9 +48,9 @@ const SoftwareComplianceWith = ({
         {
           values: bbDetail.bbVersions.map(() => ({
             values: [
-              { value: format('table.deployment.label') },
-              { value: format('table.interface.label') },
+              { value: format('table.deployment_compliance.label') },
               { value: format('table.requirement_specification.label') },
+              { value: format('table.interface_compliance.label') },
             ],
           })),
         },
@@ -63,8 +63,8 @@ const SoftwareComplianceWith = ({
             .map((bbVersion) => ({
               values: [
                 { value: bbVersion.deploymentCompliance.level ?? '' },
-                { value: bbVersion.interface.level ?? '' },
                 { value: bbVersion.requirements.level ?? '' },
+                { value: bbVersion.interface.level ?? '' },
               ],
             })),
         },
@@ -77,8 +77,8 @@ const SoftwareComplianceWith = ({
             .map((bbVersion) => ({
               values: [
                 { value: bbVersion.deploymentCompliance.notes ?? '' },
-                { value: bbVersion.interface.notes ?? '' },
                 { value: bbVersion.requirements.notes ?? '' },
+                { value: bbVersion.interface.notes ?? '' },
               ],
             })),
         },

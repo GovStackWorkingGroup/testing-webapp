@@ -1,8 +1,9 @@
 import React from 'react';
 import { RiCloseFill } from 'react-icons/ri';
+import { formatTranslationType } from '../../../service/types';
 
 type ModalProps = {
-  modalTitle: string;
+  modalTitle: formatTranslationType;
   onClose: () => void;
   children: React.ReactNode;
 };

@@ -1,4 +1,5 @@
-import { RefObject, useEffect, useState } from 'react';
+import React, { RefObject, useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import useTranslations from '../../hooks/useTranslation';
 import { ComplianceRequirementsType } from '../../service/types';
 import { getComplianceRequirements } from '../../service/serviceAPI';
@@ -42,11 +43,27 @@ const RequirementSpecificationComplianceForm = ({
   return (
     <div style={{ display: display ? 'block' : 'none' }}>
       <div className="interface-bb-selector">
-        <p className="text-18">{format('form.select_building_blocks.label')}</p>
+        {/* @ts-ignore */}
+        <ReactMarkdown className="definition-description" linkTarget="_blank">
+          {format('form.select_building_blocks.top.label')}
+        </ReactMarkdown>
+        <ol>
+          <li>
+            <p className="definition-description">{format('form.select_building_blocks.list.first.label')}</p>
+          </li>
+          <li>
+            <p className="definition-description">{format('form.select_building_blocks.list.second.label')}</p>
+          </li>
+          <li>
+            <p className="definition-description">{format('form.select_building_blocks.list.third.label')}</p>
+          </li>
+        </ol>
+        <p className="definition-description">{format('form.select_building_blocks.bottom.label')}</p>
         <RequirementSpecificationSelectBBs
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCRequirementsFormRef={IRSCRequirementsFormRef}
+          isFormActive={true}
         />
       </div>
     </div>

@@ -1224,6 +1224,13 @@
   dependencies:
     react-intl "*"
 
+"@types/react-show-more-text@^1.4.5":
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/@types/react-show-more-text/-/react-show-more-text-1.4.5.tgz#b6b39b63de14b050badbcd6afe69b371b2b5f130"
+  integrity sha512-tpo+we9AwkSBvQoeZfEGUJt6ZwkLov3vak/ZTNXLlW5K1q2drKDqlQ7K1Yo+0CuYF7aK5j9gjxJkbesgr0tP4A==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-table@^7.7.18":
   version "7.7.18"
   resolved "https://registry.yarnpkg.com/@types/react-table/-/react-table-7.7.18.tgz#603541083dd01328b576ab4373f7dcbe22033c31"
@@ -5146,6 +5153,13 @@ react-select@^5.8.0:
     prop-types "^15.6.0"
     react-transition-group "^4.3.0"
     use-isomorphic-layout-effect "^1.1.2"
+
+react-show-more-text@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/react-show-more-text/-/react-show-more-text-1.7.1.tgz#9123995d7ee5ea2597bb5941b13e2cd323faa155"
+  integrity sha512-k+NyTogrBgPVpE84r6AdDLgf60k9cR4F0zlhp3w8Hoquq+UStKjAOatsVYDLwfWD8wqF6smRXohi2rvQZRpQDQ==
+  dependencies:
+    prop-types "^15.7.2"
 
 react-table@^7.8.0:
   version "7.8.0"

@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import Link from 'next/link';
 import { RiCheckboxCircleFill } from 'react-icons/ri';
+import { formatTranslationType } from '../../../service/types';
 
 type ButtonProps = {
-  text: string;
+  text: formatTranslationType;
   onClick?: () => void;
   styles: string;
   type: 'link' | 'button';

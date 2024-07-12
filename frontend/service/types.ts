@@ -46,6 +46,7 @@ export type BuildingBlockTestSummary = {
 };
 
 export type SingleComplianceItem = {
+  logo: string;
   _id: string;
   bb: string;
   bbVersion: string;
@@ -57,6 +58,11 @@ export type SingleComplianceItem = {
   status: number;
   submissionDate: string;
 };
+
+export type ParentOfCandidatesResult = {
+  name: string;
+  children: SingleComplianceItem[];
+}
 
 export type ComplianceList = {
   count: number;
@@ -89,6 +95,7 @@ export type SoftwareDetailsType = {
   pointOfContact: string;
   compliance: [
     {
+      _id: string | undefined;
       softwareVersion: string;
       bbDetails: Compliance[];
     }
@@ -102,6 +109,7 @@ export type BBDetailsType = {
     requirementSpecificationCompliance: {
       crossCuttingRequirements: RequirementsType[];
       functionalRequirements: RequirementsType[];
+      keyDigitalFunctionalitiesRequirements: RequirementsType[];
     };
     interfaceCompliance: {
       testHarnessResult: string;
@@ -134,6 +142,7 @@ export type Requirement = {
   comment: string;
   fulfillment: number;
   status: number;
+  link?: string;
 };
 export type DeploymentCompliance = {
   documentation: string | File;
@@ -166,6 +175,7 @@ export type IRSCSoftwareDraftToUpdateType = {
     crossCutting: RequirementsType[];
     functional: RequirementsType[];
     interface: RequirementsType[];
+    keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -182,6 +192,7 @@ export type ComplianceRequirementsType = {
     crossCutting: RequirementsType[] | never[];
     functional: RequirementsType[] | never[];
     interface: RequirementsType[] | never[];
+    keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
     testHarnessResult: string;
@@ -195,6 +206,7 @@ export type RequirementsType = {
   fulfillment: number;
   _id?: string;
   status: number;
+  link?: string;
 };
 
 export type SoftwareDetailsDataType = {
@@ -218,7 +230,8 @@ export type TableProps = {
 };
 
 export type CellValue = {
-  value: string | number | boolean;
+  value: string | number | boolean | formatTranslationType | undefined;
+  logo?: string;
 };
 
 export type CellValues = {
@@ -233,6 +246,7 @@ export type Cell =
 export type DataRow = {
   cell: Cell[];
   subHeader?: string;
+  logo?: string;
 };
 
 export type InputOptionsProps = {
@@ -300,4 +314,7 @@ export type IRSCTableType = {
   setUpdatedData: (data: ComplianceRequirementsType) => void;
   isTableValid: boolean;
   readOnlyView?: boolean;
+  isFormActive?: boolean;
 };
+
+export type formatTranslationType = string | JSX.Element | (string | JSX.Element)[] | undefined;
