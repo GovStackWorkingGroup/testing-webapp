@@ -2,13 +2,15 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { useRouter } from 'next/router';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
-import { ComplianceRequirementsType, SoftwareDetailsDataType, } from '../../../service/types';
+import {
+  ComplianceRequirementsType,
+  SoftwareDetailsDataType,
+} from '../../../service/types';
 import useTranslations from '../../../hooks/useTranslation';
 import useGetDraftData from '../../../hooks/useGetDraftDetail';
 import { REQUIREMENT_SPEC_STORAGE_NAME } from '../../../service/constants';
 import IRSCFunctionalTable from '../../table/IRSC/IRSCFunctionalTable';
 import IRSCCrossCuttingTableType from '../../table/IRSC/IRSCCrossCuttingTable';
-import IRSCKeyDigitalFunctionalitiesTableType from '../../table/IRSC/IRSCKeyDigitalFunctionalitiesTable';
 
 export type IRSCRequirementsFormRef = {
   validate: () => boolean;
@@ -20,7 +22,6 @@ type SelectorWithPillsProps = {
   IRSCRequirementsFormRef?: RefObject<IRSCRequirementsFormRef>;
   readOnlyView?: boolean;
   readOnlyData?: SoftwareDetailsDataType;
-  isFormActive?: boolean;
 };
 
 const RequirementSpecificationSelectBBs = ({
@@ -29,7 +30,6 @@ const RequirementSpecificationSelectBBs = ({
   IRSCRequirementsFormRef,
   readOnlyView = false,
   readOnlyData,
-  isFormActive = false,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -38,15 +38,12 @@ const RequirementSpecificationSelectBBs = ({
     useState<ComplianceRequirementsType>();
   const [updatedFunctionalData, setUpdatedFunctionalData] =
     useState<ComplianceRequirementsType>();
-  const [updatedKDFData, setUpdatedKDFData] =
-    useState<ComplianceRequirementsType>();
   const [options, setOptions] = useState<
     { value: ComplianceRequirementsType | undefined; label: string }[]
   >([{ value: undefined, label: '' }]);
   const [isCrossCuttingTableValid, setIsCrossCuttingTableTableValid] =
     useState(true);
   const [isFunctionalTableValid, setIsFunctionalTableValid] = useState(true);
-  const [isKDFTableValid, setIsKDFTableValid] = useState(true);
   const [savedInLocalStorage, setSavedInLocalStorage] = useState<
     ComplianceRequirementsType[] | null
   >(
@@ -109,26 +106,6 @@ const RequirementSpecificationSelectBBs = ({
       setSelectedItems(updatedSecondArrFromObjectTwo);
     }
   }, [updatedFunctionalData, readOnlyView]);
-
-  useEffect(() => {
-    if (updatedKDFData) {
-      const updatedSecondArrFromObjectThree = selectedItems.map((item) => {
-        if (item.bbKey === updatedKDFData.bbKey) {
-          return {
-            ...item,
-            requirements: {
-              ...item.requirements,
-              keyDigitalFunctionalities: updatedKDFData.requirements.keyDigitalFunctionalities,
-            },
-          };
-        }
-
-        return item;
-      });
-
-      setSelectedItems(updatedSecondArrFromObjectThree);
-    }
-  }, [updatedKDFData]);
 
   useEffect(() => {
     if (setUpdatedBBs) {
@@ -198,9 +175,7 @@ const RequirementSpecificationSelectBBs = ({
                 (formDetail.bbDetails[bbKey].requirementSpecificationCompliance
                   .crossCuttingRequirements.length ||
                 formDetail.bbDetails[bbKey].requirementSpecificationCompliance
-                  .functionalRequirements.length ||
-                formDetail.bbDetails[bbKey].requirementSpecificationCompliance
-                  .keyDigitalFunctionalitiesRequirements.length)
+                  .functionalRequirements.length)
               ) {
                 combinedItem = {
                   bbName: matchingFirstArrItem.bbName,
@@ -216,10 +191,6 @@ const RequirementSpecificationSelectBBs = ({
                       formDetail.bbDetails[bbKey]
                         .requirementSpecificationCompliance
                         .functionalRequirements,
-                    keyDigitalFunctionalities:
-                      formDetail.bbDetails[bbKey]
-                        .requirementSpecificationCompliance
-                        .keyDigitalFunctionalitiesRequirements
                   },
                   interfaceCompliance: {
                     testHarnessResult:
@@ -327,21 +298,20 @@ const RequirementSpecificationSelectBBs = ({
   };
 
   const isFulfillmentValid = (data: ComplianceRequirementsType[]) => {
-    return data.every((item) => {
+    const isTableValid = data.every((item) => {
       let isValidCrossCutting = true;
       let isValidFunctional = true;
-      let isValidKDF = true;
 
       if (
         item.requirements.crossCutting &&
-          item.requirements.crossCutting.length > 0
+        item.requirements.crossCutting.length > 0
       ) {
         isValidCrossCutting = item.requirements.crossCutting.every(
           (crossCuttingItem) => {
             if (crossCuttingItem.status === 0) {
               return (
                 crossCuttingItem.fulfillment != null &&
-                    crossCuttingItem.fulfillment !== -1
+                crossCuttingItem.fulfillment !== -1
               );
             }
 
@@ -352,32 +322,14 @@ const RequirementSpecificationSelectBBs = ({
 
       if (
         item.requirements.functional &&
-          item.requirements.functional.length > 0
+        item.requirements.functional.length > 0
       ) {
         isValidFunctional = item.requirements.functional.every(
           (functionalItem) => {
             if (functionalItem.status === 0) {
               return (
                 functionalItem.fulfillment != null &&
-                    functionalItem.fulfillment !== -1
-              );
-            }
-
-            return true;
-          }
-        );
-      }
-
-      if (
-        item.requirements.keyDigitalFunctionalities &&
-          item.requirements.keyDigitalFunctionalities.length > 0
-      ) {
-        isValidKDF = item.requirements.keyDigitalFunctionalities.every(
-          (KDFItem) => {
-            if (KDFItem.status === 0) {
-              return (
-                KDFItem.fulfillment != null &&
-                    KDFItem.fulfillment !== -1
+                functionalItem.fulfillment !== -1
               );
             }
 
@@ -388,17 +340,20 @@ const RequirementSpecificationSelectBBs = ({
 
       setIsCrossCuttingTableTableValid(isValidCrossCutting);
       setIsFunctionalTableValid(isValidFunctional);
-      setIsKDFTableValid(isValidKDF);
 
-      return isValidCrossCutting && isValidFunctional && isValidKDF;
+      return isValidCrossCutting && isValidFunctional;
     });
+
+    return isTableValid;
   };
 
   useImperativeHandle(
     IRSCRequirementsFormRef,
     () => ({
       validate: () => {
-        return isFulfillmentValid(selectedItems);
+        const isValid = isFulfillmentValid(selectedItems);
+
+        return isValid;
       },
     }),
     [selectedItems]
@@ -418,23 +373,9 @@ const RequirementSpecificationSelectBBs = ({
   const displayTable = selectedItems.map((item) => {
     return (
       <div key={item.bbKey}>
-        {item.requirements?.keyDigitalFunctionalities?.length ? (
-          <>
-            <p className="table-container-name">{item.bbName} BB</p>
-            <p className="table-container-title">
-              {format('form.kdf_requirements.label')}
-            </p>
-            <IRSCKeyDigitalFunctionalitiesTableType
-              selectedData={item}
-              setUpdatedData={setUpdatedKDFData}
-              isTableValid={isKDFTableValid}
-              readOnlyView={readOnlyView}
-              isFormActive={isFormActive}
-            />
-          </>
-        ) : null}
         {item.requirements?.crossCutting.length ? (
           <>
+            <p className="table-container-name">{item.bbName} BB</p>
             <p className="table-container-title">
               {format('form.cross_cutting_requirements.label')}
             </p>
@@ -443,7 +384,6 @@ const RequirementSpecificationSelectBBs = ({
               setUpdatedData={setUpdatedCrossCuttingData}
               isTableValid={isCrossCuttingTableValid}
               readOnlyView={readOnlyView}
-              isFormActive={isFormActive}
             />
           </>
         ) : null}
@@ -457,7 +397,6 @@ const RequirementSpecificationSelectBBs = ({
               setUpdatedData={setUpdatedFunctionalData}
               isTableValid={isFunctionalTableValid}
               readOnlyView={readOnlyView}
-              isFormActive={isFormActive}
             />
           </>
         ) : null}
@@ -477,7 +416,7 @@ const RequirementSpecificationSelectBBs = ({
           handleSetOptions={handleSetOptions}
         />
       )}
-      {selectedItems.length > 0 ? (
+      {selectedItems.length > 0 && (
         <div>
           <div className="pills-container">
             {readOnlyView ? (
@@ -496,11 +435,6 @@ const RequirementSpecificationSelectBBs = ({
             {displayPills}
           </div>
           {displayTable}
-        </div>
-      ) : (
-        <div>
-          {format('app.view_report_details.noInformation',
-            { section: `${format('table.requirement_specification_compliance.label')}` })}
         </div>
       )}
     </div>

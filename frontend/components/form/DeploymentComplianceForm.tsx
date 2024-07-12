@@ -7,7 +7,6 @@ import Input from '../shared/inputs/Input';
 import { DEPLOYMENT_COMPLIANCE_STORAGE_NAME } from '../../service/constants';
 import { fetchFileDetails } from '../../service/serviceAPI';
 import useGetDraftData from '../../hooks/useGetDraftDetail';
-import { formatTranslationType } from '../../service/types';
 import { deploymentComplianceDefaultValues } from './helpers';
 
 export type DeploymentComplianceFormValuesType = {
@@ -55,7 +54,7 @@ const DeploymentComplianceForm = ({
     draftUUID: (draftUUID as string) || undefined,
   });
 
-  const checkboxOptions: { label: formatTranslationType; value: FieldType }[] = [
+  const checkboxOptions: { label: string; value: FieldType }[] = [
     { label: format('form.link.label'), value: 'link' },
     { label: format('form.file.label'), value: 'file' },
   ];

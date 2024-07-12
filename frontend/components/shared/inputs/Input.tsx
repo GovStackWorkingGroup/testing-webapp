@@ -1,10 +1,9 @@
 import classNames from 'classnames';
-import { formatTranslationType } from '../../../service/types';
 
 type InputProps = {
-  inputTitle?: formatTranslationType;
-  errorMessage?: formatTranslationType;
-  tipMessage?: formatTranslationType;
+  inputTitle?: string;
+  errorMessage?: string;
+  tipMessage?: string;
   inputKey: string;
   isInvalid: boolean;
   required?: boolean;

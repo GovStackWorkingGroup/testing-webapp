@@ -22,7 +22,6 @@ type SelectorWithPillsProps = {
   IRSCFormRef?: RefObject<IRSCFormRef>;
   readOnlyView?: boolean;
   readOnlyData?: SoftwareDetailsDataType;
-  isFormActive?: boolean;
 };
 
 const SelectBBs = ({
@@ -31,7 +30,6 @@ const SelectBBs = ({
   IRSCFormRef,
   readOnlyView = false,
   readOnlyData,
-  isFormActive = false,
 }: SelectorWithPillsProps) => {
   const [selectedItems, setSelectedItems] = useState<
     ComplianceRequirementsType[]
@@ -392,7 +390,6 @@ const SelectBBs = ({
           setUpdatedData={setUpdatedData}
           isTableValid={isTableValid}
           readOnlyView={readOnlyView}
-          isFormActive={isFormActive}
         />
       </div>
     );
@@ -410,7 +407,7 @@ const SelectBBs = ({
           handleSetOptions={handleSetOptions}
         />
       )}
-      {selectedItems.length > 0 ? (
+      {selectedItems.length > 0 && (
         <div>
           <div className="pills-container">
             {readOnlyView ? (
@@ -428,11 +425,6 @@ const SelectBBs = ({
             {displayPills}
           </div>
           {displayTable}
-        </div>
-      ) : (
-        <div>
-          {format('app.view_report_details.noInformation',
-            { section: `${format('table.interface_compliance.label')}` })}
         </div>
       )}
     </div>

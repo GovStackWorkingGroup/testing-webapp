@@ -1,7 +1,6 @@
-import React, { RefObject, useEffect, useState } from 'react';
+import { RefObject, useEffect, useState } from 'react';
 import { AiOutlineQuestionCircle } from 'react-icons/ai';
 import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
 import SelectBBs, { IRSCFormRef } from '../shared/combined/SelectBBs';
 import { getComplianceRequirements } from '../../service/serviceAPI';
 import { ComplianceRequirementsType } from '../../service/types';
@@ -61,27 +60,11 @@ const InterfaceComplianceForm = ({
         </p>
       </div>
       <div className="interface-bb-selector">
-        {/* @ts-ignore */}
-        <ReactMarkdown className="definition-description" linkTarget="_blank">
-          {format('form.select_building_blocks.top.label')}
-        </ReactMarkdown>
-        <ol>
-          <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.first.label')}</p>
-          </li>
-          <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.second.label')}</p>
-          </li>
-          <li>
-            <p className="definition-description">{format('form.select_building_blocks.list.third.label')}</p>
-          </li>
-        </ol>
-        <p className="definition-description">{format('form.select_building_blocks.bottom.label')}</p>
+        <p className="text-18">{format('form.select_building_blocks.label')}</p>
         <SelectBBs
           interfaceRequirementsData={interfaceRequirementsData}
           setUpdatedBBs={setUpdatedData}
           IRSCFormRef={IRSCFormRef}
-          isFormActive={true}
         />
       </div>
     </div>

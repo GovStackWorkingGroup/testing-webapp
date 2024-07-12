@@ -83,12 +83,12 @@ const SoftwareComplianceDetailsPage = () => {
   ) => {
     const { name, value } = event.target;
 
-    if (name === 'softwareName') {
+    if (name === 'softwareName' ) {
       setDeleteSoftwareName(value);
     }
   };
 
-  const handleDeleteEntry = async () => {
+  const handleDeleteEntry = async() => {
     if (deleteSoftwareName === softwareName) {
       await handleDeleteSoftwareForm(softwareDetail[0]._id).then(
         (response) => {
@@ -218,7 +218,7 @@ const SoftwareComplianceDetailsPage = () => {
             showContactDetails={true}
           />
         </SoftwareDetails>
-        {isLoggedIn && (
+        { isLoggedIn && (
           <div className="software-attributes-section">
             <Input
               name="softwareName"
@@ -242,7 +242,7 @@ const SoftwareComplianceDetailsPage = () => {
               title={format('app.compliance_with.label')}
               complianceSection={true}
               softwareVersion={item.softwareVersion}
-              softwareId={softwareDetail[0].compliance[indexKey]._id} // Pass the correct ID for each compliance item
+              softwareId={softwareDetail[0]._id}
               key={`software-compliance-with-${indexKey}`}
               viewReportDetails={true}
             >
@@ -265,7 +265,6 @@ const SoftwareComplianceDetailsPage = () => {
             </SoftwareDetails>
           ))
           : null}
-
       </div>
       {(isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1) &&
         <div className="bottom-bar-container">

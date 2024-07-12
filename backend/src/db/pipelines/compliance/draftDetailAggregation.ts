@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 export const draftDetailAggregationPipeline = (draftUuid: string): any[] => {
     const matchStage = {};
 
-    matchStage['uniqueId'] = draftUuid;
+        matchStage['uniqueId'] = draftUuid;
 
     return [
         {
@@ -27,11 +27,11 @@ export const draftDetailAggregationPipeline = (draftUuid: string): any[] => {
                 expirationDate: { $ifNull: ["$expirationDate", ""] },
                 description: { $ifNull: ["$description", ""] },
                 deploymentCompliance: { $ifNull: ["$deploymentCompliance", ""] },
-                version: { $ifNull: ["$compliance.version", ""] },
+                version: "$compliance.version",
                 bbDetails: {
                     $cond: {
-                        if: { $or: [{ $eq: ["$compliance.bbDetails", null] }, { $eq: ["$compliance.bbDetails", {}] }] },
-                        then: {},
+                        if: { $eq: ["$compliance", []] },
+                        then: "$$REMOVE",
                         else: {
                             $arrayToObject: {
                                 $map: {
@@ -41,15 +41,14 @@ export const draftDetailAggregationPipeline = (draftUuid: string): any[] => {
                                         k: "$$bbDetail.k",
                                         v: {
                                             interfaceCompliance: {
-                                                testHarnessResult: { $ifNull: ["$$bbDetail.v.interfaceCompliance.testHarnessResult", ""] },
-                                                requirements: { $ifNull: ["$$bbDetail.v.interfaceCompliance.requirements", ""] }
+                                                testHarnessResult: "$$bbDetail.v.interfaceCompliance.testHarnessResult",
+                                                requirements: "$$bbDetail.v.interfaceCompliance.requirements"
                                             },
                                             requirementSpecificationCompliance: {
-                                                crossCuttingRequirements: { $ifNull: ["$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements", ""] },
-                                                functionalRequirements: { $ifNull: ["$$bbDetail.v.functionalRequirements", ""] },
-                                                keyDigitalFunctionalitiesRequirements: { $ifNull: ["$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalitiesRequirements", ""] },
+                                                crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
+                                                functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements"
                                             },
-                                            deploymentCompliance: { $ifNull: ["$$bbDetail.v.deploymentCompliance", ""] }
+                                            deploymentCompliance: "$$bbDetail.v.deploymentCompliance"
                                         }
                                     }
                                 }

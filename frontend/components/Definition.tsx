@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import classNames from 'classnames';
-import { formatTranslationType } from '../service/types';
 
 type DefinitionType = {
-  title: formatTranslationType;
+  title: string;
   hasRedirecting?: boolean;
-  description: formatTranslationType;
-  descriptionPartTwo?: formatTranslationType;
-  note?: formatTranslationType;
+  description: string;
+  descriptionPartTwo?: string;
+  note?: string;
   customStyle?: string;
 };
 
@@ -27,11 +26,9 @@ const Definition = ({
     <div data-testid="definition-description">
       {hasRedirecting ? (
         <div>
-          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
-            {description || ''}
+            {description}
           </ReactMarkdown>
-          {/* @ts-ignore */}
           <ReactMarkdown className="definition-description" linkTarget="_blank">
             {descriptionPartTwo || ''}
           </ReactMarkdown>

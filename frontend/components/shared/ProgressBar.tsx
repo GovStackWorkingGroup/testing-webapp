@@ -3,7 +3,6 @@ import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
 import useTranslations from '../../hooks/useTranslation';
-import useGetDraftData from '../../hooks/useGetDraftDetail';
 import Button from './buttons/Button';
 
 export type ProgressBarRef = {
@@ -39,15 +38,7 @@ const ProgressBar = ({
   const [isNextButtonActive, setIsNextButtonActive] = useState(0);
 
   const { format } = useTranslations();
-
   const router = useRouter();
-
-  const { draftUUID } = router.query;
-  const { draftData } = useGetDraftData({
-    draftUUID: (draftUUID as string) || undefined,
-  });
-
-  const expirationDate = draftData?.expirationDate.toString().split('T')[0];
 
   useImperativeHandle(customRef, () => ({
     goNext: nextStep,
@@ -154,13 +145,6 @@ const ProgressBar = ({
                 styles="secondary-button"
                 onClick={() => prevStep()}
               ></Button>
-            )}
-          </div>
-          <div className="progress-bar-buttons-mid-section">
-            {activeStep > 1 && (
-              <div>
-                {format('form.expirationDate', { date: expirationDate })}
-              </div>
             )}
           </div>
           <div className="progress-bar-buttons-right-section">

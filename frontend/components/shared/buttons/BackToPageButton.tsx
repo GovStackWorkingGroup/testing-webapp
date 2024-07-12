@@ -1,7 +1,6 @@
 import Link from 'next/link';
-import { formatTranslationType } from '../../../service/types';
 type BackToPageProps = {
-  text: formatTranslationType;
+  text: string;
   href?: string | URL;
   goBack?: boolean;
 };

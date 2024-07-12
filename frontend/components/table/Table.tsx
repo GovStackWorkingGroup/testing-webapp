@@ -4,18 +4,16 @@ import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
 import { useState } from 'react';
 import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
-import { FiExternalLink } from 'react-icons/fi';
 import {
   Cell,
   CellValue,
   CellValues,
   DataRow,
-  DataType, formatTranslationType,
+  DataType,
 } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
 import useTranslations from '../../hooks/useTranslation';
-import { baseUrl } from '../../service/serviceAPI';
 
 type TableProps = {
   data: DataType;
@@ -183,24 +181,20 @@ const Table = ({
                                 className="details-arrow"
                                 onClick={() =>
                                   handleExpandSubHeaderRows(
-                                      row.subHeader as string
+                                    row.subHeader as string
                                   )
                                 }
                               >
-                                <RiArrowDownSLine/>
+                                <RiArrowDownSLine />
                               </div>
                             )}
-                            <img
-                              className="img-logo list-of-candidate-table-logo"
-                              src={`${baseUrl}/${row.logo}`}
-                            />
                             <Link
                               className="tr-subheader-container"
                               href={{
                                 pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                               }}
                             >
-                              <p><FiExternalLink/> {row.subHeader}</p>
+                              <p>{row.subHeader}</p>
                             </Link>
                           </div>
                         </td>
@@ -224,24 +218,20 @@ const Table = ({
                               className="details-arrow"
                               onClick={() =>
                                 handleExpandSubHeaderRows(
-                                          row.subHeader as string
+                                  row.subHeader as string
                                 )
                               }
                             >
-                              <RiArrowUpSLine/>
+                              <RiArrowUpSLine />
                             </div>
                           )}
-                          <img
-                            className="img-logo list-of-candidate-table-logo"
-                            src={`${baseUrl}/${row.logo}`}
-                          />
                           <Link
                             className="tr-subheader-container"
                             href={{
                               pathname: `${COMPLIANCE_TESTING_DETAILS_PAGE}${row.subHeader}`,
                             }}
                           >
-                            <p><FiExternalLink/> {row.subHeader}</p>
+                            <p>{row.subHeader}</p>
                           </Link>
                         </div>
                       </td>
@@ -270,7 +260,6 @@ const Table = ({
                             1,
                             2,
                             true,
-                          // @ts-ignore
                           ].includes(cell.value)
                         ) {
                           return (
@@ -296,26 +285,17 @@ const Table = ({
                                 </p>
                               )}
                               {cell.value === -1 && (
-                                <p className="td-text-color-container status-na cursor-pointer"
-                                  onClick={() => handleOpenEvaluationSchemaModal
-                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                >
+                                <p className="td-text-color-container status-na">
                                   {format('table.N/A.label')}
                                 </p>
                               )}
                               {cell.value === 1 && (
-                                <p className="td-text-color-container status-level-one cursor-pointer"
-                                  onClick={() => handleOpenEvaluationSchemaModal
-                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                >
+                                <p className="td-text-color-container status-level-one">
                                   {format('table.level_1.label')}
                                 </p>
                               )}
                               {cell.value === 2 && (
-                                <p className="td-text-color-container status-level-two cursor-pointer"
-                                  onClick={() => handleOpenEvaluationSchemaModal
-                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                >
+                                <p className="td-text-color-container status-level-two">
                                   {format('table.level_2.label')}
                                 </p>
                               )}
@@ -418,29 +398,19 @@ const Table = ({
                                             <td className="border-none">
                                               {(item.value as number) ===
                                                 -1 && (
-                                                <p className="td-text-color-container status-na cursor-pointer"
-                                                  onClick={() => handleOpenEvaluationSchemaModal
-                                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                                >
+                                                <p className="td-text-color-container status-na">
                                                   {format('table.N/A.label')}
                                                 </p>
                                               )}
                                               {(item.value as number) === 1 && (
-                                                <p
-                                                  className="td-text-color-container status-level-one cursor-pointer"
-                                                  onClick={() => handleOpenEvaluationSchemaModal
-                                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                                >
+                                                <p className="td-text-color-container status-level-one">
                                                   {format(
                                                     'table.level_1.label'
-                                                  )} xx
+                                                  )}
                                                 </p>
                                               )}
                                               {(item.value as number) === 2 && (
-                                                <p className="td-text-color-container status-level-two cursor-pointer"
-                                                  onClick={() => handleOpenEvaluationSchemaModal
-                                                    ? handleOpenEvaluationSchemaModal(true) : null}
-                                                >
+                                                <p className="td-text-color-container status-level-two">
                                                   {format(
                                                     'table.level_2.label'
                                                   )}
@@ -519,11 +489,7 @@ const Table = ({
                                                           >
                                                             {(item.value as number) ===
                                                               -1 && (
-                                                              <p className="td-text-color-container status-na
-                                                              cursor-pointer"
-                                                              onClick={() => handleOpenEvaluationSchemaModal
-                                                                ? handleOpenEvaluationSchemaModal(true) : null}
-                                                              >
+                                                              <p className="td-text-color-container status-na">
                                                                 {format(
                                                                   'table.N/A.label'
                                                                 )}
@@ -531,11 +497,7 @@ const Table = ({
                                                             )}
                                                             {(item.value as number) ===
                                                               1 && (
-                                                              <p className="td-text-color-container status-level-one
-                                                              cursor-pointer"
-                                                              onClick={() => handleOpenEvaluationSchemaModal
-                                                                ? handleOpenEvaluationSchemaModal(true) : null}
-                                                              >
+                                                              <p className="td-text-color-container status-level-one">
                                                                 {format(
                                                                   'table.level_1.label'
                                                                 )}
@@ -543,11 +505,7 @@ const Table = ({
                                                             )}
                                                             {(item.value as number) ===
                                                               2 && (
-                                                              <p className="td-text-color-container status-level-two
-                                                               cursor-pointer"
-                                                              onClick={() => handleOpenEvaluationSchemaModal
-                                                                ? handleOpenEvaluationSchemaModal(true) : null}
-                                                              >
+                                                              <p className="td-text-color-container status-level-two">
                                                                 {format(
                                                                   'table.level_2.label'
                                                                 )}
