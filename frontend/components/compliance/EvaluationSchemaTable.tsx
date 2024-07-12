@@ -37,7 +37,7 @@ const EvaluationSchemaTable = () => {
             values: [
               {
                 value: format(
-                  'evaluation_schema.fulfillment_of_required_key.label'
+                  'evaluation_schema.fulfillment_of_required_cc.label'
                 ),
               },
               {
@@ -45,34 +45,25 @@ const EvaluationSchemaTable = () => {
                   'evaluation_schema.fulfillment_of_required_functional_requirements.label'
                 ),
               },
+            ],
+          },
+          {
+            values: [
               {
-                value: format(
-                  'evaluation_schema.fulfillment_of_required_cross_cutting_requirements.label'
-                ),
+                value: format('evaluation_schema.over50.label'),
+              },
+              {
+                value: format('evaluation_schema.over90.label'),
               },
             ],
           },
           {
             values: [
               {
-                value: format('evaluation_schema.all.label'),
+                value: format('evaluation_schema.over50.label'),
               },
               {
-                value: format('evaluation_schema.equal_or_more_than_1.label'),
-              },
-              { value: format('evaluation_schema.equal_or_more_than_1.label') },
-            ],
-          },
-          {
-            values: [
-              {
-                value: format('evaluation_schema.all.label'),
-              },
-              {
-                value: format('evaluation_schema.all.label'),
-              },
-              {
-                value: format('evaluation_schema.all.label'),
+                value: format('evaluation_schema.over90.label'),
               },
             ],
           },

@@ -32,7 +32,7 @@ exports[`Unit tests for Header component: should render the Header component and
           data-testid="header-menu-button"
           href="/apiTesting"
         >
-          API testing
+          API Compliance Testing
         </a>
       </div>
       <div
