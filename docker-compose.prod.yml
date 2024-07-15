@@ -39,6 +39,8 @@ services:
         API_URL: api.testing.govstack.global
 
   backend:
+    volumes:
+      - /var/docker/uploads:/app/uploads
     environment:
         API_KEY_BB: ${API_KEY_BB:-asudbq827ebsadon}
         VIRTUAL_HOST: api.testing.govstack.global
