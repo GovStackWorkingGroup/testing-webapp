@@ -47,13 +47,19 @@ const TableCells = ({ row, expanded = false }: TableCellProps) => {
             </div>
           </div>
           <div className='description-buttons'>
-            <div>
-              <Link href={cell.row.original.link} className='description-buttons' target="_blank" rel="noopener noreferrer">
-                {format('form.description.goToRequirement')}
-              </Link>
-            </div>
+            {cell.row.original.link &&
+              <div>
+                <Link href={cell.row.original.link} className='description-buttons' target="_blank"
+                  rel="noopener noreferrer">
+                  {format('form.description.goToRequirement')}
+                </Link>
+              </div>
+            }
             {isTruncatable && (
-              <div onClick={handleIsTextTruncated}>
+              <div
+                onClick={handleIsTextTruncated}
+                className={classNames({ 'margin-left-auto': !cell.row.original.link })}
+              >
                 {!isTextTruncated ? format('text.showMore') : format('text.showLess')}
               </div>
             )}
