@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import MultiSelectDropdown from '../shared/inputs/MultiSelectDropdown';
 import { getFilters } from '../../service/serviceAPI';
-import { FilterOptionsType } from '../../service/types';
+import { FilterOptionsType, formatTranslationType } from '../../service/types';
 
 interface ListOfCandidateFilter {
     filterType: string;
     onChange: (arg0: any) => void;
-    placeholder: string
+    placeholder: formatTranslationType;
 }
 
 interface OptionType {

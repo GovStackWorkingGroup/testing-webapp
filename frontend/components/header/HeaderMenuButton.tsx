@@ -1,7 +1,8 @@
 import Link from 'next/link';
+import { formatTranslationType } from '../../service/types';
 
 type Props = {
-  buttonTitle: string;
+  buttonTitle: formatTranslationType;
   href: string | URL;
   active?: boolean;
 };

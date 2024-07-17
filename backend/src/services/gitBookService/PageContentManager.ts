@@ -1,8 +1,11 @@
 import { RequirementStatusEnum } from "myTypes";
+import KeyDigitalFunctionalitiesExtractor from "./KeyDigitalFunctionalitiesExtractor";
+import { appConfig } from "../../config";
 
 type Requirement = {
     status: RequirementStatusEnum;
     requirement: string;
+    link?: string;
 };
 
 class GitBookPageManagerError extends Error {
@@ -16,6 +19,12 @@ class GitBookPageContentManager {
     static REQUIRED_TEXT = "(REQUIRED)";
     static RECOMMENDED_TEXT = "(RECOMMENDED)";
     static OPTIONAL_TEXT = "(OPTIONAL)";
+
+    private kdfExtractor: KeyDigitalFunctionalitiesExtractor;
+
+    constructor() {
+        this.kdfExtractor = new KeyDigitalFunctionalitiesExtractor();
+    }
 
     extractInterfaceRequirements(documentObject, _) {
         if (!documentObject.pages || !Array.isArray(documentObject.pages)) {
@@ -47,58 +56,91 @@ class GitBookPageContentManager {
     }
 
 
-    extractCrossCuttingRequirements(pageContent, API_REQUIREMENTS) {
-
-        if (!pageContent?.document?.nodes) {
-            return { error: new GitBookPageManagerError("Invalid page content format.") };
-        }
-
-        const nodes = pageContent.document.nodes;
-        const requirements: Requirement[] = [];
-        const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
-
-        nodes.forEach(node => {
-            if (node.type === 'heading-1' && node.nodes) {
-                let textContent = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
-                const regexMatch = textContent.match(numericPrefixRegex) && textContent.match(numericPrefixRegex)[0]?.toString().trim()
-                if (!API_REQUIREMENTS || (regexMatch && API_REQUIREMENTS.includes(regexMatch))) {
-                  textContent = textContent.replace(numericPrefixRegex, ''); // Remove numeric prefix
-                  let status = this.extractStatus(textContent);
-                  if (status !== undefined) {
-                      textContent = textContent.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-                      requirements.push({ status, requirement: textContent });
-                  }
-                }
+    extractCrossCuttingRequirements(pageContent, _, requirementURL, bbKey) {
+        try {
+            if (!pageContent?.document?.nodes) {
+                throw new GitBookPageManagerError("Invalid page content format.");
             }
-        });
 
-        return { requirements };
+            const nodes = pageContent.document.nodes;
+            const requirements: Requirement[] = [];
+            const numericPrefixRegex = /^\d+(\.\d+)*\s*/;
+
+            let currentRequirement: Requirement | null = null;
+
+            nodes.forEach((node: any) => {
+                if ((node.type === 'heading-1' || node.type === 'heading-2' || node.type === 'heading-3') && node.nodes) {
+                    if (currentRequirement) {
+                        requirements.push(currentRequirement);
+                        currentRequirement = null;
+                    }
+                    let headerText = node.nodes.map(n => n.leaves.map(leaf => leaf.text).join('')).join('');
+                    const link = this.generateLink(headerText, bbKey, requirementURL);
+                    headerText = headerText.replace(numericPrefixRegex, ''); // Remove numeric prefix
+                    let status = this.extractStatus(headerText);
+                    if (status !== undefined) {
+                        const statusMatch = headerText.match(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/);
+                        if (statusMatch) {
+                            headerText = statusMatch[0] + ' ' + headerText.replace(statusMatch[0], '').trim();
+                        }
+                        currentRequirement = { status, requirement: headerText, link };
+                    }
+                } else if (currentRequirement) {
+                    if (node.object === 'block') {
+                        let textContent = node.nodes.map(n => this.extractText(n)).join('');
+                        currentRequirement.requirement += ' ' + textContent.trim();
+                    }
+                }
+            });
+
+            if (currentRequirement) {
+                requirements.push(currentRequirement);
+            }
+
+            return { requirements };
+        } catch (error) {
+            return { error: new GitBookPageManagerError((error as Error).message) };
+        }
     }
 
-    extractFunctionalRequirements(pageContent) {
+    private extractText(node: any): string {
+        if (node.object === 'text') {
+            return node.leaves.map((leaf: any) => leaf.text).join('');
+        } else if (node.object === 'block' || node.object === 'inline') {
+            return node.nodes.map((n: any) => this.extractText(n)).join('');
+        }
+        return '';
+    }
+
+    extractFunctionalRequirements(pageContent, requirementURL, bbKey) {
         if (!pageContent?.document?.nodes) {
             return { error: new GitBookPageManagerError("Invalid page content format.") };
         }
 
         const nodes = pageContent.document.nodes;
         const requirements: Requirement[] = [];
+        let savedHeading: string = '';
 
         nodes.forEach(node => {
-            if (node.type == 'heading-2') {
+            if (node.type == 'heading-1' || node.type == 'heading-2') {
                 const headingText = node.nodes.map(textNode => {
                     return textNode.leaves.map(leaf => leaf.text).join('');
                 }).join('');
-                this.processTextForRequirement(headingText, requirements);
+                savedHeading = headingText;
+                this.processTextForRequirement(headingText, requirements, requirementURL, savedHeading, bbKey);
             }
             else if (node.type == 'list-unordered' || node.type == 'list-ordered') {
                 node.nodes.forEach(item => {
                     let itemText = this.extractTextFromNode(item);
-                    this.processTextForRequirement(itemText, requirements);
+                    this.processTextForRequirement(itemText, requirements, requirementURL, savedHeading, bbKey);
                 });
             }
         });
 
         return { requirements };
+    }
+    extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID: string, url, bbKey) {
+        return this.kdfExtractor.extractKeyDigitalFunctionalitiesRequirements(pageContent, spaceID, url, bbKey);
     }
 
     extractTextFromNode(node) {
@@ -127,13 +169,20 @@ class GitBookPageContentManager {
         return textContent;
     }
 
-    processTextForRequirement(text, requirements) {
+    processTextForRequirement(text, requirements, requirementURL, urlHeading: string = '', bbKey) {
+        const link = this.generateLink(urlHeading, bbKey, requirementURL);
         // Remove leading numeric sequences like "number.number.number"
-        text = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
+        const sanitizedText = text.replace(/^\d+\.\d+(\.\d+)?\s*/, '').trim();
+
         let status = this.extractStatus(text);
         if (status !== undefined) {
-            text = text.replace(/\(REQUIRED\)|\(RECOMMENDED\)|\(OPTIONAL\)/, '').trim();
-            requirements.push({ status, requirement: text });
+            const regex = /\((REQUIRED|RECOMMENDED|OPTIONAL)\)/;
+            const match = sanitizedText.match(regex);
+            const textReqRecOpt = match ? match[0] : '';
+            const modifiedText = sanitizedText.replace(regex, '').trim();
+            const finalText = textReqRecOpt + ' ' + modifiedText + ".";
+
+            requirements.push({ status, requirement: finalText, link  });
         }
     }
 
@@ -161,6 +210,14 @@ class GitBookPageContentManager {
 
         return filteredPageIds;
     }
+
+    generateLink(heading: string, bbKey: string, requirementURL: string): string {
+        const id = 'id-' + heading.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\.-]/g, '');
+        const baseURL = "https://govstack.gitbook.io";
+        const bbKeySegment = bbKey ? `/${bbKey}` : '';
+        return `${baseURL}${bbKeySegment}/${requirementURL}#${id}`;
+    }
+
 }
 
 export default GitBookPageContentManager;

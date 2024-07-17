@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { RiFileDownloadLine, RiLink } from 'react-icons/ri';
+import dynamic from 'next/dynamic';
 import useTranslations from '../../hooks/useTranslation';
 import SelectBBs from '../shared/combined/SelectBBs';
 import {
@@ -14,13 +15,17 @@ import {
   ComplianceRequirementsType,
   SoftwareDetailsDataType,
 } from '../../service/types';
-import RequirementSpecificationSelectBBs from '../shared/combined/RequirementSpecificationSelectBB';
 import BackToPageButton from '../shared/buttons/BackToPageButton';
+
+const RequirementSpecificationSelectBBs = dynamic(
+  () => import('../shared/combined/RequirementSpecificationSelectBB'),
+  { ssr: false }
+);
 
 type activeTabProps = 'deployment' | 'interface' | 'specification';
 
 const ReportViewDetail = () => {
-  const [activeTab, setActiveTab] = useState<activeTabProps>('deployment');
+  const [activeTab, setActiveTab] = useState<activeTabProps>('specification');
   const [requirementsData, setRequirementsData] =
     useState<ComplianceRequirementsType[]>();
   const [softwareDetailsData, setSoftwareDetailsData] =
@@ -82,6 +87,7 @@ const ReportViewDetail = () => {
       const data = await getSoftwareDetailsReport(softwareId as string);
       if (data.status) {
         setSoftwareDetailsData(data.data);
+
       }
     }
   };
@@ -106,19 +112,19 @@ const ReportViewDetail = () => {
           </div>
           <div
             className={classNames('report-detail-single-tab', {
-              active: activeTab === 'interface',
-            })}
-            onClick={() => setActiveTab('interface')}
-          >
-            {format('table.interface_compliance.label')}
-          </div>
-          <div
-            className={classNames('report-detail-single-tab', {
               active: activeTab === 'specification',
             })}
             onClick={() => setActiveTab('specification')}
           >
             {format('table.requirement_specification_compliance.label')}
+          </div>
+          <div
+            className={classNames('report-detail-single-tab', {
+              active: activeTab === 'interface',
+            })}
+            onClick={() => setActiveTab('interface')}
+          >
+            {format('table.interface_compliance.label')}
           </div>
         </div>
         {activeTab === 'deployment' && (
@@ -149,14 +155,14 @@ const ReportViewDetail = () => {
             </Link>
           </div>
         )}
-        {activeTab === 'interface' && (
+        {activeTab === 'interface' && softwareDetailsData !== undefined && (
           <SelectBBs
             interfaceRequirementsData={requirementsData}
             readOnlyView={true}
             readOnlyData={softwareDetailsData}
           />
         )}
-        {activeTab === 'specification' && (
+        {activeTab === 'specification' && softwareDetailsData !== undefined && (
           <RequirementSpecificationSelectBBs
             interfaceRequirementsData={requirementsData}
             readOnlyView={true}

@@ -1,10 +1,11 @@
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import useTranslations from '../../hooks/useTranslation';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
+import Button from '../shared/buttons/Button';
+import { formatTranslationType } from '../../service/types';
 
 type SoftwareDetailsProps = {
-  title: string;
+  title: formatTranslationType;
   children: React.ReactNode;
   complianceSection?: boolean;
   softwareVersion?: string;
@@ -54,16 +55,12 @@ const SoftwareDetails = ({
             )} ${softwareVersion}`}</span>
           </p>
           {viewReportDetails && (
-            <Link
-              className="software-attributes-title-edit-link"
-              href={{
-                pathname: `/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails/${
-                  softwareId ?? ''
-                }`,
-              }}
-            >
-              {format('app.view_report_details.label')}
-            </Link>
+            <Button
+              type="link"
+              href={`/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails/${softwareId}`}
+              text={format('app.view_report_details.label')}
+              styles="primary-button"
+            />
           )}
         </div>
       ) : (

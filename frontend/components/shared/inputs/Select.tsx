@@ -1,11 +1,12 @@
 import React from 'react';
 import Select, { SingleValue } from 'react-select';
+import { formatTranslationType } from '../../../service/types';
 
-export type OptionsType = { value: string; label: string };
+export type OptionsType = { value: string; label: formatTranslationType };
 
 type SelectProps = {
   onChange: (args0: SingleValue<OptionsType>) => void;
-  placeholder: string;
+  placeholder: formatTranslationType;
   options: OptionsType[];
 };
 
