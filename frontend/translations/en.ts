@@ -44,7 +44,8 @@ export const en = {
   'app.software_attributes.label': 'Software Attributes',
   'app.software_requirements_compliance.label':
     'Software Requirements Compliance',
-  'app.view_report_details.label': 'view report details',
+  'app.view_report_details.label': 'View report details',
+  'app.view_report_details.noInformation': 'Information has not been provided for the {section} of the compliance form',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
@@ -94,11 +95,13 @@ export const en = {
   'form.error_loading_file.message': 'Error loading file. Please try again.',
   'form.evaluation_summary_title.label':
     'Make sure all data entered is correct',
+  'form.expirationDate': 'This draft will expire on {date}',
   'form.file.label': 'File',
   'form.fill_in_all_the_fields_below.label': 'Fill in all the fields below.',
   'form.filled_compliance_form.label': 'Filled Compliance Forms',
   'form.filling_required.label': 'Filling this form is required.',
   'form.functional_requirements.label': 'Functional Requirements',
+  'form.kdf_requirements.label': 'Key Digital Functionalities Requirements',
   'form.header.comment.label': 'Comment',
   'form.header.fulfillment.label': 'Fulfillment',
   'form.header.requirement.label': 'Requirement',
@@ -133,8 +136,13 @@ export const en = {
   'form.clear_selection.label': 'Clear selection',
   'form.reject.label': 'Reject Form',
   'form.required_label': 'Required',
-  'form.select_building_blocks.label':
-    'Select at least one Building Block for which compliance you want to check. You can test more than one Building Block at a time.',
+  'form.select_building_blocks.top.label': `In this section, you can evaluate whether your product adheres to 
+  GovStack API and requirement specifications. Follow the steps below to complete the compliance assessment.
+   (For reference, view full GovStack specifications on [GitBook](https://govstack.gitbook.io/specification/))`,
+  'form.select_building_blocks.list.first.label': 'Select one or more Building Block(s) (Compliance to several Building Blocks can be tested simoultaneously)',
+  'form.select_building_blocks.list.second.label': 'Approve/ Disapprove each requirement (starting with key digital functionalities, followed by cross-cutting requirements, and functional requirements)',
+  'form.select_building_blocks.list.third.label': 'Comment on the approval/disapproval where needed',
+  'form.select_building_blocks.bottom.label': 'By following these steps, you can systematically assess and demonstrate your product\'s compliance with GovStack Building Block specifications. This process helps ensure that your product meets GovStack requirements and identifies areas for potential enhancement.',
   'form.software_delete.label': 'Delete this Entry',
   'form.software_delete.placeholder': 'Enter the software name to delete',
   'form.software_version.label': 'Software Version',
@@ -153,6 +161,7 @@ export const en = {
   'form.question_line.here': 'here',
   'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance':
     ' and see instructions on how to configure interface compliance.',
+  'form.description.goToRequirement': 'Go to requirement',
 
   'image.alt.logoFor': 'Logo for: {name}',
 
@@ -207,10 +216,13 @@ export const en = {
   'table.rejected.label': 'Rejected',
   'table.result.label': ' result',
   'table.result.plural.label': ' results',
-  'table.requirement_specification.label': 'Requirement Specification',
+  'table.requirement_specification.label': 'Requirement Specification Compliance',
   'table.requirement_specification_compliance.label':
     'Requirement Specification Compliance',
   'table.website.label': 'Website',
+
+  'text.showMore': 'Show More',
+  'text.showLess': 'Show Less',
 
   'test_table.category.label': 'Category',
   'test_table.failed': 'Failed',

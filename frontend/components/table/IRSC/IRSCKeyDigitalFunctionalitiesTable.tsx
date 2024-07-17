@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useTable, Cell } from 'react-table';
+import { useTable, Column, CellProps } from 'react-table';
 import classNames from 'classnames';
 import {
   FaRegCircleCheck,
@@ -15,25 +15,25 @@ import {
 import useTranslations from '../../../hooks/useTranslation';
 import TableCells from '../../shared/TableCells';
 
-const IRSCCrossCuttingTableType = ({
+const IRSCKeyDigitalFunctionalitiesTableType = ({
   selectedData,
   setUpdatedData,
   isTableValid,
-  readOnlyView = false,
+  readOnlyView = false
 }: IRSCTableType) => {
   const [data, setData] = useState<ComplianceRequirementsType>(selectedData);
 
-  const { format } = useTranslations();
+  const dataKDF = data.requirements.keyDigitalFunctionalities;
 
-  const dataCC = data.requirements.crossCutting;
-
-  const requiredNumber = dataCC.filter(item => item.status === 0).length;
-  const recommendedNumber = dataCC.filter(item => item.status === 1).length;
-  const optionalNumber = dataCC.filter(item => item.status === 2).length;
+  const requiredNumber = dataKDF.filter(item => item.status === 0).length;
+  const recommendedNumber = dataKDF.filter(item => item.status === 1).length;
+  const optionalNumber = dataKDF.filter(item => item.status === 2).length;
 
   const [filledRequired, setFilledRequired] = useState<number>(0);
   const [filledRecommended, setFilledRecommended] = useState<number>(0);
   const [filledOptional, setFilledOptional] = useState<number>(0);
+
+  const { format } = useTranslations();
 
   useEffect(() => {
     setUpdatedData(data);
@@ -46,7 +46,7 @@ const IRSCCrossCuttingTableType = ({
     value: string | number | null
   ) => {
     if (type === 'fulfillment') {
-      return data.requirements.crossCutting.map((item) =>
+      return dataKDF.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -55,7 +55,7 @@ const IRSCCrossCuttingTableType = ({
           : item
       );
     } else if (type === 'comment') {
-      return data.requirements.crossCutting.map((item) =>
+      return dataKDF.map((item) =>
         item._id === cellId
           ? {
             ...item,
@@ -67,11 +67,11 @@ const IRSCCrossCuttingTableType = ({
   };
 
   const updateNumberOfFulfilledRequirements = () => {
-    setFilledRequired(dataCC.filter(item =>
+    setFilledRequired(dataKDF.filter(item =>
       item.status === 0 && (item.fulfillment === 1)).length);
-    setFilledRecommended(dataCC.filter(item =>
+    setFilledRecommended(dataKDF.filter(item =>
       item.status === 1 && (item.fulfillment === 1)).length);
-    setFilledOptional(dataCC.filter(item =>
+    setFilledOptional(dataKDF.filter(item =>
       item.status === 2 && (item.fulfillment === 1)).length);
   };
 
@@ -80,35 +80,35 @@ const IRSCCrossCuttingTableType = ({
     type: string,
     value: string | number | null
   ) => {
-    let updatedCrossCuttings;
+    let updatedKeyDigitalFunctionalities;
     if (type === 'fulfillment') {
-      updatedCrossCuttings = updateData(cellId, type, value as number);
+      updatedKeyDigitalFunctionalities = updateData(cellId, type, value as number);
     }
 
     if (type === 'comment') {
-      updatedCrossCuttings = updateData(cellId, type, value as string);
+      updatedKeyDigitalFunctionalities = updateData(cellId, type, value as string);
     }
 
     const updatedData = {
       ...data,
       requirements: {
         ...data.requirements,
-        crossCutting: updatedCrossCuttings,
+        keyDigitalFunctionalities: updatedKeyDigitalFunctionalities,
       },
     };
     setData(updatedData as ComplianceRequirementsType);
   };
 
-  const columns = useMemo(
+  const columns : Column<RequirementsType>[] = useMemo(
     () => [
       {
-        Header: () => format('form.header.requirement.label'),
+        Header: format('form.header.requirement.label'),
         accessor: 'requirement',
       },
       {
         Header: format('form.header.comment.label'),
         accessor: 'comment',
-        Cell: ({ row }: Cell<RequirementsType>) => {
+        Cell: ({ row }: CellProps<RequirementsType>) => {
           const [comment, setComment] = useState<string>(row.values.comment);
           const [active, setActive] = useState(false);
 
@@ -133,9 +133,9 @@ const IRSCCrossCuttingTableType = ({
                 }}
                 onBlur={(event) => {
                   handleUpdateField(
-                    row.original._id as string,
-                    'comment',
-                    event.target.value
+                          row.original._id as string,
+                          'comment',
+                          event.target.value
                   );
                   setActive(false);
                 }}
@@ -207,18 +207,16 @@ const IRSCCrossCuttingTableType = ({
         },
       },
     ],
-    [data.requirements.crossCutting]
+    [dataKDF]
   );
 
-  // @ts-ignore
   const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } =
-    useTable({
-      // @ts-ignore
-      columns,
-      data: data.requirements.crossCutting,
-    });
+        useTable({
+          columns,
+          data: dataKDF,
+        });
 
-  return data.requirements.crossCutting?.length ? (
+  return dataKDF?.length ? (
     <div className="irsc-table-container">
       <table {...getTableProps()} className="irsc-table">
         <thead>
@@ -257,13 +255,13 @@ const IRSCCrossCuttingTableType = ({
                   {...row.getRowProps()}
                   key={`row-${indexKey}`}
                   className={`irsc-table-rows ${
-                    !isTableValid &&
-                    (row.values.fulfillment === undefined ||
-                      row.values.fulfillment === null ||
-                      row.values.fulfillment === -1)
-                      ? 'irsc-invalid-row'
-                      : ''
-                  }`}
+                                    !isTableValid &&
+                                    (row.values.fulfillment === undefined ||
+                                        row.values.fulfillment === null ||
+                                        row.values.fulfillment === -1)
+                                      ? 'irsc-invalid-row'
+                                      : ''
+                                }`}
                 >
                   <TableCells row={row}/>
                 </tr>
@@ -320,4 +318,4 @@ const IRSCCrossCuttingTableType = ({
   );
 };
 
-export default IRSCCrossCuttingTableType;
+export default IRSCKeyDigitalFunctionalitiesTableType;

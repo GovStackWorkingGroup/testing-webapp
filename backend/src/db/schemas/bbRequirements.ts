@@ -21,6 +21,7 @@ const BBRequirementSchema = new mongoose.Schema({
     },
     requirements: {
         crossCutting: [RequirementSchema],
+        keyDigitalFunctionalities: [RequirementSchema],
         functional: [RequirementSchema],
         interface: [RequirementSchema],
     }
