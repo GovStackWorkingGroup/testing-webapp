@@ -34,17 +34,18 @@ services:
 
   web:
     environment:
-        VIRTUAL_HOST: staging.testing.govstack.global
-        LETSENCRYPT_HOST: staging.testing.govstack.global
-        API_URL: api.staging.testing.govstack.global
+      VIRTUAL_HOST: staging.testing.govstack.global
+      LETSENCRYPT_HOST: staging.testing.govstack.global
+      API_URL: api.staging.testing.govstack.global
 
   backend:
+    volumes:
+      - /var/docker/uploads:/app/uploads
     environment:
-        API_KEY_BB: ${API_KEY_BB:-O7VKGLW47I6e}
-        VIRTUAL_HOST: api.staging.testing.govstack.global
-        LETSENCRYPT_HOST: api.staging.testing.govstack.global
+      API_KEY_BB: ${API_KEY_BB:-O7VKGLW47I6e}
+      VIRTUAL_HOST: api.staging.testing.govstack.global
+      LETSENCRYPT_HOST: api.staging.testing.govstack.global
 
   mongo:
     ports:
       - 27017:27017
-
