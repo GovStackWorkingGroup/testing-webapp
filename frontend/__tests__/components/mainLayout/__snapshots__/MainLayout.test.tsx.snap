@@ -35,7 +35,7 @@ exports[`Unit test for MainLayout component: render the MainLayout component 1`]
             data-testid="header-menu-button"
             href="/apiTesting"
           >
-            API testing
+            API Compliance Testing
           </a>
         </div>
         <div
