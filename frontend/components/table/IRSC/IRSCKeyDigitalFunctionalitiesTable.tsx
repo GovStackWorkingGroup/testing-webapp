@@ -7,6 +7,7 @@ import {
   FaCircleXmark,
   FaRegCircleXmark,
 } from 'react-icons/fa6';
+import { RiArrowDownSLine, RiArrowUpSLine } from 'react-icons/ri';
 import {
   ComplianceRequirementsType,
   IRSCTableType,
@@ -32,6 +33,9 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
   const [filledRequired, setFilledRequired] = useState<number>(0);
   const [filledRecommended, setFilledRecommended] = useState<number>(0);
   const [filledOptional, setFilledOptional] = useState<number>(0);
+  const [isRequirementExpanded, setIsRequirementExpanded] = useState<boolean>(false);
+
+  const handleRequirementExpand = () => setIsRequirementExpanded(!isRequirementExpanded);
 
   const { format } = useTranslations();
 
@@ -255,13 +259,15 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                   {...row.getRowProps()}
                   key={`row-${indexKey}`}
                   className={`irsc-table-rows ${
-                                    !isTableValid &&
-                                    (row.values.fulfillment === undefined ||
-                                        row.values.fulfillment === null ||
-                                        row.values.fulfillment === -1)
-                                      ? 'irsc-invalid-row'
-                                      : ''
-                                }`}
+                        !isTableValid &&
+                        (row.values.fulfillment === undefined ||
+                            row.values.fulfillment === null ||
+                            row.values.fulfillment === -1)
+                          ? 'irsc-invalid-row'
+                          : ''
+                    }
+                    ${(!isRequirementExpanded) ? 'irsc-table-row-collapse' : ''}
+                    `}
                 >
                   <TableCells row={row}/>
                 </tr>
@@ -270,7 +276,12 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           })}
           {rows.some((item) => item.original.status === 1) && (
             <tr>
-              <td className="irsc-table-header-required" colSpan={3}>
+              <td className={classNames(
+                'irsc-table-header-required',
+                { 'irsc-table-row-collapse': !isRequirementExpanded }
+              )}
+              colSpan={3}
+              >
                 {`${format('table.recommended_not_required.label')} ${filledRecommended}/${recommendedNumber}`}
               </td>
             </tr>
@@ -282,7 +293,10 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                 <tr
                   {...row.getRowProps()}
                   key={`row-${indexKey}`}
-                  className="irsc-table-rows"
+                  className={classNames(
+                    'irsc-table-rows',
+                    { 'irsc-table-row-collapse': !isRequirementExpanded }
+                  )}
                 >
                   <TableCells row={row}/>
                 </tr>
@@ -291,7 +305,12 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
           })}
           {rows.some((item) => item.original.status === 2) && (
             <tr>
-              <td className="irsc-table-header-required" colSpan={3}>
+              <td className={classNames(
+                'irsc-table-header-required',
+                { 'irsc-table-row-collapse': !isRequirementExpanded }
+              )}
+              colSpan={3}
+              >
                 {`${format('table.optional_not_required.label')} ${filledOptional}/${optionalNumber}`}
               </td>
             </tr>
@@ -303,13 +322,38 @@ const IRSCKeyDigitalFunctionalitiesTableType = ({
                 <tr
                   {...row.getRowProps()}
                   key={`row-${indexKey}`}
-                  className="irsc-table-rows"
+                  className={classNames(
+                    'irsc-table-rows',
+                    { 'irsc-table-row-collapse': !isRequirementExpanded }
+                  )}
                 >
                   <TableCells row={row}/>
                 </tr>
               );
             }
           })}
+          <tr>
+            <td
+              colSpan={3}
+              className="irsc-table-header-required irsc-table-collapse-expand"
+              onClick={handleRequirementExpand}
+            >
+              {isRequirementExpanded
+                ? <div className='irsc-table-collapse-expand-body'>
+                  <span className='irsc-table-arrow'>
+                    <RiArrowUpSLine />
+                  </span>
+                  {format('table.collapse_requirements.label')}
+                </div>
+                : <div className='irsc-table-collapse-expand-body'>
+                  <span className='irsc-table-arrow'>
+                    <RiArrowDownSLine/>
+                  </span>
+                  {format('table.expand_requirements.label')}
+                </div>
+              }
+            </td>
+          </tr>
         </tbody>
       </table>
     </div>
