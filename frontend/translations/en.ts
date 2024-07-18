@@ -233,6 +233,8 @@ export const en = {
   'table.requirement_specification_compliance.label':
     'Requirement Specification Compliance',
   'table.website.label': 'Website',
+  'table.expand_requirements.label': 'Expand requirements',
+  'table.collapse_requirements.label': 'Collapse requirements',
 
   'text.showMore': 'Show More',
   'text.showLess': 'Show Less',
