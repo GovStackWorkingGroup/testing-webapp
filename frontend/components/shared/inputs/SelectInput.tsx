@@ -10,9 +10,7 @@ type SelectProps = {
   onFocus?: () => void;
   placeholder: string;
   className?: string;
-  options:
-    | OptionsOrGroups<InputOptionsProps[], GroupBase<InputOptionsProps[]>>
-    | undefined;
+  options: InputOptionsProps[];
   handleSetOptions: () => void;
 };
 

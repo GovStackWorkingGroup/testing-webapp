@@ -12,6 +12,7 @@ import IRSCInterfaceTable from '../../table/IRSC/IRSCInterfaceTable';
 import useTranslations from '../../../hooks/useTranslation';
 import useGetDraftData from '../../../hooks/useGetDraftDetail';
 import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../../service/constants';
+import { handleSelectFocus } from '../../../hooks/utilities';
 
 export type IRSCFormRef = {
   validate: () => boolean;
@@ -352,15 +353,6 @@ const SelectBBs = ({
     [updatedAllItems]
   );
 
-  const handleFocus = () => {
-    setIsSelectFocused(true);
-    setTimeout(() => {
-      if (selectedItems.length === 0) {
-        selectRef.current?.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 100);
-  };
-
   const displayPills = selectedItems.map((item) => {
     return (
       <Pill
@@ -419,10 +411,13 @@ const SelectBBs = ({
             placeholder="Select Building Block(s)"
             className="input-select"
             onChange={handleOnSelect}
-            // @ts-ignore
             options={options}
             handleSetOptions={handleSetOptions}
-            onFocus={handleFocus}
+            onFocus={() => handleSelectFocus({
+              items: selectedItems,
+              ref: selectRef,
+              setIsSelectFocused
+            })}
             onBlur={() => setIsSelectFocused(false)}
           />
         </div>
