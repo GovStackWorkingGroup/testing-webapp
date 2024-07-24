@@ -19,6 +19,15 @@ To configure and run the application, navigate to project directory - 'frontend'
 cd frontend
 ```
 
+#### Setup
+
+Create an copy of example.env file.
+
+```bash
+# Use default environmental variables, which can be adjusted if necessary
+mv .env.example .env
+```
+
 and run the following commands:
 
 ```
