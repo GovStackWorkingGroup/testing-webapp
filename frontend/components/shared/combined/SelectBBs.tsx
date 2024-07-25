@@ -1,5 +1,6 @@
-import { RefObject, useEffect, useImperativeHandle, useState } from 'react';
+import { RefObject, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
+import classNames from 'classnames';
 import Pill from '../Pill';
 import SelectInput from '../inputs/SelectInput';
 import {
@@ -11,6 +12,7 @@ import IRSCInterfaceTable from '../../table/IRSC/IRSCInterfaceTable';
 import useTranslations from '../../../hooks/useTranslation';
 import useGetDraftData from '../../../hooks/useGetDraftDetail';
 import { INTERFACE_COMPLIANCE_STORAGE_NAME } from '../../../service/constants';
+import { handleSelectFocus } from '../../../hooks/utilities';
 
 export type IRSCFormRef = {
   validate: () => boolean;
@@ -53,6 +55,9 @@ const SelectBBs = ({
   const { draftData } = useGetDraftData({
     draftUUID: (draftUUID as string) || undefined,
   });
+
+  const selectRef = useRef<HTMLDivElement>(null);
+  const [isSelectFocused, setIsSelectFocused] = useState(false);
 
   useEffect(() => {
     handleAlreadySavedData();
@@ -401,14 +406,21 @@ const SelectBBs = ({
   return (
     <div className="main-block">
       {!readOnlyView && (
-        <SelectInput
-          placeholder="Select Building Block(s)"
-          className="input-select"
-          onChange={handleOnSelect}
-          // @ts-ignore
-          options={options}
-          handleSetOptions={handleSetOptions}
-        />
+        <div ref={selectRef}>
+          <SelectInput
+            placeholder="Select Building Block(s)"
+            className="input-select"
+            onChange={handleOnSelect}
+            options={options}
+            handleSetOptions={handleSetOptions}
+            onFocus={() => handleSelectFocus({
+              items: selectedItems,
+              ref: selectRef,
+              setIsSelectFocused
+            })}
+            onBlur={() => setIsSelectFocused(false)}
+          />
+        </div>
       )}
       {selectedItems.length > 0 ? (
         <div>
@@ -430,7 +442,7 @@ const SelectBBs = ({
           {displayTable}
         </div>
       ) : (
-        <div>
+        <div className={classNames({ 'height-150': (isSelectFocused && selectedItems.length === 0) })}>
           {format('app.view_report_details.noInformation',
             { section: `${format('table.interface_compliance.label')}` })}
         </div>

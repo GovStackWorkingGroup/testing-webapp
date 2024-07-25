@@ -7,16 +7,16 @@ import { InputOptionsProps } from '../../../service/types';
 type SelectProps = {
   onChange: (args0: any) => void;
   onBlur?: () => void;
+  onFocus?: () => void;
   placeholder: string;
   className?: string;
-  options:
-    | OptionsOrGroups<InputOptionsProps[], GroupBase<InputOptionsProps[]>>
-    | undefined;
+  options: InputOptionsProps[];
   handleSetOptions: () => void;
 };
 
 const SelectInput = ({
   onBlur,
+  onFocus,
   placeholder,
   className,
   onChange,
@@ -34,6 +34,7 @@ const SelectInput = ({
       onBlur={onBlur}
       classNamePrefix="react-select"
       className={classNames(className)}
+      onFocus={onFocus}
     />
   );
 };
