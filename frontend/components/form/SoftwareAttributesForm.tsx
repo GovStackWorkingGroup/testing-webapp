@@ -4,10 +4,11 @@ import validator from 'validator';
 import { toast } from 'react-toastify';
 import { RiErrorWarningFill } from 'react-icons/ri';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import useTranslations from '../../hooks/useTranslation';
 import Input from '../shared/inputs/Input';
 import DragDrop from '../shared/DragAndDrop';
-import { SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
+import { DATA_PROTECTION_NOTICE_PAGE, SOFTWARE_ATTRIBUTES_STORAGE_NAME } from '../../service/constants';
 import { fetchFileDetails } from '../../service/serviceAPI';
 import useGetDraftData from '../../hooks/useGetDraftDetail';
 import { formatTranslationType } from '../../service/types';
@@ -307,6 +308,17 @@ const SoftwareAttributesForm = ({
       </div>
       <div className="form-main-container">
         <div className="form-side-container">
+          <p>
+            {format('form.disclaimer.message')}
+            <Link
+              target='_blank'
+              className='underline description-link'
+              href={DATA_PROTECTION_NOTICE_PAGE}
+            >
+              {format('app.data_protection_notice')}
+            </Link>
+            {format('form.disclaimer.page')}
+          </p>
           <div className="form-field-container">
             <Input
               name="softwareName"

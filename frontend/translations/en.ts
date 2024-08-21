@@ -32,6 +32,8 @@ export const en = {
   'app.evaluation_schema.label': 'Evaluation Schema',
   'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
+  'app.imprint': 'Imprint',
+  'app.data_protection_notice': 'Data Protection Notice',
   'app.api_requirement_specification.label':
     'API Compliance & Requirement Specification Compliance',
   'app.login.label': 'Log In',
@@ -47,6 +49,7 @@ export const en = {
     'Software Requirements Compliance',
   'app.view_report_details.label': 'View report details',
   'app.view_report_details.noInformation': 'Information has not been provided for the {section} of the compliance form',
+  'app.page_description_template': 'This page is currently a template. To populate it with content, manual updates in the IDE are required. If you are seeing this message and believe it is an error, please contact the site administrator for assistance.',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
@@ -174,6 +177,10 @@ export const en = {
   'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance':
     ' and see instructions on how to configure interface compliance.',
   'form.description.goToRequirement': 'Go to requirement',
+  'form.disclaimer.message': `All inserted information will be publicly available after submitting the full assessment.
+   The inserted e-mail address will be publicly visible, used for sending a link to the draft entry and used as point 
+   of contact for the GovStack team. For further information on data processing, please visit our `,
+  'form.disclaimer.page': ` page.`,
 
   'image.alt.logoFor': 'Logo for: {name}',
 
