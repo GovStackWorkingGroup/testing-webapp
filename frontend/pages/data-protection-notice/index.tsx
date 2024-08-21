@@ -1,8 +1,10 @@
 import Head from 'next/head';
 import React from 'react';
 import Link from 'next/link';
+import useTranslations from '../../hooks/useTranslation';
 
 const SoftwareComplianceTestingPage = () => {
+  const { format } = useTranslations();
 
   return (
     <div>
@@ -12,7 +14,7 @@ const SoftwareComplianceTestingPage = () => {
         <link rel="icon" href="/favicon.png"/>
       </Head>
       <main className='description-main-container'>
-        <p>This is a page template, if you want to have data here, you need to manually update this page in the IDE.</p>
+        <p>{format('app.page_description_template')}</p>
       </main>
     </div>
   );
