@@ -4,6 +4,8 @@ export const COMPLIANCE_TESTING_DETAILS_PAGE =
 export const COMPLIANCE_TESTING_FORM = '/requirements/form';
 export const COMPLIANCE_TESTING_RESULT_PAGE = '/requirements';
 export const API_TESTING_RESULT_PAGE = '/apiTesting';
+export const DATA_PROTECTION_NOTICE_PAGE = '/data-protection-notice';
+export const IMPRINT_PAGE = '/imprint';
 export const CONFLUENCE_INSTRUCTIONS_LINK =
   'https://govstack-global.atlassian.net/wiki/spaces/GH/pages/376012801/Instructions+for+Software+Requirements+Compliance';
 
