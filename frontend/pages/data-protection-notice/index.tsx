@@ -1,23 +1,33 @@
-import Head from 'next/head';
+import fs from 'fs';
+import path from 'path';
+import { GetStaticProps } from 'next';
 import React from 'react';
-import Link from 'next/link';
-import useTranslations from '../../hooks/useTranslation';
 
-const SoftwareComplianceTestingPage = () => {
-  const { format } = useTranslations();
+interface DataProtectionNoticeProps {
+  content: string;
+}
 
-  return (
-    <div>
-      <Head>
-        <title>GovStack testing</title>
-        <meta name="description" content="GovStack Testing App"/>
-        <link rel="icon" href="/favicon.png"/>
-      </Head>
-      <main className='description-main-container'>
-        <p>{format('app.page_description_template')}</p>
-      </main>
-    </div>
-  );
+const DataProtectionNotice: React.FC<DataProtectionNoticeProps> = ({ content }) => {
+  return <div dangerouslySetInnerHTML={{ __html: content }} />;
 };
 
-export default SoftwareComplianceTestingPage;
+export const getStaticProps: GetStaticProps = async () => {
+  const customPath = path.join(process.cwd(), 'content', 'custom', 'data-protection-notice.html');
+  const templatePath = path.join(process.cwd(), 'content', 'template', 'data-protection-notice.html');
+
+  let contentPath = templatePath;
+
+  if (fs.existsSync(customPath)) {
+    contentPath = customPath;
+  }
+
+  const content = fs.readFileSync(contentPath, 'utf8');
+
+  return {
+    props: {
+      content,
+    },
+  };
+};
+
+export default DataProtectionNotice;

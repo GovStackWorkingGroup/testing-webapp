@@ -41,6 +41,8 @@ next-env.d.ts
 # Deployment .env file
 deployment/.env
 
+# Static pages
+content/custom/
 
 */.env.example
 */.env
