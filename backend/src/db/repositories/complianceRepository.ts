@@ -98,7 +98,9 @@ const mongoComplianceRepository: ComplianceDbRepository = {
       const isDraft = draftData.status == StatusEnum.DRAFT;
       const uniqueId = isDraft ? uuidv4() : '';
       const expirationDate = isDraft ? new Date(Date.now() + appConfig.draftExpirationTime) : undefined;
-
+      if (draftData.softwareName) {
+        draftData.softwareName = draftData.softwareName.trim();
+      }
       const newForm = new Compliance({
         ...draftData,
         uniqueId,
