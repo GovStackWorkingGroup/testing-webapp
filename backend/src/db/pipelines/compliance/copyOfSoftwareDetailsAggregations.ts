@@ -37,17 +37,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
             bbVersion: "$$detail.v.bbVersion",
             requirements: "$$detail.v.requirementSpecificationCompliance",
             interface: "$$detail.v.interfaceCompliance",
-            deploymentCompliance: "$$detail.v.deploymentCompliance",
-            creationDate: {
-              $toDate: {
-                $convert: {
-                  input: { $substr: ["$$detail.v.bbVersion", 0, 8] },
-                  to: "long",
-                  onError: null,
-                  onNull: null
-                }
-              }
-            }
+            deploymentCompliance: "$$detail.v.deploymentCompliance"
           }
         }
       }
@@ -68,14 +58,12 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           bbVersion: { $ifNull: ["$compliance.bbDetailsArray.bbVersion", "N/A"] },
           requirements: { $ifNull: ["$compliance.bbDetailsArray.requirements", {}] },
           interface: { $ifNull: ["$compliance.bbDetailsArray.interface", {}] },
-          createdDate: "$creationDate",
           deploymentCompliance: { $ifNull: ["$compliance.bbDetailsArray.deploymentCompliance", {}] }
         }
       },
       latestRecord: { $first: "$$ROOT" }
     }
   },
-  { $unwind: "$bbVersions" },
   {
     $group: {
       _id: {
@@ -91,18 +79,6 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       latestRecord: { $first: "$latestRecord" }
     }
   },
-  { $project: {
-      _id: 1,
-      bbDetails: 1,
-      logo: "$latestRecord.logo",
-      website: "$latestRecord.website",
-      documentation: "$latestRecord.documentation",
-      pointOfContact: "$latestRecord.pointOfContact",
-      status: "$latestRecord.status",
-      objectId: "$latestRecord.objectId",
-      maxCreatedDate: { $max: "$bbDetails.bbVersions.createdDate" }  // Calculate max createdDate
-    }
-    },
   {
     $group: {
       _id: "$_id.softwareName",
@@ -110,8 +86,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
         $push: {
           softwareVersion: "$_id.softwareVersion",
           bbDetails: "$bbDetails",
-          _id: "$latestRecord.objectId",
-          createdDate: "$maxCreatedDate"
+          _id: "$latestRecord.objectId"
         }
       },
       logo: { $first: "$latestRecord.logo" },
@@ -124,55 +99,46 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
   },
 {
   $addFields: {
-  compliance: {
-    $map: {
-      input: {
-        $sortArray: {
+      compliance: {
+        $map: {
           input: "$compliance",
-          sortBy: { "createdDate": -1 }  // Sort compliance by createdDate in descending order
-        }
-      },
-      as: "comp",
-      in: {
-        softwareVersion: "$$comp.softwareVersion",
-        bbDetails: {
-
-          $let: {
-            vars: {
-              detailsWithSortKey: {
-
-                $map: {
-                  input: "$$comp.bbDetails",
-                  as: "detail",
-                  in: {
-                    bbName: "$$detail.bbName",
-                    bbVersions: "$$detail.bbVersions",
-                    sortKey: {
-                      $cond: {
-                        if: { $eq: ["$$detail.bbName", "N/A"] },
-                        then: 1,
-                        else: 0
+          as: "comp",
+          in: {
+            softwareVersion: "$$comp.softwareVersion",
+            bbDetails: {
+              $let: {
+                vars: {
+                  detailsWithSortKey: {
+                    $map: {
+                      input: "$$comp.bbDetails",
+                      as: "detail",
+                      in: {
+                        bbName: "$$detail.bbName",
+                        bbVersions: "$$detail.bbVersions",
+                        sortKey: {
+                          $cond: {
+                            if: { $eq: ["$$detail.bbName", "N/A"] },
+                            then: 1,
+                            else: 0
+                          }
+                        }
                       }
                     }
+                  }
+                },
+                in: {
+                  $sortArray: {
+                    input: "$$detailsWithSortKey",
+                    sortBy: { sortKey: 1, bbName: 1 }
                   }
                 }
               }
             },
-            in: {
-              $sortArray: {
-                input: "$$detailsWithSortKey",
-                sortBy: { sortKey: 1, bbName: 1 }
-              }
-            }
+            _id: "$$comp._id"
           }
-        },
-        _id: "$$comp._id",
-        createdDate: "$$comp.createdDate"  // Keep createdDate for reference
+        }
       }
     }
-  }
-}
-
 },
 
   {
