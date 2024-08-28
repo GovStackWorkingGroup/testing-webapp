@@ -1,22 +1,41 @@
 export const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
-  // Stage 1: Match documents based on the provided software name
   {
     $match: { softwareName }
   },
 
-  // Stage 2: Sort documents by the ObjectId in descending order (latest first)
-  {
-    $sort: { _id: -1 }
-  },
-
-  // Stage 3: Add a creationDate field derived from the ObjectId
   {
     $addFields: {
       creationDate: { $toDate: "$_id" }
     }
   },
 
-  // Stage 4: Project the necessary fields for further processing
+  {
+    $sort: { creationDate: -1 }
+  },
+
+  // Group all documents and add the latest document as a new field to all documents
+  {
+    $group: {
+      _id: null,
+      documents: { $push: "$$ROOT" },
+      latestDocumentRecord: { $first: "$$ROOT" } // Since the documents are sorted, $first will be the latest
+    }
+  },
+
+  {
+    $unwind: "$documents"
+  },
+
+  {
+    $addFields: {
+      "documents.latestDocumentRecord": "$latestDocumentRecord"
+    }
+  },
+
+  {
+    $replaceRoot: { newRoot: "$documents" }
+  },
+
   {
     $project: {
       objectId: "$_id",
@@ -27,16 +46,16 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       documentation: 1,
       pointOfContact: 1,
       status: 1,
-      creationDate: 1
+      creationDate: 1,
+      latestDocumentRecord: 1
     }
   },
 
-  // Stage 5: Unwind the compliance array, preserving null and empty arrays
   {
     $unwind: { path: "$compliance", preserveNullAndEmptyArrays: true }
   },
 
-  // Stage 6: Transform the compliance.bbDetails object into an array and add necessary fields
+  // Transform the compliance.bbDetails object into an array and add necessary fields
   {
     $addFields: {
       "compliance.bbDetailsArray": {
@@ -65,12 +84,11 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
 
-  // Stage 7: Unwind the bbDetailsArray, preserving null and empty arrays
   {
     $unwind: { path: "$compliance.bbDetailsArray", preserveNullAndEmptyArrays: true }
   },
 
-  // Stage 8: Group by software name, software version, and building block name
+  // Group by software name, software version, and building block name
   {
     $group: {
       _id: {
@@ -84,19 +102,46 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           requirements: { $ifNull: ["$compliance.bbDetailsArray.requirements", {}] },
           interface: { $ifNull: ["$compliance.bbDetailsArray.interface", {}] },
           createdDate: "$creationDate",
-          deploymentCompliance: { $ifNull: ["$compliance.bbDetailsArray.deploymentCompliance", {}] }
+          deploymentCompliance: { $ifNull: ["$compliance.bbDetailsArray.deploymentCompliance", {}] },
+          documentId: "$objectId"  // Capture the _id of the document for this bbVersion
         }
       },
-      latestRecord: { $first: "$$ROOT" }
+      latestRecord: { $first: "$$ROOT" },
+      latestDocumentRecord: { $first: "$latestDocumentRecord" },
+      topDocumentId: { $first: "$objectId" }  // Store the _id of the first (latest) document
     }
   },
 
-  // Stage 9: Unwind the bbVersions array
+  // Unwind the bbVersions array
   {
     $unwind: "$bbVersions"
   },
 
-  // Stage 10: Group by software name and version, and gather building block details
+  // Group by software name, version, and building block name
+  {
+    $group: {
+      _id: {
+        softwareName: "$_id.softwareName",
+        softwareVersion: "$_id.softwareVersion",
+        bbName: "$_id.bbName"
+      },
+      bbVersions: {
+        $push: {
+          bbVersion: "$bbVersions.bbVersion",
+          requirements: "$bbVersions.requirements",
+          interface: "$bbVersions.interface",
+          deploymentCompliance: "$bbVersions.deploymentCompliance",
+          creationDate: "$bbVersions.creationDate",
+          documentId: "$bbVersions.documentId"  // Preserve the documentId
+        }
+      },
+      latestRecord: { $first: "$latestRecord" },
+      latestDocumentRecord: { $first: "$latestDocumentRecord" },
+      topDocumentId: { $first: "$bbVersions.documentId" }  // Capture the documentId of the top bbVersion
+    }
+  },
+
+  // Group by software name and version, and gather building block details
   {
     $group: {
       _id: {
@@ -106,29 +151,42 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       bbDetails: {
         $push: {
           bbName: "$_id.bbName",
-          bbVersions: "$bbVersions"
+          bbVersions: "$bbVersions",  // This includes the preserved documentId within each bbVersion
+          topDocumentId: "$topDocumentId" // Capture the topDocumentId for this bbDetail
         }
       },
-      latestRecord: { $first: "$latestRecord" }
+      latestRecord: { $first: "$latestRecord" },
+      latestDocumentRecord: { $first: "$latestDocumentRecord" }
     }
   },
 
-  // Stage 11: Project the final set of fields, including maximum creation date
+  // Project the final set of fields, including maximum creation date
   {
     $project: {
       _id: 1,
-      bbDetails: 1,
+      bbDetails: {
+        $map: {
+          input: "$bbDetails",
+          as: "detail",
+          in: {
+            bbName: "$$detail.bbName",
+            bbVersions: "$$detail.bbVersions",
+            topDocumentId: "$$detail.topDocumentId" // Include topDocumentId within each bbDetails entry
+          }
+        }
+      },
       logo: "$latestRecord.logo",
       website: "$latestRecord.website",
       documentation: "$latestRecord.documentation",
       pointOfContact: "$latestRecord.pointOfContact",
       status: "$latestRecord.status",
       objectId: "$latestRecord.objectId",
-      maxCreatedDate: { $max: "$bbDetails.bbVersions.createdDate" }
+      maxCreatedDate: { $max: "$bbDetails.bbVersions.createdDate" },
+      latestDocumentRecord: 1
     }
   },
 
-  // Stage 12: Group by software name and collect all compliance details
+  // Group by software name and collect all compliance details
   {
     $group: {
       _id: "$_id.softwareName",
@@ -136,20 +194,20 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
         $push: {
           softwareVersion: "$_id.softwareVersion",
           bbDetails: "$bbDetails",
-          _id: "$latestRecord.objectId",
           createdDate: "$maxCreatedDate"
         }
       },
-      logo: { $first: "$latestRecord.logo" },
-      website: { $first: "$latestRecord.website" },
-      documentation: { $first: "$latestRecord.documentation" },
-      pointOfContact: { $first: "$latestRecord.pointOfContact" },
-      status: { $first: "$latestRecord.status" },
-      objectId: { $first: "$latestRecord.objectId" }
+      logo: { $first: "$latestDocumentRecord.logo" },
+      website: { $first: "$latestDocumentRecord.website" },
+      documentation: { $first: "$latestDocumentRecord.documentation" },
+      pointOfContact: { $first: "$latestDocumentRecord.pointOfContact" },
+      status: { $first: "$latestDocumentRecord.status" },
+      objectId: { $first: "$latestDocumentRecord.objectId" },
+      latestDocumentRecord: { $first: "$latestDocumentRecord" }
     }
   },
 
-  // Stage 13: Add fields to compliance and sort building blocks alphabetically, with "N/A" values at the end
+  // Add fields to compliance and sort building blocks alphabetically, with "N/A" values at the end
   {
     $addFields: {
       compliance: {
@@ -157,7 +215,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
           input: {
             $sortArray: {
               input: "$compliance",
-              sortBy: { createdDate: -1 }  // Sort compliance by createdDate in descending order
+              sortBy: { softwareVersion: 1 }  // Ensure compliance is sorted by softwareVersion in ascending order
             }
           },
           as: "comp",
@@ -173,6 +231,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
                       in: {
                         bbName: "$$detail.bbName",
                         bbVersions: "$$detail.bbVersions",
+                        _id: "$$detail.topDocumentId",
                         sortKey: {
                           $cond: {
                             if: { $eq: ["$$detail.bbName", "N/A"] },
@@ -200,17 +259,40 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
     }
   },
 
-  // Stage 14: Sort by the latest creation date in descending order
   {
     $sort: { "latestRecord.creationDate": -1 }
   },
 
-  // Stage 15: Limit the results to only the most recent record
   {
     $limit: 1
   },
 
-  // Stage 16: Final projection of the required fields
+  // Extract _id from the top object of bbDetails and include it at the same level as softwareVersion and createdDate
+  {
+    $addFields: {
+      compliance: {
+        $map: {
+          input: "$compliance",
+          as: "comp",
+          in: {
+            _id: {
+              $let: {
+                vars: {
+                  topDetail: { $arrayElemAt: ["$$comp.bbDetails", 0] }  // Get the top object from bbDetails
+                },
+                in: "$$topDetail._id"  // Extract _id from the top object
+              }
+            },
+            softwareVersion: "$$comp.softwareVersion",
+            createdDate: "$$comp.createdDate",
+            bbDetails: "$$comp.bbDetails"  // Keep the bbDetails array as is
+          }
+        }
+      }
+    }
+  },
+
+  // Final projection of the required fields
   {
     $project: {
       _id: "$objectId",
@@ -220,7 +302,7 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       website: 1,
       documentation: 1,
       pointOfContact: 1,
-      status: 1
+      status: 1,
     }
   }
 ];
