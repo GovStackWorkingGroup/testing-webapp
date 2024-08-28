@@ -1,15 +1,22 @@
 export const softwareDetailAggregationPipeline = (softwareName: string): any[] => [
+  // Stage 1: Match documents based on the provided software name
   {
     $match: { softwareName }
   },
+
+  // Stage 2: Sort documents by the ObjectId in descending order (latest first)
   {
     $sort: { _id: -1 }
   },
+
+  // Stage 3: Add a creationDate field derived from the ObjectId
   {
     $addFields: {
-      creationDate: { $toDate: "$_id" } // Add creationDate field from ObjectId
+      creationDate: { $toDate: "$_id" }
     }
   },
+
+  // Stage 4: Project the necessary fields for further processing
   {
     $project: {
       objectId: "$_id",
@@ -23,9 +30,13 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       creationDate: 1
     }
   },
+
+  // Stage 5: Unwind the compliance array, preserving null and empty arrays
   {
     $unwind: { path: "$compliance", preserveNullAndEmptyArrays: true }
   },
+
+  // Stage 6: Transform the compliance.bbDetails object into an array and add necessary fields
   {
     $addFields: {
       "compliance.bbDetailsArray": {
@@ -53,9 +64,13 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       }
     }
   },
+
+  // Stage 7: Unwind the bbDetailsArray, preserving null and empty arrays
   {
     $unwind: { path: "$compliance.bbDetailsArray", preserveNullAndEmptyArrays: true }
   },
+
+  // Stage 8: Group by software name, software version, and building block name
   {
     $group: {
       _id: {
@@ -75,7 +90,13 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       latestRecord: { $first: "$$ROOT" }
     }
   },
-  { $unwind: "$bbVersions" },
+
+  // Stage 9: Unwind the bbVersions array
+  {
+    $unwind: "$bbVersions"
+  },
+
+  // Stage 10: Group by software name and version, and gather building block details
   {
     $group: {
       _id: {
@@ -91,7 +112,10 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       latestRecord: { $first: "$latestRecord" }
     }
   },
-  { $project: {
+
+  // Stage 11: Project the final set of fields, including maximum creation date
+  {
+    $project: {
       _id: 1,
       bbDetails: 1,
       logo: "$latestRecord.logo",
@@ -100,9 +124,11 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       pointOfContact: "$latestRecord.pointOfContact",
       status: "$latestRecord.status",
       objectId: "$latestRecord.objectId",
-      maxCreatedDate: { $max: "$bbDetails.bbVersions.createdDate" }  // Calculate max createdDate
+      maxCreatedDate: { $max: "$bbDetails.bbVersions.createdDate" }
     }
-    },
+  },
+
+  // Stage 12: Group by software name and collect all compliance details
   {
     $group: {
       _id: "$_id.softwareName",
@@ -122,65 +148,69 @@ export const softwareDetailAggregationPipeline = (softwareName: string): any[] =
       objectId: { $first: "$latestRecord.objectId" }
     }
   },
-{
-  $addFields: {
-  compliance: {
-    $map: {
-      input: {
-        $sortArray: {
-          input: "$compliance",
-          sortBy: { "createdDate": -1 }  // Sort compliance by createdDate in descending order
-        }
-      },
-      as: "comp",
-      in: {
-        softwareVersion: "$$comp.softwareVersion",
-        bbDetails: {
 
-          $let: {
-            vars: {
-              detailsWithSortKey: {
-
-                $map: {
-                  input: "$$comp.bbDetails",
-                  as: "detail",
-                  in: {
-                    bbName: "$$detail.bbName",
-                    bbVersions: "$$detail.bbVersions",
-                    sortKey: {
-                      $cond: {
-                        if: { $eq: ["$$detail.bbName", "N/A"] },
-                        then: 1,
-                        else: 0
+  // Stage 13: Add fields to compliance and sort building blocks alphabetically, with "N/A" values at the end
+  {
+    $addFields: {
+      compliance: {
+        $map: {
+          input: {
+            $sortArray: {
+              input: "$compliance",
+              sortBy: { createdDate: -1 }  // Sort compliance by createdDate in descending order
+            }
+          },
+          as: "comp",
+          in: {
+            softwareVersion: "$$comp.softwareVersion",
+            bbDetails: {
+              $let: {
+                vars: {
+                  detailsWithSortKey: {
+                    $map: {
+                      input: "$$comp.bbDetails",
+                      as: "detail",
+                      in: {
+                        bbName: "$$detail.bbName",
+                        bbVersions: "$$detail.bbVersions",
+                        sortKey: {
+                          $cond: {
+                            if: { $eq: ["$$detail.bbName", "N/A"] },
+                            then: 1,  // "N/A" values get a higher sortKey to appear at the end
+                            else: 0
+                          }
+                        }
                       }
                     }
+                  }
+                },
+                in: {
+                  $sortArray: {
+                    input: "$$detailsWithSortKey",
+                    sortBy: { sortKey: 1, bbName: 1 }  // Sort alphabetically with "N/A" last
                   }
                 }
               }
             },
-            in: {
-              $sortArray: {
-                input: "$$detailsWithSortKey",
-                sortBy: { sortKey: 1, bbName: 1 }
-              }
-            }
+            _id: "$$comp._id",
+            createdDate: "$$comp.createdDate"
           }
-        },
-        _id: "$$comp._id",
-        createdDate: "$$comp.createdDate"  // Keep createdDate for reference
+        }
       }
     }
-  }
-}
+  },
 
-},
-
+  // Stage 14: Sort by the latest creation date in descending order
   {
     $sort: { "latestRecord.creationDate": -1 }
   },
+
+  // Stage 15: Limit the results to only the most recent record
   {
     $limit: 1
   },
+
+  // Stage 16: Final projection of the required fields
   {
     $project: {
       _id: "$objectId",
