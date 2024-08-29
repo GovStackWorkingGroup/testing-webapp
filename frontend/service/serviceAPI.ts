@@ -429,6 +429,7 @@ export const updateDraftDetailsStepThree = async (
             fulfillment: crossCuttingItem.fulfillment,
             link: crossCuttingItem.link,
             _id: crossCuttingItem._id,
+            status: crossCuttingItem.status,
           })
         ),
         functionalRequirements: requirements.functional.map(
@@ -438,6 +439,7 @@ export const updateDraftDetailsStepThree = async (
             fulfillment: functionalItem.fulfillment,
             link: functionalItem.link,
             _id: functionalItem._id,
+            status: functionalItem.status,
           })
         ),
         keyDigitalFunctionalitiesRequirements: requirements.keyDigitalFunctionalities.map(
@@ -447,6 +449,7 @@ export const updateDraftDetailsStepThree = async (
             fulfillment: KDFItem.fulfillment,
             link: KDFItem.link,
             _id: KDFItem._id,
+            status: KDFItem.status,
           })
         )
       },
