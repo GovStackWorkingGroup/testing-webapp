@@ -56,7 +56,7 @@ export const en = {
 
   'drag_drop.doc_format.label':
     'PDF, word document or plain text files accepted.',
-  'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted.',
+  'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted. Maximum size: 1 MB.',
   'drag_drop.or_drop.label': 'or drag and drop it here',
   'drag_drop.select_file.label': 'Select a file to upload',
 
@@ -124,6 +124,7 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
+  'form.file_size_error.message': 'The file size exceeds the limit.',
   'form.form_accepted_success.message': 'Form accepted successfully',
   'form.form_accepted_error.message': 'Form accepting failed',
   'form.form_reject_success.message': 'Form rejected successfully',

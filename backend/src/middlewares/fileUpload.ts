@@ -25,7 +25,11 @@ export const createFileUploadMiddleware = () => {
         },
     });
 
-    return multer({ storage }).fields([
+    const limits = {
+        fileSize: 1 * 1024 * 1024, // 1 MB
+    };
+
+    return multer({ storage, limits }).fields([
         { name: 'logo', maxCount: 1 },
         { name: 'deploymentCompliance[documentation]', maxCount: 1 },
         { name: 'deploymentCompliance[deploymentInstructions]', maxCount: 1 },

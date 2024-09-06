@@ -278,6 +278,12 @@ export type SubmitDraftResponseType = {
   link: string;
 };
 
+export type FormErrorResponseType = {
+  status: number;
+  name: string;
+  message: string;
+};
+
 type FormBBDetails = {
   interface: { level: number; note: string };
   deployment: { level: number; note: string };

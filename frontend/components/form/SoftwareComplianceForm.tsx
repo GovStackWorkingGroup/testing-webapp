@@ -132,28 +132,27 @@ const SoftwareComplianceForm = ({
   const handleSaveDraft = async (softwareData: FormValuesType) => {
     setSoftwareVersion(softwareData.softwareVersion.value);
     if (draftUUID) {
-      await updateDraftDetailsStepOne(draftUUID as string, softwareData).then(
-        (response) => {
-          if (response.status) {
-            toast.success(format('form.form_saved_success.message'), {
-              icon: <RiCheckboxCircleFill className="success-toast-icon" />,
-            });
-            localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
-
-            setIsDraftSaved(true);
-            nextStepRef.current?.goNext();
-
-            return;
-          }
-
-          if (!response.status) {
-            toast.error(format('form.form_saved_error.message'), {
-              icon: <RiErrorWarningFill className="error-toast-icon" />,
-            });
-          }
+      await updateDraftDetailsStepOne(draftUUID as string, softwareData).then((response) => {
+        if (response.status) {
+          toast.success(format('form.form_saved_success.message'), {
+            icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+          });
+          localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
+          setIsDraftSaved(true);
+          nextStepRef.current?.goNext();
+          return;
         }
-      );
-
+  
+        if (response.error?.status === 413) {
+          toast.error(format('form.file_size_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        } else {
+          toast.error(response.error?.message || format('form.form_saved_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        }
+      });
       return;
     }
 
@@ -164,19 +163,21 @@ const SoftwareComplianceForm = ({
             icon: <RiCheckboxCircleFill className="success-toast-icon" />,
           });
           localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
-
-          // router.replace only here because draftUUID is undefined
+  
           router.replace({
             query: { draftUUID: response.data.uniqueId, formStep: 2 },
           });
           setIsDraftSaved(true);
           nextStepRef.current?.goNext();
-
           return;
         }
-
-        if (!response.status) {
-          toast.error(format('form.form_saved_error.message'), {
+  
+        if (response.error?.status === 413) {
+          toast.error(format('form.file_size_error.message'), {
+            icon: <RiErrorWarningFill className="error-toast-icon" />,
+          });
+        } else {
+          toast.error(response.error?.message || format('form.form_saved_error.message'), {
             icon: <RiErrorWarningFill className="error-toast-icon" />,
           });
         }
