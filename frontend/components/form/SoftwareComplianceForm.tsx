@@ -140,9 +140,10 @@ const SoftwareComplianceForm = ({
           localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
           setIsDraftSaved(true);
           nextStepRef.current?.goNext();
+
           return;
         }
-  
+
         if (response.error?.status === 413) {
           toast.error(format('form.file_size_error.message'), {
             icon: <RiErrorWarningFill className="error-toast-icon" />,
@@ -153,6 +154,7 @@ const SoftwareComplianceForm = ({
           });
         }
       });
+
       return;
     }
 
@@ -163,15 +165,16 @@ const SoftwareComplianceForm = ({
             icon: <RiCheckboxCircleFill className="success-toast-icon" />,
           });
           localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
-  
+
           router.replace({
             query: { draftUUID: response.data.uniqueId, formStep: 2 },
           });
           setIsDraftSaved(true);
           nextStepRef.current?.goNext();
+
           return;
         }
-  
+
         if (response.error?.status === 413) {
           toast.error(format('form.file_size_error.message'), {
             icon: <RiErrorWarningFill className="error-toast-icon" />,
