@@ -96,7 +96,7 @@ const RequirementSpecificationSelectBBs = ({
   }, [updatedCrossCuttingData]);
 
   useEffect(() => {
-    if (updatedFunctionalData && !readOnlyView) {
+    if (updatedFunctionalData) {
       const updatedSecondArrFromObjectTwo = selectedItems.map((item) => {
         if (item.bbKey === updatedFunctionalData.bbKey) {
           return {
@@ -113,7 +113,7 @@ const RequirementSpecificationSelectBBs = ({
 
       setSelectedItems(updatedSecondArrFromObjectTwo);
     }
-  }, [updatedFunctionalData, readOnlyView]);
+  }, [updatedFunctionalData]);
 
   useEffect(() => {
     if (updatedKDFData) {

@@ -32,6 +32,8 @@ export const en = {
   'app.evaluation_schema.label': 'Evaluation Schema',
   'app.evaluation_summary.label': 'Evaluation Summary',
   'app.help.label': 'Help',
+  'app.imprint': 'Imprint',
+  'app.data_protection_notice': 'Data Protection Notice',
   'app.api_requirement_specification.label':
     'API Compliance & Requirement Specification Compliance',
   'app.login.label': 'Log In',
@@ -47,13 +49,14 @@ export const en = {
     'Software Requirements Compliance',
   'app.view_report_details.label': 'View report details',
   'app.view_report_details.noInformation': 'Information has not been provided for the {section} of the compliance form',
+  'app.page_description_template': 'This page is currently a template. To populate it with content, manual updates in the IDE are required. If you are seeing this message and believe it is an error, please contact the site administrator for assistance.',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
 
   'drag_drop.doc_format.label':
     'PDF, word document or plain text files accepted.',
-  'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted.',
+  'drag_drop.image_format.label': 'PNG, JPG or SVG files accepted. Maximum size: 1 MB.',
   'drag_drop.or_drop.label': 'or drag and drop it here',
   'drag_drop.select_file.label': 'Select a file to upload',
 
@@ -121,6 +124,7 @@ export const en = {
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
+  'form.file_size_error.message': 'The file size exceeds the limit.',
   'form.form_accepted_success.message': 'Form accepted successfully',
   'form.form_accepted_error.message': 'Form accepting failed',
   'form.form_reject_success.message': 'Form rejected successfully',
@@ -174,6 +178,10 @@ export const en = {
   'form.question_line.and_see_instructions_on_how_to_configure_interface_compliance':
     ' and see instructions on how to configure interface compliance.',
   'form.description.goToRequirement': 'Go to requirement',
+  'form.disclaimer.message': `All inserted information will be publicly available after submitting the full assessment.
+   The inserted e-mail address will be publicly visible, used for sending a link to the draft entry and used as point 
+   of contact for the GovStack team. For further information on data processing, please visit our `,
+  'form.disclaimer.page': ` page.`,
 
   'image.alt.logoFor': 'Logo for: {name}',
 

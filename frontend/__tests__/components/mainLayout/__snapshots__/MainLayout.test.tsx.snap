@@ -90,6 +90,16 @@ exports[`Unit test for MainLayout component: render the MainLayout component 1`]
               Help
             </button>
           </div>
+          <button
+            class="header-menu-button"
+          >
+            Imprint
+          </button>
+          <button
+            class="header-menu-button"
+          >
+            Data Protection Notice
+          </button>
         </div>
       </div>
     </div>

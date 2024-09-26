@@ -4,6 +4,8 @@ services:
       build:
         context: ./frontend
         dockerfile: ./Dockerfile
+      volumes:
+      - ./content/custom:/opt/app/content/custom
       ports:
         - 3003:3003
       environment:
