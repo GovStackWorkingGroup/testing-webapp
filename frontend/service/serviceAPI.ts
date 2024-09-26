@@ -18,7 +18,8 @@ import {
   SubmitDraftResponseType,
   SubmittingFormResponseType,
   FilterOptionsType,
-  ListFilters
+  ListFilters,
+  FormErrorResponseType
 } from './types';
 
 export const baseUrl = process.env.API_URL;
@@ -237,7 +238,7 @@ export const getSoftwareDetails = async (softwareName: string) => {
     });
 };
 
-export const saveSoftwareDraft = async (software: FormValuesType) => {
+export const saveSoftwareDraft = async (software: FormValuesType): Promise<{ data?: POSTSoftwareAttributesType; error?: FormErrorResponseType; status: boolean }> => {
   const formData = new FormData();
   formData.append('softwareName', software.softwareName.value);
   formData.append('logo', software.softwareLogo.value as File);
@@ -249,21 +250,28 @@ export const saveSoftwareDraft = async (software: FormValuesType) => {
   formData.append('compliance[0][version]', software.softwareVersion.value);
 
   return await fetch(`${baseUrl}/compliance/drafts`, {
-    method: 'post',
+    method: 'POST',
     body: formData,
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(response.statusText);
-      }
+        const errorMessage = response.status === 413
+          ? 'The logo file size exceeds the 1 MB limit. Please upload a smaller file.'
+          : response.statusText || 'An error occurred while saving the draft.';
 
+        const error: FormErrorResponseType = { status: response.status, name: 'CustomError', message: errorMessage };
+        throw error;
+      }
       return response.json();
     })
     .then<Success<POSTSoftwareAttributesType>>((response) => {
       return { data: response, status: true };
     })
-    .catch<Failure>((error) => {
-      return { error, status: false };
+    .catch((error: FormErrorResponseType) => {
+      return {
+        error,
+        status: false,
+      };
     });
 };
 
@@ -314,7 +322,7 @@ export const getComplianceRequirements = async () => {
 export const updateDraftDetailsStepOne = async (
   draftUUID: string,
   data: FormValuesType
-) => {
+): Promise<{ data?: POSTSoftwareAttributesType; error?: FormErrorResponseType; status: boolean }> => {
   const formData = new FormData();
 
   formData.append('softwareName', data.softwareName.value);
@@ -331,16 +339,23 @@ export const updateDraftDetailsStepOne = async (
   })
     .then((response) => {
       if (!response.ok) {
-        throw new Error(response.statusText);
-      }
+        const errorMessage = response.status === 413
+          ? 'The logo file size exceeds the 1 MB limit. Please upload a smaller file.'
+          : response.statusText || 'An error occurred while updating the draft.';
 
+        const error: FormErrorResponseType = { status: response.status, name: 'CustomError', message: errorMessage };
+        throw error;
+      }
       return response.json();
     })
-    .then<Success<POSTSoftwareAttributesType>>((actualData) => {
-      return { data: actualData, status: true };
+    .then<Success<POSTSoftwareAttributesType>>((response) => {
+      return { data: response, status: true };
     })
-    .catch<Failure>((error) => {
-      return { error, status: false };
+    .catch((error: FormErrorResponseType) => {
+      return {
+        error,
+        status: false,
+      };
     });
 };
 

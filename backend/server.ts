@@ -20,19 +20,30 @@ import buildReportRoutes from './src/routes/record';
 import buildComplianceRoutes from "./src/routes/compliance";
 import { startCronJobs } from "./src/cronJobs";
 import buildAuthRoutes from "./src/routes/auth";
+import multer from 'multer';
 
 const port: number = parseInt(process.env.PORT as string, 10) || 5000;
-const app =  express();
+const app = express();
 
 createConnection(appConfig).connectToMongo();
 app.use(cors());
 app.use('d', apiKeyAuth(/^API_KEY_/)); // Matching all process.env.API_KEY_*
 
 app.use(express.json());
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(buildReportRoutes(reportController(reportRepository, mongoReportRepository)));
 app.use(buildComplianceRoutes(complianceController(complianceRepository, mongoComplianceRepository)));
 app.use(buildAuthRoutes());
+
+app.use((err: any, _: express.Request, res: express.Response, next: express.NextFunction) => {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(413).json({ message: 'File too large.' });
+        }
+    }
+    return next(err);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
@@ -40,4 +51,3 @@ app.listen(port, () => {
 });
 
 export default app;
-
