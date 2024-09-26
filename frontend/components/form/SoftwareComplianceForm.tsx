@@ -167,7 +167,7 @@ const SoftwareComplianceForm = ({
           localStorage.removeItem(SOFTWARE_ATTRIBUTES_STORAGE_NAME);
 
           router.replace({
-            query: { draftUUID: response.data.uniqueId, formStep: 2 },
+            query: { draftUUID: response?.data?.uniqueId, formStep: 2 },
           });
           setIsDraftSaved(true);
           nextStepRef.current?.goNext();
