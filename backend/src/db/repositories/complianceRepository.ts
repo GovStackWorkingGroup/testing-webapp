@@ -42,9 +42,9 @@ const mongoComplianceRepository: ComplianceDbRepository = {
     }
   },
 
-  async getSoftwareComplianceDetail(softwareName: string) {
+  async getSoftwareComplianceDetail(softwareName: string, isAuthenticated: Boolean) {
     try {
-      const results = await Compliance.aggregate(softwareDetailAggregationPipeline(softwareName)).exec();
+      const results = await Compliance.aggregate(softwareDetailAggregationPipeline(softwareName, isAuthenticated)).exec();
       return results;
     } catch (error) {
       console.error("Root cause of fetching software compliance details:", error);
