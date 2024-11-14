@@ -9,7 +9,7 @@ class GitBookPageManagerError extends Error {
 }
 
 class KeyDigitalFunctionalitiesExtractor {
-    private static readonly DEFAULT_REQUIREMENT_STATUS = "(REQUIRED)";
+    private static readonly DEFAULT_REQUIREMENT_STATUS = "";
 
     extractKeyDigitalFunctionalitiesRequirements(pageContent: any, spaceID, requirementURL, bbKey) {
         if (!pageContent?.document?.nodes) {

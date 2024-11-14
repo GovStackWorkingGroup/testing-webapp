@@ -16,7 +16,7 @@ import { softwareAttributesDefaultValues } from './helpers';
 
 export type FormValuesType = {
   softwareName: { value: string; error: boolean };
-  softwareLogo: { value: File | undefined; error: boolean };
+  softwareLogo: { value: File | undefined; error: { error: boolean; message: formatTranslationType } };
   softwareWebsite: { value: string; error: { error: boolean; message: formatTranslationType } };
   softwareDocumentation: { value: string; error: { error: boolean; message: formatTranslationType } };
   toolDescription: { value: string; error: boolean };
@@ -91,7 +91,7 @@ const SoftwareAttributesForm = ({
           },
           softwareLogo: {
             value: logoFile ? (logoFile as File) : undefined,
-            error: false,
+            error: { error: false, message: '' },
           },
           softwareWebsite: {
             value: draftData.website,
@@ -169,7 +169,7 @@ const SoftwareAttributesForm = ({
     if (name === 'email' || name === 'confirmEmail') {
       const isError = !validator.isEmail(value);
       setFormValues(setFieldValues(name, value, isError, format('form.invalid_email.message')));
-    } else if (name === 'softwareWebsite' || name ==='softwareDocumentation') {
+    } else if (name === 'softwareWebsite' || name === 'softwareDocumentation') {
       const isError = !validator.isURL(value, { require_protocol: true });
       setFormValues(setFieldValues(name, value, isError, format('form.invalid_url.message')));
     } else {
@@ -192,29 +192,25 @@ const SoftwareAttributesForm = ({
   const handleSelectedFile = (selectedFile: File | undefined) => {
     setFormValues((prevFormValues) => ({
       ...prevFormValues,
-      softwareLogo: { value: selectedFile, error: false },
+      softwareLogo: {
+        value: selectedFile,
+        error: { error: !selectedFile, message: selectedFile ? '' : format('form.no_file_selected.message') },
+      },
     }));
   };
+
 
   const isFormValid = (values: FormValuesType): boolean => {
     const updatedValues = { ...values };
     const entries = Object.entries(updatedValues);
     let isValid = true;
-
-    for (const [fieldName, field] of entries) {
-      if (fieldName === 'softwareLogo') {
-        if (!field.value) {
-          updatedValues.softwareLogo.error = true;
-
-          isValid = false;
-        } else if (
-          Object.keys(field.value as File).length === 0 &&
-          field.value?.constructor === Object
-        ) {
-          updatedValues.softwareLogo.error = true;
-
-          isValid = false;
-        }
+    for (const [fieldName, field] of Object.entries(updatedValues)) {
+      if (!updatedValues.softwareLogo.value) {
+        updatedValues.softwareLogo.error = {
+          error: true,
+          message: format('form.no_file_selected.message'),
+        };
+        isValid = false;
       } else if (fieldName === 'email' && typeof field.value === 'string') {
         if (field.value.trim() === '') {
           updatedValues.email.error.error = true;
@@ -351,9 +347,10 @@ const SoftwareAttributesForm = ({
             </p>
             <DragDrop
               selectedFile={(selectedFile) => handleSelectedFile(selectedFile)}
-              isInvalid={formValues.softwareLogo?.error}
+              isInvalid={formValues.softwareLogo?.error.error}
               defaultFile={formValues.softwareLogo.value}
               uploadFileType="image"
+              customErrorMessage={formValues.softwareLogo.error.message}
             />
           </div>
           <div className="form-field-container">

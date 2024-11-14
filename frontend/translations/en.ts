@@ -122,6 +122,8 @@ export const en = {
     'Invalid file format. Please select a PDF, word document, or plain text file.',
   'form.invalid_image_file_format.message':
     'Invalid file format. Please select a PNG, JPG, or SVG file.',
+  'form.invalid_file_size.message': 'Maximum file size is {size} MB. Please upload a smaller file.',
+  'form.no_file_selected.message': 'No file selected. Please choose a file to upload.',
   'form.link.label': 'Link',
   'form.required_field.message': 'This field is required.',
   'form.file_size_error.message': 'The file size exceeds the limit.',

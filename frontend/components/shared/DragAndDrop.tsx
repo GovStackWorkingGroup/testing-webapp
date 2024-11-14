@@ -7,6 +7,7 @@ import {
 } from 'react-icons/ri';
 import classNames from 'classnames';
 import useTranslations from '../../hooks/useTranslation';
+import { formatTranslationType } from '../../service/types';
 
 type DragDrop = {
   selectedFile: (file: File | undefined) => void;
@@ -14,6 +15,7 @@ type DragDrop = {
   defaultFile: File | undefined;
   name?: string;
   uploadFileType: 'image' | 'document';
+  customErrorMessage?: formatTranslationType;
 };
 
 const allowedFormats = ['image/png', 'image/jpeg', 'image/svg+xml'];
@@ -23,15 +25,19 @@ const allowedFormatsDocx = [
   'text/plain',
 ];
 
+const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE || `${1 * 1024 * 1024}`, 10); // Default to 1 MB in bytes 
+
 const DragDrop = ({
   selectedFile,
   isInvalid,
   defaultFile,
   name,
   uploadFileType,
+  customErrorMessage,
 }: DragDrop) => {
   const [dragIsOver, setDragIsOver] = useState(false);
   const [isTypeFileError, setTypeFileError] = useState<boolean>(false);
+  const [isSizeError, setIsSizeError] = useState<boolean>(false);
   const [file, setFile] = useState<File>();
 
   const { format } = useTranslations();
@@ -68,30 +74,30 @@ const DragDrop = ({
     setDragIsOver(false);
   };
 
+  const handleFileValidation = (selectedFile: File) => {
+    if (isFileFormatAllowed(selectedFile.type) && selectedFile.size <= MAX_FILE_SIZE) {
+      setFile(selectedFile);
+      setIsSizeError(false);
+      setTypeFileError(false);
+    } else if (selectedFile.size > MAX_FILE_SIZE) {
+      setFile(undefined);
+      setIsSizeError(true);
+      setTypeFileError(false);
+    } else if (!isFileFormatAllowed(selectedFile.type)) {
+      setFile(undefined);
+      setIsSizeError(false);
+      setTypeFileError(true);
+    }
+  };
+
   const handleDrop = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-
     setDragIsOver(false);
 
     // Fetch the files
     const droppedFile = event.dataTransfer.files[0];
 
-    if (isFileFormatAllowed(droppedFile.type)) {
-      setFile(droppedFile);
-
-      // Use FileReader to read file content
-      const reader = new FileReader();
-
-      reader.onerror = () => {
-        setTypeFileError(true);
-      };
-
-      reader.readAsDataURL(droppedFile);
-
-      return reader;
-    } else {
-      setTypeFileError(true);
-    }
+    handleFileValidation(droppedFile);
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -99,12 +105,7 @@ const DragDrop = ({
 
     if (e.target.files && e.target.files.length > 0) {
       const selectedFile = e.target.files[0];
-      if (isFileFormatAllowed(selectedFile.type)) {
-        setFile(selectedFile);
-        setTypeFileError(false);
-      } else {
-        setTypeFileError(true);
-      }
+      handleFileValidation(selectedFile);
     }
   };
 
@@ -136,8 +137,7 @@ const DragDrop = ({
         </label>
         <label htmlFor={inputId} className="drag-drop-file-text-3">
           {uploadFileType === 'image' && format('drag_drop.image_format.label')}
-          {uploadFileType === 'document' &&
-            format('drag_drop.doc_format.label')}
+          {uploadFileType === 'document' && format('drag_drop.doc_format.label')}
         </label>
         <input
           id={inputId}
@@ -146,6 +146,11 @@ const DragDrop = ({
           style={{ visibility: 'hidden' }}
         ></input>
       </div>
+      {isSizeError && (
+        <p className="custom-error-message">
+          {format('form.invalid_file_size.message', { size: (MAX_FILE_SIZE / (1024 * 1024)).toString() })}
+        </p>
+      )}
       {isTypeFileError && (
         <p className="custom-error-message">
           {uploadFileType === 'image' &&
@@ -154,9 +159,9 @@ const DragDrop = ({
             format('form.invalid_doc_file_format.message')}
         </p>
       )}
-      {isInvalid && (
+      {isInvalid && !isTypeFileError && !isSizeError && (
         <p className="custom-error-message">
-          {format('form.required_field.message')}
+          {customErrorMessage || format('form.required_field.message')}
         </p>
       )}
       {file && (
