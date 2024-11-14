@@ -199,7 +199,6 @@ const SoftwareAttributesForm = ({
     }));
   };
 
-
   const isFormValid = (values: FormValuesType): boolean => {
     const updatedValues = { ...values };
     const entries = Object.entries(updatedValues);

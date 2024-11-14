@@ -25,7 +25,7 @@ const allowedFormatsDocx = [
   'text/plain',
 ];
 
-const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE || `${1 * 1024 * 1024}`, 10); // Default to 1 MB in bytes 
+const MAX_FILE_SIZE = parseInt(process.env.REACT_APP_MAX_FILE_SIZE || `${1 * 1024 * 1024}`, 10); // Default to 1 MB in bytes
 
 const DragDrop = ({
   selectedFile,
