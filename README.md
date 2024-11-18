@@ -6,6 +6,12 @@ Frontend web application for the GovStack test platform.
 
 ### Frontend
 
+## Adding Custom HTML Pages to Your Application
+
+To customize the content of specific pages in your application, you can add your static HTML files to the `frontend/content/custom/` directory. This directory is mapped into the Docker container, allowing your application to access and serve these files at runtime. Each HTML file should be named according to the page it represents (e.g., `imprint.html` for the Imprint page).
+
+If a custom HTML file is not provided in the `custom` directory, the application will automatically fall back to using the default template located in the `frontend/content/template/` directory. This ensures that your application can still display content even when custom pages are not available.
+
 #### Prerequisites
 
 - Node.js (Version 16 or greater)
