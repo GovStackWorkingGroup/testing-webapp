@@ -54,7 +54,7 @@ export const softwareDetailAggregationPipeline = (
     {
       $addFields: {
         complianceVersion: "$documents.compliance.version",
-        complianceStatus: "$documents.compliance.status",
+        complianceStatus: "$documents.status", // Carry forward the document's status
         bbDetailsArray: {
           $map: {
             input: { $ifNull: [{ $objectToArray: "$documents.compliance.bbDetails" }, []] },
@@ -84,39 +84,29 @@ export const softwareDetailAggregationPipeline = (
     // Group by compliance (status and version) to prepare the compliance list
     {
       $group: {
-        _id: {
-          status: "$complianceStatus",
-          version: "$complianceVersion"
+        _id: "$documents._id",
+        compliance: {
+          $push: {
+            status: "$complianceStatus",
+            version: "$complianceVersion",
+            bbDetailsArray: "$bbDetailsArray"
+          }
         },
-        bbDetailsArray: { $push: "$bbDetailsArray" }
+        latestDocumentRecord: { $first: "$latestDocumentRecord" }
+
       }
     },
 
     // Flatten bbDetailsArray for each compliance entry
     {
-      $addFields: {
-        bbDetailsArray: {
-          $reduce: {
-            input: "$bbDetailsArray",
-            initialValue: [],
-            in: { $concatArrays: ["$$value", "$$this"] }
-          }
-        }
-      }
-    },
-
-    // Restructure the compliance list
-    {
       $group: {
         _id: null,
         compliance: {
           $push: {
-            status: "$_id.status",
-            version: "$_id.version",
-            bbDetailsArray: "$bbDetailsArray"
+            $arrayElemAt: ["$compliance", 0]
           }
         },
-        latestDocumentRecord: { $first: "$$ROOT.latestDocumentRecord" }
+        latestDocumentRecord: { $first: "$latestDocumentRecord" }
       }
     },
 
@@ -130,7 +120,8 @@ export const softwareDetailAggregationPipeline = (
         documentation: "$latestDocumentRecord.documentation",
         description: "$latestDocumentRecord.description",
         pointOfContact: "$latestDocumentRecord.pointOfContact",
-        compliance: 1
+        status: "$latestDocumentRecord.status",
+        compliance: 1,
       }
     }
   ];
