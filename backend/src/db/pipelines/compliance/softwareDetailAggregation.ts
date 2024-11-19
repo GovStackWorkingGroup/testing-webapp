@@ -50,7 +50,7 @@ export const softwareDetailAggregationPipeline = (
       $unwind: { path: "$documents.compliance", preserveNullAndEmptyArrays: true }
     },
 
-    // Keep the version and bbDetails of each compliance object
+    // Process bbDetails into a structured format, keeping the array intact
     {
       $addFields: {
         complianceVersion: "$documents.compliance.version",
@@ -81,29 +81,17 @@ export const softwareDetailAggregationPipeline = (
       }
     },
 
-    {
-      $unwind: { path: "$bbDetailsArray", preserveNullAndEmptyArrays: true }
-    },
-
-    // Group all compliance objects with their version and bbDetails for the final output
+    // Group by document occurrence, keeping compliance details separate
     {
       $group: {
-        _id: "$documents.softwareName",
+        _id: "$documents._id", // Group by the document ID to maintain separate compliance lists for each document
         compliance: {
           $push: {
             version: "$complianceVersion",
-            bbDetails: {
-              bbName: "$bbDetailsArray.bbName",
-              bbVersion: "$bbDetailsArray.bbVersion",
-              requirements: "$bbDetailsArray.requirements",
-              interface: "$bbDetailsArray.interface",
-              deploymentCompliance: "$bbDetailsArray.deploymentCompliance",
-              creationDate: "$bbDetailsArray.creationDate",
-              status: "$bbDetailsArray.status"
-            }
+            bbDetails: "$bbDetailsArray"
           }
         },
-        latestDocumentRecord: { $first: "$latestDocumentRecord" }  // Only take the latest document once
+        latestDocumentRecord: { $first: "$latestDocumentRecord" }
       }
     },
 
