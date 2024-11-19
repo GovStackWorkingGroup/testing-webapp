@@ -54,7 +54,8 @@ export const softwareDetailAggregationPipeline = (
     {
       $addFields: {
         complianceVersion: "$documents.compliance.version",
-        complianceStatus: "$documents.status", // Carry forward the document's status
+        complianceStatus: "$documents.status",
+        complianceDocumentId: "$documents._id",
         bbDetailsArray: {
           $map: {
             input: { $ifNull: [{ $objectToArray: "$documents.compliance.bbDetails" }, []] },
@@ -89,6 +90,7 @@ export const softwareDetailAggregationPipeline = (
           $push: {
             status: "$complianceStatus",
             version: "$complianceVersion",
+            id: "$complianceDocumentId",
             bbDetailsArray: "$bbDetailsArray"
           }
         },
