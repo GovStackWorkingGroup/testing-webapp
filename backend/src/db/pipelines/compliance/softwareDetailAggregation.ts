@@ -56,6 +56,7 @@ export const softwareDetailAggregationPipeline = (
         complianceVersion: "$documents.compliance.version",
         complianceStatus: "$documents.status",
         complianceDocumentId: "$documents._id",
+        complianceDocumentUniqueId: "$documents.uniqueId",
         bbDetailsArray: {
           $map: {
             input: { $ifNull: [{ $objectToArray: "$documents.compliance.bbDetails" }, []] },
@@ -91,6 +92,9 @@ export const softwareDetailAggregationPipeline = (
             status: "$complianceStatus",
             version: "$complianceVersion",
             id: "$complianceDocumentId",
+            uniqueIdz: {
+              $ifNull: ["$complianceDocumentUniqueId", null]
+            },
             bbDetailsArray: "$bbDetailsArray"
           }
         },
