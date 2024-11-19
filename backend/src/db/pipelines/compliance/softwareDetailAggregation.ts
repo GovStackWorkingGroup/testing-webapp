@@ -45,7 +45,7 @@ export const softwareDetailAggregationPipeline = (
       $unwind: "$documents"  // Unwind to process each document individually
     },
 
-    // Unwind the compliance list to take each compliance object
+    // Unwind the compliance list to process each compliance object
     {
       $unwind: { path: "$documents.compliance", preserveNullAndEmptyArrays: true }
     },
@@ -54,6 +54,7 @@ export const softwareDetailAggregationPipeline = (
     {
       $addFields: {
         complianceVersion: "$documents.compliance.version",
+        complianceStatus: "$documents.compliance.status",
         bbDetailsArray: {
           $map: {
             input: { $ifNull: [{ $objectToArray: "$documents.compliance.bbDetails" }, []] },
@@ -73,36 +74,61 @@ export const softwareDetailAggregationPipeline = (
                     onNull: null
                   }
                 }
-              },
-              status: "$$detail.v.status"
+              }
             }
           }
         }
       }
     },
 
-    // Group by document occurrence, keeping compliance details separate
+    // Group by compliance (status and version) to prepare the compliance list
     {
       $group: {
-        _id: "$documents._id", // Group by the document ID to maintain separate compliance lists for each document
-        compliance: {
-          $push: {
-            version: "$complianceVersion",
-            bbDetails: "$bbDetailsArray"
-          }
+        _id: {
+          status: "$complianceStatus",
+          version: "$complianceVersion"
         },
-        latestDocumentRecord: { $first: "$latestDocumentRecord" }
+        bbDetailsArray: { $push: "$bbDetailsArray" }
       }
     },
 
-    // Final projection for output
+    // Flatten bbDetailsArray for each compliance entry
+    {
+      $addFields: {
+        bbDetailsArray: {
+          $reduce: {
+            input: "$bbDetailsArray",
+            initialValue: [],
+            in: { $concatArrays: ["$$value", "$$this"] }
+          }
+        }
+      }
+    },
+
+    // Restructure the compliance list
+    {
+      $group: {
+        _id: null,
+        compliance: {
+          $push: {
+            status: "$_id.status",
+            version: "$_id.version",
+            bbDetailsArray: "$bbDetailsArray"
+          }
+        },
+        latestDocumentRecord: { $first: "$$ROOT.latestDocumentRecord" }
+      }
+    },
+
+    // Final projection to return the desired structure
     {
       $project: {
         _id: 0,
-        softwareName: "$_id",
+        softwareName: "$latestDocumentRecord.softwareName",
         logo: "$latestDocumentRecord.logo",
         website: "$latestDocumentRecord.website",
         documentation: "$latestDocumentRecord.documentation",
+        description: "$latestDocumentRecord.description",
         pointOfContact: "$latestDocumentRecord.pointOfContact",
         compliance: 1
       }
