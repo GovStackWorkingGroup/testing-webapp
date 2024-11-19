@@ -92,7 +92,7 @@ export const softwareDetailAggregationPipeline = (
             status: "$complianceStatus",
             version: "$complianceVersion",
             id: "$complianceDocumentId",
-            uniqueIdz: {
+            uniqueId: {
               $ifNull: ["$complianceDocumentUniqueId", null]
             },
             bbDetailsArray: "$bbDetailsArray"
