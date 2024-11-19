@@ -21,6 +21,7 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
     },
     {
       $project: {
+        originalId: "$_id",
         bbDetails: {
           $arrayToObject: {
             $map: {
@@ -56,7 +57,8 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
           $push: {
             version: "$version",
             bbDetails: "$bbDetails",
-            deploymentCompliance: "$deploymentCompliance"
+            deploymentCompliance: "$deploymentCompliance",
+            id: "$originalId"
           }
         }
       }
