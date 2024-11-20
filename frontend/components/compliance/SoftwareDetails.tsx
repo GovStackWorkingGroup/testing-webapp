@@ -47,28 +47,28 @@ const SoftwareDetails = ({
       }`}
     >
       {complianceSection ? (
-        <div className="software-attributes-title-with-link">
+        <div className='software-attributes-title-with-link'>
           <p>
             {title}{' '}
-            <span className="bold">{`${format(
-              'table.software_name.label'
-            )} ${softwareVersion}`}</span>
+            <span className='bold'>{`${format('table.software_name.label')} ${
+              softwareVersion ? softwareVersion : format('app.not_available')
+            }`}</span>
           </p>
           {viewReportDetails && (
             <Button
-              type="link"
+              type='link'
               href={`/${COMPLIANCE_TESTING_DETAILS_PAGE}${softwareName}/reportDetails/${softwareId}`}
               text={format('app.view_report_details.label')}
-              styles="primary-button"
+              styles='primary-button'
             />
           )}
         </div>
       ) : (
-        <div className="software-attributes-title-with-link">
+        <div className='software-attributes-title-with-link'>
           <p>{title}</p>
           {editButton && (
             <p
-              className="software-attributes-title-edit-link"
+              className='software-attributes-title-edit-link'
               onClick={() => handlePressEdit()}
             >
               {format('app.edit.label')}

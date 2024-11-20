@@ -50,6 +50,7 @@ export const en = {
   'app.view_report_details.label': 'View report details',
   'app.view_report_details.noInformation': 'Information has not been provided for the {section} of the compliance form',
   'app.page_description_template': 'This page is currently a template. To populate it with content, manual updates in the IDE are required. If you are seeing this message and believe it is an error, please contact the site administrator for assistance.',
+  'app.not_available': 'NOT_AVAILABLE',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',

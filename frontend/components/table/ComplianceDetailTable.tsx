@@ -7,14 +7,20 @@ import useTranslations from '../../hooks/useTranslation';
 import { SoftwareDetailsDataType } from '../../service/types';
 import BBImage from '../BuildingBlocksImage';
 import CustomSelect, { OptionsType } from '../shared/inputs/Select';
+import Button from '../shared/buttons/Button';
 
 type ComplianceDetailTable = {
   data: SoftwareDetailsDataType | undefined;
-  setUpdatedData: (data: ComplianceDetailFormValuesType[] | undefined) => void;
+  savedFormState: { [key: string]: boolean };
   handleOpenEvaluationSchemaModal: (value: boolean) => void;
+  handleFormAction: (
+    data: ComplianceDetailFormValuesType[],
+    type: 'update' | 'accept' | 'reject'
+  ) => Promise<void>;
 };
 
 type TransformedDataType = {
+  id: string;
   bbName: string;
   interfaceCompliance: { requirements: RequirementsType[] };
   requirementSpecificationCompliance: {
@@ -24,6 +30,7 @@ type TransformedDataType = {
 };
 
 export type ComplianceDetailFormValuesType = {
+  id: string;
   bbName: string;
   interface: { level: number; note: string };
   deployment: { level: number; note: string };
@@ -32,8 +39,9 @@ export type ComplianceDetailFormValuesType = {
 
 const ComplianceDetailTable = ({
   data,
-  setUpdatedData,
+  savedFormState,
   handleOpenEvaluationSchemaModal,
+  handleFormAction,
 }: ComplianceDetailTable) => {
   const [transformedData, setTransformedData] =
     useState<TransformedDataType[]>();
@@ -51,15 +59,19 @@ const ComplianceDetailTable = ({
 
   useEffect(() => {
     if (data?.formDetails?.length) {
-      const newData = Object.entries(data?.formDetails[0].bbDetails).map(
-        ([bbName, rest]) => ({
-          bbName,
-          ...rest,
-        })
+      const newData = Object.entries(data.formDetails[0].bbDetails).map(
+        ([bbName, rest]) => {
+          return {
+            id: data.formDetails[0].id,
+            bbName,
+            ...rest,
+          };
+        }
       );
       setTransformedData(newData);
       const updatedData = newData.map((item) => {
         return {
+          id: item.id,
           bbName: item.bbName,
           interface: { level: -1, note: '' },
           deployment: { level: -1, note: '' },
@@ -70,11 +82,16 @@ const ComplianceDetailTable = ({
     }
   }, [data]);
 
-  useEffect(() => {
-    if (updatedFormValues) {
-      setUpdatedData(updatedFormValues);
+  const onAction = (
+    data: ComplianceDetailFormValuesType[] | undefined,
+    type: 'update' | 'accept' | 'reject'
+  ) => {
+    if (!data) {
+      throw new Error('Data is missing');
     }
-  }, [updatedFormValues]);
+
+    handleFormAction(data, type);
+  };
 
   const handleOnSelect = (value: SingleValue<OptionsType>) => {
     const index = value?.value;
@@ -197,17 +214,17 @@ const ComplianceDetailTable = ({
 
   return data?.formDetails?.length ? (
     <div>
-      <table className="main-table">
+      <table className='main-table'>
         <thead>
-          <tr className="border">
+          <tr className='border'>
             {headers.map((header, indexKey) => {
               if (header === 'table.compliance_level.label') {
                 return (
                   <th key={`header-${header}-${indexKey}`}>
-                    <div className="th-header-with-icon">
+                    <div className='th-header-with-icon'>
                       <p>{format(header)}</p>
                       <RiQuestionLine
-                        className="th-icon-question-mark cursor-pointer"
+                        className='th-icon-question-mark cursor-pointer'
                         onClick={() => handleOpenEvaluationSchemaModal(true)}
                       />
                     </div>
@@ -220,7 +237,7 @@ const ComplianceDetailTable = ({
           </tr>
         </thead>
         <tbody>
-          <tr className="border">
+          <tr className='border'>
             <td>{format('table.deployment.label')}</td>
             <td>{'-'}</td>
             <td>
@@ -244,10 +261,10 @@ const ComplianceDetailTable = ({
               />
             </td>
             <td>
-              <div className="notes-container">
+              <div className='notes-container'>
                 <textarea
-                  id="deployment"
-                  className="notes-textarea"
+                  id='deployment'
+                  className='notes-textarea'
                   onChange={(event) =>
                     handleTextarea('deployment', event?.target.value)
                   }
@@ -255,36 +272,32 @@ const ComplianceDetailTable = ({
               </div>
             </td>
           </tr>
-          <tr className="border">
+          <tr className='border'>
             <td>
               {format('evaluation_schema.requirement_specification.label')}
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
+                                  <td className={classNames('border-none')}>
+                                    <div className='td-bb-image-name-container'>
+                                      <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
                                     </div>
                                   </td>
@@ -299,30 +312,26 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
+                                  <td className={classNames('border-none')}>
                                     <CustomSelect
                                       options={[
                                         {
@@ -357,38 +366,34 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table'>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="notes-container">
+                                  <td className={classNames('border-none')}>
+                                    <div className='notes-container'>
                                       <textarea
                                         id={`requirement-${item.bbName}`}
-                                        className="notes-textarea"
+                                        className='notes-textarea'
                                         onChange={(event) =>
                                           handleTextarea(
-                                                  `requirement-${item.bbName}`,
-                                                  event?.target.value
+                                            `requirement-${item.bbName}`,
+                                            event?.target.value
                                           )
                                         }
                                       />
@@ -406,14 +411,14 @@ const ComplianceDetailTable = ({
               </table>
             </td>
           </tr>
-          <tr className="border">
+          <tr className='border'>
             <td>{format('table.interface_compliance.label')}</td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
@@ -426,8 +431,8 @@ const ComplianceDetailTable = ({
                                       'border-bottom': indexKey === 1,
                                     })}
                                   >
-                                    <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
+                                    <div className='td-bb-image-name-container'>
+                                      <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
                                     </div>
                                   </td>
@@ -442,12 +447,12 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table'>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
@@ -494,33 +499,33 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
-                  <tr className="">
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                  <tr className=''>
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
                           {transformedData?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
                                   <td
                                     className={classNames('border-none', {
                                       'border-bottom': indexKey === 1,
                                     })}
                                   >
-                                    <div className="notes-container">
+                                    <div className='notes-container'>
                                       <textarea
                                         id={`interface-${item.bbName}`}
-                                        className="notes-textarea"
+                                        className='notes-textarea'
                                         onChange={(event) =>
                                           handleTextarea(
-                                                  `interface-${item.bbName}`,
-                                                  event?.target.value
+                                            `interface-${item.bbName}`,
+                                            event?.target.value
                                           )
                                         }
                                       />
@@ -540,6 +545,27 @@ const ComplianceDetailTable = ({
           </tr>
         </tbody>
       </table>
+      <div className='table-action-buttons'>
+        <Button
+          type='button'
+          text={format('app.save.label')}
+          styles='secondary-button'
+          onClick={() => onAction(updatedFormValues, 'update')}
+          showCheckIcon={savedFormState[data.formDetails[0].id]}
+        />
+        <Button
+          type='button'
+          text={format('form.reject.label')}
+          styles='primary-red-button'
+          onClick={() => onAction(updatedFormValues, 'reject')}
+        />
+        <Button
+          type='button'
+          text={format('form.accept.label')}
+          styles='primary-button'
+          onClick={() => onAction(updatedFormValues, 'accept')}
+        />
+      </div>
     </div>
   ) : (
     <></>

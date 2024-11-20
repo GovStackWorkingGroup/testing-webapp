@@ -2,13 +2,16 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
-import { COMPLIANCE_TESTING_RESULT_PAGE } from '../../../../service/constants';
+import {
+  COMPLIANCE_TESTING_RESULT_PAGE,
+  StatusEnum,
+} from '../../../../service/constants';
 import BackToPageButton from '../../../../components/shared/buttons/BackToPageButton';
 import {
   getSoftwareDetails,
   getSoftwareDetailsReport,
   handleReviewSoftwareForm,
-  handleDeleteSoftwareForm
+  handleDeleteSoftwareForm,
 } from '../../../../service/serviceAPI';
 import SoftwareDetails from '../../../../components/compliance/SoftwareDetails';
 import SoftwareComplianceWith from '../../../../components/compliance/SoftwareComplianceWith';
@@ -16,6 +19,7 @@ import {
   FormUpdatedObject,
   SoftwareDetailsDataType,
   SoftwareDetailsType,
+  SoftwareDetailsTypeCompliance,
 } from '../../../../service/types';
 import SoftwareAttributes from '../../../../components/compliance/SoftwareAttributes';
 import useTranslations from '../../../../hooks/useTranslation';
@@ -34,12 +38,9 @@ const SoftwareComplianceDetailsPage = () => {
   const [deleteSoftwareName, setDeleteSoftwareName] = useState<string>();
 
   const [softwareDetailsDataToApprove, setSoftwareDetailsDataToApprove] =
-    useState<SoftwareDetailsDataType>();
+    useState<SoftwareDetailsDataType[]>();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [updatedData, setUpdatedData] = useState<
-    ComplianceDetailFormValuesType[] | undefined
-  >();
-  const [isFormSaved, setIsFormSaved] = useState(false);
+  const [savedFormState, setSavedFormState] = useState({});
   const [displayEvaluationSchemaModal, setDisplayEvaluationSchemaModal] =
     useState(false);
 
@@ -60,7 +61,7 @@ const SoftwareComplianceDetailsPage = () => {
 
   useEffect(() => {
     if (softwareDetail.length) {
-      fetchSoftwareDetailsData(softwareDetail[0]._id);
+      fetchSoftwareDetailsData(softwareDetail[0].compliance);
     }
   }, [softwareDetail]);
 
@@ -71,10 +72,38 @@ const SoftwareComplianceDetailsPage = () => {
     }
   };
 
-  const fetchSoftwareDetailsData = async (id: string) => {
-    const data = await getSoftwareDetailsReport(id);
-    if (data.status) {
-      setSoftwareDetailsDataToApprove(data.data);
+  const formatSoftwareDetailsDataToApprove = (
+    data: SoftwareDetailsDataType[] = [],
+    id: string | undefined
+  ) => {
+    return data.filter((item) => item.formDetails[0].id === id)[0];
+  };
+
+  const fetchSoftwareDetailsData = async (
+    complianceArray: SoftwareDetailsTypeCompliance[]
+  ) => {
+    try {
+      const fetchComplianceFormsData = complianceArray.map((form) =>
+        getSoftwareDetailsReport(form.id || '')
+      );
+
+      const responses = await Promise.all(fetchComplianceFormsData);
+
+      if (responses.some((item) => !item.status)) {
+        throw new Error('Error fetching compliance forms data');
+      }
+
+      const softwareDetailsData = responses.map((response) => {
+        if ('data' in response) {
+          return response.data;
+        } else {
+          throw new Error('Response does not contain data');
+        }
+      });
+
+      setSoftwareDetailsDataToApprove(softwareDetailsData);
+    } catch (error) {
+      throw new Error(`[fetchSoftwareDetailsData]: ${error}`);
     }
   };
 
@@ -90,27 +119,29 @@ const SoftwareComplianceDetailsPage = () => {
 
   const handleDeleteEntry = async () => {
     if (deleteSoftwareName === softwareName) {
-      await handleDeleteSoftwareForm(softwareDetail[0]._id).then(
-        (response) => {
-          if (response.status) {
-            toast.success(format('form.form_deleted_success.message'), {
-              icon: <RiCheckboxCircleFill className="success-toast-icon" />,
-            });
-            router.push(COMPLIANCE_TESTING_RESULT_PAGE);
+      await handleDeleteSoftwareForm(softwareDetail[0]._id).then((response) => {
+        if (response.status) {
+          toast.success(format('form.form_deleted_success.message'), {
+            icon: <RiCheckboxCircleFill className='success-toast-icon' />,
+          });
+          router.push(COMPLIANCE_TESTING_RESULT_PAGE);
 
-            return;
-          } else {
-            toast.error(format('form.form_deleted_error.message'), {
-              icon: <RiErrorWarningFill className="error-toast-icon" />,
-            });
+          return;
+        } else {
+          toast.error(format('form.form_deleted_error.message'), {
+            icon: <RiErrorWarningFill className='error-toast-icon' />,
+          });
 
-            return;
-          }
-        });
+          return;
+        }
+      });
     }
   };
 
-  const handleFormAction = async (type: 'update' | 'accept' | 'reject') => {
+  const handleFormAction = async (
+    updatedData: ComplianceDetailFormValuesType[],
+    type: 'update' | 'accept' | 'reject'
+  ) => {
     if (updatedData) {
       const payload: FormUpdatedObject = {
         bbDetails: {},
@@ -121,7 +152,7 @@ const SoftwareComplianceDetailsPage = () => {
           bbName,
           interface: interfaceData,
           deployment,
-          requirement
+          requirement,
         } = item;
 
         payload.bbDetails[bbName] = {
@@ -140,12 +171,14 @@ const SoftwareComplianceDetailsPage = () => {
         };
       });
 
-      await handleReviewSoftwareForm(softwareDetail[0]._id, payload, type).then(
+      const complianceFormId = updatedData[0].id;
+
+      await handleReviewSoftwareForm(complianceFormId, payload, type).then(
         (response) => {
           if (response.status) {
             if (type === 'accept') {
               toast.success(format('form.form_accepted_success.message'), {
-                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+                icon: <RiCheckboxCircleFill className='success-toast-icon' />,
               });
               router.push(COMPLIANCE_TESTING_RESULT_PAGE);
 
@@ -154,16 +187,19 @@ const SoftwareComplianceDetailsPage = () => {
 
             if (type === 'update') {
               toast.success(format('form.form_update_success.message'), {
-                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+                icon: <RiCheckboxCircleFill className='success-toast-icon' />,
               });
-              setIsFormSaved(true);
+              setSavedFormState((prevState) => ({
+                ...prevState,
+                [complianceFormId]: true,
+              }));
 
               return;
             }
 
             if (type === 'reject') {
               toast.success(format('form.form_reject_success.message'), {
-                icon: <RiCheckboxCircleFill className="success-toast-icon" />,
+                icon: <RiCheckboxCircleFill className='success-toast-icon' />,
               });
               router.push(COMPLIANCE_TESTING_RESULT_PAGE);
 
@@ -176,7 +212,7 @@ const SoftwareComplianceDetailsPage = () => {
           if (!response.status) {
             if (type === 'accept') {
               toast.error(format('form.form_accepted_error.message'), {
-                icon: <RiErrorWarningFill className="error-toast-icon" />,
+                icon: <RiErrorWarningFill className='error-toast-icon' />,
               });
 
               return;
@@ -184,7 +220,7 @@ const SoftwareComplianceDetailsPage = () => {
 
             if (type === 'update') {
               toast.error(format('form.form_update_error.message'), {
-                icon: <RiErrorWarningFill className="error-toast-icon" />,
+                icon: <RiErrorWarningFill className='error-toast-icon' />,
               });
 
               return;
@@ -192,7 +228,7 @@ const SoftwareComplianceDetailsPage = () => {
 
             if (type === 'reject') {
               toast.error(format('form.form_reject_error.message'), {
-                icon: <RiErrorWarningFill className="error-toast-icon" />,
+                icon: <RiErrorWarningFill className='error-toast-icon' />,
               });
 
               return;
@@ -205,9 +241,42 @@ const SoftwareComplianceDetailsPage = () => {
     }
   };
 
+  const processSoftwareDetailsData = (softwareDetail: SoftwareDetailsType) => {
+    const ungroupedCompliance = softwareDetail[0].compliance;
+
+    const groupedCompliance = ungroupedCompliance.reduce(
+      (acc, item) => {
+        if (!acc[item.version]) {
+          acc[item.version] = [item];
+        } else {
+          acc[item.version].push(item);
+        }
+
+        return acc;
+      },
+      {} as {
+        [key: string]: SoftwareDetailsTypeCompliance[];
+      }
+    );
+
+    const processedDetail = {
+      ...softwareDetail[0],
+      compliance: Object.entries(groupedCompliance).map(
+        ([version, bbDetails]) => {
+          return {
+            softwareVersion: version,
+            bbDetails,
+          };
+        }
+      ),
+    };
+
+    return processedDetail;
+  };
+
   return (
     <div>
-      <div className="compliance-detail-page-container">
+      <div className='compliance-detail-page-container'>
         <BackToPageButton
           text={format('app.back_to_reports_list.label')}
           href={COMPLIANCE_TESTING_RESULT_PAGE}
@@ -219,79 +288,66 @@ const SoftwareComplianceDetailsPage = () => {
           />
         </SoftwareDetails>
         {isLoggedIn && (
-          <div className="software-attributes-section">
+          <div className='software-attributes-section'>
             <Input
-              name="softwareName"
+              name='softwareName'
               isInvalid={false}
               inputTitle={format('form.software_delete.placeholder')}
               errorMessage={format('form.required_field.message')}
               onChange={(event) => handleInputChange(event)}
-              inputKey="key-software-name"
+              inputKey='key-software-name'
             />
             <Button
-              type="button"
+              type='button'
               text={format('form.software_delete.label')}
-              styles="primary-red-button"
+              styles='primary-red-button'
               onClick={() => handleDeleteEntry()}
             />
           </div>
         )}
         {softwareDetail.length && softwareDetail[0].compliance.length
-          ? softwareDetail[0].compliance.map((item, indexKey) => (
-            <SoftwareDetails
-              title={format('app.compliance_with.label')}
-              complianceSection={true}
-              softwareVersion={item.softwareVersion}
-              softwareId={softwareDetail[0].compliance[indexKey]._id} // Pass the correct ID for each compliance item
-              key={`software-compliance-with-${indexKey}`}
-              viewReportDetails={true}
-            >
-              {isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1 ? (
-                <ComplianceDetailTable
-                  data={softwareDetailsDataToApprove}
-                  handleOpenEvaluationSchemaModal={(value) =>
-                    setDisplayEvaluationSchemaModal(value)
-                  }
-                  setUpdatedData={(data) => {
-                    setUpdatedData(data);
-                    setIsFormSaved(false);
-                  }}
-                />
-              ) : (
-                <SoftwareComplianceWith
-                  softwareComplianceData={item.bbDetails}
-                />
-              )}
-            </SoftwareDetails>
-          ))
+          ? processSoftwareDetailsData(softwareDetail).compliance.map(
+            (complianceItem, indexKey) => {
+              return complianceItem.bbDetails.map((detailItem) => {
+                return (
+                  <SoftwareDetails
+                    title={format('app.compliance_with.label')}
+                    complianceSection={true}
+                    softwareVersion={detailItem.version}
+                    softwareId={detailItem.id}
+                    key={`software-compliance-with-${indexKey}`}
+                    viewReportDetails={true}
+                  >
+                    {isLoggedIn &&
+                      softwareDetail.length &&
+                      softwareDetail[0].status === StatusEnum.IN_REVIEW ? (
+                        <>
+                          <ComplianceDetailTable
+                            key={`compliance-detail-table-${indexKey}`}
+                            data={formatSoftwareDetailsDataToApprove(
+                              softwareDetailsDataToApprove,
+                              detailItem.id
+                            )}
+                            handleOpenEvaluationSchemaModal={(value) =>
+                              setDisplayEvaluationSchemaModal(value)
+                            }
+                            handleFormAction={handleFormAction}
+                            savedFormState={savedFormState}
+                          />
+                        </>
+                      ) : (
+                        <SoftwareComplianceWith
+                          key={`software-compliance-with-${indexKey}`}
+                          softwareComplianceData={detailItem.bbDetailsArray}
+                        />
+                      )}
+                  </SoftwareDetails>
+                );
+              });
+            }
+          )
           : null}
-
       </div>
-      {(isLoggedIn && softwareDetail.length && softwareDetail[0].status === 1) &&
-        <div className="bottom-bar-container">
-          <div className="bottom-bar">
-            <Button
-              type="button"
-              text={format('app.save.label')}
-              styles="secondary-button"
-              onClick={() => handleFormAction('update')}
-              showCheckIcon={isFormSaved}
-            />
-            <Button
-              type="button"
-              text={format('form.reject.label')}
-              styles="primary-red-button"
-              onClick={() => handleFormAction('reject')}
-            />
-            <Button
-              type="button"
-              text={format('form.accept.label')}
-              styles="primary-button"
-              onClick={() => handleFormAction('accept')}
-            />
-          </div>
-        </div>
-      }
       {displayEvaluationSchemaModal && (
         <InfoModal
           onClose={() => setDisplayEvaluationSchemaModal(false)}

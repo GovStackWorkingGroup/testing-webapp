@@ -35,3 +35,23 @@ export const DEPLOYMENT_COMPLIANCE_STORAGE_NAME = 'deployment_compliance';
 export const INTERFACE_COMPLIANCE_STORAGE_NAME = 'interface_compliance';
 export const REQUIREMENT_SPEC_STORAGE_NAME =
   'requirement_specification_compliance';
+
+// Enums
+export const enum StatusEnum {
+    DRAFT = 0,
+    IN_REVIEW = 1,
+    APPROVED = 2,
+    REJECTED = 3
+  }
+
+export enum SpecificationComplianceLevel {
+    NA = -1,
+    LEVEL_1 = 1,
+    LEVEL_2 = 2
+  }
+
+export const enum RequirementStatusEnum {
+    REQUIRED = 0,
+    RECOMMENDED = 1,
+    OPTIONAL = 2
+  }

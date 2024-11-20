@@ -10,7 +10,7 @@ import {
   CellValue,
   CellValues,
   DataRow,
-  DataType, formatTranslationType,
+  DataType,
 } from '../../service/types';
 import { COMPLIANCE_TESTING_DETAILS_PAGE } from '../../service/constants';
 import BBImage from '../BuildingBlocksImage';
@@ -192,6 +192,7 @@ const Table = ({
                             )}
                             <img
                               className="img-logo list-of-candidate-table-logo"
+                              alt='Candidate Logo'
                               src={`${baseUrl}/${row.logo}`}
                             />
                             <Link
@@ -233,6 +234,7 @@ const Table = ({
                           )}
                           <img
                             className="img-logo list-of-candidate-table-logo"
+                            alt='Candidate Logo'
                             src={`${baseUrl}/${row.logo}`}
                           />
                           <Link
