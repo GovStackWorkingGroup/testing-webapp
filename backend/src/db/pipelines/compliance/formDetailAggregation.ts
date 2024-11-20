@@ -43,6 +43,10 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
                     crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
                     functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements",
                     keyDigitalFunctionalitiesRequirements: "$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalitiesRequirements"
+                  },
+                  deploymentCompliance: {
+                    level: { $ifNull: ["$deploymentCompliance.level", SpecificationComplianceLevel.NA] },
+                    notes: { $ifNull: ["$deploymentCompliance.notes", ""] }
                   }
                 }
               ]
