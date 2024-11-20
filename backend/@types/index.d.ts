@@ -11,7 +11,7 @@ declare module 'myTypes' {
     REJECTED = 3
   }
 
-  export enum SpecificationComplianceLevel {
+  export const enum SpecificationComplianceLevel {
     NA = -1,
     LEVEL_1 = 1,
     LEVEL_2 = 2
