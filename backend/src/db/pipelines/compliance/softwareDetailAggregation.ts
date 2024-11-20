@@ -57,6 +57,7 @@ export const softwareDetailAggregationPipeline = (
         complianceStatus: "$documents.status",
         complianceDocumentId: "$documents._id",
         complianceDocumentUniqueId: "$documents.uniqueId",
+        complianceCreationDate: "$documents.creationDate",
         bbDetailsArray: {
           $map: {
             input: { $ifNull: [{ $objectToArray: "$documents.compliance.bbDetails" }, []] },
@@ -95,6 +96,7 @@ export const softwareDetailAggregationPipeline = (
             uniqueId: {
               $ifNull: ["$complianceDocumentUniqueId", null]
             },
+            creationDate: "$complianceCreationDate",
             bbDetailsArray: "$bbDetailsArray"
           }
         },
@@ -115,7 +117,16 @@ export const softwareDetailAggregationPipeline = (
         latestDocumentRecord: { $first: "$latestDocumentRecord" }
       }
     },
-
+    {
+      $addFields: {
+        compliance: {
+          $sortArray: {
+            input: "$compliance",
+            sortBy: { creationDate: -1 } // Sort descending by creationDate
+          }
+        }
+      }
+    },
     // Final projection to return the desired structure
     {
       $project: {
