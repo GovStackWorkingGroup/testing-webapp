@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { SpecificationComplianceLevel } from "myTypes";
 
 export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
   formId?: string,
@@ -31,13 +32,17 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
                 "$$bbDetail.k",
                 {
                   interfaceCompliance: {
+                    level: { $ifNull: ["$$bbDetail.v.interfaceCompliance.level", SpecificationComplianceLevel.NA] },
+                    notes: { $ifNull: ["$$bbDetail.v.interfaceCompliance.notes", ""] },
                     testHarnessResult: "$$bbDetail.v.interfaceCompliance.testHarnessResult",
                     requirements: "$$bbDetail.v.interfaceCompliance.requirements"
                   },
                   requirementSpecificationCompliance: {
+                    level: { $ifNull: ["$$bbDetail.v.requirementSpecificationCompliance.level", SpecificationComplianceLevel.NA] },
+                    notes: { $ifNull: ["$$bbDetail.v.requirementSpecificationCompliance.notes", ""] },
                     crossCuttingRequirements: "$$bbDetail.v.requirementSpecificationCompliance.crossCuttingRequirements",
                     functionalRequirements: "$$bbDetail.v.requirementSpecificationCompliance.functionalRequirements",
-                    keyDigitalFunctionalitiesRequirements: "$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalitiesRequirements",
+                    keyDigitalFunctionalitiesRequirements: "$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalitiesRequirements"
                   }
                 }
               ]
@@ -45,6 +50,8 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
           }
         },
         deploymentCompliance: {
+          level: { $ifNull: ["$deploymentCompliance.level", SpecificationComplianceLevel.NA] },
+          notes: { $ifNull: ["$deploymentCompliance.notes", ""] },
           documentation: "$deploymentCompliance.documentation",
           deploymentInstructions: "$deploymentCompliance.deploymentInstructions"
         }
