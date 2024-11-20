@@ -45,8 +45,8 @@ export const formDetailAggregationPipeline = ({ formId, draftUuid }: {
                     keyDigitalFunctionalitiesRequirements: "$$bbDetail.v.requirementSpecificationCompliance.keyDigitalFunctionalitiesRequirements"
                   },
                   deploymentCompliance: {
-                    level: { $ifNull: ["$deploymentCompliance.level", SpecificationComplianceLevel.NA] },
-                    notes: { $ifNull: ["$deploymentCompliance.notes", ""] }
+                    level: { $ifNull: ["$$bbDetail.v.deploymentCompliance.level", SpecificationComplianceLevel.NA] },
+                    notes: { $ifNull: ["$$bbDetail.v.deploymentCompliance.notes", ""] }
                   }
                 }
               ]
