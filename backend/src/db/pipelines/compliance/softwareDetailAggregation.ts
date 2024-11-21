@@ -42,7 +42,7 @@ export const softwareDetailAggregationPipeline = (
     },
 
     {
-      $unwind: "$documents"  // Unwind to process each document individually
+      $unwind: "$documents"
     },
 
     // Unwind the compliance list to process each compliance object
@@ -127,6 +127,74 @@ export const softwareDetailAggregationPipeline = (
         }
       }
     },
+
+    // Collect all compliance statuses
+    {
+      $addFields: {
+        complianceStatuses: {
+          $map: {
+            input: "$compliance",
+            as: "comp",
+            in: "$$comp.status"
+          }
+        }
+      }
+    },
+
+    // **New Stage**: Filter out statuses 0 and 3
+    {
+      $addFields: {
+        filteredStatuses: {
+          $filter: {
+            input: "$complianceStatuses",
+            as: "status",
+            cond: { $and: [{ $ne: ["$$status", 0] }, { $ne: ["$$status", 3] }] }
+          }
+        }
+      }
+    },
+
+    // **New Stage**: Determine unique statuses
+    {
+      $addFields: {
+        uniqueFilteredStatuses: { $setUnion: ["$filteredStatuses", []] }
+      }
+    },
+
+    // **New Stage**: Apply logic to set finalStatus
+    {
+      $addFields: {
+        finalStatus: {
+          $switch: {
+            branches: [
+              // Condition 1: All statuses are 2
+              {
+                case: {
+                  $and: [
+                    { $gt: [{ $size: "$filteredStatuses" }, 0] }, // Ensure there are statuses
+                    { $setEquals: ["$uniqueFilteredStatuses", [2]] } // Only status 2 is present
+                  ]
+                },
+                then: 2
+              },
+              // Condition 2: Some statuses are 1 and 2
+              {
+                case: {
+                  $and: [
+                    { $in: [1, "$uniqueFilteredStatuses"] },
+                    { $in: [2, "$uniqueFilteredStatuses"] }
+                  ]
+                },
+                then: 1
+              }
+            ],
+            // Default case: Keep the latest document's status
+            default: "$latestDocumentRecord.status"
+          }
+        }
+      }
+    },
+
     // Final projection to return the desired structure
     {
       $project: {
@@ -137,7 +205,7 @@ export const softwareDetailAggregationPipeline = (
         documentation: "$latestDocumentRecord.documentation",
         description: "$latestDocumentRecord.description",
         pointOfContact: "$latestDocumentRecord.pointOfContact",
-        status: "$latestDocumentRecord.status",
+        status: "$finalStatus",
         compliance: 1,
       }
     }
