@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
-import { RequirementsType } from '../../service/types';
+import {
+  FormStatusOptions,
+  RequirementsType,
+  SoftwareDetailsTypeCompliance,
+  SpecificationComplianceLevelOptions,
+} from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { SoftwareDetailsDataType } from '../../service/types';
 import BBImage from '../BuildingBlocksImage';
 import CustomSelect, { OptionsType } from '../shared/inputs/Select';
 import Button from '../shared/buttons/Button';
+import { StatusEnum } from '../../service/constants';
 
 type ComplianceDetailTable = {
   data: SoftwareDetailsDataType | undefined;
@@ -17,24 +23,27 @@ type ComplianceDetailTable = {
     data: ComplianceDetailFormValuesType[],
     type: 'update' | 'accept' | 'reject'
   ) => Promise<void>;
-};
-
-type TransformedDataType = {
-  id: string;
-  bbName: string;
-  interfaceCompliance: { requirements: RequirementsType[] };
-  requirementSpecificationCompliance: {
-    crossCuttingRequirements: RequirementsType[];
-    functionalRequirements: RequirementsType[];
-  };
+  detailItem: SoftwareDetailsTypeCompliance;
 };
 
 export type ComplianceDetailFormValuesType = {
   id: string;
   bbName: string;
-  interface: { level: number; note: string };
-  deployment: { level: number; note: string };
-  requirement: { level: number; note: string };
+  deploymentCompliance: {
+    level: SpecificationComplianceLevelOptions;
+    notes: string;
+  };
+  interfaceCompliance: {
+    requirements: RequirementsType[];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
+  };
+  requirementSpecificationCompliance: {
+    crossCuttingRequirements: RequirementsType[];
+    functionalRequirements: RequirementsType[];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
+  };
 };
 
 const ComplianceDetailTable = ({
@@ -42,11 +51,13 @@ const ComplianceDetailTable = ({
   savedFormState,
   handleOpenEvaluationSchemaModal,
   handleFormAction,
+  detailItem,
 }: ComplianceDetailTable) => {
-  const [transformedData, setTransformedData] =
-    useState<TransformedDataType[]>();
   const [updatedFormValues, setUpdatedFormValues] =
     useState<ComplianceDetailFormValuesType[]>();
+  const complianceFormStatus: FormStatusOptions = detailItem.status;
+  const isInReviewStatus = complianceFormStatus === StatusEnum.IN_REVIEW;
+  const isInApprovedStatus = complianceFormStatus === StatusEnum.APPROVED;
 
   const { format } = useTranslations();
 
@@ -68,17 +79,8 @@ const ComplianceDetailTable = ({
           };
         }
       );
-      setTransformedData(newData);
-      const updatedData = newData.map((item) => {
-        return {
-          id: item.id,
-          bbName: item.bbName,
-          interface: { level: -1, note: '' },
-          deployment: { level: -1, note: '' },
-          requirement: { level: -1, note: '' },
-        };
-      });
-      setUpdatedFormValues(updatedData);
+
+      setUpdatedFormValues(newData);
     }
   }, [data]);
 
@@ -115,12 +117,18 @@ const ComplianceDetailTable = ({
       const indexBB = parts.slice(1).join('-');
 
       if (index.startsWith('deployment')) {
-        setUpdatedFormValues(
-          formValues.map((item) => ({
+        const updatedArray = formValues.map((item) => {
+          return {
             ...item,
-            deployment: { level, note: item.deployment.note },
-          }))
-        );
+            deploymentCompliance: {
+              ...item.deploymentCompliance,
+              level,
+              notes: item.deploymentCompliance.notes,
+            },
+          };
+        });
+
+        setUpdatedFormValues(updatedArray);
 
         return;
       }
@@ -130,7 +138,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              interface: { level, note: item.interface.note },
+              interfaceCompliance: {
+                ...item.interfaceCompliance,
+                level,
+                note: item.interfaceCompliance.notes,
+              },
             };
           }
 
@@ -146,7 +158,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              requirement: { level, note: item.requirement.note },
+              requirementSpecificationCompliance: {
+                ...item.requirementSpecificationCompliance,
+                level,
+                note: item.requirementSpecificationCompliance.notes,
+              },
             };
           }
 
@@ -168,12 +184,18 @@ const ComplianceDetailTable = ({
       const indexBB = parts.slice(1).join('-');
 
       if (index.startsWith('deployment')) {
-        setUpdatedFormValues(
-          formValues.map((item) => ({
+        const updatedArray = formValues.map((item) => {
+          return {
             ...item,
-            deployment: { level: item.deployment.level, note: value },
-          }))
-        );
+            deploymentCompliance: {
+              ...item.deploymentCompliance,
+              level: item.deploymentCompliance.level,
+              notes: value,
+            },
+          };
+        });
+
+        setUpdatedFormValues(updatedArray);
 
         return;
       }
@@ -183,7 +205,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              interface: { level: item.interface.level, note: value },
+              interfaceCompliance: {
+                ...item.interfaceCompliance,
+                level: item.interfaceCompliance.level,
+                notes: value,
+              },
             };
           }
 
@@ -199,7 +225,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              requirement: { level: item.requirement.level, note: value },
+              requirementSpecificationCompliance: {
+                ...item.requirementSpecificationCompliance,
+                level: item.requirementSpecificationCompliance.level,
+                notes: value,
+              },
             };
           }
 
@@ -212,7 +242,7 @@ const ComplianceDetailTable = ({
     }
   };
 
-  return data?.formDetails?.length ? (
+  return updatedFormValues?.length ? (
     <div>
       <table className='main-table'>
         <thead>
@@ -257,6 +287,16 @@ const ComplianceDetailTable = ({
                   },
                 ]}
                 onChange={handleOnSelect}
+                isDisabled={!isInReviewStatus}
+                value={{
+                  value: 'deployment',
+                  label:
+                    updatedFormValues[0].deploymentCompliance.level === -1
+                      ? format('table.N/A.label')
+                      : format(
+                          `evaluation_schema.level_${updatedFormValues[0].deploymentCompliance.level}.label`
+                      ),
+                }}
                 placeholder={format('app.select.label')}
               />
             </td>
@@ -265,9 +305,11 @@ const ComplianceDetailTable = ({
                 <textarea
                   id='deployment'
                   className='notes-textarea'
+                  disabled={!isInReviewStatus}
                   onChange={(event) =>
                     handleTextarea('deployment', event?.target.value)
                   }
+                  value={updatedFormValues[0].deploymentCompliance.notes}
                 ></textarea>
               </div>
             </td>
@@ -283,7 +325,7 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
@@ -319,13 +361,21 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
                               item.requirementSpecificationCompliance
                                 .functionalRequirements.length
                             ) {
+                              const formattedLabel =
+                                item.requirementSpecificationCompliance
+                                  .level === -1
+                                  ? format('table.N/A.label')
+                                  : format(
+                                      `evaluation_schema.level_${item.requirementSpecificationCompliance.level}.label`
+                                  );
+
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
@@ -352,6 +402,11 @@ const ComplianceDetailTable = ({
                                         },
                                       ]}
                                       onChange={handleOnSelect}
+                                      isDisabled={!isInReviewStatus}
+                                      value={{
+                                        value: `requirement-${item.bbName}`,
+                                        label: formattedLabel,
+                                      }}
                                       placeholder={format('app.select.label')}
                                     />
                                   </td>
@@ -373,7 +428,7 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table'>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
@@ -390,6 +445,12 @@ const ComplianceDetailTable = ({
                                       <textarea
                                         id={`requirement-${item.bbName}`}
                                         className='notes-textarea'
+                                        disabled={!isInReviewStatus}
+                                        value={
+                                          item[
+                                            'requirementSpecificationCompliance'
+                                          ].notes
+                                        }
                                         onChange={(event) =>
                                           handleTextarea(
                                             `requirement-${item.bbName}`,
@@ -420,7 +481,7 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
@@ -454,8 +515,15 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table'>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
+                              const formattedLabel =
+                                item.interfaceCompliance.level === -1
+                                  ? format('table.N/A.label')
+                                  : format(
+                                      `evaluation_schema.level_${item.interfaceCompliance.level}.label`
+                                  );
+
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
@@ -484,6 +552,11 @@ const ComplianceDetailTable = ({
                                           label: format('table.N/A.label'),
                                         },
                                       ]}
+                                      isDisabled={!isInReviewStatus}
+                                      value={{
+                                        value: `interface-${item.bbName}`,
+                                        label: formattedLabel,
+                                      }}
                                       onChange={handleOnSelect}
                                       placeholder={format('app.select.label')}
                                     />
@@ -506,7 +579,7 @@ const ComplianceDetailTable = ({
                     <td className='td-row-details td-full-width border-none'>
                       <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
@@ -522,6 +595,10 @@ const ComplianceDetailTable = ({
                                       <textarea
                                         id={`interface-${item.bbName}`}
                                         className='notes-textarea'
+                                        disabled={!isInReviewStatus}
+                                        value={
+                                          item['interfaceCompliance'].notes
+                                        }
                                         onChange={(event) =>
                                           handleTextarea(
                                             `interface-${item.bbName}`,
@@ -546,25 +623,32 @@ const ComplianceDetailTable = ({
         </tbody>
       </table>
       <div className='table-action-buttons'>
-        <Button
-          type='button'
-          text={format('app.save.label')}
-          styles='secondary-button'
-          onClick={() => onAction(updatedFormValues, 'update')}
-          showCheckIcon={savedFormState[data.formDetails[0].id]}
-        />
-        <Button
-          type='button'
-          text={format('form.reject.label')}
-          styles='primary-red-button'
-          onClick={() => onAction(updatedFormValues, 'reject')}
-        />
-        <Button
-          type='button'
-          text={format('form.accept.label')}
-          styles='primary-button'
-          onClick={() => onAction(updatedFormValues, 'accept')}
-        />
+        {isInReviewStatus && (
+          <>
+            <Button
+              type='button'
+              text={format('app.save.label')}
+              styles='secondary-button'
+              onClick={() => onAction(updatedFormValues, 'update')}
+              showCheckIcon={savedFormState[data?.formDetails[0].id || 0]}
+            />
+            <Button
+              type='button'
+              text={format('form.reject.label')}
+              styles='primary-red-button'
+              onClick={() => onAction(updatedFormValues, 'reject')}
+            />
+            <Button
+              type='button'
+              text={format('form.accept.label')}
+              styles='primary-button'
+              onClick={() => onAction(updatedFormValues, 'accept')}
+            />
+          </>
+        )}
+        {isInApprovedStatus && (
+          <div className='approved-box'> {format('table.accepted')} </div>
+        )}
       </div>
     </div>
   ) : (

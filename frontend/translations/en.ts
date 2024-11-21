@@ -244,6 +244,7 @@ export const en = {
   'table.website.label': 'Website',
   'table.expand_requirements.label': 'Expand requirements',
   'table.collapse_requirements.label': 'Collapse requirements',
+  'table.accepted': 'The form has been accepted',
 
   'text.showMore': 'Show More',
   'text.showLess': 'Show Less',

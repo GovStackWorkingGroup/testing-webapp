@@ -150,23 +150,23 @@ const SoftwareComplianceDetailsPage = () => {
       updatedData.forEach((item) => {
         const {
           bbName,
-          interface: interfaceData,
-          deployment,
-          requirement,
+          interfaceCompliance,
+          deploymentCompliance,
+          requirementSpecificationCompliance,
         } = item;
 
         payload.bbDetails[bbName] = {
           interfaceCompliance: {
-            level: interfaceData.level,
-            notes: interfaceData.note || '',
+            level: interfaceCompliance.level,
+            notes: interfaceCompliance.notes || '',
           },
           deploymentCompliance: {
-            level: deployment.level,
-            notes: deployment.note || '',
+            level: deploymentCompliance.level,
+            notes: deploymentCompliance.notes || '',
           },
           requirementSpecificationCompliance: {
-            level: requirement.level,
-            notes: requirement.note || '',
+            level: requirementSpecificationCompliance.level,
+            notes: requirementSpecificationCompliance.notes || '',
           },
         };
       });
@@ -328,6 +328,7 @@ const SoftwareComplianceDetailsPage = () => {
                               softwareDetailsDataToApprove,
                               detailItem.id
                             )}
+                            detailItem={detailItem}
                             handleOpenEvaluationSchemaModal={(value) =>
                               setDisplayEvaluationSchemaModal(value)
                             }

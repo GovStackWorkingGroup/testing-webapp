@@ -1,4 +1,11 @@
-import { SpecificationComplianceLevel } from './constants';
+import { SpecificationComplianceLevel, StatusEnum } from './constants';
+
+export type SpecificationComplianceLevelOptions =
+  | SpecificationComplianceLevel.LEVEL_1
+  | SpecificationComplianceLevel.LEVEL_2
+  | SpecificationComplianceLevel.NA;
+
+export type FormStatusOptions = StatusEnum.APPROVED | StatusEnum.DRAFT | StatusEnum.IN_REVIEW | StatusEnum.REJECTED;
 
 export type BuildingBlockType = {
   id: string;
@@ -116,12 +123,19 @@ export type BBDetailsType = {
       crossCuttingRequirements: RequirementsType[];
       functionalRequirements: RequirementsType[];
       keyDigitalFunctionalitiesRequirements: RequirementsType[];
+      notes: string;
+      level: SpecificationComplianceLevelOptions;
     };
     interfaceCompliance: {
       testHarnessResult: string;
       requirements: RequirementsType[];
+      notes: string;
+      level: SpecificationComplianceLevelOptions;
     };
-    deploymentCompliance: number;
+    deploymentCompliance: {
+      level: SpecificationComplianceLevelOptions;
+      notes: string;
+    };
   };
 };
 
@@ -186,6 +200,8 @@ export type IRSCSoftwareDraftToUpdateType = {
   interfaceCompliance: {
     testHarnessResult: string;
     requirements: [];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
   };
 };
 
@@ -201,6 +217,8 @@ export type ComplianceRequirementsType = {
     keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
     testHarnessResult: string;
     requirements: RequirementsType[] | [];
   };
@@ -208,11 +226,6 @@ export type ComplianceRequirementsType = {
 
 export type RequirementsType = {
   requirement: string;
-  notes: string;
-  level:
-    | SpecificationComplianceLevel.NA
-    | SpecificationComplianceLevel.LEVEL_1
-    | SpecificationComplianceLevel.LEVEL_2;
   comment: string;
   fulfillment: number;
   _id?: string;
