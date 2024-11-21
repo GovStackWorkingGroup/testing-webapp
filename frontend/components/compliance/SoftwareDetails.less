@@ -1,4 +1,5 @@
 @import '../../styles/Variables.less';
+@import '../../styles/Extends.less';
 
 .compliance-detail-page-container {
   padding: 16px 25px;
@@ -182,4 +183,29 @@
 .software-compliance-with-table-container {
   max-width: 100%;
   overflow-x: auto;
+}
+
+.software-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+
+.confirm-delete-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.confirm-delete-modal > p {
+  color: @text-main;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.confirm-delete-modal > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 16px;
 }

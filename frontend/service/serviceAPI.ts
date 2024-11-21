@@ -217,10 +217,13 @@ export const getComplianceList = async (offset: number, limit: number, filters: 
 };
 
 export const getSoftwareDetails = async (softwareName: string) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
   return await fetch(`${baseUrl}/compliance/${softwareName}/detail`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
+      ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
     },
   })
     .then((response) => {

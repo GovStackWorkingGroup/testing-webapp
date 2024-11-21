@@ -11,7 +11,6 @@ import {
   getSoftwareDetails,
   getSoftwareDetailsReport,
   handleReviewSoftwareForm,
-  handleDeleteSoftwareForm,
 } from '../../../../service/serviceAPI';
 import SoftwareDetails from '../../../../components/compliance/SoftwareDetails';
 import SoftwareComplianceWith from '../../../../components/compliance/SoftwareComplianceWith';
@@ -26,8 +25,6 @@ import useTranslations from '../../../../hooks/useTranslation';
 import ComplianceDetailTable, {
   ComplianceDetailFormValuesType,
 } from '../../../../components/table/ComplianceDetailTable';
-import Button from '../../../../components/shared/buttons/Button';
-import Input from '../../../../components/shared/inputs/Input';
 import InfoModal from '../../../../components/shared/modals/InfoModal';
 import EvaluationSchemaTable from '../../../../components/compliance/EvaluationSchemaTable';
 
@@ -35,7 +32,6 @@ const SoftwareComplianceDetailsPage = () => {
   const [softwareDetail, setSoftwareDetail] = useState<
     SoftwareDetailsType | []
   >([]);
-  const [deleteSoftwareName, setDeleteSoftwareName] = useState<string>();
 
   const [softwareDetailsDataToApprove, setSoftwareDetailsDataToApprove] =
     useState<SoftwareDetailsDataType[]>();
@@ -104,37 +100,6 @@ const SoftwareComplianceDetailsPage = () => {
       setSoftwareDetailsDataToApprove(softwareDetailsData);
     } catch (error) {
       throw new Error(`[fetchSoftwareDetailsData]: ${error}`);
-    }
-  };
-
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.target;
-
-    if (name === 'softwareName') {
-      setDeleteSoftwareName(value);
-    }
-  };
-
-  const handleDeleteEntry = async () => {
-    if (deleteSoftwareName === softwareName) {
-      await handleDeleteSoftwareForm(softwareDetail[0]._id).then((response) => {
-        if (response.status) {
-          toast.success(format('form.form_deleted_success.message'), {
-            icon: <RiCheckboxCircleFill className='success-toast-icon' />,
-          });
-          router.push(COMPLIANCE_TESTING_RESULT_PAGE);
-
-          return;
-        } else {
-          toast.error(format('form.form_deleted_error.message'), {
-            icon: <RiErrorWarningFill className='error-toast-icon' />,
-          });
-
-          return;
-        }
-      });
     }
   };
 
@@ -287,24 +252,6 @@ const SoftwareComplianceDetailsPage = () => {
             showContactDetails={true}
           />
         </SoftwareDetails>
-        {isLoggedIn && (
-          <div className='software-attributes-section'>
-            <Input
-              name='softwareName'
-              isInvalid={false}
-              inputTitle={format('form.software_delete.placeholder')}
-              errorMessage={format('form.required_field.message')}
-              onChange={(event) => handleInputChange(event)}
-              inputKey='key-software-name'
-            />
-            <Button
-              type='button'
-              text={format('form.software_delete.label')}
-              styles='primary-red-button'
-              onClick={() => handleDeleteEntry()}
-            />
-          </div>
-        )}
         {softwareDetail.length && softwareDetail[0].compliance.length
           ? processSoftwareDetailsData(softwareDetail).compliance.map(
             (complianceItem, indexKey) => {

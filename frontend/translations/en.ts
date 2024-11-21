@@ -256,6 +256,14 @@ export const en = {
   'test_table.passed': 'Passed',
   'test_table.status.label': 'Status',
 
+  'software_details.delete_confirm_modal.title': 'Delete Confirmation',
+  'software_details.delete_confirm_modal.message': 'Are you sure you want to delete this entry?',
+  'software_details.delete_confirm_modal.cancel': 'Cancel',
+  'software_details.delete_confirm_modal.delete': 'Delete',
+
+  'form.form_deleted_success.message': 'Form deleted successfully',
+  'form.form_deleted_error.message': 'Form deletion failed',
+
   // ---------------------------------------------------------------------
   // This is translation for each building block
   'bb-cloud-infrastructure-hosting': 'Cloud and Infrastructure Hosting',
