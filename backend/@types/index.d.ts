@@ -11,7 +11,7 @@ declare module 'myTypes' {
     REJECTED = 3
   }
 
-  export enum SpecificationComplianceLevel {
+  export const enum SpecificationComplianceLevel {
     NA = -1,
     LEVEL_1 = 1,
     LEVEL_2 = 2
@@ -179,7 +179,7 @@ declare module 'myTypes' {
     getAllSoftwares: () => Promise<ComplianceListFilter[]>;
     getAllBBs: () => Promise<ComplianceListFilter[]>;
     aggregateComplianceReports: (limit: number, offset: number, filters: ComplianceListFilters, isAuthenticated: Boolean) => Promise<ComplianceAggregationListResult>;
-    getSoftwareComplianceDetail: (softwareName: string) => Promise<SofwareDetailsResults>;
+    getSoftwareComplianceDetail: (softwareName: string, isAuthenticated: Boolean) => Promise<SofwareDetailsResults>;
     getFormDetail: (formId: string) => Promise<FormDetailsResults>;
     getDraftDetail: (draftUuid: string) => Promise<FormDetailsResults>;
     createOrSubmitForm: (draftData: Partial<ComplianceReport>) => Promise<string>;

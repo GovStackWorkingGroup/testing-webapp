@@ -50,6 +50,7 @@ export const en = {
   'app.view_report_details.label': 'View report details',
   'app.view_report_details.noInformation': 'Information has not been provided for the {section} of the compliance form',
   'app.page_description_template': 'This page is currently a template. To populate it with content, manual updates in the IDE are required. If you are seeing this message and believe it is an error, please contact the site administrator for assistance.',
+  'app.not_available': 'NOT_AVAILABLE',
 
   'building_block.label': 'Building Block',
   'building_block.plural.label': 'Building Blocks',
@@ -245,6 +246,7 @@ export const en = {
   'table.website.label': 'Website',
   'table.expand_requirements.label': 'Expand requirements',
   'table.collapse_requirements.label': 'Collapse requirements',
+  'table.accepted': 'The form has been accepted',
 
   'text.showMore': 'Show More',
   'text.showLess': 'Show Less',
@@ -255,6 +257,14 @@ export const en = {
   'test_table.name.label': 'Name',
   'test_table.passed': 'Passed',
   'test_table.status.label': 'Status',
+
+  'software_details.delete_confirm_modal.title': 'Delete Confirmation',
+  'software_details.delete_confirm_modal.message': 'Are you sure you want to delete this entry?',
+  'software_details.delete_confirm_modal.cancel': 'Cancel',
+  'software_details.delete_confirm_modal.delete': 'Delete',
+
+  'form.form_deleted_success.message': 'Form deleted successfully',
+  'form.form_deleted_error.message': 'Form deletion failed',
 
   // ---------------------------------------------------------------------
   // This is translation for each building block

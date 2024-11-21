@@ -1,8 +1,17 @@
+import { SpecificationComplianceLevel, StatusEnum } from './constants';
+
+export type SpecificationComplianceLevelOptions =
+  | SpecificationComplianceLevel.LEVEL_1
+  | SpecificationComplianceLevel.LEVEL_2
+  | SpecificationComplianceLevel.NA;
+
+export type FormStatusOptions = StatusEnum.APPROVED | StatusEnum.DRAFT | StatusEnum.IN_REVIEW | StatusEnum.REJECTED;
+
 export type BuildingBlockType = {
   id: string;
   buildingBlock: string; // Building block label
   timestamp: number; // Execution time from test [seconds]
-  saveTime: number; // Save time in db [miliseconds]
+  saveTime: number; // Save time in db [ms]
   testsPassed: number;
   testsFailed: number;
   compatibility: number;
@@ -62,7 +71,7 @@ export type SingleComplianceItem = {
 export type ParentOfCandidatesResult = {
   name: string;
   children: SingleComplianceItem[];
-}
+};
 
 export type ComplianceList = {
   count: number;
@@ -79,6 +88,8 @@ export type ComplianceItem = {
   requirements: ComplianceDetails;
   interface: ComplianceDetails;
   bbVersion: string;
+  creationDate: string | null;
+  bbName: string;
   deploymentCompliance: { level: number; notes: string };
 };
 
@@ -87,19 +98,21 @@ export type Compliance = {
   bbVersions: ComplianceItem[];
 };
 
+export type SoftwareDetailsTypeCompliance = {
+  id: string | undefined;
+  uniqueId: string | null;
+  status: number;
+  version: string;
+  bbDetailsArray: ComplianceItem[];
+};
+
 export type SoftwareDetailsType = {
   _id: string;
   logo: string;
   website: string;
   documentation: string;
   pointOfContact: string;
-  compliance: [
-    {
-      _id: string | undefined;
-      softwareVersion: string;
-      bbDetails: Compliance[];
-    }
-  ];
+  compliance: SoftwareDetailsTypeCompliance[];
   softwareName: string;
   status: number;
 }[];
@@ -110,12 +123,19 @@ export type BBDetailsType = {
       crossCuttingRequirements: RequirementsType[];
       functionalRequirements: RequirementsType[];
       keyDigitalFunctionalitiesRequirements: RequirementsType[];
+      notes: string;
+      level: SpecificationComplianceLevelOptions;
     };
     interfaceCompliance: {
       testHarnessResult: string;
       requirements: RequirementsType[];
+      notes: string;
+      level: SpecificationComplianceLevelOptions;
     };
-    deploymentCompliance: number;
+    deploymentCompliance: {
+      level: SpecificationComplianceLevelOptions;
+      notes: string;
+    };
   };
 };
 
@@ -180,6 +200,8 @@ export type IRSCSoftwareDraftToUpdateType = {
   interfaceCompliance: {
     testHarnessResult: string;
     requirements: [];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
   };
 };
 
@@ -195,6 +217,8 @@ export type ComplianceRequirementsType = {
     keyDigitalFunctionalities: RequirementsType[] | never[];
   };
   interfaceCompliance: {
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
     testHarnessResult: string;
     requirements: RequirementsType[] | [];
   };
@@ -211,6 +235,7 @@ export type RequirementsType = {
 
 export type SoftwareDetailsDataType = {
   formDetails: {
+    id: string;
     bbDetails: BBDetailsType;
     deploymentCompliance: {
       documentation: string;
@@ -284,12 +309,6 @@ export type FormErrorResponseType = {
   message: string;
 };
 
-type FormBBDetails = {
-  interface: { level: number; note: string };
-  deployment: { level: number; note: string };
-  requirement: { level: number; note: string };
-};
-
 type BBDetails = {
   interfaceCompliance: ComplianceDetails;
   deploymentCompliance: ComplianceDetails;
@@ -311,9 +330,10 @@ export type FilterOptionsType = {
 };
 
 export type ListFilters = {
-  software: {[key: string]: string[]};
-  bb: {[key: string]: string[]};
-}
+  software: { [key: string]: string[] };
+  bb: { [key: string]: string[] };
+};
+
 // Types used in IRSC/IRSC...Table.tsx and the data connected to it
 export type IRSCTableType = {
   selectedData: ComplianceRequirementsType;
@@ -323,4 +343,8 @@ export type IRSCTableType = {
   isFormActive?: boolean;
 };
 
-export type formatTranslationType = string | JSX.Element | (string | JSX.Element)[] | undefined;
+export type formatTranslationType =
+  | string
+  | JSX.Element
+  | (string | JSX.Element)[]
+  | undefined;
