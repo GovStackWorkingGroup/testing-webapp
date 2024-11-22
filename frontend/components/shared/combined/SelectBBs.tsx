@@ -208,6 +208,7 @@ const SelectBBs = ({
           value: {
             ...item,
             interfaceCompliance: {
+              ...item.interfaceCompliance,
               testHarnessResult: '',
               requirements: item.requirements.interface,
             },
