@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Compliance, DataRow, DataType } from '../../service/types';
+import { ComplianceItem, DataType } from '../../service/types';
 import Table from '../table/Table';
 import InfoModal from '../shared/modals/InfoModal';
 import useTranslations from '../../hooks/useTranslation';
 import EvaluationSchemaTable from './EvaluationSchemaTable';
 
 type SoftwareComplianceWithProps = {
-  softwareComplianceData: Compliance[];
+  softwareComplianceData: ComplianceItem[];
 };
 
 const SoftwareComplianceWith = ({
@@ -29,72 +29,64 @@ const SoftwareComplianceWith = ({
 
   useEffect(() => {
     const transformedData: DataType = {
-      rows: [],
-    };
-
-    const row: DataRow[] = softwareComplianceData.map((bbDetail) => ({
-      cell: [
-        { value: bbDetail.bbName },
-        {
-          values: bbDetail.bbVersions
-            .slice()
-            .sort((a, b) => {
-              return b.bbVersion.localeCompare(a.bbVersion);
-            })
-            .map((bbVersion) => ({
-              value: bbVersion.bbVersion ?? '',
-            })),
-        },
-        {
-          values: bbDetail.bbVersions.map(() => ({
+      rows: softwareComplianceData.map((bbDetail) => ({
+        cell: [
+          // Building Block Name
+          { value: bbDetail.bbName },
+          // Building Block Version
+          {
             values: [
-              { value: format('table.deployment_compliance.label') },
-              { value: format('table.requirement_specification.label') },
-              { value: format('table.interface_compliance.label') },
+              {
+                value: bbDetail.bbVersion ?? '',
+              },
             ],
-          })),
-        },
-        {
-          values: bbDetail.bbVersions
-            .slice()
-            .sort((a, b) => {
-              return b.bbVersion.localeCompare(a.bbVersion);
-            })
-            .map((bbVersion) => ({
-              values: [
-                { value: bbVersion.deploymentCompliance.level ?? '' },
-                { value: bbVersion.requirements.level ?? '' },
-                { value: bbVersion.interface.level ?? '' },
-              ],
-            })),
-        },
-        {
-          values: bbDetail.bbVersions
-            .slice()
-            .sort((a, b) => {
-              return b.bbVersion.localeCompare(a.bbVersion);
-            })
-            .map((bbVersion) => ({
-              values: [
-                { value: bbVersion.deploymentCompliance.notes ?? '' },
-                { value: bbVersion.requirements.notes ?? '' },
-                { value: bbVersion.interface.notes ?? '' },
-              ],
-            })),
-        },
-      ],
-    }));
-
-    row.forEach((row) => {
-      transformedData.rows.push(row);
-    });
+          },
+          // Compliance Labels
+          {
+            values: [
+              {
+                values: [
+                  { value: format('table.deployment_compliance.label') },
+                  { value: format('table.requirement_specification.label') },
+                  { value: format('table.interface_compliance.label') },
+                ],
+              },
+            ],
+          },
+          // Compliance Levels
+          {
+            values: [
+              {
+                values: [
+                  { value: bbDetail.deploymentCompliance.level ?? '' },
+                  { value: bbDetail.requirements.level ?? '' },
+                  { value: bbDetail.interface.level ?? '' },
+                ],
+              },
+            ],
+          },
+          // Compliance Notes
+          {
+            values: [
+              {
+                values: [
+                  { value: bbDetail.deploymentCompliance.notes ?? '' },
+                  { value: bbDetail.requirements.notes ?? '' },
+                  { value: bbDetail.interface.notes ?? '' },
+                ],
+              },
+            ],
+          },
+        ],
+      })),
+    };
 
     setSoftwareComplianceParams(transformedData);
   }, [softwareComplianceData, format]);
 
   return (
     <>
-      <div className="software-compliance-with-table-container">
+      <div className='software-compliance-with-table-container'>
         <Table
           data={softwareComplianceParams}
           headers={headers}

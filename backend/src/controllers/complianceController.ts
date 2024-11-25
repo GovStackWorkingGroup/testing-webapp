@@ -36,10 +36,10 @@ const complianceController = (
       .catch((err: any) => default500Error(res, err));
   }
 
-  const getSoftwareComplianceDetail = (req: Request, res: Response): void => {
+  const getSoftwareComplianceDetail = (req: AuthenticatedRequest, res: Response): void => {
     const softwareName = req.params.softwareName;
-
-    new GetSoftwareComplianceDetailRequestHandler(req, res, repository, softwareName)
+    const isAuthenticated = Boolean(req.user);
+    new GetSoftwareComplianceDetailRequestHandler(req, res, repository, softwareName, isAuthenticated)
       .getSoftwareComplianceDetail()
       .catch((err: any) => default500Error(res, err));
   };

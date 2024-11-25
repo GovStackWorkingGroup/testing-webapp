@@ -2,43 +2,62 @@ import React, { useEffect, useState } from 'react';
 import { SingleValue } from 'react-select';
 import { RiQuestionLine } from 'react-icons/ri';
 import classNames from 'classnames';
-import { RequirementsType } from '../../service/types';
+import {
+  FormStatusOptions,
+  RequirementsType,
+  SoftwareDetailsTypeCompliance,
+  SpecificationComplianceLevelOptions,
+} from '../../service/types';
 import useTranslations from '../../hooks/useTranslation';
 import { SoftwareDetailsDataType } from '../../service/types';
 import BBImage from '../BuildingBlocksImage';
 import CustomSelect, { OptionsType } from '../shared/inputs/Select';
+import Button from '../shared/buttons/Button';
+import { StatusEnum } from '../../service/constants';
 
 type ComplianceDetailTable = {
   data: SoftwareDetailsDataType | undefined;
-  setUpdatedData: (data: ComplianceDetailFormValuesType[] | undefined) => void;
+  savedFormState: { [key: string]: boolean };
   handleOpenEvaluationSchemaModal: (value: boolean) => void;
-};
-
-type TransformedDataType = {
-  bbName: string;
-  interfaceCompliance: { requirements: RequirementsType[] };
-  requirementSpecificationCompliance: {
-    crossCuttingRequirements: RequirementsType[];
-    functionalRequirements: RequirementsType[];
-  };
+  handleFormAction: (
+    data: ComplianceDetailFormValuesType[],
+    type: 'update' | 'accept' | 'reject'
+  ) => Promise<void>;
+  detailItem: SoftwareDetailsTypeCompliance;
 };
 
 export type ComplianceDetailFormValuesType = {
+  id: string;
   bbName: string;
-  interface: { level: number; note: string };
-  deployment: { level: number; note: string };
-  requirement: { level: number; note: string };
+  deploymentCompliance: {
+    level: SpecificationComplianceLevelOptions;
+    notes: string;
+  };
+  interfaceCompliance: {
+    requirements: RequirementsType[];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
+  };
+  requirementSpecificationCompliance: {
+    crossCuttingRequirements: RequirementsType[];
+    functionalRequirements: RequirementsType[];
+    notes: string;
+    level: SpecificationComplianceLevelOptions;
+  };
 };
 
 const ComplianceDetailTable = ({
   data,
-  setUpdatedData,
+  savedFormState,
   handleOpenEvaluationSchemaModal,
+  handleFormAction,
+  detailItem,
 }: ComplianceDetailTable) => {
-  const [transformedData, setTransformedData] =
-    useState<TransformedDataType[]>();
   const [updatedFormValues, setUpdatedFormValues] =
     useState<ComplianceDetailFormValuesType[]>();
+  const complianceFormStatus: FormStatusOptions = detailItem.status;
+  const isInReviewStatus = complianceFormStatus === StatusEnum.IN_REVIEW;
+  const isInApprovedStatus = complianceFormStatus === StatusEnum.APPROVED;
 
   const { format } = useTranslations();
 
@@ -51,30 +70,30 @@ const ComplianceDetailTable = ({
 
   useEffect(() => {
     if (data?.formDetails?.length) {
-      const newData = Object.entries(data?.formDetails[0].bbDetails).map(
-        ([bbName, rest]) => ({
-          bbName,
-          ...rest,
-        })
+      const newData = Object.entries(data.formDetails[0].bbDetails).map(
+        ([bbName, rest]) => {
+          return {
+            id: data.formDetails[0].id,
+            bbName,
+            ...rest,
+          };
+        }
       );
-      setTransformedData(newData);
-      const updatedData = newData.map((item) => {
-        return {
-          bbName: item.bbName,
-          interface: { level: -1, note: '' },
-          deployment: { level: -1, note: '' },
-          requirement: { level: -1, note: '' },
-        };
-      });
-      setUpdatedFormValues(updatedData);
+
+      setUpdatedFormValues(newData);
     }
   }, [data]);
 
-  useEffect(() => {
-    if (updatedFormValues) {
-      setUpdatedData(updatedFormValues);
+  const onAction = (
+    data: ComplianceDetailFormValuesType[] | undefined,
+    type: 'update' | 'accept' | 'reject'
+  ) => {
+    if (!data) {
+      throw new Error('Data is missing');
     }
-  }, [updatedFormValues]);
+
+    handleFormAction(data, type);
+  };
 
   const handleOnSelect = (value: SingleValue<OptionsType>) => {
     const index = value?.value;
@@ -98,12 +117,18 @@ const ComplianceDetailTable = ({
       const indexBB = parts.slice(1).join('-');
 
       if (index.startsWith('deployment')) {
-        setUpdatedFormValues(
-          formValues.map((item) => ({
+        const updatedArray = formValues.map((item) => {
+          return {
             ...item,
-            deployment: { level, note: item.deployment.note },
-          }))
-        );
+            deploymentCompliance: {
+              ...item.deploymentCompliance,
+              level,
+              notes: item.deploymentCompliance.notes,
+            },
+          };
+        });
+
+        setUpdatedFormValues(updatedArray);
 
         return;
       }
@@ -113,7 +138,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              interface: { level, note: item.interface.note },
+              interfaceCompliance: {
+                ...item.interfaceCompliance,
+                level,
+                note: item.interfaceCompliance.notes,
+              },
             };
           }
 
@@ -129,7 +158,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              requirement: { level, note: item.requirement.note },
+              requirementSpecificationCompliance: {
+                ...item.requirementSpecificationCompliance,
+                level,
+                note: item.requirementSpecificationCompliance.notes,
+              },
             };
           }
 
@@ -151,12 +184,18 @@ const ComplianceDetailTable = ({
       const indexBB = parts.slice(1).join('-');
 
       if (index.startsWith('deployment')) {
-        setUpdatedFormValues(
-          formValues.map((item) => ({
+        const updatedArray = formValues.map((item) => {
+          return {
             ...item,
-            deployment: { level: item.deployment.level, note: value },
-          }))
-        );
+            deploymentCompliance: {
+              ...item.deploymentCompliance,
+              level: item.deploymentCompliance.level,
+              notes: value,
+            },
+          };
+        });
+
+        setUpdatedFormValues(updatedArray);
 
         return;
       }
@@ -166,7 +205,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              interface: { level: item.interface.level, note: value },
+              interfaceCompliance: {
+                ...item.interfaceCompliance,
+                level: item.interfaceCompliance.level,
+                notes: value,
+              },
             };
           }
 
@@ -182,7 +225,11 @@ const ComplianceDetailTable = ({
           if (item.bbName === indexBB) {
             return {
               ...item,
-              requirement: { level: item.requirement.level, note: value },
+              requirementSpecificationCompliance: {
+                ...item.requirementSpecificationCompliance,
+                level: item.requirementSpecificationCompliance.level,
+                notes: value,
+              },
             };
           }
 
@@ -195,19 +242,19 @@ const ComplianceDetailTable = ({
     }
   };
 
-  return data?.formDetails?.length ? (
+  return updatedFormValues?.length ? (
     <div>
-      <table className="main-table">
+      <table className='main-table'>
         <thead>
-          <tr className="border">
+          <tr className='border'>
             {headers.map((header, indexKey) => {
               if (header === 'table.compliance_level.label') {
                 return (
                   <th key={`header-${header}-${indexKey}`}>
-                    <div className="th-header-with-icon">
+                    <div className='th-header-with-icon'>
                       <p>{format(header)}</p>
                       <RiQuestionLine
-                        className="th-icon-question-mark cursor-pointer"
+                        className='th-icon-question-mark cursor-pointer'
                         onClick={() => handleOpenEvaluationSchemaModal(true)}
                       />
                     </div>
@@ -220,7 +267,7 @@ const ComplianceDetailTable = ({
           </tr>
         </thead>
         <tbody>
-          <tr className="border">
+          <tr className='border'>
             <td>{format('table.deployment.label')}</td>
             <td>{'-'}</td>
             <td>
@@ -240,51 +287,59 @@ const ComplianceDetailTable = ({
                   },
                 ]}
                 onChange={handleOnSelect}
+                isDisabled={!isInReviewStatus}
+                value={{
+                  value: 'deployment',
+                  label:
+                    updatedFormValues[0].deploymentCompliance.level === -1
+                      ? format('table.N/A.label')
+                      : format(
+                          `evaluation_schema.level_${updatedFormValues[0].deploymentCompliance.level}.label`
+                      ),
+                }}
                 placeholder={format('app.select.label')}
               />
             </td>
             <td>
-              <div className="notes-container">
+              <div className='notes-container'>
                 <textarea
-                  id="deployment"
-                  className="notes-textarea"
+                  id='deployment'
+                  className='notes-textarea'
+                  disabled={!isInReviewStatus}
                   onChange={(event) =>
                     handleTextarea('deployment', event?.target.value)
                   }
+                  value={updatedFormValues[0].deploymentCompliance.notes}
                 ></textarea>
               </div>
             </td>
           </tr>
-          <tr className="border">
+          <tr className='border'>
             <td>
               {format('evaluation_schema.requirement_specification.label')}
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
+                                  <td className={classNames('border-none')}>
+                                    <div className='td-bb-image-name-container'>
+                                      <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
                                     </div>
                                   </td>
@@ -299,30 +354,34 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
+                              const formattedLabel =
+                                item.requirementSpecificationCompliance
+                                  .level === -1
+                                  ? format('table.N/A.label')
+                                  : format(
+                                      `evaluation_schema.level_${item.requirementSpecificationCompliance.level}.label`
+                                  );
+
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
+                                  <td className={classNames('border-none')}>
                                     <CustomSelect
                                       options={[
                                         {
@@ -343,6 +402,11 @@ const ComplianceDetailTable = ({
                                         },
                                       ]}
                                       onChange={handleOnSelect}
+                                      isDisabled={!isInReviewStatus}
+                                      value={{
+                                        value: `requirement-${item.bbName}`,
+                                        label: formattedLabel,
+                                      }}
                                       placeholder={format('app.select.label')}
                                     />
                                   </td>
@@ -357,38 +421,40 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table'>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (
                               item.requirementSpecificationCompliance
                                 .crossCuttingRequirements.length ||
-                          item.requirementSpecificationCompliance
-                            .functionalRequirements.length
+                              item.requirementSpecificationCompliance
+                                .functionalRequirements.length
                             ) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
-                                  <td
-                                    className={classNames('border-none', {
-                                      'border-bottom': indexKey === 1,
-                                    })}
-                                  >
-                                    <div className="notes-container">
+                                  <td className={classNames('border-none')}>
+                                    <div className='notes-container'>
                                       <textarea
                                         id={`requirement-${item.bbName}`}
-                                        className="notes-textarea"
+                                        className='notes-textarea'
+                                        disabled={!isInReviewStatus}
+                                        value={
+                                          item[
+                                            'requirementSpecificationCompliance'
+                                          ].notes
+                                        }
                                         onChange={(event) =>
                                           handleTextarea(
-                                                  `requirement-${item.bbName}`,
-                                                  event?.target.value
+                                            `requirement-${item.bbName}`,
+                                            event?.target.value
                                           )
                                         }
                                       />
@@ -406,16 +472,16 @@ const ComplianceDetailTable = ({
               </table>
             </td>
           </tr>
-          <tr className="border">
+          <tr className='border'>
             <td>{format('table.interface_compliance.label')}</td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
@@ -426,8 +492,8 @@ const ComplianceDetailTable = ({
                                       'border-bottom': indexKey === 1,
                                     })}
                                   >
-                                    <div className="td-bb-image-name-container">
-                                      <BBImage imagePath={item.bbName}/>
+                                    <div className='td-bb-image-name-container'>
+                                      <BBImage imagePath={item.bbName} />
                                       <p>{format(item.bbName)}</p>
                                     </div>
                                   </td>
@@ -442,15 +508,22 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
                   <tr>
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table">
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table'>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
+                              const formattedLabel =
+                                item.interfaceCompliance.level === -1
+                                  ? format('table.N/A.label')
+                                  : format(
+                                      `evaluation_schema.level_${item.interfaceCompliance.level}.label`
+                                  );
+
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
@@ -479,6 +552,11 @@ const ComplianceDetailTable = ({
                                           label: format('table.N/A.label'),
                                         },
                                       ]}
+                                      isDisabled={!isInReviewStatus}
+                                      value={{
+                                        value: `interface-${item.bbName}`,
+                                        label: formattedLabel,
+                                      }}
                                       onChange={handleOnSelect}
                                       placeholder={format('app.select.label')}
                                     />
@@ -494,33 +572,37 @@ const ComplianceDetailTable = ({
                 </tbody>
               </table>
             </td>
-            <td className="td-row-details">
-              <table className="main-table">
+            <td className='td-row-details'>
+              <table className='main-table'>
                 <tbody>
-                  <tr className="">
-                    <td className="td-row-details td-full-width border-none">
-                      <table className="main-table ">
+                  <tr className=''>
+                    <td className='td-row-details td-full-width border-none'>
+                      <table className='main-table '>
                         <tbody>
-                          {transformedData?.map((item, indexKey) => {
+                          {updatedFormValues?.map((item, indexKey) => {
                             if (item.interfaceCompliance.requirements.length) {
                               return (
                                 <tr
                                   key={`details-divided-cell-values-${item}-${indexKey}`}
-                                  className=""
+                                  className=''
                                 >
                                   <td
                                     className={classNames('border-none', {
                                       'border-bottom': indexKey === 1,
                                     })}
                                   >
-                                    <div className="notes-container">
+                                    <div className='notes-container'>
                                       <textarea
                                         id={`interface-${item.bbName}`}
-                                        className="notes-textarea"
+                                        className='notes-textarea'
+                                        disabled={!isInReviewStatus}
+                                        value={
+                                          item['interfaceCompliance'].notes
+                                        }
                                         onChange={(event) =>
                                           handleTextarea(
-                                                  `interface-${item.bbName}`,
-                                                  event?.target.value
+                                            `interface-${item.bbName}`,
+                                            event?.target.value
                                           )
                                         }
                                       />
@@ -540,6 +622,34 @@ const ComplianceDetailTable = ({
           </tr>
         </tbody>
       </table>
+      <div className='table-action-buttons'>
+        {isInReviewStatus && (
+          <>
+            <Button
+              type='button'
+              text={format('app.save.label')}
+              styles='secondary-button'
+              onClick={() => onAction(updatedFormValues, 'update')}
+              showCheckIcon={savedFormState[data?.formDetails[0].id || 0]}
+            />
+            <Button
+              type='button'
+              text={format('form.reject.label')}
+              styles='primary-red-button'
+              onClick={() => onAction(updatedFormValues, 'reject')}
+            />
+            <Button
+              type='button'
+              text={format('form.accept.label')}
+              styles='primary-button'
+              onClick={() => onAction(updatedFormValues, 'accept')}
+            />
+          </>
+        )}
+        {isInApprovedStatus && (
+          <div className='approved-box'> {format('table.accepted')} </div>
+        )}
+      </div>
     </div>
   ) : (
     <></>

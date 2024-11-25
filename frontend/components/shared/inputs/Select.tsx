@@ -8,12 +8,16 @@ type SelectProps = {
   onChange: (args0: SingleValue<OptionsType>) => void;
   placeholder: formatTranslationType;
   options: OptionsType[];
+  value: SingleValue<OptionsType>;
+  isDisabled?: boolean;
 };
 
 const CustomSelect = ({
   placeholder,
   onChange,
   options,
+  value,
+  isDisabled = false,
   ...otherProps
 }: SelectProps) => {
   return (
@@ -22,6 +26,8 @@ const CustomSelect = ({
       placeholder={placeholder}
       onChange={(newValue: SingleValue<OptionsType>) => onChange(newValue)}
       classNamePrefix="react-select"
+      value={value}
+      isDisabled={isDisabled}
       classNames={{
         valueContainer: () => 'search-value-container',
         placeholder: () => 'search-placeholder',

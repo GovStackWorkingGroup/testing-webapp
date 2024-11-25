@@ -217,10 +217,13 @@ export const getComplianceList = async (offset: number, limit: number, filters: 
 };
 
 export const getSoftwareDetails = async (softwareName: string) => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
   return await fetch(`${baseUrl}/compliance/${softwareName}/detail`, {
     method: 'get',
     headers: {
       'Content-Type': 'application/json',
+      ...(accessToken ? { 'Authorization': `Bearer ${accessToken}` } : {}),
     },
   })
     .then((response) => {
@@ -238,6 +241,7 @@ export const getSoftwareDetails = async (softwareName: string) => {
     });
 };
 
+// eslint-disable-next-line max-len
 export const saveSoftwareDraft = async (software: FormValuesType): Promise<{ data?: POSTSoftwareAttributesType; error?: FormErrorResponseType; status: boolean }> => {
   const formData = new FormData();
   formData.append('softwareName', software.softwareName.value);
@@ -262,6 +266,7 @@ export const saveSoftwareDraft = async (software: FormValuesType): Promise<{ dat
         const error: FormErrorResponseType = { status: response.status, name: 'CustomError', message: errorMessage };
         throw error;
       }
+
       return response.json();
     })
     .then<Success<POSTSoftwareAttributesType>>((response) => {
@@ -346,6 +351,7 @@ export const updateDraftDetailsStepOne = async (
         const error: FormErrorResponseType = { status: response.status, name: 'CustomError', message: errorMessage };
         throw error;
       }
+
       return response.json();
     })
     .then<Success<POSTSoftwareAttributesType>>((response) => {

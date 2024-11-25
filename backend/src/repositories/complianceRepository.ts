@@ -32,9 +32,9 @@ const complianceRepository = (repository: ComplianceDbRepository) => {
     }
   };
 
-  const getSoftwareComplianceDetail = async (softwareName: string) => {
+  const getSoftwareComplianceDetail = async (softwareName: string, isAuthenticated) => {
     try {
-      return await repository.getSoftwareComplianceDetail(softwareName);
+      return await repository.getSoftwareComplianceDetail(softwareName, isAuthenticated);
     } catch (error) {
       console.error('There was an error while aggregating the compliance reports:', error);
       throw error;
