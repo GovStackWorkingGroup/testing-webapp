@@ -116,11 +116,6 @@ Backend service and monogoDB are also setups automatically
 during `docker-compose up --build` execution.
 
 
-#Deployment
-
-## 
-
-
 ### Useful information
 
 Below you will find all the guidelines.
@@ -301,6 +296,3 @@ Commit Message Convention:
 - For each commit use format: `ticket_ID: brief description of the changes`
 
 Remember, when creating a new branch, always pull the latest changes from the branch you're basing off to avoid conflicts.
-
-
-
