@@ -115,6 +115,12 @@ yarn dev
 Backend service and monogoDB are also setups automatically
 during `docker-compose up --build` execution.
 
+
+#Deployment
+
+## 
+
+
 ### Useful information
 
 Below you will find all the guidelines.
@@ -144,6 +150,130 @@ To ensure that the file with translation keys is properly organized, it is worth
 
 - avoid concatenating translations
 
+
+# Cloud Hosting Setup Guide
+
+## Cloud Hosting
+1. Select a suitable plan (e.g., CX22) based on your resource needs.
+2. Operating System: Use Ubuntu 24.04 or similar.
+3. Add SSH keys to authenticate users and allow them to deploy the application.
+
+## Domain Name System (DNS)
+1. Use a DNS provider to map IP with domain names.
+2. Update DNS records to use new IP addresses:
+   - `testing.govstack.global -> Server IP`
+   - `api.testing.govstack.global -> Server IP`
+
+## SSL
+1. Set up an SSL/TLS certificate to use HTTPS instead of HTTP.
+
+---
+
+## Server Initial Setup
+1. Connect to the server:
+   ```bash
+   ssh user@<your_server_ip>
+   ```
+2. Ensure that Docker and Docker Compose are installed:
+   ```bash
+   sudo apt update && sudo apt upgrade -y
+   sudo apt install git docker docker-compose -y
+   ```
+3. Create the `/opt/` directory and fetch the `testing-webapp` repository from GitHub:
+   ```bash
+   mkdir -p /opt/
+   cd /opt/
+   ```
+4. Clone the repository:
+   ```bash
+   git clone https://github.com/GovStackWorkingGroup/testing-webapp.git .
+   ```
+
+## Environment Configuration
+1. Set up local `.env` files for `frontend` and `backend` directories:
+   ```bash
+   cp frontend/.env.example frontend/.env
+   cp backend/.env.example backend/.env
+   ```
+2. Fill in the variables based on comments:
+   - `Mongo_username`: root
+   - For production, turn Jira config and email notifications to `true`.
+   - Use GitHub for SSO for review users.
+   - For EU operators: use an email service based in the EU.
+
+---
+
+## Deployment
+### Using `deploy.sh` Script
+1. Configure the script to match server credentials, e.g.:
+   ```bash
+   elif [ "${DEPLOY_ENV}" == "prod" ]; then
+     DEPLOYMENT_USER="ubuntu"
+     DEPLOYMENT_HOST="testing.govstack.global"
+     BRANCH="main"
+   else
+   ```
+2. Ensure your RSA key is set as default or specify it in the script:
+   ```bash
+   sudo ssh -i your_rsa_key
+   ```
+
+### Manual Deployment
+1. Navigate to `/opt/testing-webapp` and run:
+   ```bash
+   git fetch
+   git checkout main
+   git reset --hard origin/main
+   git pull origin main
+   ```
+2. Build and deploy using Docker Compose:
+   ```bash
+   docker compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+   docker image prune -f
+   ```
+
+---
+
+## Verify Deployment
+1. Check running containers:
+   ```bash
+   docker ps
+   ```
+2. Inspect logs if needed:
+   ```bash
+   docker logs <container_name>
+   ```
+   Example:
+   ```bash
+   docker logs testing-webapp-web-1
+   docker logs testing-webapp-backend-1
+   ```
+
+---
+
+## Testing
+1. Verify the database connection with MongoDB.
+2. Run backend tests.
+3. Run frontend tests.
+4. Use Postman to send requests to the API.
+
+## Data Upload
+1. Download from previous server: compliance forms, building block requirements and reports.
+2. Save static folder `/uploads` that stores documentation and logos
+3. Copy static pages to new instance
+
+---
+
+## QA / Common Issues
+1. If set up with IP addresses, API may not be accessible on port 5000 without editing Nginx settings.
+2. Domain names may take up to 24 hours to bind to IP addresses.
+3. Changing domain names like `testing.govstack.global` requires updates in:
+   - `docker-compose.yml`
+   - `docker-compose.prod.yml`
+4. If the application keeps loading, check the backend or database:
+   - If the database has no records, it may display "Loading more data."
+5. Do not use root as default user, change default passwords and API key
+
 ### Git Flow in Our Project
 
 We use the Git Flow branching model to organize our work:
@@ -171,3 +301,6 @@ Commit Message Convention:
 - For each commit use format: `ticket_ID: brief description of the changes`
 
 Remember, when creating a new branch, always pull the latest changes from the branch you're basing off to avoid conflicts.
+
+
+
