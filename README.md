@@ -257,6 +257,9 @@ To ensure that the file with translation keys is properly organized, it is worth
 2. Save static folder `/uploads` that stores documentation and logos
 3. Copy static pages to new instance
 
+## Update CircleCI
+Add CircleCI ssh key to the server to allow orbs to deploy application after each Pull Request merge.
+
 ---
 
 ## QA / Common Issues
