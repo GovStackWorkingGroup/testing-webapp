@@ -37,7 +37,11 @@ describe('GitBook API', () => {
 
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractFunctionalRequirements(testData);
+            const result = contentManager.extractFunctionalRequirements(
+                testData,
+                'functional-requirements',
+                'test-bb-key'
+            );
             if ('error' in result) {
                 throw result.error;
             }
@@ -62,7 +66,11 @@ describe('GitBook API', () => {
           
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractFunctionalRequirements(testData);
+            const result = contentManager.extractFunctionalRequirements(
+                testData,
+                'functional-requirements',
+                'some_key'
+            );
             if ('error' in result) {
                 throw result.error;
             }
@@ -105,7 +113,12 @@ describe('GitBook API', () => {
 
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractCrossCuttingRequirements(testData, null);
+            const result = contentManager.extractCrossCuttingRequirements(
+                testData,
+                null,
+                'cross-cutting-requirements',
+                'test-bb-key'
+            );
             if ('error' in result) {
                 throw result.error;
             }
@@ -130,7 +143,12 @@ describe('GitBook API', () => {
           
             // Process the data
             const contentManager = new GitBookPageContentManager();
-            const result = contentManager.extractCrossCuttingRequirements(testData, null);
+            const result = contentManager.extractCrossCuttingRequirements(
+                testData,
+                null,
+                'cross-cutting-requirements',
+                'test-bb-key'
+            );
             if ('error' in result) {
                 throw result.error;
             }

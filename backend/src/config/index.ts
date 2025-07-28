@@ -66,8 +66,8 @@ const appConfig: AppConfig = {
     : 30 * 24 * 60 * 60 * 1000,
   frontendHost: process.env.FE_HOST,
   cron: {
-    removeExpiredDraftsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
-    syncGitBookRequirementsSchedule: '0 3 * * 0', // Run every Sunday at 3:00 AM
+    removeExpiredDraftsSchedule: process.env.REMOVE_EXPIRED_DRAFTS_SCHEDULE || '0 3 * * 0', // Run every Sunday at 3:00 AM
+    syncGitBookRequirementsSchedule: process.env.SYNC_GITBOOK_REQUIREMENTS_SCHEDULE || '0 3 * * 0', // Run every Sunday at 3:00 AM
   },
   enableJiraIntegration: process.env.ENABLE_JIRA_INTEGRATION ? process.env.ENABLE_JIRA_INTEGRATION === 'true' : false,
   gitBook: {
