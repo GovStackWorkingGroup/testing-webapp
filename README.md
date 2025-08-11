@@ -74,13 +74,13 @@ yarn lint
 Application can be deployed in docker container by running
 
 ```shell
-docker-compose up --build
+docker compose up --build
 ```
 
 or
 
 ```shell
- docker-compose up
+ docker compose up
 ```
 
 #### Less
