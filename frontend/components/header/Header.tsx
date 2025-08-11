@@ -2,7 +2,8 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import '../../public/images/logo.png';
 import { RiQuestionLine } from 'react-icons/ri';
-import { BiLogIn, BiLogOut } from 'react-icons/bi';
+import { BiLogIn, BiLogOut, BiSync } from 'react-icons/bi';
+import './Header.less';
 import {
   COMPLIANCE_TESTING_RESULT_PAGE,
   API_TESTING_RESULT_PAGE,
@@ -11,11 +12,13 @@ import {
 } from '../../service/constants';
 import useTranslations from '../../hooks/useTranslation';
 import HeaderMenuButton from './HeaderMenuButton';
+import { syncGitBookBBRequirements as syncGitBookBBRequirementsAPI } from '../../service/serviceAPI';
 
 const Header = () => {
   const router = useRouter();
   const { format } = useTranslations();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem('accessToken');
@@ -38,6 +41,22 @@ const Header = () => {
     sessionStorage.clear();
     setIsLoggedIn(false);
     router.push('/');
+  };
+
+  const syncGitBookBBRequirements = async () => {
+    if (isSyncing) return; // Prevent multiple simultaneous requests
+    
+    setIsSyncing(true);
+    try {
+      await syncGitBookBBRequirementsAPI();
+      console.log('Building block requirements synced successfully');
+      // Optionally refresh the page or show a success notification
+    } catch (error) {
+      console.error('Failed to sync building block requirements:', error);
+      // You could add a toast notification here for better UX
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   const handleHelpClick = () => {
@@ -72,14 +91,24 @@ const Header = () => {
         <div className="action-buttons">
           <div className="header-login">
             {isLoggedIn ? (
-              <button onClick={handleLogout} className="header-menu-button">
-                <BiLogOut className="header-icon"/>
-                {format('app.logout.label')}
-              </button>
+              <>
+                <button onClick={handleLogout} className="header-menu-button">
+                  <BiLogOut className="header-icon" />
+                  {format('app.logout.label')}
+                </button>
+                <button 
+                  onClick={syncGitBookBBRequirements} 
+                  className="header-menu-button"
+                  disabled={isSyncing}
+                >
+                  <BiSync className={`header-icon ${isSyncing ? 'syncing' : ''}`} />
+                  {format('app.sync.label')}
+                </button>
+              </>
             ) : (
               <>
                 <button onClick={handleLogin} className="header-menu-button">
-                  <BiLogIn className="header-icon"/>
+                  <BiLogIn className="header-icon" />
                   {format('app.login.label')}
                 </button>
               </>
@@ -87,7 +116,7 @@ const Header = () => {
           </div>
           <div className="header-help">
             <button onClick={handleHelpClick} className="header-menu-button">
-              <RiQuestionLine className="header-icon"/>
+              <RiQuestionLine className="header-icon" />
               {format('app.help.label')}
             </button>
           </div>

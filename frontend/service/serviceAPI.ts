@@ -693,3 +693,25 @@ export const fetchFileDetails = async (file: string) => {
     return undefined;
   }
 };
+
+export const syncGitBookBBRequirements = async () => {
+  const accessToken = sessionStorage.getItem('accessToken');
+
+  return await fetch(`${baseUrl}/maintenance/sync`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        const errorMessage = response.statusText || 'An error occurred while syncing building block requirements.';
+
+        const error: FormErrorResponseType = { status: response.status, name: 'CustomError', message: errorMessage };
+        throw error;
+      }
+
+      return response.json();
+    });
+}
