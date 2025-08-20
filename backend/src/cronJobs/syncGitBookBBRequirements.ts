@@ -14,6 +14,7 @@ export async function syncGitBookBBRequirements() {
             }
         } else {
             console.log('Failed to process GitBook entries.');
+
             if (result.errors && result.errors.length > 0) {
                 console.error('Errors:', result.errors);
             }

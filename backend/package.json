@@ -38,9 +38,10 @@
   },
   "scripts": {
     "dev": "nodemon -L server.ts",
-    "prod": "node server.ts",
+    "prod": "ts-node server.ts",
     "test": "mocha --exit",
-    "test:watch": "mocha --watch"
+    "test:watch": "mocha --watch",
+    "syncGitBookBBRequirements": "ts-node src/bin/syncGitBookBBRequirements.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.14",
