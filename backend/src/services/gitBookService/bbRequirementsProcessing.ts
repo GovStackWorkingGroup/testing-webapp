@@ -1,9 +1,9 @@
-import GitBookCollectionManager from './CollectionsManager';
+import GitBookCollectionManager, { formatCollectionTitle, Site } from './CollectionsManager';
 import GitBookSpaceManager from './SpacesManager';
 import GitBookPageContentManager from './PageContentManager';
 import BBRequirements from '../../db/schemas/bbRequirements';
 
-const processBBRequirements = async () => {
+export async function processBBRequirements() {
     const collectionManager = new GitBookCollectionManager();
     const spaceManager = new GitBookSpaceManager();
     const pageContentManager = new GitBookPageContentManager();
@@ -51,13 +51,19 @@ const processBBRequirements = async () => {
         return results.flat().filter(r => r !== null);
     };
 
-    const processInterfaceCompliancePages = async (govStackSpecCollections, API_REQUIREMENTS) => {
+    const processInterfaceCompliancePages = async (govStackSpecCollections: Array<Site>, API_REQUIREMENTS) => {
         if (govStackSpecCollections.length === 0) {
             throw new Error("No collections provided for processing.");
         }
+
         const spaceInfo = await Promise.all(govStackSpecCollections.map(
             collection => collectionManager.fetchLatestVersionSpaceIdAndVersion(collection.id)
         ));
+
+        if (spaceInfo[0] === null) {
+            throw new Error("No valid spaces found for site");
+        }
+
         const spaceId = spaceInfo[0].spaceId;
         const fetchedGovStackSpecPages: string[] = await spaceManager.fetchPages(spaceId, INTERFACE_REQUIREMENTS_REGEX)
         const fetchedGovStackSpecNestedPagesfetche = await spaceManager.fetchPageContent(spaceId, fetchedGovStackSpecPages[0]);
@@ -67,37 +73,44 @@ const processBBRequirements = async () => {
         const pageContent = await spaceManager.fetchPageContent(spaceId, filteredPagesIds[0]);
         const extractResult = pageContentManager.extractCrossCuttingRequirements(
             pageContent, API_REQUIREMENTS, INTERFACE_REQUIREMENTS_URL, ""
-            );
+        );
+
         return extractResult;
     };
 
     try {
-        const bbCollections = await collectionManager.fetchCollections('bb');
-        const govStackSpecCollections = await collectionManager.fetchCollections('GovStack Specification');
+        const bbSites = await collectionManager.fetchSites('bb');
+        const govStackSpecCollections = await collectionManager.fetchSites('GovStack Specification');
         // These are the Cross-cutting requirements that relate to APIs. We may eventually pull this
         // out into a configuration file
         const API_REQUIREMENTS = ["5.1", "5.2", "5.3", "5.4", "5.6", "5.13"]
         const architecturalRequirements = await processInterfaceCompliancePages(govStackSpecCollections, API_REQUIREMENTS);
 
-        const allPageContents = await Promise.all(bbCollections.map(async ({ id: collectionId, bbKey, bbName }) => {
+        const allPageContents = await Promise.all(bbSites.map(async ({ id: siteId, title: bbKey }) => {
+            let bbName = formatCollectionTitle(bbKey);
+
             try {
-                const spaceInfo = await collectionManager.fetchLatestVersionSpaceIdAndVersion(collectionId);
-                if (!spaceInfo || !spaceInfo.spaceId ||!spaceInfo.version) {
-                    throw new Error('No valid space found for the collection');
+                const spaceInfo = await collectionManager.fetchLatestVersionSpaceIdAndVersion(siteId);
+
+                if (spaceInfo === null) {
+                    return null;
                 }
+
                 bbName = getBuildingBlockName(bbKey, bbName);
+
                 const crossCutting = await processPages(spaceInfo, CROSS_CUTTING_REQUIREMENTS_REGEX, bbKey);
                 const functional = await processPages(spaceInfo, FUNCTIONAL_REQUIREMENTS_REGEX, bbKey);
                 const keyDigitalFunctionalities = await processPages(spaceInfo, KEY_DIGITAL_FUNCTIONALITIES_REQUIREMENTS_REGEX, bbKey);
                 const requirements = { crossCutting, functional, keyDigitalFunctionalities, interface: architecturalRequirements.requirements };
                 const dateOfSave = new Date().toISOString();
                 const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
+
                 await BBRequirements.deleteMany({ bbKey, bbName, bbVersion: spaceInfo.version });
                 await bbRequirement.save();
 
                 return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
             } catch (outerError) {
-                errors.push(`Error processing collection: ${(outerError as Error).message}`);
+                errors.push(`Error processing collection ${siteId}: ${(outerError as Error).message}`);
                 return [];
             }
         }));
@@ -118,11 +131,10 @@ const processBBRequirements = async () => {
     }
 };
 
-const getBuildingBlockName = (bbKey: string, bbName: string): string => {
+function getBuildingBlockName(bbKey: string, bbName: string): string {
     if (bbKey == 'bb-gis') {
         return 'GIS';
     }
+
     return bbName;
 };
-
-export { processBBRequirements };
