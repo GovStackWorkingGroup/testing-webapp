@@ -26,6 +26,7 @@ const port: number = parseInt(process.env.PORT as string, 10) || 5000;
 const app = express();
 
 createConnection(appConfig).connectToMongo();
+
 app.use(cors());
 app.use('d', apiKeyAuth(/^API_KEY_/)); // Matching all process.env.API_KEY_*
 
