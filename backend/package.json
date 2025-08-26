@@ -36,7 +36,8 @@
   },
   "scripts": {
     "dev": "nodemon -L server.ts",
-    "prod": "ts-node server.ts",
+    "build": "tsc",
+    "prod": "node dist/server.js",
     "test": "mocha --exit",
     "test:watch": "mocha --watch",
     "syncGitBookBBRequirements": "ts-node src/bin/syncGitBookBBRequirements.ts"

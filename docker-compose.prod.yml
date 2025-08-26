@@ -39,6 +39,8 @@ services:
       API_URL: api.testing.govstack.global
 
   backend:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/backend:latest
+    command: prod
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:

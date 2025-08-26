@@ -18,7 +18,7 @@ COPY ./tsconfig.json ./
 
 ENV NODE_ENV production
 
-RUN yarn run tsc
+RUN yarn run build
 
 # -----------------------------------------------------------------------------+
 # Runtime container
