@@ -33,6 +33,7 @@ services:
       NGINX_PROXY_CONTAINER: 'nginx'
 
   web:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/frontend:latest
     environment:
       VIRTUAL_HOST: testing.govstack.global
       LETSENCRYPT_HOST: testing.govstack.global
