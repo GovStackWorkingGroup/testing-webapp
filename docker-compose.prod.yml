@@ -31,18 +31,17 @@ services:
       - /var/docker/nginx/acme:/etc/acme.sh
     environment:
       NGINX_PROXY_CONTAINER: 'nginx'
-      
+
   web:
     environment:
-        VIRTUAL_HOST: testing.govstack.global
-        LETSENCRYPT_HOST: testing.govstack.global
-        API_URL: api.testing.govstack.global
+      VIRTUAL_HOST: testing.govstack.global
+      LETSENCRYPT_HOST: testing.govstack.global
+      API_URL: api.testing.govstack.global
 
   backend:
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:
-        API_KEY_BB: ${API_KEY_BB:-asudbq827ebsadon}
-        VIRTUAL_HOST: api.testing.govstack.global
-        LETSENCRYPT_HOST: api.testing.govstack.global
-
+      API_KEY_BB: ${API_KEY_BB:-asudbq827ebsadon}
+      VIRTUAL_HOST: api.testing.govstack.global
+      LETSENCRYPT_HOST: api.testing.govstack.global

@@ -10,11 +10,10 @@ services:
         - 3003:3003
       environment:
         API_URL: ${API_URL:-http://localhost:5000}
-      logging: 
+      logging:
         driver: "json-file"
         options:
           max-size: "50mb"
-
 
     mongo:
       image: mongo
@@ -33,7 +32,6 @@ services:
         driver: "json-file"
         options:
           max-size: "50mb"
-
 
     backend:
       image: testing-webapp-server
@@ -60,7 +58,6 @@ services:
         driver: "json-file"
         options:
           max-size: "50mb"
-
 
 networks:
   backend:
