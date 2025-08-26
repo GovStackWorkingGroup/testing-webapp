@@ -13,6 +13,8 @@ RUN yarn install --pure-lockfile
 
 COPY . .
 
+ARG API_URL
+
 RUN yarn build
 
 #Running the app
