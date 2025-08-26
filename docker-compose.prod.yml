@@ -42,6 +42,5 @@ services:
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:
-      API_KEY_BB: ${API_KEY_BB:-asudbq827ebsadon}
       VIRTUAL_HOST: api.testing.govstack.global
       LETSENCRYPT_HOST: api.testing.govstack.global
