@@ -33,12 +33,15 @@ services:
       NGINX_PROXY_CONTAINER: 'nginx'
 
   web:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/frontend:latest
     environment:
       VIRTUAL_HOST: staging.testing.govstack.global
       LETSENCRYPT_HOST: staging.testing.govstack.global
       API_URL: api.staging.testing.govstack.global
 
   backend:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/backend:latest
+    command: prod
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:
