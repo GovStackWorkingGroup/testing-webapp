@@ -1,13 +1,41 @@
-FROM node:18
+# -----------------------------------------------------------------------------+
+# Build container
+# -----------------------------------------------------------------------------+
+FROM node:22.8.0 AS build
 
-# Create app directory
+# Build code
 WORKDIR /app
 
-COPY . .
+COPY ./package.json ./
+COPY ./yarn.lock ./
 
-RUN yarn install
-RUN yarn add nodemon
-RUN ls
+RUN yarn install --pure-lockfile
+
+COPY ./src/ src/
+COPY ./server.ts ./
+COPY ./@types/ @types/
+COPY ./tsconfig.json ./
+
+ENV NODE_ENV production
+
+RUN yarn run tsc
+
+# -----------------------------------------------------------------------------+
+# Runtime container
+# -----------------------------------------------------------------------------+
+FROM node:22.8.0
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY ./package.json ./
+COPY ./yarn.lock ./
+
+RUN yarn install --frozen-lockfile
+
+COPY --from=build /app/dist ./dist
 
 EXPOSE 5000
-ENTRYPOINT ["/app/entrypoint.sh"]
+
+CMD ["node", "dist/server.js"]

@@ -11,7 +11,7 @@ type Connection = {
 export class MongoConnection {
 
   conn: Connection;
-  
+
   uri: string;
   databaseName: string;
   reconnectInterval: number;
