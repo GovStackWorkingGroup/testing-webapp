@@ -1,7 +1,4 @@
-version: '3'
-
 services:
-
   nginx:
     container_name: nginx
     image: nginxproxy/nginx-proxy
@@ -31,18 +28,22 @@ services:
       - /var/docker/nginx/acme:/etc/acme.sh
     environment:
       NGINX_PROXY_CONTAINER: 'nginx'
-      
+
   web:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/frontend:latest
+    build:
+      args:
+        API_URL: https://api.testing.govstack.global
     environment:
-        VIRTUAL_HOST: testing.govstack.global
-        LETSENCRYPT_HOST: testing.govstack.global
-        API_URL: api.testing.govstack.global
+      VIRTUAL_HOST: testing.govstack.global
+      LETSENCRYPT_HOST: testing.govstack.global
+      API_URL: api.testing.govstack.global
 
   backend:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/backend:latest
+    command: yarn prod
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:
-        API_KEY_BB: ${API_KEY_BB:-asudbq827ebsadon}
-        VIRTUAL_HOST: api.testing.govstack.global
-        LETSENCRYPT_HOST: api.testing.govstack.global
-
+      VIRTUAL_HOST: api.testing.govstack.global
+      LETSENCRYPT_HOST: api.testing.govstack.global

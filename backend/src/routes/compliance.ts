@@ -5,14 +5,14 @@ import { createFileUploadMiddleware } from '../middlewares/fileUpload';
 import verifyOptionalGithubToken from '../middlewares/optionalAuthMiddleware';
 import verifyGithubToken from '../middlewares/requiredAuthMiddleware';
 import syncGitBookBBRequirements from '../cronJobs/syncGitBookBBRequirements'
+
 const filesUpload = createFileUploadMiddleware();
 const buildComplianceRoutes = (controller: any) => {
   const router = express.Router();
 
-
   router.get('/compliance/list', limiter, verifyOptionalGithubToken, PaginationMiddleware.handlePaginationFilters, controller.getAllComplianceReports);
   router.get('/compliance/filters/:type', limiter, controller.getAvailableFilters);
-  
+
   router.get('/compliance/:softwareName/detail', limiter, verifyOptionalGithubToken, controller.getSoftwareComplianceDetail);
   router.get('/compliance/forms/:id', limiter, controller.getFormDetail);
   router.get('/compliance/drafts/:id', limiter, controller.getDraftDetail);

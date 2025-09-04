@@ -1,7 +1,4 @@
-version: '3'
-
 services:
-
   nginx:
     container_name: nginx
     image: nginxproxy/nginx-proxy
@@ -33,16 +30,21 @@ services:
       NGINX_PROXY_CONTAINER: 'nginx'
 
   web:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/frontend:latest
+    build:
+      args:
+        API_URL: https://api.staging.testing.govstack.global
     environment:
       VIRTUAL_HOST: staging.testing.govstack.global
       LETSENCRYPT_HOST: staging.testing.govstack.global
       API_URL: api.staging.testing.govstack.global
 
   backend:
+    image: ghcr.io/govstackworkinggroup/testing-webapp/backend:latest
+    command: yarn prod
     volumes:
       - /var/docker/uploads:/app/uploads
     environment:
-      API_KEY_BB: ${API_KEY_BB:-O7VKGLW47I6e}
       VIRTUAL_HOST: api.staging.testing.govstack.global
       LETSENCRYPT_HOST: api.staging.testing.govstack.global
 

@@ -1,4 +1,3 @@
-version: '3'
 services:
     web:
       build:
@@ -10,11 +9,10 @@ services:
         - 3003:3003
       environment:
         API_URL: ${API_URL:-http://localhost:5000}
-      logging: 
+      logging:
         driver: "json-file"
         options:
           max-size: "50mb"
-
 
     mongo:
       image: mongo
@@ -34,14 +32,13 @@ services:
         options:
           max-size: "50mb"
 
-
     backend:
       image: testing-webapp-server
       restart: always
       build:
         context: ./backend
         dockerfile: ./Dockerfile
-      command: dev
+      command: yarn dev
       expose:
         - "5000"
       environment:
@@ -50,6 +47,9 @@ services:
         MONGO_HOST: ${MONGO_HOST:-mongo}
         MONGO_PORT: ${MONGO_PORT:-27017}
         MONGO_DATABASE: ${MONGO_DATABASE:-test_execution_result}
+        GITBOOK_URL: ${GITBOOK_URL:-https://api.gitbook.com}
+        GITBOOK_API_KEY: ${GITBOOK_API_KEY}
+        GITBOOK_ORG_ID: ${GITBOOK_ORG_ID}
         PORT: ${BACKEND_PORT:-5000}
       depends_on:
         - mongo
@@ -60,7 +60,6 @@ services:
         driver: "json-file"
         options:
           max-size: "50mb"
-
 
 networks:
   backend:

@@ -6,15 +6,24 @@ type SpaceType = {
     title: string;
 };
 
+export type Site = {
+    id: string,
+    title: string,
+};
+
+type SpaceInfo = {
+  spaceId: string,
+  version: string,
+};
+
 class GitBookCollectionManagerError extends Error {
-    constructor(message) {
+    constructor(message: string) {
         super(message);
         this.name = 'GitBookCollectionManagerError';
     }
 }
 
-class GitBookCollectionManager {
-
+export default class GitBookCollectionManager {
     private orgId: string;
 
     constructor(orgId = appConfig.gitBook.orgId) {
@@ -29,111 +38,60 @@ class GitBookCollectionManager {
         }
     }
 
-    async fetchCollections(titleStartsWith: string = '') {
-        let allCollections: SpaceType[] = [];
-
+    async fetchSites(titleStartsWith: string = ''): Promise<Array<Site>> {
+        const sites: Array<any> = [];
         const lowerCaseTitleStartsWith = titleStartsWith.toLowerCase();
 
-        const { baseURL, apiKey } = appConfig.gitBook;
-        const collectionUrl = `${baseURL}/v1/orgs/${this.orgId}/collections`
-        const response = await fetch(collectionUrl, 
-          {headers: { 'Authorization': `Bearer ${apiKey}` }})
-        let data = await response.json();
+        let { data } = await gitBookClient.get(`/v1/orgs/${this.orgId}/sites`);
 
-        if (!response || response.status !== 200 || !data || !data.items) {
-          throw new GitBookCollectionManagerError('Failed to fetch collections.');
-        }
+        sites.push(...data.items);
 
-        allCollections = allCollections.concat(data.items);
-        // If it contains a 'next' object, call again to get remaining items - ?page=next-page-id
+        // Consume all paginated items
         while (data.next) {
-          const response = await fetch(`${collectionUrl}?page=${data.next.page}`, 
-            {headers: { 'Authorization': `Bearer ${apiKey}` }})
-          data = await response.json();
-          allCollections = allCollections.concat(data.items);
-        }
-        
-        allCollections.map((item) => {
-          console.log(JSON.stringify(item.title));
-        })
-        return allCollections
-            .filter(collection => collection.title.toLowerCase().startsWith(lowerCaseTitleStartsWith))
-            .map(collection => ({
-                id: collection.id,
-                bbKey: collection.title,
-                bbName: this.formatCollectionTitle(collection.title)
-            }));
-    }
+            data = (await gitBookClient.get(`/v1/orgs/${this.orgId}/sites?page=${data.next.page}`)).data;
 
-    async fetchSpacesForCollection(collectionId) {
-        const response = await gitBookClient.get(`/v1/collections/${collectionId}/spaces`);
-        return response.data.items
-    }
-
-    async fetchLatestVersionSpaceIdAndVersion(collectionId) {
-        // Note that GovStack is no longer using semantic versioning. 
- 
-        // TO DO: Allow user to select version of spec that they want to measure compliance against,
-        //    which means storing functional requirements for each version of each spec
-        const spaces = await this.fetchSpacesForCollection(collectionId);
-        let highestVersionSpace: SpaceType | null = null;
-
-        spaces.forEach(space => {
-          /*if (space.title === 'development') {
-            highestVersionSpace = space;
-          }*/
-
-          if (this.isVersion(space.title)) {
-            if (!highestVersionSpace || this.compareVersions(space.title, highestVersionSpace.title) > 0) {
-                highestVersionSpace = space;
-            }
-          }
-        });
-
-        if (!highestVersionSpace) {
-            highestVersionSpace = { id: '', title: '' };
+            sites.push(...data.items);
         }
 
-        return highestVersionSpace ? { spaceId: highestVersionSpace.id, version: highestVersionSpace.title } : null;
+        return sites
+          .filter((site) => site.title.toLowerCase().startsWith(lowerCaseTitleStartsWith));
+    }
 
-    };
+    async fetchSpacesForSite(siteId: string) {
+        const response = await gitBookClient.get(`/v1/orgs/${this.orgId}/sites/${siteId}/site-spaces?default=true`);
 
-    // Checks if the title is in GovStack version format ({YY}Q{q} - 23Q4, 24Q2, etc)
-    isVersion(title: string) {
-        return /^\d{2}Q[1-4](.\d)?$/.test(title);
-    };
+        return response.data.items;
+    }
 
-    versionToArray(versionTitle: string) {
-        const matches = versionTitle.match(/^(\d{2})Q([1-4]).?(\d)?$/);
-        return matches ? [parseInt(matches[1], 10), parseInt(matches[2], 10), parseInt(matches[3], 10)] : [0, 0, 0];
-    };
+    async fetchLatestVersionSpaceIdAndVersion(siteId: string): Promise<SpaceInfo | null> {
+        const spaces = (await this.fetchSpacesForSite(siteId)).filter((s) => s.default);
+        const lastSpace = spaces[spaces.length - 1];
 
-    compareVersions(version1: string, version2: string) {
-        const [year1, quarter1, patch1] = this.versionToArray(version1);
-        const [year2, quarter2, patch2] = this.versionToArray(version2);
-    
-        if (year1 > year2) return 1;
-        if (year1 < year2) return -1;
-        if (quarter1 > quarter2) return 1;
-        if (quarter1 < quarter2) return -1;
-        if (patch1 !== undefined) {
-          if (patch1 > patch2 || isNaN(patch2)) return 1;
-          if (patch1 < patch2) return -1;
+        if (!isVersion(lastSpace.space.title)) {
+            return null;
         }
 
-        return 0;
+        return {
+          spaceId: lastSpace.space.id,
+          version: lastSpace.space.title,
+        };
     };
+};
 
-    formatCollectionTitle(title: string) {
-        return title
-            .replace(/^bb/, '') // Remove 'bb' prefix
-            .replace(/-/g, ' ') // Replace hyphens with spaces
-            .split(' ') // Split into words
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
-            .join(' ') // Combine words with spaces
-            .trim(); // Trim whitespace
-    }
-    // Example: "bb-payments" becomes "Payments"
+// Checks if the title is in GovStack version format ({YY}Q{q} - 23Q4, 24Q2, etc)
+function isVersion(title: string): boolean {
+    return /^(\d+\.)?(\d+\.)?(\*|\d+)$/.test(title) || /^\d{2}Q[1-4](.\d)?$/.test(title);
+};
+
+/**
+ * Example: "bb-payments" becomes "Payments"
+ */
+export function formatCollectionTitle(title: string) {
+    return title
+        .replace(/^bb/, '') // Remove 'bb' prefix
+        .replace(/-/g, ' ') // Replace hyphens with spaces
+        .split(' ') // Split into words
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize first letter of each word
+        .join(' ') // Combine words with spaces
+        .trim(); // Trim whitespace
 }
-
-export default GitBookCollectionManager;
