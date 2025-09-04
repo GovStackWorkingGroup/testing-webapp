@@ -105,7 +105,7 @@ export async function processBBRequirements() {
                 const dateOfSave = new Date().toISOString();
                 const bbRequirement = new BBRequirements({ bbKey, bbName, bbVersion: spaceInfo.version, dateOfSave, requirements });
 
-                await BBRequirements.deleteMany({ bbKey, bbName, bbVersion: spaceInfo.version });
+                await BBRequirements.deleteMany({ bbKey, bbName });
                 await bbRequirement.save();
 
                 return { bbKey, bbName, version: spaceInfo.version, dateOfSave, requirements };
