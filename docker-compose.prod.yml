@@ -43,7 +43,7 @@ services:
     image: ghcr.io/govstackworkinggroup/testing-webapp/backend:latest
     command: yarn prod
     volumes:
-      - /var/docker/uploads:/app/dist/uploads
+      - /var/docker/uploads:/app/uploads
     environment:
       VIRTUAL_HOST: api.testing.govstack.global
       LETSENCRYPT_HOST: api.testing.govstack.global
