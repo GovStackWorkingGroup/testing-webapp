@@ -32,7 +32,7 @@ app.use('d', apiKeyAuth(/^API_KEY_/)); // Matching all process.env.API_KEY_*
 
 app.use(express.json());
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(appConfig.uploadDir));
 app.use(buildReportRoutes(reportController(reportRepository, mongoReportRepository)));
 app.use(buildComplianceRoutes(complianceController(complianceRepository, mongoComplianceRepository)));
 app.use(buildAuthRoutes());
