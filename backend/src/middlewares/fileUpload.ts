@@ -1,5 +1,6 @@
 import multer from 'multer';
 import path from 'path';
+import { appConfig } from '../config';
 
 const getFileExtension = (mimetype) => {
     const mimeToExt = {
@@ -15,7 +16,7 @@ const getFileExtension = (mimetype) => {
 
 export const createFileUploadMiddleware = () => {
     const storage = multer.diskStorage({
-        destination: (_req, _file, done) => done(null, 'uploads/'),
+        destination: (_req, _file, done) => done(null, appConfig.uploadDir),
         filename: (_req, file, done) => {
             let ext = path.extname(file.originalname);
             if (!ext) {

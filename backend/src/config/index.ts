@@ -1,13 +1,14 @@
 /* eslint-disable import/prefer-default-export */
 import dotenv from 'dotenv';
 import { MongoConnection } from './connectionStringBuilder';
-import rateLimit from "express-rate-limit"; 
+import rateLimit from "express-rate-limit";
 import { parseDuration } from './utils';
 
 dotenv.config();
 
 interface AppConfig {
   appName: string;
+  uploadDir: string;
   isProduction: boolean;
   mongoConnection: MongoConnection;
   cron: {
@@ -60,10 +61,11 @@ interface AppConfig {
 
 const appConfig: AppConfig = {
   appName: process.env.appName || 'testing-webapp-api',
+  uploadDir: process.env.UPLOAD_DIR || '/app/uploads',
   isProduction: process.env.envName ? process.env.envName === 'prod' : false,
   mongoConnection: new MongoConnection(),
-  draftExpirationTime: process.env.DRAFT_EXPIRATION_TIME 
-    ? parseDuration(process.env.DRAFT_EXPIRATION_TIME) 
+  draftExpirationTime: process.env.DRAFT_EXPIRATION_TIME
+    ? parseDuration(process.env.DRAFT_EXPIRATION_TIME)
     : 30 * 24 * 60 * 60 * 1000,
   frontendHost: process.env.FE_HOST,
   cron: {
@@ -98,7 +100,7 @@ const appConfig: AppConfig = {
     assigneeId: process.env.JIRA_ASSIGNEE_ID!,
     labels: process.env.JIRA_LABELS ? process.env.JIRA_LABELS.split(',') : [],
     titleTemplate: process.env.JIRA_TITLE_TEMPLATE!,
-    descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!, 
+    descriptionTemplate: process.env.JIRA_DESCRIPTION_TEMPLATE!,
   },
   emailsEnabled: process.env.SEND_FORM_CONFIRMATION_EMAILS ? process.env.SEND_FORM_CONFIRMATION_EMAILS === 'true' : false,
   emailSender: process.env.EMAIL_SENDER || 'placeholder.email.sender@example.com',
@@ -115,7 +117,7 @@ const appConfig: AppConfig = {
 
 const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 1000, 
+  max: 1000,
   message: "Too many requests from this IP, please try again later."
 });
 
