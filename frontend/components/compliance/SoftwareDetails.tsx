@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { RiCheckboxCircleFill, RiErrorWarningFill } from 'react-icons/ri';
 import useTranslations from '../../hooks/useTranslation';
@@ -41,6 +41,12 @@ const SoftwareDetails = ({
     useState<boolean>(false);
 
   const { draftUUID, softwareName } = router.query;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem('accessToken');
+    setIsLoggedIn(!!token);
+  });
 
   const handlePressEdit = () => {
     if (draftUUID) {
@@ -90,12 +96,12 @@ const SoftwareDetails = ({
             }`}</span>
           </p>
           <div className='software-actions'>
-            <Button
+            {isLoggedIn && <Button
               type='button'
               onClick={() => setDeleteConfirmModalOpen(true)}
               text={format('form.software_delete.label')}
               styles='primary-red-button'
-            />
+            />}
             {viewReportDetails && (
               <Button
                 type='link'
