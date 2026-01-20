@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 import express from "express";
 import cors from "cors";
-import path from 'path';
 import { apiKeyAuth } from '@vpriem/express-api-key-auth';
 
 import { appConfig } from './src/config';
@@ -18,7 +17,6 @@ import mongoComplianceRepository from "./src/db/repositories/complianceRepositor
 
 import buildReportRoutes from './src/routes/record';
 import buildComplianceRoutes from "./src/routes/compliance";
-import { startCronJobs } from "./src/cronJobs";
 import buildAuthRoutes from "./src/routes/auth";
 import multer from 'multer';
 
@@ -48,7 +46,6 @@ app.use((err: any, _: express.Request, res: express.Response, next: express.Next
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
-  startCronJobs();
 });
 
 export default app;
