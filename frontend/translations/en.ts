@@ -38,6 +38,7 @@ export const en = {
     'API Compliance & Requirement Specification Compliance',
   'app.login.label': 'Log In',
   'app.logout.label': 'Log Out',
+  'app.sync.label': 'Sync',
   'app.tests_passed.label': 'Tests Passed',
   'app.tests_failed.label': 'Tests Failed',
   'app.save.label': 'Save',
